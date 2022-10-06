@@ -1,4 +1,5 @@
 using Alcoholic.Models.Entities;
+using Alcoholic.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<MailService>();
 
 builder.Services.AddDbContext<db_a8de26_projectContext>(option =>
 {
