@@ -9,20 +9,23 @@
     <link href="https://use.fontawesome.com/releases/v6.2.0/css/all.css" rel="stylesheet">
     <title>後台中心</title>
     <style>
-        h2{
-            color:#842029
+        h2 {
+            color: #842029
         }
-        h3{
+
+        h3 {
             font-size: 2 rem;
             font-weight: bold;
             color: #444;
             margin-bottom: 16px;
         }
-        h4{
+
+        h4 {
             font-size: 1rem;
         }
-        h5{
-            font-size:medium;
+
+        h5 {
+            font-size: medium;
             color: #666;
             margin-bottom: 0;
         }
@@ -30,42 +33,50 @@
         body {
             position: relative;
             background-color: #333;
-            min-width: 768px;
+            min-width: 852px;
         }
 
         .MainArea {
             background-color: #fff;
             border-radius: 0.375rem;
         }
+
         /*表格*/
-        img{
+        img {
             width: 100px;
         }
-        table{
+
+        table {
             width: 80%;
         }
-        thead{
+
+        thead {
             background-color: rgb(215, 215, 215);
             color: #444;
             height: 30px;
             line-height: 30px;
         }
-        td{
+
+        td {
             line-height: 100px;
         }
-        tbody tr:hover{
+
+        tbody tr:hover {
             background-color: rgb(241, 241, 241);
         }
+
         /*下拉選單*/
-        #mark{
+        #mark {
             width: 20%;
         }
+
         /*水平分割並靠外*/
-        .spacebetween{
+        .spacebetween {
             display: flex;
             justify-content: space-between;
         }
-        .spacebetween h3{
+
+        .spacebetween h3 {
             margin: 0;
             display: flex;
             align-items: center;
@@ -74,6 +85,12 @@
         /* Top Nav */
         .navbar {
             justify-content: space-around;
+        }
+
+        @media screen and (max-width:852px) {
+            .navbar i {
+                display: block;
+            }
         }
 
         .navigation img {
@@ -105,7 +122,12 @@
         }
 
         /* 資料中心 */
-        .form-select{
+        .scrollregion {
+            overflow-y: scroll;
+            height: 100vh;
+        }
+
+        .form-select {
             margin-right: 10px;
         }
 
@@ -118,17 +140,21 @@
         .datadetail {
             width: 24%;
             border: 1px solid rgb(215, 215, 215);
-            border-radius: 0.375rem;  
+            border-radius: 0.375rem;
         }
-        .datadetail:hover,.keymarkdetail:hover{
+
+        .datadetail:hover,
+        .keymarkdetail:hover {
             border-bottom: 2px solid #842029;
         }
-        .data table{
+
+        .data table {
             margin-left: 5px;
         }
 
         /* 數據中心 關鍵指標 */
-        .datacenter ul button,.datacenter ul a{
+        .datacenter ul button,
+        .datacenter ul a {
             color: #000;
         }
 
@@ -143,28 +169,35 @@
             color: #842029;
             font-weight: bold;
         }
-        .datacenter h2{
+
+        .datacenter h2 {
             margin: 5px 0 5px 0;
         }
-        .datacenter p{
+
+        .datacenter p {
             margin: 0;
         }
-        .keymark{
+
+        .keymark {
             width: 100%;
             display: flex;
             justify-content: space-around;
             text-align: center;
         }
-        .keymarkdetail{
+
+        .keymarkdetail {
             width: 19%;
             border: 1px solid rgb(215, 215, 215);
             border-radius: 0.375rem;
         }
-        .info{
+
+        .info {
             padding: 50px;
             border: 1px solid rgb(215, 215, 215);
         }
-        .discount, .undiscount{
+
+        .discount,
+        .undiscount {
             border: 1px solid rgb(215, 215, 215);
             border-radius: 0.375rem;
             width: 100%;
@@ -177,48 +210,66 @@
         .addproduct {
             display: flex;
         }
-        .productAdding{
+
+        .productAdding {
             display: flex;
             flex-direction: column;
         }
+
         .productmanage {
             position: relative;
         }
-        .products button,.discountmanage button{
+
+        .products button,
+        .discountmanage button {
             line-height: 24px;
         }
-        .products tr,.discountmanage tr{
+
+        .products tr,
+        .discountmanage tr {
             text-align: center;
         }
+
         .discountmanage {
             position: relative;
         }
-        .addbtn{
+
+        .addbtn {
             width: 150px;
         }
-        .addbtn,.btneditproducts{
+
+        .addbtn,
+        .btneditproducts {
             border: 0;
             border-radius: 0.375rem;
             background-color: #842029;
             color: #fff;
         }
-        .btnproducts{
+
+        .btnproducts {
             width: 45px;
         }
-        .btnproducts,.btneaddcancel {
+
+        .btnproducts,
+        .btneaddcancel {
             border-radius: 0.375rem;
             border: 1px solid rgb(215, 215, 215);
             height: 30px;
             background-color: #fff;
             color: #842029;
         }
-        .addbtn:hover,.btnproducts:hover,.btneaddcancel:hover,.btneditproducts:hover{
+
+        .addbtn:hover,
+        .btnproducts:hover,
+        .btneaddcancel:hover,
+        .btneditproducts:hover {
             background-color: #666;
             color: #fff;
             font-weight: bold;
         }
+
         @media screen and (max-width:852px) {
-            .navbar i{
+            .navbar i {
                 display: block;
             }
         }
@@ -235,249 +286,319 @@
                 </div>
                 <ul class="nav navbar" id="myTab" role="tablist">
                     <li class="" role="presentation">
-                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" 
-                        type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
-                        <i class="fa-solid fa-house"></i>後臺首頁</button>
+                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
+                            type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
+                            <i class="fa-solid fa-house"></i> 後臺首頁</button>
                     </li>
                     <li class="" role="presentation">
-                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#data" 
-                        type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
-                        <i class="fa-solid fa-gauge-high"></i>  數據中心</button>
+                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#data"
+                            type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
+                            <i class="fa-solid fa-gauge-high"></i> 數據中心</button>
                     </li>
                     <li class="" role="presentation">
-                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#products" 
-                        type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">
-                        <i class="fa-solid fa-list"></i>  商品管理</button>
+                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#products"
+                            type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">
+                            <i class="fa-solid fa-list"></i> 商品管理</button>
                     </li>
                     <li class="" role="presentation">
-                        <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#discount" 
-                        type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">
-                        <i class="fa-solid fa-tags"></i>  優惠管理</button>
+                        <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#discount"
+                            type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">
+                            <i class="fa-solid fa-tags"></i> 優惠管理</button>
                     </li>
                 </ul>
             </div>
-            <div class="col-10 container-fluid my-5">
-                <div class="tab-content MainArea" id="myTabContent">
-                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" tabindex="0">            
-                        <div class="container-fluid p-5">
-                            <h3>後臺首頁</h3>
-                            <hr>
-                            <div class="data py-4">
-                                <h3>本月累計數據</h3>
-                                <div class="dataarea row-cols-4">
-                                    <div class="datadetail p-4"><h2>100</h2><h5>當月營業額</h5></div>
-                                    <div class="datadetail p-4"><h2>10</h2><h5>當月來客量</h5></div>
-                                    <div class="datadetail p-4"><h2>1</h2><h5>新增會員數</h5></div>
-                                    <div class="datadetail p-4"><h2>5/5</h2><h5>當前評價</h5></div>                    
+            <div class="col-10 scrollregion">
+                <div class="container-fluid my-5">
+                    <div class="tab-content MainArea" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"
+                            tabindex="0">
+                            <div class="container-fluid p-5">
+                                <h3>後臺首頁</h3>
+                                <hr>
+                                <div class="data py-4">
+                                    <h3>本月累計數據</h3>
+                                    <div class="dataarea row-cols-4">
+                                        <div class="datadetail p-4">
+                                            <h2>100</h2>
+                                            <h5>當月營業額</h5>
+                                        </div>
+                                        <div class="datadetail p-4">
+                                            <h2>10</h2>
+                                            <h5>當月來客量</h5>
+                                        </div>
+                                        <div class="datadetail p-4">
+                                            <h2>1</h2>
+                                            <h5>新增會員數</h5>
+                                        </div>
+                                        <div class="datadetail p-4">
+                                            <h2>5/5</h2>
+                                            <h5>當前評價</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="data py-4">
+                                    <div class="spacebetween row-cols-2 mb-3">
+                                        <h3>營運總覽</h3>
+                                        <select class="form-select" name="mark" id="mark">
+                                            <option value="days">近七日</option>
+                                            <option value="month">近一個月</option>
+                                            <option value="season">近一季</option>
+                                            <option value="year">近一年</option>
+                                        </select>
+                                    </div>
+                                    <div class="dataarea row-cols-4">
+                                        <div class="datadetail p-4">
+                                            <h2>100</h2>
+                                            <h5>營業額</h5>
+                                        </div>
+                                        <div class="datadetail p-4">
+                                            <h2>10</h2>
+                                            <h5>來客量</h5>
+                                        </div>
+                                        <div class="datadetail p-4">
+                                            <h2>1</h2>
+                                            <h5>會員數</h5>
+                                        </div>
+                                        <div class="datadetail p-4">
+                                            <h2>5/5</h2>
+                                            <h5>評價</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="data py-4">
+                                    <h3>熱賣商品</h3>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>排序</th>
+                                                <th>商品照片</th>
+                                                <th>商品名稱</th>
+                                                <th>銷售件數</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td><img src="Images/Cocktails/bloodymary.jpeg" alt=""></td>
+                                                <td>bloodymary</td>
+                                                <td>15</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td><img src="Images/Cocktails/highball.jpg" alt=""></td>
+                                                <td>highball</td>
+                                                <td>10</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td><img src="Images/Cocktails/junglebird.jpg" alt=""></td>
+                                                <td>junglebird</td>
+                                                <td>5</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <div class="data py-4">
-                                <div class="spacebetween row-cols-2 mb-3">
-                                    <h3>營運總覽</h3>
-                                    <select class="form-select" name="mark" id="mark">
-                                        <option value="days">近七日</option>
-                                        <option value="month">近一個月</option>
-                                        <option value="season">近一季</option>
-                                        <option value="year">近一年</option>
-                                    </select>
-                                </div>
-                                <div class="dataarea row-cols-4">
-                                    <div class="datadetail p-4"><h2>100</h2><h5>營業額</h5></div>
-                                    <div class="datadetail p-4"><h2>10</h2><h5>來客量</h5></div>
-                                    <div class="datadetail p-4"><h2>1</h2><h5>會員數</h5></div>
-                                    <div class="datadetail p-4"><h2>5/5</h2><h5>評價</h5></div>                    
-                                </div>
-                            </div> 
-                            <div class="data py-4">
-                                <h3>熱賣商品</h3>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>排序</th>
-                                            <th>商品照片</th>
-                                            <th>商品名稱</th>
-                                            <th>銷售件數</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td><img src="Images/Cocktails/bloodymary.jpeg" alt=""></td>
-                                            <td>bloodymary</td>
-                                            <td>15</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td><img src="Images/Cocktails/highball.jpg" alt=""></td>
-                                            <td>highball</td>
-                                            <td>10</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td><img src="Images/Cocktails/junglebird.jpg" alt=""></td>
-                                            <td>junglebird</td>
-                                            <td>5</td>
-                                        </tr>
-                                    </tbody>
-                                </table>                  
-                            </div>      
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="data" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                        <div class="datacenter container-fluid p-5">
-                            <h3>數據中心</h3>
-                            <hr>
-                            <ul class="nav  mb-0" id="pills-tab" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill"
-                                        data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-home"
-                                        aria-selected="true">關鍵指標</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill"
-                                        data-bs-target="#pills-2" type="button" role="tab" aria-controls="pills-profile"
-                                        aria-selected="false">訂單數據</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill"
-                                        data-bs-target="#pills-3" type="button" role="tab" aria-controls="pills-contact"
-                                        aria-selected="false">優惠折抵成效</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill"
-                                        data-bs-target="#pills-4" type="button" role="tab"
-                                        aria-controls="pills-disabled" aria-selected="false">商品數據</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill"
-                                        data-bs-target="#pills-5" type="button" role="tab"
-                                        aria-controls="pills-disabled" aria-selected="false">來客數量</button>
-                                </li>
-                            </ul>                             
-                            <div class="tab-content" id="pills-tabContent">
-                                <div class="tab-pane fade show active" id="pills-1" role="tabpanel"
-                                    aria-labelledby="pills-home-tab" tabindex="0">
-                                    <div class="info">
-                                        <div class="tabtop">
-                                            <div class="spacebetween row-cols-2 mb-3">
-                                                <h3>關鍵指標</h3>
-                                                <select class="form-select" name="mark" id="mark">
-                                                    <option value="days">近七日</option>
-                                                    <option value="month">近一個月</option>
-                                                    <option value ="season">近一季</option>
-                                                    <option value="year">近一年</option>
-                                                </select>
+                        <div class="tab-pane fade" id="data" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                            <div class="datacenter container-fluid p-5">
+                                <h3>數據中心</h3>
+                                <hr>
+                                <ul class="nav  mb-0" id="pills-tab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill"
+                                            data-bs-target="#pills-1" type="button" role="tab"
+                                            aria-controls="pills-home" aria-selected="true">關鍵指標</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill"
+                                            data-bs-target="#pills-2" type="button" role="tab"
+                                            aria-controls="pills-profile" aria-selected="false">訂單數據</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill"
+                                            data-bs-target="#pills-3" type="button" role="tab"
+                                            aria-controls="pills-contact" aria-selected="false">優惠折抵成效</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill"
+                                            data-bs-target="#pills-4" type="button" role="tab"
+                                            aria-controls="pills-disabled" aria-selected="false">商品數據</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill"
+                                            data-bs-target="#pills-5" type="button" role="tab"
+                                            aria-controls="pills-disabled" aria-selected="false">來客數量</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="pills-tabContent">
+                                    <div class="tab-pane fade show active" id="pills-1" role="tabpanel"
+                                        aria-labelledby="pills-home-tab" tabindex="0">
+                                        <div class="info">
+                                            <div class="tabtop">
+                                                <div class="spacebetween row-cols-2 mb-3">
+                                                    <h3>關鍵指標</h3>
+                                                    <select class="form-select" name="mark" id="mark">
+                                                        <option value="days">近七日</option>
+                                                        <option value="month">近一個月</option>
+                                                        <option value="season">近一季</option>
+                                                        <option value="year">近一年</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="keymark row-cols-5">
-                                            <div class="keymarkdetail p-4"><h5>來客數</h5><h2>888</h2><p>0.00%</p></div>
-                                            <div class="keymarkdetail p-4"><h5>訂單數</h5><h2>888</h2><p>0.00%</p></div>
-                                            <div class="keymarkdetail p-4"><h5>總營業額</h5><h2>888</h2><p>0.00%</p></div>
-                                            <div class="keymarkdetail p-4"><h5>訂單平均金額</h5><h2>888</h2><p>0.00%</p></div> 
-                                            <div class="keymarkdetail p-4"><h5>會員數</h5><h2>888</h2><p>0.00%</p></div>                    
-                                        </div>
-                                        <br>
-                                        <div class="chart">
-                                            <canvas id="myChart" width="400" height="200"></canvas>
-                                        </div>                               
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="pills-2" role="tabpanel"
-                                    aria-labelledby="pills-profile-tab" tabindex="0">
-                                    <div class="info">
-                                        <div class="tabtop">
-                                            <div class="spacebetween row-cols-2 mb-3">
-                                                <h3>訂單數據</h3>
-                                                <select class="form-select" name="mark" id="mark">
-                                                    <option value="days">近七日</option>
-                                                    <option value="month">近一個月</option>
-                                                    <option value ="season">近一季</option>
-                                                    <option value="year">近一年</option>
-                                                </select>
+                                            <div class="keymark row-cols-5">
+                                                <div class="keymarkdetail p-4">
+                                                    <h5>來客數</h5>
+                                                    <h2>888</h2>
+                                                    <p>0.00%</p>
+                                                </div>
+                                                <div class="keymarkdetail p-4">
+                                                    <h5>訂單數</h5>
+                                                    <h2>888</h2>
+                                                    <p>0.00%</p>
+                                                </div>
+                                                <div class="keymarkdetail p-4">
+                                                    <h5>總營業額</h5>
+                                                    <h2>888</h2>
+                                                    <p>0.00%</p>
+                                                </div>
+                                                <div class="keymarkdetail p-4">
+                                                    <h5>訂單平均金額</h5>
+                                                    <h2>888</h2>
+                                                    <p>0.00%</p>
+                                                </div>
+                                                <div class="keymarkdetail p-4">
+                                                    <h5>會員數</h5>
+                                                    <h2>888</h2>
+                                                    <p>0.00%</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="orders">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>訂單數</th>
-                                                        <th>訂單總金額</th>
-                                                        <th>訂單平均金額</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>春</td>
-                                                        <td>3</td>
-                                                        <td>1000</td>
-                                                        <td>333</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>春</td>
-                                                        <td>3</td>
-                                                        <td>1000</td>
-                                                        <td>333</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>春</td>
-                                                        <td>3</td>
-                                                        <td>1000</td>
-                                                        <td>333</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>春</td>
-                                                        <td>3</td>
-                                                        <td>1000</td>
-                                                        <td>333</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            <br>
+                                            <div class="chart">
+                                                <canvas id="myChart" width="400" height="200"></canvas>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="tab-pane fade" id="pills-3" role="tabpanel"
-                                    aria-labelledby="pills-contact-tab" tabindex="0">
-                                    <div class="info">
-                                        <div class="tabtop">
-                                            <div class="spacebetween row-cols-2 mb-3">
-                                                <h3>優惠折抵成效</h3>
-                                                <select class="form-select" name="mark" id="mark">
-                                                    <option value="days">近七日</option>
-                                                    <option value="month">近一個月</option>
-                                                    <option value ="season">近一季</option>
-                                                    <option value="year">近一年</option>
-                                                </select>
+                                    <div class="tab-pane fade" id="pills-2" role="tabpanel"
+                                        aria-labelledby="pills-profile-tab" tabindex="0">
+                                        <div class="info">
+                                            <div class="tabtop">
+                                                <div class="spacebetween row-cols-2 mb-3">
+                                                    <h3>訂單數據</h3>
+                                                    <select class="form-select" name="mark" id="mark">
+                                                        <option value="days">近七日</option>
+                                                        <option value="month">近一個月</option>
+                                                        <option value="season">近一季</option>
+                                                        <option value="year">近一年</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="discount row-cols-3">
-                                            <div class="p-4"><h5>含優惠訂單-訂單數</h5><h2>0</h2><p>100%</p></div>
-                                            <div class="p-4"><h5>含優惠訂單-訂單總金額</h5><h2>0</h2><p>100%</p></div>
-                                            <div class="p-4"><h5>含優惠訂單-訂單平均金額</h5><h2>0</h2><p>100%</p></div>
-                                        </div>
-                                        <br>
-                                        <div class="undiscount row-cols-3">
-                                            <div class="p-4"><h5>不含優惠訂單-訂單數</h5><h2>0</h2><p>100%</p></div>
-                                            <div class="p-4"><h5>不含優惠訂單-訂單總金額</h5><h2>0</h2><p>100%</p></div>
-                                            <div class="p-4"><h5>不含優惠訂單-訂單平均金額</h5><h2>0</h2><p>100%</p></div>
+                                            <div class="orders">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th>訂單數</th>
+                                                            <th>訂單總金額</th>
+                                                            <th>訂單平均金額</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>春</td>
+                                                            <td>3</td>
+                                                            <td>1000</td>
+                                                            <td>333</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>春</td>
+                                                            <td>3</td>
+                                                            <td>1000</td>
+                                                            <td>333</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>春</td>
+                                                            <td>3</td>
+                                                            <td>1000</td>
+                                                            <td>333</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>春</td>
+                                                            <td>3</td>
+                                                            <td>1000</td>
+                                                            <td>333</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="tab-pane fade" id="pills-4" role="tabpanel"
-                                    aria-labelledby="pills-disabled-tab" tabindex="0">
-                                    <div class="info">
-                                        <div class="tabtop">
-                                            <div class="spacebetween row-cols-2 mb-3">
-                                                <h3>商品數據</h3>
-                                                <select class="form-select" name="mark" id="mark">
-                                                    <option value="days">近七日</option>
-                                                    <option value="month">近一個月</option>
-                                                    <option value ="season">近一季</option>
-                                                    <option value="year">近一年</option>
-                                                </select>
+                                    <div class="tab-pane fade" id="pills-3" role="tabpanel"
+                                        aria-labelledby="pills-contact-tab" tabindex="0">
+                                        <div class="info">
+                                            <div class="tabtop">
+                                                <div class="spacebetween row-cols-2 mb-3">
+                                                    <h3>優惠折抵成效</h3>
+                                                    <select class="form-select" name="mark" id="mark">
+                                                        <option value="days">近七日</option>
+                                                        <option value="month">近一個月</option>
+                                                        <option value="season">近一季</option>
+                                                        <option value="year">近一年</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="discount row-cols-3">
+                                                <div class="p-4">
+                                                    <h5>含優惠訂單-訂單數</h5>
+                                                    <h2>0</h2>
+                                                    <p>100%</p>
+                                                </div>
+                                                <div class="p-4">
+                                                    <h5>含優惠訂單-訂單總金額</h5>
+                                                    <h2>0</h2>
+                                                    <p>100%</p>
+                                                </div>
+                                                <div class="p-4">
+                                                    <h5>含優惠訂單-訂單平均金額</h5>
+                                                    <h2>0</h2>
+                                                    <p>100%</p>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="undiscount row-cols-3">
+                                                <div class="p-4">
+                                                    <h5>不含優惠訂單-訂單數</h5>
+                                                    <h2>0</h2>
+                                                    <p>100%</p>
+                                                </div>
+                                                <div class="p-4">
+                                                    <h5>不含優惠訂單-訂單總金額</h5>
+                                                    <h2>0</h2>
+                                                    <p>100%</p>
+                                                </div>
+                                                <div class="p-4">
+                                                    <h5>不含優惠訂單-訂單平均金額</h5>
+                                                    <h2>0</h2>
+                                                    <p>100%</p>
+                                                </div>
                                             </div>
                                         </div>
-                                        <!-- <br>
+                                    </div>
+                                    <div class="tab-pane fade" id="pills-4" role="tabpanel"
+                                        aria-labelledby="pills-disabled-tab" tabindex="0">
+                                        <div class="info">
+                                            <div class="tabtop">
+                                                <div class="spacebetween row-cols-2 mb-3">
+                                                    <h3>商品數據</h3>
+                                                    <select class="form-select" name="mark" id="mark">
+                                                        <option value="days">近七日</option>
+                                                        <option value="month">近一個月</option>
+                                                        <option value="season">近一季</option>
+                                                        <option value="year">近一年</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!-- <br>
                                         <div class="products">
                                             <ul class="nav">
                                                 <li class="nav-item">
@@ -495,205 +616,244 @@
                                             </ul>
                                             <hr class="mt-0">
                                         </div> -->
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="tab-pane fade" id="pills-5" role="tabpanel"
-                                    aria-labelledby="pills-disabled-tab" tabindex="0">
-                                    <div class="info">
-                                        <div class="tabtop">
-                                            <div class="spacebetween row-cols-2 mb-3">
-                                                <h3>來客數量</h3>
-                                                <select class="form-select" name="mark" id="mark">
-                                                    <option value="days">近七日</option>
-                                                    <option value="month">近一個月</option>
-                                                    <option value ="season">近一季</option>
-                                                    <option value="year">近一年</option>
-                                                </select>
+                                    <div class="tab-pane fade" id="pills-5" role="tabpanel"
+                                        aria-labelledby="pills-disabled-tab" tabindex="0">
+                                        <div class="info">
+                                            <div class="tabtop">
+                                                <div class="spacebetween row-cols-2 mb-3">
+                                                    <h3>來客數量</h3>
+                                                    <select class="form-select" name="mark" id="mark">
+                                                        <option value="days">近七日</option>
+                                                        <option value="month">近一個月</option>
+                                                        <option value="season">近一季</option>
+                                                        <option value="year">近一年</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="products" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-                        <div class="productmanage container-fluid p-5">
-                            <div class="spacebetween row-cols-2 mb-3">
-                                <h3>商品管理</h3>        
-                                <button type="button" class="addbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                    <i class="fa-sharp fa-solid fa-plus"></i> 新增商品
-                                </button>  
+                        <div class="tab-pane fade" id="products" role="tabpanel" aria-labelledby="contact-tab"
+                            tabindex="0">
+                            <div class="productmanage container-fluid p-5">
+                                <div class="spacebetween row-cols-2 mb-3">
+                                    <h3>商品管理</h3>
+                                    <button type="button" class="addbtn" data-bs-toggle="modal"
+                                        data-bs-target="#staticBackdrop">
+                                        <i class="fa-sharp fa-solid fa-plus"></i> 新增商品
+                                    </button>
+                                </div>
+                                <hr>
+                                <div class="products">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" colspan="2">商品內容</th>
+                                                <th scope="col">售價</th>
+                                                <th scope="col">成本</th>
+                                                <th scope="col">庫存</th>
+                                                <th scope="col">叫貨時長</th>
+                                                <th scope="col">刪除 編輯</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row"><img src="Images/Cocktails/bloodymary.jpeg" alt=""></th>
+                                                <td>bloodymary</td>
+                                                <td>300</td>
+                                                <td>100</td>
+                                                <td>80</td>
+                                                <td>2 month</td>
+                                                <td>
+                                                    <button class="btnproducts"><i
+                                                            class="fa-solid fa-trash"></i></button>
+                                                    <button class="btnproducts"><i
+                                                            class="fa-solid fa-pen-to-square"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><img src="Images/Cocktails/highball.jpg" alt=""></th>
+                                                <td>highball</td>
+                                                <td>300</td>
+                                                <td>100</td>
+                                                <td>80</td>
+                                                <td>2 month</td>
+                                                <td>
+                                                    <button class="btnproducts"><i
+                                                            class="fa-solid fa-trash"></i></button>
+                                                    <button class="btnproducts"><i
+                                                            class="fa-solid fa-pen-to-square"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><img src="Images/Cocktails/junglebird.jpg" alt=""></th>
+                                                <td>junglebird</td>
+                                                <td>300</td>
+                                                <td>100</td>
+                                                <td>80</td>
+                                                <td>2 month</td>
+                                                <td>
+                                                    <button class="btnproducts"><i
+                                                            class="fa-solid fa-trash"></i></button>
+                                                    <button class="btnproducts"><i
+                                                            class="fa-solid fa-pen-to-square"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="addproduct container-fluid py-4">
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h3 class="modal-title" id="staticBackdropLabel">新增商品</h3>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body container productAdding">
+                                                    <label for="productPic">圖片：<img src="" alt=""></label><input
+                                                        type="file" id="productPic" class="w-50">
+                                                    <label for="productName">商品名稱：</label><input type="text"
+                                                        id="productName" class="w-100">
+                                                    <label for="productPrice">商品售價：</label><input type="text"
+                                                        id="productPrice" class="w-100">
+                                                    <label for="productCost">商品成本：</label><input type="text"
+                                                        id="productCost" class="w-100">
+                                                    <label for="productInstock">商品庫存量：</label><input type="text"
+                                                        id="productInstock" class="w-100">
+                                                    <label for="productShip">叫貨時長：</label><input type="text"
+                                                        id="productShip" class="w-100">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <div class="row m-0">
+                                                        <button class=" col btneaddcancel m-1" type="button"
+                                                            data-bs-dismiss="modal"><i
+                                                                class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                                                        <button class=" col btneditproducts m-1" type="button"><i
+                                                                class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <hr>
-                            <div class="products">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col" colspan="2">商品內容</th>
-                                        <th scope="col">售價</th>
-                                        <th scope="col">成本</th>
-                                        <th scope="col">庫存</th>
-                                        <th scope="col">叫貨時長</th>
-                                        <th scope="col">刪除 編輯</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <th scope="row"><img src="Images/Cocktails/bloodymary.jpeg" alt=""></th>
-                                        <td>bloodymary</td>
-                                        <td>300</td>
-                                        <td>100</td>
-                                        <td>80</td>
-                                        <td>2 month</td>
-                                        <td>
-                                            <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
-                                            <button class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><img src="Images/Cocktails/highball.jpg" alt=""></th>
-                                        <td>highball</td>
-                                        <td>300</td>
-                                        <td>100</td>
-                                        <td>80</td>
-                                        <td>2 month</td>
-                                        <td>
-                                            <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
-                                            <button class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><img src="Images/Cocktails/junglebird.jpg" alt=""></th>
-                                        <td>junglebird</td>
-                                        <td>300</td>
-                                        <td>100</td>
-                                        <td>80</td>
-                                        <td>2 month</td>
-                                        <td>
-                                            <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
-                                            <button class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="addproduct container-fluid py-4">
+                        </div>
+                        <div class="tab-pane fade" id="discount" role="tabpanel" aria-labelledby="disabled-tab"
+                            tabindex="0">
+                            <div class="discountmanage container-fluid p-5">
+                                <div class="spacebetween row-cols-2 mb-3">
+                                    <h3>優惠管理</h3>
+                                    <button type="button" class="addbtn" data-bs-toggle="modal"
+                                        data-bs-target="#discountBackdrop">
+                                        <i class="fa-sharp fa-solid fa-plus"></i> 新增商品優惠
+                                    </button>
+                                </div>
+                                <hr>
+                                <div class="discountmanage">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" colspan="2">優惠名稱</th>
+                                                <th scope="col">折扣率</th>
+                                                <th scope="col">適用資格</th>
+                                                <th scope="col">適用品項</th>
+                                                <th scope="col">期限</th>
+                                                <th scope="col">刪除 編輯</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row"><img src="Images/Cocktails/bloodymary.jpeg" alt=""></th>
+                                                <td>bloodymary</td>
+                                                <td>0.8</td>
+                                                <td>All</td>
+                                                <td>經典</td>
+                                                <td>2022/02/30當日</td>
+                                                <td>
+                                                    <button class="btnproducts"><i
+                                                            class="fa-solid fa-trash"></i></button>
+                                                    <button class="btnproducts icon"><i
+                                                            class="fa-solid fa-pen-to-square"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><img src="Images/Cocktails/highball.jpg" alt=""></th>
+                                                <td>highball</td>
+                                                <td>0.8</td>
+                                                <td>All</td>
+                                                <td>經典</td>
+                                                <td>2022/02/30當日</td>
+                                                <td>
+                                                    <button class="btnproducts"><i
+                                                            class="fa-solid fa-trash"></i></button>
+                                                    <button class="btnproducts icon"><i
+                                                            class="fa-solid fa-pen-to-square"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><img src="Images/Cocktails/junglebird.jpg" alt=""></th>
+                                                <td>junglebird</td>
+                                                <td>0.8</td>
+                                                <td>All</td>
+                                                <td>經典</td>
+                                                <td>2022/02/30當日</td>
+                                                <td>
+                                                    <button class="btnproducts"><i
+                                                            class="fa-solid fa-trash"></i></button>
+                                                    <button class="btnproducts icon"><i
+                                                            class="fa-solid fa-pen-to-square"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <!-- Modal -->
-                                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                                <div class="modal fade" id="discountBackdrop" data-bs-backdrop="static"
                                     data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
                                     aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h3 class="modal-title" id="staticBackdropLabel">新增商品</h3>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                <h3 class="modal-title" id="staticBackdropLabel">新增優惠</h3>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body container productAdding">
-                                                <label for="productPic">圖片：<img src="" alt=""></label><input type="file" id="productPic" class="w-50">
-                                                <label for="productName">商品名稱：</label><input type="text" id="productName" class="w-100">
-                                                <label for="productPrice">商品售價：</label><input type="text" id="productPrice" class="w-100">
-                                                <label for="productCost">商品成本：</label><input type="text" id="productCost" class="w-100">
-                                                <label for="productInstock">商品庫存量：</label><input type="text" id="productInstock" class="w-100">
-                                                <label for="productShip">叫貨時長：</label><input type="text" id="productShip" class="w-100">
+                                                <label for="discountPic">圖片：<img src="" alt=""></label><input
+                                                    type="file" id="discountPic" class="w-50">
+                                                <label for="discountName">名稱：</label><input type="text"
+                                                    id="discountName" class="w-50">
+                                                <label for="discountPrice">折扣率：</label><input type="text"
+                                                    id="discountPrice" class="w-50">
+                                                <label for="discountCost">適用資格：</label><input type="text"
+                                                    id="discountCost" class="w-50">
+                                                <label for="discountInstock">適用品項：</label><input type="text"
+                                                    id="discountInstock" class="w-50">
+                                                <label for="discountShip">期限：</label><input type="text"
+                                                    id="discountShip" class="w-50">
                                             </div>
                                             <div class="modal-footer">
                                                 <div class="row m-0">
-                                                    <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
-                                                    <button class=" col btneditproducts m-1" type="button"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
-                                                </div>                                            
+                                                    <button class=" col btneaddcancel m-1" type="button"
+                                                        data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i>
+                                                        離開編輯</button>
+                                                    <button class=" col btneditproducts m-1" type="button"><i
+                                                            class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="discount" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">
-                        <div class="discountmanage container-fluid p-5">
-                            <div class="spacebetween row-cols-2 mb-3">
-                                <h3>優惠管理</h3>
-                                <button type="button" class="addbtn" data-bs-toggle="modal" data-bs-target="#discountBackdrop">
-                                    <i class="fa-sharp fa-solid fa-plus"></i> 新增商品優惠
-                                </button>
-                            </div>
-                            <hr>
-                            <div class="discountmanage">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" colspan="2">優惠名稱</th>
-                                            <th scope="col">折扣率</th>
-                                            <th scope="col">適用資格</th>
-                                            <th scope="col">適用品項</th>
-                                            <th scope="col">期限</th>
-                                            <th scope="col">刪除 編輯</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row"><img src="Images/Cocktails/bloodymary.jpeg" alt=""></th>
-                                            <td>bloodymary</td>
-                                            <td>0.8</td>
-                                            <td>All</td>
-                                            <td>經典</td>
-                                            <td>2022/02/30當日</td>
-                                            <td>
-                                                <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
-                                                <button class="btnproducts icon"><i class="fa-solid fa-pen-to-square"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><img src="Images/Cocktails/highball.jpg" alt=""></th>
-                                            <td>highball</td>
-                                            <td>0.8</td>
-                                            <td>All</td>
-                                            <td>經典</td>
-                                            <td>2022/02/30當日</td>
-                                            <td>
-                                                <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
-                                                <button class="btnproducts icon"><i class="fa-solid fa-pen-to-square"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><img src="Images/Cocktails/junglebird.jpg" alt=""></th>
-                                            <td>junglebird</td>
-                                            <td>0.8</td>
-                                            <td>All</td>
-                                            <td>經典</td>
-                                            <td>2022/02/30當日</td>
-                                            <td>
-                                                <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
-                                                <button class="btnproducts icon"><i class="fa-solid fa-pen-to-square"></i></button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- Modal -->
-                            <div class="modal fade" id="discountBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h3 class="modal-title" id="staticBackdropLabel">新增優惠</h3>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body container productAdding">
-                                            <label for="discountPic">圖片：<img src="" alt=""></label><input type="file" id="discountPic" class="w-50">
-                                            <label for="discountName">名稱：</label><input type="text" id="discountName" class="w-50">
-                                            <label for="discountPrice">折扣率：</label><input type="text" id="discountPrice" class="w-50">
-                                            <label for="discountCost">適用資格：</label><input type="text" id="discountCost" class="w-50">
-                                            <label for="discountInstock">適用品項：</label><input type="text" id="discountInstock" class="w-50">
-                                            <label for="discountShip">期限：</label><input type="text" id="discountShip" class="w-50">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <div class="row m-0">
-                                                <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
-                                                <button class=" col btneditproducts m-1" type="button"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>                    
                         </div>
                     </div>
                 </div>
