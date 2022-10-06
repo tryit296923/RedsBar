@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<MailService>();
+builder.Services.AddRazorTemplating();
 
 builder.Services.AddDbContext<db_a8de26_projectContext>(option =>
 {

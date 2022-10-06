@@ -1,13 +1,16 @@
 ﻿using Alcoholic.Models.ViewModels;
+using Alcoholic.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Alcoholic.Controllers
 {
     public class BookingController : Controller
     {
-        public BookingController()
-        {
+        private readonly MailService mailService;
 
+        public BookingController(MailService mailService)
+        {
+            this.mailService = mailService;
         }
         public IActionResult Index()
         {
@@ -19,9 +22,11 @@ namespace Alcoholic.Controllers
             ViewBag.People = people;
             return View();
         }
-        public IActionResult Success(BookingSuccessViewModels data)
+        public async Task<IActionResult> Success(BookingSuccessViewModels data)
         {
-            
+            var result = await Razor.Templating.Core.RazorTemplateEngine.RenderAsync<BookingSuccessViewModels>("Views/EmailTemplate/BookingTemplate.cshtml",data);
+            mailService.SendMail(data.Email,result,"感謝您的訂位");
+
             return View(data);
         }
 
