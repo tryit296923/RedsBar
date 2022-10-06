@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="bootstrap/bootstrap.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10"></script>
 
     <title>線上訂位</title>
@@ -58,7 +58,6 @@
             height: 38px;
             border: 1px solid #ced4da;
             border-radius: 0.375rem;
-            background-color: #D8CDB9;
             padding: 6px 12px 6px 12px;
         }
         .people-member:focus{
@@ -195,7 +194,7 @@
     <!--Navbar-->
     <nav class="navbar navbar-expand-lg ">
         <div class="container-fluid">
-            <img src="/Images/icons/logo-w.png" alt="" class="logo">
+            <img src="Images/icons/logo-w.png" alt="" class="logo">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -205,7 +204,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <form class="searcharea2 search" role="search">
                         <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                        <a href=""><img src="/Images/icons/search.png" alt=""></a>
+                        <a href=""><img src="Images/icons/search.png" alt=""></a>
                     </form>
                     <li class="nav-item">
                         <a class="nav-link" href="#">推薦</a>
@@ -222,7 +221,7 @@
                 </ul>
                 <form class="d-flex searcharea search" role="search">
                     <input class=" form-control" type="search" placeholder="Search" aria-label="Search">
-                    <a href=""><img src="/Images/icons/search.png" alt=""></a>
+                    <a href=""><img src="Images/icons/search.png" alt=""></a>
                 </form>
             </div>
         </div>
@@ -243,7 +242,7 @@
     <div class="backcolor">
         <div class="container">
             <div class="img-box">
-                <img src="/Images/BackGround/bookingbanner.jpg" />
+                <img src="Images/BackGround/bookingbanner.jpg" />
             </div>
         </div>
     </div>
@@ -281,13 +280,13 @@
                 <hr class="d-xl-none">
                 <div class="map-item">
                     <p>Address</p>
-                    <img src="/Images/icons/icon01.png" alt="" class="icon">
+                    <img src="Images/icons/icon01.png" alt="" class="icon">
                     <a href="https://goo.gl/maps/VARMRkiZqDQLhgWbA">100 台北市中正區濟南路一段321號</a>
                 </div>
                 <hr>
                 <div class="map-item">
                     <p>Phone</p>
-                    <img src="/Images/icons/phonering.png" alt="" class="icon">
+                    <img src="Images/icons/phonering.png" alt="" class="icon">
                     <a href="tel:0233221368">02 3322 1368</a>
                 </div>
                 <hr>
@@ -337,7 +336,7 @@
                     <button class="booking-check-people">請選擇用餐人數</button>
                 </template>
                 <template v-else>
-                    <button class="booking-check-people">{{people[selectpeople].txt}}</button>
+                    <button class="booking-check-people">{{people[selectpeople-1].txt}}</button>
                 </template>
             </p>
         </div>
@@ -346,14 +345,14 @@
                 <a class="col-12 booking-uncheck-btn" type="button">請選擇用餐日期與人數</a>
             </template>
             <template v-else>
-                <a href="/booking-check.html" class="col-12 booking-check-btn" type="button">下一步，填寫聯絡資訊</a>
+                <a href="booking-check.html" class="col-12 booking-check-btn" type="button">下一步，填寫聯絡資訊</a>
             </template>
         </div>
     </div>
     </div>
 
     <!--JS-->
-    <script src="/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="bootstrap/bootstrap.bundle.min.js"></script>
     <script>
         var app = new Vue({
             el: '#d1',
@@ -465,7 +464,7 @@
             var marker = new google.maps.Marker(
                 {
                     position: mapProp.center,
-                    icon: "/Images/icons/icon01.png",
+                    icon: "Images/icons/icon01.png",
                     animation: google.maps.Animation.BOUNCE
                 });
             marker.setMap(map);
