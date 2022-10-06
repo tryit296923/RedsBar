@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/bootstrap/bootstrap.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10"></script>
+
+    <title>線上訂位</title>
+    <style type="text/css">
+        body {
+            color: aliceblue;
+            background-color: #222220;
+        }
+
+        .img-box {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .img-box img {
+            padding: 20px 0;
+            height: 80%;
+            width: 80%;
+        }
+
+        a {
+            color: aliceblue;
+            text-decoration: none;
+        }
+
+        .search {
+            height: 38px;
+            margin: 10px;
+            position: relative;
+        }
+
+        .search img {
+            height: 20px;
+            width: 20px;
+            position: absolute;
+            top: 9px;
+            right: 9px;
+        }
+
+        .breadcrumb a {
+            color: #444;
+        }
+
+        .check-area {
+            padding-top: 20px;
+        }
+
+        .datepicker {
+            width: 100%;
+            height: 38px;
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+            background-color: #D8CDB9;
+            padding: 6px 12px 6px 12px;
+        }
+        .people-member:focus{
+            background-color: #D8CDB9;
+        }
+        .open-hours {
+            text-align: left;
+        }
+        .open-hours-bold{
+            font-weight: bold;
+            background-color: #721B29;
+            color: white;
+        }
+        .map-text {
+            padding: 10px 12px 10px 12px;
+        }
+
+        .icon {
+            height: 25px;
+            padding: 0 10px 5px 10px;
+        }
+
+        .booking-check {
+            border-top: 1px solid #D8CDB9;
+            background-color: #222220;
+            height: 100px;
+            width: 100%;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .booking-check div {
+            height: 50px;
+        }
+
+        .booking-check-text {
+            margin: 0;
+            padding: 10px 0px 0px 5px;
+            color: white;
+            vertical-align: middle;
+        }
+
+        .booking-check-date,
+        .booking-check-people {
+            border: 0;
+            border-radius: 5px;
+            background-color: #D8CDB9;
+            height: 28px;
+            
+        }
+
+        .booking-check-btn,.booking-uncheck-btn {
+            padding: 7px;
+            border-radius: 5px;
+            color: white;
+            text-align: center;
+        }
+
+        .booking-check-btn {
+            background-color: #721B29;
+        }
+
+        .booking-uncheck-btn {
+            background-color: gray;
+        }
+
+        .booking-uncheck-btn:hover{
+            color: white;
+        }
+        
+        .logo{
+            width: 50px;
+            margin-right: 20px;
+        }
+        .navbar {
+            background-color: #721B29;
+        }
+
+        .navbar-brand {
+            color: white;
+        }
+
+        .nav-link {
+            color: white;
+        }
+
+        .breadcrumb {
+            margin-bottom: 0;
+            height: 30px;
+        }
+
+        .path {
+            background-color: #D8CDB9;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .searcharea2 {
+            display: none;
+        }
+
+        footer {
+            background-color: #D8CDB9;
+            margin-top: 40px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        footer a {
+            color: #666;
+        }
+
+        .footleft,
+        .footright {
+            margin: auto;
+            padding: 20px 10px 10px 10px;
+            width: 50%;
+        }
+
+        @media screen and (max-width: 992px) {
+            .searcharea {
+                display: none !important;
+            }
+
+            .searcharea2 {
+                display: block;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg ">
+        <div class="container-fluid">
+            <img src="/Images/icons/logo-w.png" alt="" class="logo">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <form class="searcharea2 search" role="search">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                        <a href=""><img src="/Images/icons/search.png" alt=""></a>
+                    </form>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">推薦</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">經典酒款</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">算命調酒</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">線上訂位</a>
+                    </li>
+                </ul>
+                <form class="d-flex searcharea search" role="search">
+                    <input class=" form-control" type="search" placeholder="Search" aria-label="Search">
+                    <a href=""><img src="/Images/icons/search.png" alt=""></a>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <!--Breadcrumb-->
+    <div class="path">
+        <div class="container">
+            <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Booking</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div id="d1">
+    <!--pic-->
+    <div class="backcolor">
+        <div class="container">
+            <div class="img-box">
+                <img src="/Images/BackGround/bookingbanner.jpg" />
+            </div>
+        </div>
+    </div>
+
+    <!--日期/人數選擇-->
+    <div class="container check-area">
+        <div class="row">
+            <div class="col-12 col-xl-6">
+                <label for="datepicker" class="col-sm-12 col-form-label">用餐日期</label>
+                <input type="date" id="datepicker" class="datepicker" placeholder="請選擇用餐日期" v-bind:min="mindate()" v-bind:max="maxdate()" v-model="datepick">
+            </div>
+            <div class="col-12 col-xl-6">
+                <label for="people" class="col-sm-12 col-form-label" >用餐人數</label>
+                <select id="people" class="form-select" v-model="selectpeople">
+                    <option value="" disabled>請選擇用餐人數</option>
+                    <template v-for="peo in people">
+                        <option :value="peo.value">{{peo.txt}}</option>
+                    </template>
+                </select>
+            </div>
+        </div>
+    </div>
+    <!--分隔線-->
+    <div class="container">
+        <hr>
+    </div>
+    <!--地圖/店家資訊-->
+    <div class="container">
+        <div class="row">
+            <h4>餐廳資訊</h4>
+            <div class="col-12 col-xl-6">
+                <div id="googleMap" style="width:100%;height:300px;"></div>
+            </div>
+            <div class="col-12 col-xl-6 map-text">
+                <hr class="d-xl-none">
+                <div class="map-item">
+                    <p>Address</p>
+                    <img src="/Images/icons/icon01.png" alt="" class="icon">
+                    <a href="https://goo.gl/maps/VARMRkiZqDQLhgWbA">100 台北市中正區濟南路一段321號</a>
+                </div>
+                <hr>
+                <div class="map-item">
+                    <p>Phone</p>
+                    <img src="/Images/icons/phonering.png" alt="" class="icon">
+                    <a href="tel:0233221368">02 3322 1368</a>
+                </div>
+                <hr>
+                <div class="map-item">
+                    <p>Opening</p>
+                    <button class="form-select open-hours" type="button" data-bs-toggle="dropdown">{{Weekday[MyDate.getDay()].name}}</button>
+                    <ul class="dropdown-menu">
+                        <li v-for="day in Weekday">
+                            <button v-bind:class="bold(day,MyDate.getDay())" class="dropdown-item" type="button">{{day.name}}</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--footer-->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="footleft col-5">
+                    <p><a href="">僅為製作範本之參考</a></p>
+                    <p><a href="">顧客意見表</a></p>
+                    <p><a href="">僅為製作範本之參考</a></p>
+                </div>
+                <div class="footright col-5">
+                    <p>訂單詢問: 0900-XXX-XXX</p>
+                    <p>客服專線: 0911-XXX-XXX</p>
+                    <p>Mail: xxx.xxx@gmail.com</p>
+                </div>
+            </div>
+        </div>
+
+    </footer>
+
+    <!--底部浮動框-->
+    <div class="booking-check">
+        <div class="container">
+            <p class="booking-check-text">選擇預定
+                <template v-if="datepick==''">
+                    <button class="booking-check-date">請選擇預定日期</button>
+                </template>
+                <template v-else>
+                    <button class="booking-check-date">{{datepick}}</button>
+                </template>
+                >
+                <template v-if="selectpeople==''">
+                    <button class="booking-check-people">請選擇用餐人數</button>
+                </template>
+                <template v-else>
+                    <button class="booking-check-people">{{people[selectpeople].txt}}</button>
+                </template>
+            </p>
+        </div>
+        <div class="container">
+            <template v-if=" datepick == '' || selectpeople =='' ">
+                <a class="col-12 booking-uncheck-btn" type="button">請選擇用餐日期與人數</a>
+            </template>
+            <template v-else>
+                <a href="/booking-check.html" class="col-12 booking-check-btn" type="button">下一步，填寫聯絡資訊</a>
+            </template>
+        </div>
+    </div>
+    </div>
+
+    <!--JS-->
+    <script src="/bootstrap/bootstrap.bundle.min.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#d1',
+            data: {
+                MyDate: new Date,
+                datepick:'',
+                selectpeople:'',
+                people:[
+                    {value:1,txt:'1位成人'},
+                    {value:2,txt:'2位成人'},
+                    {value:3,txt:'3位成人'},
+                    {value:4,txt:'4位成人'},
+                    {value:5,txt:'5位成人'},
+                    {value:6,txt:'6位成人'},
+                    {value:7,txt:'7位成人'},
+                    {value:8,txt:'8位成人'}
+                ],
+                Weekday: [
+                    {id:0,name:'星期日 18:00-00:00'},
+                    {id:1,name:'星期一 公休'},
+                    {id:2,name:'星期二 18:00-00:00'} ,
+                    {id:3,name:'星期三 18:00-00:00'},
+                    {id:4,name:'星期四 18:00-00:00'},
+                    {id:5,name:'星期五 18:00-02:00'},
+                    {id:6,name:'星期六 18:00-02:00'}
+                ],
+            },
+            methods: {
+                bold:function(day,getDay){
+                    if(day.id==getDay){
+                        return 'open-hours-bold';
+                    }
+                },
+                mindate:function(){
+                    var mindate = new Date;
+                    mindate.setDate(mindate.getDate()+1);
+                    return mindate.toJSON().substr(0,10);
+                },
+                maxdate:function(){
+                    var maxdate = new Date;
+                    maxdate.setDate(maxdate.getDate()+31);
+                    return maxdate.toJSON().substr(0,10);
+                }
+            },
+        });
+
+        function myMap() {
+            var mapProp = {
+                center: new google.maps.LatLng(25.043025219011874, 121.52522706375855),
+                zoom: 18,
+                styles: [
+                    {
+                        elementType: 'geometry', stylers: [{ color: '#242f3e' }]
+                    },
+                    {
+                        elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }]
+                    },
+                    {
+                        elementType: 'labels.text.fill', stylers: [{ color: '#746855' }]
+                    },
+                    {
+                        featureType: 'administrative.locality',
+                        elementType: 'labels.text.fill',
+                        stylers: [{ color: '#d59563' }]
+                    },
+                    {
+                        featureType: 'poi',
+                        elementType: 'labels.text.fill',
+                        stylers: [{ color: '#d59563' }]
+                    },
+                    {
+                        featureType: 'poi.park',
+                        elementType: 'geometry',
+                        stylers: [{ color: '#263c3f' }]
+                    },
+                    {
+                        featureType: 'poi.park',
+                        elementType: 'labels.text.fill',
+                        stylers: [{ color: '#6b9a76' }]
+                    },
+                    {
+                        featureType: 'road',
+                        elementType: 'geometry',
+                        stylers: [{ color: '#38414e' }]
+                    },
+                    {
+                        featureType: 'road',
+                        elementType: 'geometry.stroke',
+                        stylers: [{ color: '#212a37' }]
+                    },
+                    {
+                        featureType: 'road',
+                        elementType: 'labels.text.fill',
+                        stylers: [{ color: '#9ca5b3' }]
+                    },
+                    {
+                        featureType: 'transit',
+                        elementType: 'geometry',
+                        stylers: [{ color: '#2f3948' }]
+                    },
+                    {
+                        featureType: 'transit.station',
+                        elementType: 'labels.text.fill',
+                        stylers: [{ color: '#d59563' }]
+                    }
+                ]
+            };
+            var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+            var marker = new google.maps.Marker(
+                {
+                    position: mapProp.center,
+                    icon: "/Images/icons/icon01.png",
+                    animation: google.maps.Animation.BOUNCE
+                });
+            marker.setMap(map);
+        }
+
+    </script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVVm5mchHhBmVCsFrrXAP_ir4J3JO5xVw&callback=myMap"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>初始畫面</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background-color: #222220;
+        }
+        .logo img{
+            height: 40px;
+            margin: 8px;
+        }
+        .selectform{
+            background-color: #fff;
+            height: 240px;        
+            margin: 36% 5%;
+        }
+        .inputform{
+            padding: 50px 0 0 0;
+            text-align: center;
+        }
+        .inputform div{
+            padding: 10px;
+        }
+        .inputform input,select{
+            width: 70%;
+            height: 28px;
+            border: 1px solid #ccc;
+        }
+        .inputform input{
+            height: 24px;
+        }
+        .idenchoice{
+            display: flex;
+            justify-content: space-around;
+        }
+        .idenchoice button{
+            border: 0px;
+            border-radius: 10px;
+            box-shadow: 4px 4px 4px #666;
+            font-size: 1.5rem;
+            padding: 6px 20px;
+            margin: 12px 0 0 0;
+        }
+        .member{
+            background-color: #721B29;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <a href=""><img src="Images/logo_pre.png" alt=""></a>
+    </div>
+    <div class="selectform">
+        <form class="inputform">
+            <div class="desk">
+                <label for="desknum">桌號: </label>
+                <select name="desknum" id="desknum" required>
+                    <option value="A01">A01</option>
+                    <option value="A02">A02</option>
+                    <option value="A03">A03</option>
+                    <option value="A04">A04</option>
+                    <option value="A05">A05</option>
+                    <option value="A06">A06</option>
+                    <option value="B07">B07</option>
+                    <option value="B08">B08</option>
+                    <option value="B09">B09</option>
+                    <option value="B10">B10</option>
+                    <option value="C11">C11</option>
+                    <option value="C12">C12</option>
+                </select>
+            </div>
+            <div class="people">
+                <label for="number">人數: </label>
+                <input type="text" name="number" required>
+            </div>
+            <div class="idenchoice">
+                <button class="cust">訪客點餐</button>
+                <button class="member">會員點餐</button>
+            </div>            
+        </form>
+    </div>        
+
+
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="bootstrap/bootstrap.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10"></script>
+    <title>顧客意見表</title>
+    <style type="text/css">
+        body {
+            color: aliceblue;
+            background-color: #222220;
+        }
+                a {
+            color: aliceblue;
+            text-decoration: none;
+        }
+        .search {
+            height: 38px;
+            margin: 10px;
+            position: relative;
+        }
+
+        .search img {
+            height: 20px;
+            width: 20px;
+            position: absolute;
+            top: 9px;
+            right: 9px;
+        }
+
+        .breadcrumb a {
+            color: #444;
+        }
+
+        .check-area {
+            padding-top: 20px;
+        }
+
+        .datepicker {
+            width: 100%;
+            height: 38px;
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+            padding: 6px 12px 6px 12px;
+        }
+
+        .icon {
+            height: 25px;
+            padding: 0 10px 5px 10px;
+        }
+
+        h2 {
+            text-align: center;
+            padding: 50px 0px 30px 0px;
+            color: white;
+        }
+
+        .check-area {
+            border: 1px solid #D8CDB9;
+            padding: 20px 0px 20px 0px;
+            border-radius: 0.375rem;
+            text-align: center;
+            color: white;
+        }
+        .inputform {
+            text-align: center;
+        }
+
+        .inputform div {
+            text-align: left;
+            margin: 0 5% 0 5%;
+        }
+
+        .inputform input {
+            border: 1px solid #D8CDB9;
+            border-radius: 0.375rem;
+            width: 100%;
+            height: 38px;
+        }
+        textarea{
+            border: 1px solid #D8CDB9;
+            border-radius: 0.375rem;
+            width: 100%;
+            height: 200px;
+        }
+        label{
+            padding: 5px 0 5px 0;
+        }
+        .input-btn{
+            margin: 0;
+        }
+
+        .logo{
+            width: 50px;
+            margin-right: 20px;
+        }
+        .navbar {
+            background-color: #721B29;
+        }
+
+        .navbar-brand {
+            color: white;
+        }
+
+        .nav-link {
+            color: white;
+        }
+
+        .breadcrumb {
+            margin-bottom: 0;
+            height: 30px;
+        }
+
+        .path {
+            background-color: #D8CDB9;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .searcharea2 {
+            display: none;
+        }
+
+        footer {
+            background-color: #D8CDB9;
+            margin-top: 40px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        footer a {
+            color: #666;
+        }
+
+        .footleft,
+        .footright {
+            margin: auto;
+            padding: 20px 10px 10px 10px;
+            width: 50%;
+        }
+        .namedata,.emaildata,.detaildata{
+            padding: 6px 12px 6px 12px;
+        }
+
+        .btn-return,.btn-submit {
+            border: 0;
+            border-radius: 0.375rem;
+            width: 100%;
+            height: 38px;
+            display: inline;
+        }
+
+        .btn-return {
+            background-color: white;
+            color: #222220;
+        }
+
+        .btn-submit {
+            background-color: #721B29;
+            color: white;
+        }
+
+        .btn-submit:active ,.btn-return:active {
+            background-color: #C28C2E;
+            color: #222220;
+        }
+
+        @media screen and (max-width: 992px) {
+            .searcharea {
+                display: none !important;
+            }
+
+            .searcharea2 {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg ">
+        <div class="container-fluid">
+            <img src="/Images/icons/logo-w.png" alt="" class="logo">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <form class="searcharea2 search" role="search">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                        <a href=""><img src="/Images/icons/search.png" alt=""></a>
+                    </form>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">推薦</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">經典酒款</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">算命調酒</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">線上訂位</a>
+                    </li>
+                </ul>
+                <form class="d-flex searcharea search" role="search">
+                    <input class=" form-control" type="search" placeholder="Search" aria-label="Search">
+                    <a href=""><img src="/Images/icons/search.png" alt=""></a>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="path">
+        <div class="container">
+            <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">feedback</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <h2>顧客意見表</h2>
+    <div class="container col-10 col-xl-6 check-area" id="app">
+        <form action="" class="inputform">
+            <div>
+                <label for="name">姓名 : </label>
+                <input type="text" id="name" required maxlength="20" class="namedata">
+            </div>
+            <div>
+                <label for="Email">Email : </label>
+                <input type="email" id="Email" required class="emaildata">
+            </div>
+            <div>
+                <label for="date">用餐日期 : </label>
+                <input type="date" id="date" class="datepicker" v-bind:min="mindate()" v-bind:max="maxdate()" required>
+            </div>
+            <div>
+                <label for="detail">回饋內容 : </label>
+                <textarea type="text" id="detail" required class="detaildata"></textarea>
+            </div>
+            <div class="input-btn">
+                <div class="row m-0">
+                    <button class=" col btn-return m-1" type="button">取消</button>
+                    <button class=" col btn-submit m-1" type="submit">送出</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="footleft col-5">
+                    <p><a href="">僅為製作範本之參考</a></p>
+                    <p><a href="">顧客意見表</a></p>
+                    <p><a href="">僅為製作範本之參考</a></p>
+                </div>
+                <div class="footright col-5">
+                    <p>訂單詢問: 0900-XXX-XXX</p>
+                    <p>客服專線: 0911-XXX-XXX</p>
+                    <p>Mail: xxx.xxx@gmail.com</p>
+                </div>
+            </div>
+        </div>
+
+    </footer>
+    <script src="/bootstrap/bootstrap.bundle.min.js"></script>
+    <script>
+        var app = new Vue({
+            el:'#app',
+            methods: {
+                mindate:function(){
+                    var mindate = new Date;
+                    mindate.setDate(mindate.getDate()-30);
+                    return mindate.toJSON().substr(0,10);
+                },
+                maxdate:function(){
+                    var maxdate = new Date;
+                    maxdate.setDate(maxdate.getDate()-1);
+                    return maxdate.toJSON().substr(0,10);
+                }
+            },
+        });
+    </script>
+</body>
+</html>
