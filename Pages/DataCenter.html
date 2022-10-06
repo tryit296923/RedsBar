@@ -9,20 +9,23 @@
     <link href="https://use.fontawesome.com/releases/v6.2.0/css/all.css" rel="stylesheet">
     <title>後台中心</title>
     <style>
-        h2{
-            color:#842029
+        h2 {
+            color: #842029
         }
-        h3{
+
+        h3 {
             font-size: 2 rem;
             font-weight: bold;
             color: #444;
             margin-bottom: 16px;
         }
-        h4{
+
+        h4 {
             font-size: 1rem;
         }
-        h5{
-            font-size:medium;
+
+        h5 {
+            font-size: medium;
             color: #666;
             margin-bottom: 0;
         }
@@ -36,35 +39,43 @@
             background-color: #fff;
             border-radius: 0.375rem;
         }
+
         /*表格*/
-        img{
+        img {
             width: 100px;
         }
-        table{
+
+        table {
             width: 80%;
         }
-        thead{
+
+        thead {
             background-color: rgb(215, 215, 215);
             color: #444;
             height: 30px;
             line-height: 30px;
         }
-        td{
+
+        td {
             line-height: 100px;
         }
-        tbody tr:hover{
+
+        tbody tr:hover {
             background-color: rgb(241, 241, 241);
         }
+
         /*下拉選單*/
-        #mark{
+        #mark {
             width: 20%;
         }
+
         /*水平分割並靠外*/
-        .spacebetween{
+        .spacebetween {
             display: flex;
             justify-content: space-between;
         }
-        .spacebetween h3{
+
+        .spacebetween h3 {
             margin: 0;
             display: flex;
             align-items: center;
@@ -74,11 +85,13 @@
         .navbar {
             justify-content: space-around;
         }
+
         @media screen and (max-width:852px) {
             .navbar i {
                 display: block;
             }
         }
+
         .navigation img {
             width: 100%;
         }
@@ -109,9 +122,11 @@
             overflow-y: scroll;
             height: 100vh;
         }
-        .form-select{
+
+        .form-select {
             margin-right: 10px;
         }
+
         .dataarea {
             width: 100%;
             display: flex;
@@ -120,17 +135,21 @@
         .datadetail {
             width: 24%;
             border: 1px solid rgb(215, 215, 215);
-            border-radius: 0.375rem;  
+            border-radius: 0.375rem;
         }
-        .datadetail:hover,.keymarkdetail:hover{
+
+        .datadetail:hover,
+        .keymarkdetail:hover {
             border-bottom: 2px solid #842029;
         }
-        .data table{
+
+        .data table {
             margin-left: 5px;
         }
 
         /* 數據中心 關鍵指標 */
-        .datacenter ul button,.datacenter ul a{
+        .datacenter ul button,
+        .datacenter ul a {
             color: #000;
         }
 
@@ -145,28 +164,35 @@
             color: #842029;
             font-weight: bold;
         }
-        .datacenter h2{
+
+        .datacenter h2 {
             margin: 5px 0 5px 0;
         }
-        .datacenter p{
+
+        .datacenter p {
             margin: 0;
         }
-        .keymark{
+
+        .keymark {
             width: 100%;
             display: flex;
             justify-content: space-around;
             text-align: center;
         }
-        .keymarkdetail{
+
+        .keymarkdetail {
             width: 19%;
             border: 1px solid rgb(215, 215, 215);
             border-radius: 0.375rem;
         }
-        .info{
+
+        .info {
             padding: 50px;
             border: 1px solid rgb(215, 215, 215);
         }
-        .discount, .undiscount{
+
+        .discount,
+        .undiscount {
             border: 1px solid rgb(215, 215, 215);
             border-radius: 0.375rem;
             width: 100%;
@@ -179,50 +205,62 @@
         .addproduct {
             display: flex;
         }
-        .productAdding{
+
+        .productAdding {
             display: flex;
             flex-direction: column;
         }
+
         .productmanage {
             position: relative;
         }
-        .products button,.discountmanage button{
+
+        .products button,
+        .discountmanage button {
             line-height: 24px;
         }
-        .products tr,.discountmanage tr{
+
+        .products tr,
+        .discountmanage tr {
             text-align: center;
         }
+
         .discountmanage {
             position: relative;
         }
-        .addbtn{
+
+        .addbtn {
             width: 150px;
         }
-        .addbtn,.btneditproducts{
+
+        .addbtn,
+        .btneditproducts {
             border: 0;
             border-radius: 0.375rem;
             background-color: #842029;
             color: #fff;
         }
-        .btnproducts{
+
+        .btnproducts {
             width: 45px;
         }
-        .btnproducts,.btneaddcancel {
+
+        .btnproducts,
+        .btneaddcancel {
             border-radius: 0.375rem;
             border: 1px solid rgb(215, 215, 215);
             height: 30px;
             background-color: #fff;
             color: #842029;
         }
-        .addbtn:hover,.btnproducts:hover,.btneaddcancel:hover,.btneditproducts:hover{
+
+        .addbtn:hover,
+        .btnproducts:hover,
+        .btneaddcancel:hover,
+        .btneditproducts:hover {
             background-color: #666;
             color: #fff;
             font-weight: bold;
-        }
-        @media screen and (max-width:852px) {
-            .navbar i{
-                display: block;
-            }
         }
     </style>
 </head>
@@ -237,24 +275,24 @@
                 </div>
                 <ul class="nav navbar" id="myTab" role="tablist">
                     <li class="" role="presentation">
-                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" 
-                        type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
-                        <i class="fa-solid fa-house"></i>  後臺首頁</button>
+                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
+                            type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
+                            <i class="fa-solid fa-house"></i> 後臺首頁</button>
                     </li>
                     <li class="" role="presentation">
-                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#data" 
-                        type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
-                        <i class="fa-solid fa-gauge-high"></i>  數據中心</button>
+                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#data"
+                            type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
+                            <i class="fa-solid fa-gauge-high"></i> 數據中心</button>
                     </li>
                     <li class="" role="presentation">
-                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#products" 
-                        type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">
-                        <i class="fa-solid fa-list"></i>  商品管理</button>
+                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#products"
+                            type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">
+                            <i class="fa-solid fa-list"></i> 商品管理</button>
                     </li>
                     <li class="" role="presentation">
-                        <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#discount" 
-                        type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">
-                        <i class="fa-solid fa-tags"></i>  優惠管理</button>
+                        <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#discount"
+                            type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">
+                            <i class="fa-solid fa-tags"></i> 優惠管理</button>
                     </li>
                 </ul>
             </div>
@@ -290,7 +328,7 @@
                                         <div class="datadetail p-4"><h2>1</h2><h5>會員數</h5></div>
                                         <div class="datadetail p-4"><h2>5/5</h2><h5>評價</h5></div>                    
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="data py-4">
                                     <h3>熱賣商品</h3>
                                     <table class="table">
@@ -525,7 +563,7 @@
                                     <h3>商品管理</h3>        
                                     <button type="button" class="addbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                         <i class="fa-sharp fa-solid fa-plus"></i> 新增商品
-                                    </button>  
+                                    </button>
                                 </div>
                                 <hr>
                                 <div class="products">
