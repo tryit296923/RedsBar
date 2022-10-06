@@ -1,4 +1,4 @@
-using Alcoholic.Models.DTO;
+using Alcoholic.Models.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
@@ -9,22 +9,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<ProjectContext>(option =>
+builder.Services.AddDbContext<db_a8de26_projectContext>(option =>
 {
-    option.UseSqlServer(builder.Configuration.GetConnectionString("local"));
+    option.UseSqlServer(builder.Configuration.GetConnectionString("remote"));
 });
-builder.Services.AddDbContext<ProjectContext>(option =>
-{
-    option.UseSqlServer(builder.Configuration.GetConnectionString("Note"));
-});
-
 
 // CORS Middleware會處理跨原始來源的要求。(WithOrigins => 套用至指定來源)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
         name:"Policy",
-        policy => policy.WithOrigins("http://127.0.0.1:5501","").WithHeaders("*").WithMethods("*")
+        policy => policy.WithOrigins("http://127.0.0.1:5501", "http://127.0.0.1:5500").WithHeaders("*").WithMethods("*")
     );
 });
 
