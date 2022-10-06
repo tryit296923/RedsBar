@@ -1,0 +1,2 @@
+
+> PM> Scaffold-DbContext "Data Source=SQL8001.site4now.net;Initial Catalog=db_a8de26_project;User Id=db_a8de26_project_admin;Password=reds1210" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models\Entities -f

@@ -1,5 +1,4 @@
-﻿using Alcoholic.Models.DTO;
-using Alcoholic.Models.Entities;
+﻿using Alcoholic.Models.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -16,8 +15,8 @@ namespace Alcoholic.Controllers
     //[EnableCors] 針對特定Controller或是Action進行設定。
     public class MemberController : Controller
     {
-        private ProjectContext _projectContext;
-        public MemberController(ProjectContext projectContext)
+        private db_a8de26_projectContext _projectContext;
+        public MemberController(db_a8de26_projectContext projectContext)
         {
             _projectContext = projectContext;
         }
@@ -25,15 +24,15 @@ namespace Alcoholic.Controllers
         // GET: Member/Getmember
         //[Authorize]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MembersModel>>> GetAllMember(MembersModel memberData)
+        public async Task<ActionResult<IEnumerable<Member>>> GetAllMember(Member memberData)
         {
             return await _projectContext.Members.ToListAsync();
         }
         //[Authorize(Roles ="moderate")]
         [HttpGet("{id}")]
-        public async Task<ActionResult<MembersModel>> GetMember(MembersModel memberData)
+        public async Task<ActionResult<Member>> GetMember(Member memberData)
         {
-            MembersModel? member = await _projectContext.Members.FindAsync(memberData);
+            Member? member = await _projectContext.Members.FindAsync(memberData);
             if (member == null)
             {
                 return NotFound();
@@ -49,21 +48,25 @@ namespace Alcoholic.Controllers
 
         // POST: Member/Register => Member/Getmember
         [HttpPost]
-        public async Task<ActionResult<MembersModel>> Register(MembersModel memberData)
+        public async Task<bool> Register(Member memberData)
         {
+            if (MemberExists(memberData.MemberAccount))
+            {
+                return false;
+            }
             int number = _projectContext.Members.Count() + 100;
-            memberData.MemberID = DateTime.Now.ToString("yyyyMMdd") + number.ToString();
+            memberData.MemberId = DateTime.Now.ToString("yyyyMMdd") + number.ToString();
             await _projectContext.AddAsync(memberData);
             await _projectContext.SaveChangesAsync();
 
-            return RedirectToAction("GetAllMember", "Member");
+            return true;
         }
 
         // PUT: Update
         [HttpPut]
-        public async Task<IActionResult> ModifyData(string id, MembersModel memberData)
+        public async Task<IActionResult> ModifyData(string id, Member memberData)
         {
-            if(id != memberData.MemberID)
+            if (id != memberData.MemberId)
             {
                 return BadRequest();
             }
