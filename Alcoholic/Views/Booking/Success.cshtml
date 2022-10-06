@@ -1,0 +1,108 @@
+﻿@model Alcoholic.Models.ViewModels.BookingSuccessViewModels
+
+<style>
+    body {
+        background-color: #222220;
+    }
+
+    .alert-area {
+        margin-top: 30px;
+        background-color: #D8CDB9;
+        padding: 20px 0px 20px 0px;
+        border-radius: 0.375rem;
+        text-align: center;
+        color: #222220;
+    }
+
+    .alert-area p {
+        font-weight: bold;
+        margin: 0px;
+    }
+
+    .check-area {
+        border: 1px solid #D8CDB9;
+        border-radius: 0.375rem;
+    }
+
+    .check-title {
+        padding-top: 20px;
+        text-align: center;
+    }
+
+    .check-title p {
+        display: inline;
+        color: white;
+    }
+
+    hr {
+        color: #D8CDB9;
+    }
+
+    .booking-detail {
+        text-align: center;
+        color: white;
+        font-size: 36px;
+    }
+
+    .booking-date {
+        color:#222220;
+        background-color: #D8CDB9;
+        border-radius: 0.375rem;
+    }
+
+    .store-detial {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+    }
+
+    .store-detial p {
+        margin: 0;
+    }
+
+    .store-detial a {
+        height: 24px;
+    }
+
+    button {
+        border: 0;
+        border-radius: 0.375rem;
+        width: 100%;
+        height: 38px;
+    }
+    .btn-menu {
+        background-color: #721B29;
+        color: white;
+    }
+    .check-btn{
+        margin-bottom:20px ;
+    }
+</style>
+<div class="container alert-area col-10">
+    <p>訂位成功</p>
+    <p>訂位詳細資訊已寄送到您的電子信箱</p>
+</div>
+<br>
+<div class="container check-area col-10 col-xl-4">
+    <div class="check-title">
+        <p class="username">@Model.Name</p>
+        <p>您好，以下為訂位資訊：</p>
+    </div>
+    <hr>
+    <div class="booking-detail">
+        <p class="booking-date">@Model.DatePicker &nbsp; @System.Globalization.DateTimeFormatInfo.CurrentInfo.DayNames[(byte)DateTime.Parse(Model.DatePicker).DayOfWeek]</p>
+        <p class="booking-people">@Model.People 位大人</p>
+    </div>
+    <hr>
+    <div class="store-detial">
+        <p>店家名稱</p>
+        <a href="tel:0233221368">02 3322 1368</a><br />
+        <a href="https://goo.gl/maps/VARMRkiZqDQLhgWbA">100 台北市中正區濟南路一段321號</a>
+    </div>
+    <div class="check-btn">
+        <div class="row m-0">
+            <button class="col m-1 btn-cancel" type="button">取消預定</button>
+            <button class="col m-1 btn-menu" type="button">看菜單</button>
+        </div>
+    </div>
+</div>
