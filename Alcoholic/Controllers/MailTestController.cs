@@ -12,7 +12,7 @@ namespace Alcoholic.Controllers
         {
             this.mailService = mailService;
         }
-        public void Index(string mailAddress, string msg,string title)
+        public void Index(string mailAddress, string msg, string title)
         {
             mailService.SendMail(mailAddress, msg, title);
         }
