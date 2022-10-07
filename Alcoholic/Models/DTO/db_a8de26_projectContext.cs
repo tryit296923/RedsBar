@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Alcoholic.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace Alcoholic.Models.Entities
+namespace Alcoholic.Models.DTO
 {
     public partial class db_a8de26_projectContext : DbContext
     {
@@ -58,7 +59,7 @@ namespace Alcoholic.Models.Entities
 
             modelBuilder.Entity<Member>(entity =>
             {
-                entity.Property(e => e.MemberId)
+                entity.Property(e => e.MemberID)
                     .HasMaxLength(20)
                     .HasColumnName("MemberID");
 
@@ -66,7 +67,7 @@ namespace Alcoholic.Models.Entities
 
                 entity.Property(e => e.Email).HasMaxLength(50);
 
-                entity.Property(e => e.EmailId)
+                entity.Property(e => e.EmailID)
                     .HasColumnName("emailID")
                     .HasDefaultValueSql("(newid())");
 

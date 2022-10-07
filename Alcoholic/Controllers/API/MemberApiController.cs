@@ -1,4 +1,6 @@
-﻿using Alcoholic.Models.Entities;
+﻿using Alcoholic.Models.DTO;
+using Alcoholic.Models.Entities;
+using Alcoholic.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -18,10 +20,12 @@ namespace Alcoholic.Controllers.API
     [ApiController]
     public class MemberApiController : ControllerBase
     {
-        private readonly db_a8de26_projectContext _projectContext;
-        public MemberApiController(db_a8de26_projectContext projectContext)
+        private readonly db_a8de26_projectContext projectContext;
+        private readonly MailService mailService;
+        public MemberApiController(db_a8de26_projectContext projectContext, MailService mailService)
         {
-            _projectContext = projectContext;
+            this.projectContext = projectContext;
+            this.mailService = mailService;
         }
 
         // "api/MemberApi"
@@ -29,14 +33,14 @@ namespace Alcoholic.Controllers.API
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Member>>> GetMember()
         {
-            return await _projectContext.Members.ToListAsync();
+            return await projectContext.Members.ToListAsync();
         }
 
         // "api/Login"
         [HttpPost]
         public string Login(Member memberData)
         {
-            Member? user = (from member in _projectContext.Members
+            Member? user = (from member in projectContext.Members
                                   where member.MemberAccount == memberData.MemberAccount
                                   && member.MemberPassword == memberData.MemberPassword
                                   select member).SingleOrDefault();
@@ -77,13 +81,19 @@ namespace Alcoholic.Controllers.API
 
         // POST: api/Register
         [HttpPost]
-        public async Task<ActionResult<Member>> Register(Member memberData)
+        public async Task<bool> Register(Member memberData)
         {
-            int number = _projectContext.Members.Count() + 100;
-            memberData.MemberId = DateTime.Now.ToString("yyyyMMdd") + number.ToString();
-            await _projectContext.AddAsync(memberData);
-            await _projectContext.SaveChangesAsync();
-            return memberData;
+            if (MemberExists(memberData.MemberAccount))
+            {
+                return false;
+            }
+            int number = projectContext.Members.Count() + 100;
+            memberData.Qualified = "n";
+            memberData.MemberID = DateTime.Now.ToString("yyyyMMdd") + number.ToString();
+            await projectContext.AddAsync(memberData);
+            await projectContext.SaveChangesAsync();
+            mailService.SendMail(memberData.Email, "請點擊下方連結", "RedsBar 會員認證信件");
+            return true;
         }
 
 
@@ -98,11 +108,9 @@ namespace Alcoholic.Controllers.API
             return "尚未登入";
         }
 
-        [HttpPost]
-        public string Test(Member memberData)
+        private bool MemberExists(string Account)
         {
-            Console.WriteLine(memberData);
-            return " ";
+            return projectContext.Members.Any(member => member.MemberAccount == Account);
         }
     }
 }

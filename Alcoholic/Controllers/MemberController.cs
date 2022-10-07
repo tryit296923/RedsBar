@@ -8,6 +8,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Policy;
 using System.Linq;
+using Alcoholic.Models.DTO;
+using Alcoholic.Services;
 //using Microsoft.AspNetCore.Cors;
 
 namespace Alcoholic.Controllers
@@ -15,10 +17,12 @@ namespace Alcoholic.Controllers
     //[EnableCors] 針對特定Controller或是Action進行設定。
     public class MemberController : Controller
     {
-        private db_a8de26_projectContext _projectContext;
-        public MemberController(db_a8de26_projectContext projectContext)
+        private readonly db_a8de26_projectContext _projectContext;
+        private readonly MailService _mailService;
+        public MemberController(db_a8de26_projectContext projectContext, MailService mailService)
         {
             _projectContext = projectContext;
+            _mailService = mailService;
         }
 
         // GET: Member/Getmember
@@ -55,10 +59,11 @@ namespace Alcoholic.Controllers
                 return false;
             }
             int number = _projectContext.Members.Count() + 100;
-            memberData.MemberId = DateTime.Now.ToString("yyyyMMdd") + number.ToString();
+            memberData.Qualified = "n";
+            memberData.MemberID = DateTime.Now.ToString("yyyyMMdd") + number.ToString();
             await _projectContext.AddAsync(memberData);
             await _projectContext.SaveChangesAsync();
-
+            _mailService.SendMail(memberData.Email, "請點擊下方連結", "RedsBar 會員認證信件");
             return true;
         }
 
@@ -66,7 +71,7 @@ namespace Alcoholic.Controllers
         [HttpPut]
         public async Task<IActionResult> ModifyData(string id, Member memberData)
         {
-            if (id != memberData.MemberId)
+            if (id != memberData.MemberID)
             {
                 return BadRequest();
             }

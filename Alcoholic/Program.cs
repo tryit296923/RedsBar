@@ -1,4 +1,4 @@
-using Alcoholic.Models.Entities;
+using Alcoholic.Models.DTO;
 using Alcoholic.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.CodeAnalysis.Options;
