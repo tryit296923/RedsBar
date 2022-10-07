@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>結帳完成頁面</title>
+    <link rel="stylesheet" href="/Pages/bootstrap/bootstrap.css">
+    <link href="https://use.fontawesome.com/releases/v6.2.0/css/all.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #222220;
+        }
+
+        .colorbox {
+            background-color: #D8CDB9;
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            border-radius: 0.375rem;
+            color: #222220;
+            font-weight: bold;
+            align-items: center;
+            margin-bottom: 20px;
+            margin-top: 50px;
+        }
+
+        .successedmessage {
+            font-size: xx-large;
+            margin-bottom: 0px;
+            height: 65px;
+            line-height: 65px;
+        }
+
+        .logopic {
+            display: flex;
+            align-content: center;
+            justify-content: center;
+            width: 200px;
+            height: 200px;
+        }
+
+        .feedbackmessage {
+            color: white;
+            font-size: larger;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        hr {
+            color: gray;
+        }
+
+        .btnfeedback {
+
+            background-color: #721B29;
+            color: white;
+            border: none;
+            height: 40px;
+            border-radius: 0.375rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="container-fluid colorbox py-2 col-10 col-xl-6 text-center">
+                <div class="successedmessage"><i class="fa-sharp fa-solid fa-check"></i> 付款成功</div>
+            </div>
+            <div class="container-fluid logopic col-10 col-xl-6 align-self-center my-3">
+                <img src="/Pages/Images/icons/logo-w.png" alt="">
+            </div>
+            <div class="container-fluid col-10 col-xl-6 text-center align-self-center px-0">
+                <hr>
+                <div class="feedbackmessage">
+                    <p><i class="fa-sharp fa-solid fa-pen"></i> 為我們留下評分:</p>
+                </div>
+                <div>
+                    <a href="" class="btnfeedback">顧客意見表</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/Pages/bootstrap/bootstrap.bundle.min.js"></script>
+</body>
+
+
+</html>
