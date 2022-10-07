@@ -216,13 +216,8 @@
             font-weight: bold;
         }
 
-        .btnbacktomenu, 
-        .btnmodalcancel{
-            background-color: #D8CDB9;
-            color: #222220;
-        }
-
-        .btnbacktomenu:active {
+        .btnbacktomenu:active,
+        .btnmodalcancel:active {
             background-color: #C28C2E;
             color: white;
         }
@@ -233,15 +228,24 @@
             color: white;
         }
 
-        .btncartconfirm:active {
+        .btncartconfirm:active,
+        .btnmodalconfirm:active {
             background-color: #C28C2E;
         }
 
-        .btninmodal{
+        .btninmodal {
             border: none;
             border-radius: 0.375rem;
+            width: 90px;
+            display: flex;
+            justify-content: center;
+            height: 30px;
+            align-items: center;
         }
-        
+
+        a:active {
+            color: white;
+        }
     </style>
 </head>
 
