@@ -8,7 +8,7 @@
         background-color: #222220;
     }
 
-    .backcolor {
+    .backColor {
         background-color: #222220;
     }
 
@@ -69,6 +69,7 @@
     .scrollregion {
         overflow-y: scroll;
         height: 86vh;
+        overflow-x: hidden;
     }
 
     .img-box img {
@@ -96,17 +97,6 @@
         padding-right: 12%;
     }
 
-    .iconcart {
-        width: 20px;
-        margin-right: 0.5rem;
-    }
-
-    .carttitle {
-        color: white;
-        font-size: 30px;
-        padding-left: 20px;
-    }
-
     .user {
         color: white;
         text-align: right;
@@ -120,70 +110,70 @@
         padding: 15px;
     }
 
-    fieldset legend {
-        background: #C28C2E;
-        color: white;
-        font-size: 20px;
-        border-radius: 0.375rem;
-        box-shadow: 0 0 0 3px #D8CDB9;
-        width: 40%;
-        height: 50px;
-        margin-left: 5%;
-        float: none;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+        fieldset legend {
+            background: #C28C2E;
+            color: white;
+            font-size: 20px;
+            border-radius: 0.375rem;
+            box-shadow: 0 0 0 3px #D8CDB9;
+            width: 40%;
+            height: 50px;
+            margin-left: 5%;
+            float: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .cartlist {
+    .cartList {
         background-color: white;
         border-radius: 0.375rem;
     }
 
     .list-group-item,
-    .carttotal {
+    .cartTotal {
         color: #222220;
     }
 
-    .productname {
+    .productName {
         font-size: larger;
     }
 
-    .originalprice {
+    .originalPrice {
         text-decoration: line-through;
     }
 
-    .discountprice {
+    .discountPrice {
         color: darkred;
     }
 
-    .btndelete {
+    .btnDelete {
         border: none;
         border-radius: 0.25em;
         font-size: larger;
     }
 
-    .btndelete:active {
-        background-color: #721B29;
-        color: white;
-    }
+        .btnDelete:active {
+            background-color: #721B29;
+            color: white;
+        }
 
-    .btncount {
+    .btnCount {
         border: none;
         background-color: transparent;
         border-radius: 0.25em;
     }
 
-    .btncount:active {
-        background-color: #D8CDB9;
-    }
+        .btnCount:active {
+            background-color: #D8CDB9;
+        }
 
     .align-items-start {
         display: flex !important;
         align-items: center !important;
     }
 
-    .carttotal {
+    .cartTotal {
         text-align-last: center;
         display: flex;
         justify-content: center;
@@ -192,7 +182,7 @@
         font-weight: bold;
     }
 
-    .ordercheck {
+    .orderCheck {
         width: 100%;
         position: sticky;
         bottom: 0%;
@@ -210,30 +200,30 @@
         font-weight: bold;
     }
 
-    .btnbacktomenu,
-    .btnmodalcancel {
+    .btnBacktoMenu,
+    .btnModalCancel {
         background-color: #D8CDB9;
         color: #222220;
     }
 
-    .btnbacktomenu:active,
-    .btnmodalcancel:active {
-        background-color: #C28C2E;
-        color: white;
-    }
+        .btnBacktoMenu:active,
+        .btnModalCancel:active {
+            background-color: #C28C2E;
+            color: white;
+        }
 
-    .btncartconfirm,
-    .btnmodalconfirm {
+    .btnCartConfirm,
+    .btnModalConfirm {
         background-color: #721B29;
         color: white;
     }
 
-    .btncartconfirm:active,
-    .btnmodalconfirm:active {
-        background-color: #C28C2E;
-    }
+        .btnCartConfirm:active,
+        .btnModalConfirm:active {
+            background-color: #C28C2E;
+        }
 
-    .btninmodal {
+    .btnInModal {
         border: none;
         border-radius: 0.375rem;
         width: 90px;
@@ -243,7 +233,7 @@
         align-items: center;
     }
 
-    a:active{
+    a:active {
         color: white;
     }
 
@@ -291,7 +281,7 @@
 <div class="scrollregion">
     <div>
         <!-- banner -->
-        <div class="backcolor container-fluid mb-3">
+        <div class="backColor container-fluid mb-3">
             <div class="img-box">
                 <img src="https://picsum.photos/id/24/1200/300" class="img-fluid w-100" />
             </div>
@@ -316,8 +306,8 @@
             <b>購物車</b>
         </legend>
         <!-- 購物車清單 -->
-        <div class="container-fluid">
-            <div class="cartlist">
+        <div class="container-fluid" id="cartList">
+            <div class="cartList" v-for="(item,index) in itemList" v-bind:key="item.id">
                 <ol class="list-group">
                     <li class="row list-group-item d-flex justify-content-between align-items-start">
 
@@ -327,175 +317,53 @@
 
                         <div class="col-5 px-0">
                             <div class="ms-2 me-auto">
-                                <div class="fw-bold productname">品名</div>
+                                <div class="fw-bold productName">{{item.name}}</div>
                                 <div>描述</div>
-                                <div>
-                                    <span>$</span>
-                                    <span class="originalprice">300</span>
-                                    <span> </span>
-                                    <span class="discountprice">270</span>
+                                <div v-if="item.discount != 1">
+                                    <span>$ </span>
+                                    <span class="originalPrice">{{item.price * item.count}} </span>
+                                    <span class="discountPrice">{{item.price*item.count*item.discount}}</span>
+                                </div>
+                                <div v-else>
+                                    <span>$ </span>
+                                    <span class="">{{item.price * item.count}} </span>
                                 </div>
                             </div>
                         </div>
                         <div class="row col-4 px-0">
                             <div class="col-6 text-center px-0">
-                                <button class="btncount">▲</button>
-                                <div>2</div>
-                                <button class="btncount">▼</button>
+                                <button class="btnCount" v-on:click="increase(item)">▲</button>
+                                <div>{{item.count}}</div>
+                                <button class="btnCount" v-on:click="decrease(item)">▼</button>
                             </div>
                             <div class="col-6 text-center d-flex align-items-center justify-content-center">
                                 <div>
-                                    <button class="btndelete">X</button>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="row list-group-item d-flex justify-content-between align-items-start">
-
-                        <div class="col-3 px-0">
-                            <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
-                        </div>
-
-                        <div class="col-5 px-0">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold productname">品名</div>
-                                <div>描述</div>
-                                <div>
-                                    <span>$</span>
-
-                                    <span> </span>
-                                    <span>270</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row col-4 px-0">
-                            <div class="col-6 text-center px-0">
-                                <button class="btncount">▲</button>
-                                <div>2</div>
-                                <button class="btncount">▼</button>
-                            </div>
-                            <div class="col-6 text-center d-flex align-items-center justify-content-center">
-                                <div>
-                                    <button class="btndelete">X</button>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="row list-group-item d-flex justify-content-between align-items-start">
-
-                        <div class="col-3 px-0">
-                            <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
-                        </div>
-
-                        <div class="col-5 px-0">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold productname">品名</div>
-                                <div>描述</div>
-                                <div>
-                                    <span>$</span>
-
-                                    <span> </span>
-                                    <span>270</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row col-4 px-0">
-                            <div class="col-6 text-center px-0">
-                                <button class="btncount">▲</button>
-                                <div>2</div>
-                                <button class="btncount">▼</button>
-                            </div>
-                            <div class="col-6 text-center d-flex align-items-center justify-content-center">
-                                <div>
-                                    <button class="btndelete">X</button>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="row list-group-item d-flex justify-content-between align-items-start">
-
-                        <div class="col-3 px-0">
-                            <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
-                        </div>
-
-                        <div class="col-5 px-0">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold productname">品名</div>
-                                <div>描述</div>
-                                <div>
-                                    <span>$</span>
-
-                                    <span> </span>
-                                    <span>270</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row col-4 px-0">
-                            <div class="col-6 text-center px-0">
-                                <button class="btncount">▲</button>
-                                <div>2</div>
-                                <button class="btncount">▼</button>
-                            </div>
-                            <div class="col-6 text-center d-flex align-items-center justify-content-center">
-                                <div>
-                                    <button class="btndelete">X</button>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="row list-group-item d-flex justify-content-between align-items-start">
-
-                        <div class="col-3 px-0">
-                            <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
-                        </div>
-
-                        <div class="col-5 px-0">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold productname">品名</div>
-                                <div>描述</div>
-                                <div>
-                                    <span>$</span>
-
-                                    <span> </span>
-                                    <span>270</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row col-4 px-0">
-                            <div class="col-6 text-center px-0">
-                                <button class="btncount">▲</button>
-                                <div>2</div>
-                                <button class="btncount">▼</button>
-                            </div>
-                            <div class="col-6 text-center d-flex align-items-center justify-content-center">
-                                <div>
-                                    <button class="btndelete">X</button>
+                                    <button class="btnDelete" v-on:click="deleteItem(index)">X</button>
                                 </div>
                             </div>
                         </div>
                     </li>
                 </ol>
-                <hr>
-                <div class="carttotal">此筆訂單總額: XXX 元</div>
             </div>
+            <hr>
+            <div class="cartTotal">此筆訂單總額: XXX 元</div>
         </div>
     </fieldset>
 </div>
 
 <!-- 底部按鈕 -->
-<div class="ordercheck">
+<div class="orderCheck">
     <div class="container row w-100">
         <div class="col col-xl-6 text-center">
-            <button type="button" class="bottombtntext btnbacktomenu w-100 py-2">
+            <button type="button" class="bottombtntext btnBacktoMenu w-100 py-2">
                 繼續點餐
             </button>
         </div>
         <div class="col col-xl-6 text-center">
-            <button type="button" class="bottombtntext btncartconfirm w-100 py-2" data-bs-toggle="modal"
+            <button type="button" class="bottombtntext btnCartConfirm w-100 py-2" data-bs-toggle="modal"
                     data-bs-target="#delieveBackdrop">
                 送出訂單
             </button>
-
         </div>
     </div>
 </div>
@@ -513,9 +381,78 @@
                 確認訂單無誤並送出?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btninmodal btnmodalcancel" data-bs-dismiss="modal">取消</button>
-                <a href="/Order/Success" class="btninmodal btnmodalconfirm">確認送出</a>
+                <button type="button" class="btnInModal btnModalCancel" data-bs-dismiss="modal">取消</button>
+                <a href="/Order/Success" class="btnInModal btnModalConfirm">確認送出</a>
             </div>
         </div>
     </div>
 </div>
+<script>
+    var app = new Vue({
+        el: '#cartList',
+        data: {
+            itemList: [
+                {
+                    id: '1',
+                    imgUrl: '',
+                    name: '蘭姆酒',
+                    itemDescript: '',
+                    price: '250',
+                    count: '1',
+                    discount: '0.8',
+                },
+                {
+                    id: '2',
+                    imgUrl: '',
+                    name: '長島冰茶',
+                    itemDescript: '',
+                    price: '350',
+                    count: '1',
+                    discount: '1',
+                },
+                {
+                    id: '3',
+                    imgUrl: '',
+                    name: '紅酒',
+                    itemDescript: '',
+                    price: '300',
+                    count: '1',
+                    discount: '1',
+                },
+                {
+                    id: '4',
+                    imgUrl: '',
+                    name: '白酒',
+                    itemDescript: '',
+                    price: '250',
+                    count: '1',
+                    discount: '0.95',
+                },
+                {
+                    id: '5',
+                    imgUrl: '',
+                    name: '威士忌',
+                    itemDescript: '',
+                    price: '300',
+                    count: '1',
+                    discount: '0.9',
+                },
+            ]
+        },
+        methods: {
+            decrease: function (item) {
+                console.log(item);
+                if (item.count > 1) {
+                    item.count--;
+                }
+            },
+            increase: function (item) {
+                console.log(item);
+                item.count++;
+            },
+            deleteItem: function (index) {
+                this.itemList.splice(index, 1);
+            }
+        },
+    })
+</script>
