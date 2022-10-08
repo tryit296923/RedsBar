@@ -79,6 +79,17 @@ namespace Alcoholic.Controllers
             await _projectContext.SaveChangesAsync();
             return NoContent();
         }
+        public ActionResult FrontPage()
+        {
+            return View();
+        }
+        [HttpPost]
+        public bool StartOrder([FromBody] DeskInfo deskInfo)
+        {
+            string desk = deskInfo.Desk;
+            string number = deskInfo.Number;
+            return true;
+        }
 
         private bool MemberExists(string Account)
         {
