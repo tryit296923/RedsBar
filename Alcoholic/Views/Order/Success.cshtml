@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Alcoholic.Models.ViewModels.OrderViewModel
+@{
     ViewData["Title"] = "訂單送出成功!";
     Layout = "_LayoutMobile";
 }
@@ -38,9 +39,9 @@
         padding: 20px 12px 20px 12px !important;
     }
 
-    .orderdetail p {
-        margin-bottom: 0px;
-    }
+        .orderdetail p {
+            margin-bottom: 0px;
+        }
 
     .orderinfotext {
         font-size: larger;
@@ -74,10 +75,10 @@
         font-weight: bold;
     }
 
-    .btnbacktoindex:active {
-        background-color: #C28C2E;
-        color: white;
-    }
+        .btnbacktoindex:active {
+            background-color: #C28C2E;
+            color: white;
+        }
 
     .btnlistchecking {
         background-color: #721B29;
@@ -91,9 +92,9 @@
         justify-content: center;
     }
 
-    .btnlistchecking:active {
-        background-color: #C28C2E;
-    }
+        .btnlistchecking:active {
+            background-color: #C28C2E;
+        }
 
 </style>
 
@@ -112,8 +113,8 @@
                 <p class="orderinfotext tablenum">桌號: 8</p>
                 <p class="orderinfotext custnum">用餐人數: 4 人</p>
                 <hr>
-                <p class="orderinfotext orderid">訂單單號: XXXXXXXX</p>
-                <p class="orderinfotext ordertime">訂單成立時間: 2022/09/29 12:00</p>
+                <p class="orderinfotext orderid">訂單單號: @Model.CaseNo</p>
+                <p class="orderinfotext ordertime">訂單成立時間: @ViewBag.orderDate</p>
             </div>
 
             <!-- 餐點準備提示 -->
@@ -138,3 +139,16 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    var app = new Vue({
+        el: '#orderSuccess',
+        data: {
+
+        },
+        methods: {
+
+        }
+    })
+</script>

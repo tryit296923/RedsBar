@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Alcoholic.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Alcoholic.Controllers
 {
@@ -9,9 +10,13 @@ namespace Alcoholic.Controllers
             return View();
         }
 
-        public IActionResult Success()
+        public IActionResult Success(OrderViewModel order)
         {
-            return View();
+            var caseNo = 12345678;
+            order.CaseNo = caseNo.ToString();
+            var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
+            ViewBag.orderDate = now;
+            return View(order);
         }
 
         public IActionResult Total()
