@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -75,11 +76,11 @@ namespace Alcoholic.Controllers.API
 
         // POST: api/Register
         [HttpPost]
-        public async Task<bool> Register(Member memberData)
+        public async Task<ActionResult> Register(Member memberData)
         {
             if (MemberExists(memberData.MemberAccount))
             {
-                return false;
+                return NotFound();
             }
             int number = projectContext.Members.Count() + 100;
             memberData.Qualified = "n";
@@ -87,9 +88,16 @@ namespace Alcoholic.Controllers.API
             await projectContext.AddAsync(memberData);
             await projectContext.SaveChangesAsync();
             mailService.SendMail(memberData.Email, "請點擊下方連結", "RedsBar 會員認證信件");
-            return true;
+            return Ok(memberData);
         }
 
+        public async Task<bool> Authorize(Member memberData)
+        {
+            memberData.Qualified = "y";
+            projectContext.Entry(memberData).State = EntityState.Modified;
+            await projectContext.SaveChangesAsync();
+            return true;
+        }
 
 
         public string NoAccess()
