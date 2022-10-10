@@ -1,0 +1,37 @@
+﻿@model Alcoholic.Models.ViewModels.BookingSuccessViewModels
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+    <head>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            margin: auto;
+            width: 100%;
+            height: 100%;
+        }
+
+        .content {
+            color:aliceblue;
+            width: 500px;
+            height: 500px;
+            background-color: #222220;
+        }
+    </style>
+    </head>
+    <body>
+    <div class="container">
+        <div class="content">
+            <img src="~/images/icons/logo-w.png" />
+            <div>
+                親愛的 @Model.Name
+            </div>
+            <p>感謝您預定 @Model.DatePicker 共計 @Model.People 兩位</p>
+        </div>
+    </div>
+    </body>
+</html>

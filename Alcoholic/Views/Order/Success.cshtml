@@ -1,0 +1,154 @@
+﻿@model Alcoholic.Models.ViewModels.OrderViewModel
+@{
+    ViewData["Title"] = "訂單送出成功!";
+    Layout = "_LayoutMobile";
+}
+
+<style>
+    body {
+        background-color: #222220;
+    }
+
+    .colorbox {
+        background-color: #D8CDB9;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        border-radius: 0.375rem;
+        color: #222220;
+        font-weight: bold;
+        align-items: center;
+        margin-bottom: 30px;
+        margin-top: 50px;
+    }
+
+    .orderdelieved {
+        font-size: xx-large;
+        margin-bottom: 0px;
+        height: 75px;
+        line-height: 75px;
+    }
+
+    .detailbox {
+        color: white;
+    }
+
+    .orderdetail {
+        border: 1px solid #D8CDB9;
+        border-radius: 0.375rem;
+        padding: 20px 12px 20px 12px !important;
+    }
+
+        .orderdetail p {
+            margin-bottom: 0px;
+        }
+
+    .orderinfotext {
+        font-size: larger;
+    }
+
+    .waitingmessage {
+        font-size: larger;
+        margin-bottom: 0px;
+        height: 60px;
+        margin-top: 20px;
+    }
+
+    .ordercheck {
+        width: 100%;
+        position: sticky;
+        bottom: 0%;
+        background-color: #222220;
+        height: 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .btnbacktoindex {
+        background-color: #D8CDB9;
+        border: none;
+        height: 40px;
+        color: #222220;
+        border-radius: 0.375rem;
+        font-weight: bold;
+    }
+
+        .btnbacktoindex:active {
+            background-color: #C28C2E;
+            color: white;
+        }
+
+    .btnlistchecking {
+        background-color: #721B29;
+        color: white;
+        border: none;
+        height: 40px;
+        border-radius: 0.375rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .btnlistchecking:active {
+            background-color: #C28C2E;
+        }
+
+</style>
+
+<div class="container">
+    <div class="row">
+        <!-- 標題 -->
+        <div class="container-fluid colorbox py-2 col-10 col-xl-8 text-center">
+            <div class="orderdelieved">訂單送出成功!</div>
+        </div>
+        <br>
+        <div class="detailbox container-fluid col-10 col-xl-8 px-0">
+            <!-- 訂單簡單資訊 -->
+            <div class="orderdetail text-center py-2">
+                <p class="orderinfotext orderinfotitle">訂單成立資訊:</p>
+                <hr>
+                <p class="orderinfotext tablenum">桌號: 8</p>
+                <p class="orderinfotext custnum">用餐人數: 4 人</p>
+                <hr>
+                <p class="orderinfotext orderid">訂單單號: @Model.CaseNo</p>
+                <p class="orderinfotext ordertime">訂單成立時間: @ViewBag.orderDate</p>
+            </div>
+
+            <!-- 餐點準備提示 -->
+            <div>
+                <p class="colorbox waitingmessage">飲品準備中，稍後為您送上</p>
+            </div>
+            <!-- 底部選單按鈕 -->
+            <div class="ordercheck">
+                <div class="container row w-100 px-0">
+                    <div class="col col-xl-6 text-center">
+                        <button type="button" class="btnbacktoindex w-100">
+                            返回首頁
+                        </button>
+                    </div>
+                    <div class="col col-xl-6 text-center">
+                        <a href="/Order/Total" class="btn btnlistchecking w-100">
+                            查看訂單明細
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var app = new Vue({
+        el: '#orderSuccess',
+        data: {
+
+        },
+        methods: {
+
+        }
+    })
+</script>

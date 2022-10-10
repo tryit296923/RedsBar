@@ -1,4 +1,6 @@
-﻿@model Alcoholic.Models.Entities.MembersModel
+﻿@{
+    Layout = null;
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +11,7 @@
     <link rel="stylesheet" href="~/css/bootstrap.css">
     <link rel="stylesheet" href="~/css/theme.css">
     <script src="~/js/bootstrap.bundle.min.js"></script>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/vue.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -41,42 +43,42 @@
             text-align: center;
         }
 
-        .inputform div {
-            padding: 10px;
-        }
+            .inputform div {
+                padding: 10px;
+            }
 
-        .inputform input, select {
-            width: 70%;
-            height: 28px;
-            border: 1px solid #ccc;
-        }
+            .inputform input, select {
+                width: 70%;
+                height: 28px;
+                border: 1px solid #ccc;
+            }
 
         .logreg {
             display: flex;
             justify-content: space-around;
         }
 
-        .logreg button {
-            border: 0px;
-            border-radius: 10px;
-            box-shadow: 4px 4px 4px #666;
-            font-size: 1.5rem;
-            padding: 6px 20px;
-            margin: 40px 0 40px 0;
-            background-color: #721B29;
-            color: #fff;
-            width: 60%;
-        }
+            .logreg button {
+                border: 0px;
+                border-radius: 10px;
+                box-shadow: 4px 4px 4px #666;
+                font-size: 1.5rem;
+                padding: 6px 20px;
+                margin: 40px 0 40px 0;
+                background-color: #721B29;
+                color: #fff;
+                width: 60%;
+            }
 
         .OA {
             text-align: center;
             padding: 10px 0 0 0;
         }
 
-        .OA h2 {
-            font-size: 1.5rem;
-            padding: 12px;
-        }
+            .OA h2 {
+                font-size: 1.5rem;
+                padding: 12px;
+            }
 
         .img {
             display: flex;
@@ -106,28 +108,28 @@
             margin: 0% 5%;
         }
 
-        .registerform h2 {
-            text-align: center;
-            font-size: 1.5rem;
-            padding: 24px 0 0 0;
-        }
+            .registerform h2 {
+                text-align: center;
+                font-size: 1.5rem;
+                padding: 24px 0 0 0;
+            }
 
-        .registerform .inputform div {
-            text-align: left;
-            margin: 0 5% 0 5%;
-            padding: 2px 0;
-        }
+            .registerform .inputform div {
+                text-align: left;
+                margin: 0 5% 0 5%;
+                padding: 2px 0;
+            }
 
-        .registerform .inputform input {
-            width: 100%;
-            height: 32px;
-            border: 1px solid #ccc;
-        }
+            .registerform .inputform input {
+                width: 100%;
+                height: 32px;
+                border: 1px solid #ccc;
+            }
 
-        .registerform .register {
-            display: flex;
-            justify-content: space-around;
-        }
+            .registerform .register {
+                display: flex;
+                justify-content: space-around;
+            }
 
         .registerbtn {
             border: 0px;
@@ -150,7 +152,7 @@
 </head>
 <body>
     <div class="logo">
-        <a href=""><img src="Images/logo_pre.png" alt=""></a>
+        <a href=""><img src="~/images/logo_pre.png" alt=""></a>
     </div>
     <ul class="nav nav-pills pages" id="pills-tab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -167,9 +169,9 @@
                     <div class="OA">
                         <h2>使用以下帳號</h2>
                         <div class="img">
-                            <img src="Images/icons/google.png" alt="">
-                            <img src="Images/icons/IG.png" alt="">
-                            <img src="Images/icons/FB.png" alt="">
+                            <img src="~/images/icons/google.png" alt="">
+                            <img src="~/images/icons/IG.png" alt="">
+                            <img src="~/images/icons/FB.png" alt="">
                         </div>
                     </div>
                     <div class="split">
@@ -177,20 +179,20 @@
                         <h3>直接登入</h3>
                         <img src="" alt="">
                     </div>
-                    <form class="inputform" id="Login" asp-controller="MemberApi" asp-action="Login" method="post" enctype="multipart/form-data">
+                    <form class="inputform" id="Login" method="post" enctype="multipart/form-data">
                         <div class="account">
-                        <label>帳號: </label>
-                        <input asp-for="MemberAccount" type="account" name="account" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
+                            <label>帳號: </label>
+                            <input type="account" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
                         </div>
                         <div class="password">
-                        <label>密碼: </label>
-                        <input asp-for="MemberPassword" type="password" name="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
+                            <label>密碼: </label>
+                            <input type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
                         </div>
                         <div class="forget">
-                        <a href="">忘記密碼?</a>
+                            <a href="">忘記密碼?</a>
                         </div>
                         <div class="logreg">
-                        <button class="login">登入</button>
+                            <button class="login">登入</button>
                         </div>
                     </form>
                 </div>
@@ -198,37 +200,37 @@
             <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
                 <div class="registerform" id="registerpage">
                     <h2>會員註冊</h2>
-                    <form class="inputform" id="Register" asp-controller="Member" asp-action="Register" method="post" enctype="multipart/form-data">
+                    <form class="inputform" id="Register" method="post" enctype="">
                         <div class="text">
-                            <label for="account">帳號: </label><br>
-                            <input asp-for="MemberAccount" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
+                            <label>帳號: </label><br>
+                            <input v-model="Account" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
                         </div>
                         <div class="password">
-                            <label for="password">密碼: </label><br>
-                            <input asp-for="MemberPassword" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
+                            <label>密碼: </label><br>
+                            <input v-model="Password" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
                         </div>
                         <div class="repassword">
-                            <label for="repassword">確認密碼: </label><br>
+                            <label>確認密碼: </label><br>
                             <input type="password" required maxlength="20" minlength="8" placeholder="請再次輸入密碼">
                         </div>
                         <div class="Email">
-                            <label for="Email">Email: </label><br>
-                            <input asp-for="Email" type="email" name="Email" required>
+                            <label>Email: </label><br>
+                            <input v-model="Email" type="email" required>
                         </div>
                         <div class="name">
-                            <label for="name">姓名: </label><br>
-                            <input asp-for="MemberName" required maxlength="20">
+                            <label>姓名: </label><br>
+                            <input v-model="Name" required maxlength="20">
                         </div>
                         <div class="phone">
-                            <label for="phone">電話: </label><br>
-                            <input asp-for="Phone" required maxlength="10" minlength="10" placeholder="請輸入連絡電話(09-開頭)">
+                            <label>電話: </label><br>
+                            <input v-model="Phone" required maxlength="10" minlength="10" placeholder="請輸入連絡電話(09-開頭)">
                         </div>
                         <div class="birth">
-                            <label for="date">生日: </label><br>
-                            <input asp-for="MemberBirth" type="date" value="2000-12-10" required>
+                            <label>生日: MemberBirth</label><br>
+                            <input v-model="Birth" type="date" value="2000-12-10" required>
                         </div>
                         <div class="register">
-                            <button type="submit" class="registerbtn">註冊</button>
+                            <button v-on:click.prevent="login" class="registerbtn">註冊</button>
                         </div>
                     </form>
                 </div>
@@ -236,4 +238,40 @@
         </div>
     </div>
 </body>
+<script>
+    const vm = new Vue({
+        el: "#Register",
+        data: {
+            Account: "",
+            Password: "",
+            Name: "",
+            Birth: "2000-02-02",
+            Phone: "",
+            Email: "",
+        },
+        methods: {
+            login: function () {
+                let fbody = {
+                    "MemberID": "",
+                    "MemberAccount": this.Account,
+                    "MemberPassword": this.Password,
+                    "MemberName": this.Name,
+                    "MemberBirth": this.Birth,
+                    "Phone": this.Phone,
+                    "Email": this.Email,
+                };
+                let JsonString = JSON.stringify(fbody);
+                console.log(JsonString);    // JSON
+                console.log(fbody);         // Obj
+                fetch("https://localhost:7273/api/Register", {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JsonString        // to JsonString
+                }).then(data => console.log(data))
+                    .catch(error => console.error(error))
+
+            }
+        }
+    })
+</script>
 </html>
