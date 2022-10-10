@@ -8,7 +8,7 @@
         background-color: #222220;
     }
 
-    .backcolor {
+    .backColor {
         background-color: #222220;
     }
 
@@ -120,36 +120,39 @@
         padding-right: 12%;
     }
 
-    .iconcart {
-        width: 20px;
-        margin-right: 0.5rem;
-    }
-
-    .carttitle {
-        color: white;
-        font-size: 30px;
-        padding-left: 20px;
-    }
-
     .user {
         color: white;
         text-align: right;
     }
 
-    .cartlist {
+    .cartList {
         background-color: white;
         border-radius: 0.375rem;
     }
 
-    .productname {
+    .subOrderTitle{
+        display:flex;
+        justify-content:space-between;
+    }
+
+    .productName {
         font-size: larger;
     }
 
-    .orderlistnum {
-        font-size: larger;
+    .subOrderText {
+        
         font-weight: bold;
         margin-bottom: 5px;
         padding-left: 1rem;
+    }
+
+    .subOrderId {
+        font-size: larger;
+    }
+
+    .subOrderTime {
+        font-size: large;
+        color:gray;
     }
 
     .align-items-start {
@@ -158,32 +161,32 @@
     }
 
     .list-group-item,
-    .carttotal {
+    .cartTotal {
         color: #222220;
         font-weight: bold;
     }
 
-    .productprice {
+    .productPrice {
         display: flex;
         justify-content: end;
     }
 
-    .originalprice {
+    .originalPrice {
         text-decoration: line-through;
     }
 
-    .discountprice {
+    .discountPrice {
         color: darkred;
     }
 
-    .subtotal {
+    .subTotal {
         font-size: large;
         font-weight: bold;
         text-align: end;
         margin-top: 5px;
     }
 
-    .carttotal {
+    .cartTotal {
         text-align-last: center;
         display: flex;
         justify-content: center;
@@ -192,7 +195,7 @@
         font-weight: bold;
     }
 
-    .finalcheck {
+    .finalCheck {
         width: 100%;
         position: sticky;
         bottom: 0%;
@@ -210,230 +213,294 @@
         font-weight: bold;
     }
 
-    .btnbacktomenu {
+    .btnBacktoMenu,
+    .btnModalCancel {
         background-color: #D8CDB9;
         color: #222220;
     }
 
-    .btnbacktomenu:active {
+    .btnBacktoMenu:active,
+    .btnModalCancel:active {
         background-color: #C28C2E;
         color: white;
     }
 
-    .btnpaymentconfirm {
+    .btnPaymentConfirm,
+    .btnModalConfirm {
         background-color: #721B29;
         color: white;
     }
 
-    .btnpaymentconfirm:active {
+    .btnPaymentConfirm:active,
+    .btnModalConfirm:active {
         background-color: #C28C2E;
+    }
+
+    .btnInModal {
+        border: none;
+        border-radius: 0.375rem;
+        width: 90px;
+        display: flex;
+        justify-content: center;
+        height: 30px;
+        align-items: center;
+    }
+
+    a:active {
+        color: white;
     }
 </style>
 
-<div class="outer">
-    <!-- navbar -->
-    <div class="topnavbar">
-        <nav class="navbar navbar-expand-lg navbarposition">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">店家名稱</a>
-                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <form class="searcharea2 search" role="search">
+<div id="orderTotal">
+    <div class="outer">
+        <!-- navbar -->
+        <div class="topnavbar">
+            <nav class="navbar navbar-expand-lg navbarposition">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">店家名稱</a>
+                    <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <form class="searcharea2 search" role="search">
+                                <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                                <a href=""><img src="/images/icons/search.png" alt=""></a>
+                            </form>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">推薦</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">經典酒款</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">算命調酒</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">線上訂位</a>
+                            </li>
+                        </ul>
+                        <form class="d-flex searcharea search" role="search">
                             <input class="form-control" type="search" placeholder="Search" aria-label="Search">
                             <a href=""><img src="/images/icons/search.png" alt=""></a>
                         </form>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">推薦</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">經典酒款</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">算命調酒</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">線上訂位</a>
-                        </li>
-                    </ul>
-                    <form class="d-flex searcharea search" role="search">
-                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                        <a href=""><img src="/images/icons/search.png" alt=""></a>
-                    </form>
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </div>
-</div>
-<div class="scrollregion">
-    <div>
-        <!-- banner -->
-        <div class="backcolor container mb-3">
-            <div class="img-box">
-                <img src="https://picsum.photos/id/24/1200/300" class="img-fluid w-100" />
-            </div>
-        </div>
-        <!-- 標題 -->
-        <div class="container col userarea">
-            <div class="title w-100">
-                <div class="himessage">
-                    <p>Hi, </p>
-                    <p class="user">XXX</p>
-                </div>
-
-            </div>
+            </nav>
         </div>
     </div>
-
-
-    <fieldset class="mx-3">
-        <legend>
-            <div>
-                <i class="fa-sharp fa-solid fa-cart-shopping me-2"></i>
+    <div class="scrollregion">
+        <div>
+            <!-- banner -->
+            <div class="backColor container mb-3">
+                <div class="img-box">
+                    <img src="https://picsum.photos/id/24/1200/300" class="img-fluid w-100" />
+                </div>
             </div>
-            <b>已選購</b>
-        </legend>
+            <!-- 標題 -->
+            <div class="container col userarea">
+                <div class="title w-100">
+                    <div class="himessage">
+                        <p>Hi, </p>
+                        <p class="user">XXX</p>
+                    </div>
 
-        <!-- 購物車清單 -->
-        <div class="container-fluid px-0">
-            <div class="cartlist px-3">
-                <ol class="list-group">
-                    <div class="orderlistnum">第一筆</div>
-                    <li class="row list-group-item d-flex justify-content-between align-items-start pe-0">
+                </div>
+            </div>
+        </div>
 
-                        <div class="col-3 px-0">
-                            <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
+
+        <fieldset class="mx-3">
+            <legend>
+                <div>
+                    <i class="fa-sharp fa-solid fa-cart-shopping me-2"></i>
+                </div>
+                <b>已選購</b>
+            </legend>
+
+            <!-- 購物車清單 -->
+            <div class="container-fluid px-0">
+                <div class="cartList px-3">
+                    <ol class="list-group">
+                        <div class="subOrderTitle">
+                            <div class="subOrderText subOrderId">訂單單號1</div>
+                            <div class="subOrderText subOrderTime">訂單時間</div>
                         </div>
+                        <li class="row list-group-item d-flex justify-content-between align-items-start pe-0">
 
-                        <div class="col-4">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold productname">品名</div>
+                            <div class="col-3 px-0">
+                                <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
                             </div>
-                        </div>
-                        <div class="col-1 px-0">
-                            <div class="col text-center px-0">
-                                <div class="col">2</div>
-                            </div>
-                        </div>
-                        <div class="col-4">
 
-                            <div class="productprice">
-                                <span>$</span>
-                                <!-- <span class="originalprice">300</span>
-                                <span> </span> -->
-                                <span class="price">300</span>
+                            <div class="col-4">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold productName">品名</div>
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                    <li class="row list-group-item d-flex justify-content-between align-items-start pe-0">
-
-                        <div class="col-3 px-0">
-                            <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
-                        </div>
-
-                        <div class="col-4">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold productname">品名</div>
+                            <div class="col-1 px-0">
+                                <div class="col text-center px-0">
+                                    <div class="col">2</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-1 px-0">
-                            <div class="col text-center px-0">
-                                <div class="col">2</div>
-                            </div>
-                        </div>
-                        <div class="col-4">
+                            <div class="col-4">
 
-                            <div class="productprice">
-                                <span>$</span>
-                                <span class="originalprice">300</span>
-                                <span> </span>
-                                <span class="discountprice">270</span>
+                                <div class="productPrice">
+                                    <span>$</span>
+                                    <!-- <span class="originalprice">300</span>
+                                    <span> </span> -->
+                                    <span class="price">300</span>
+                                </div>
                             </div>
-                        </div>
-                    </li>
+                        </li>
+                        <li class="row list-group-item d-flex justify-content-between align-items-start pe-0">
 
-                    <div class="subtotal">小計: XXXX 元</div>
+                            <div class="col-3 px-0">
+                                <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
+                            </div>
+
+                            <div class="col-4">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold productName">品名</div>
+                                </div>
+                            </div>
+                            <div class="col-1 px-0">
+                                <div class="col text-center px-0">
+                                    <div class="col">2</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+
+                                <div class="productPrice">
+                                    <span>$</span>
+                                    <span class="originalPrice">300</span>
+                                    <span> </span>
+                                    <span class="discountPrice">270</span>
+                                </div>
+                            </div>
+                        </li>
+
+                        <div class="subTotal">小計: XXXX 元</div>
+                        <hr>
+                        <div class="subOrderTitle">
+                            <div class="subOrderText subOrderId">訂單單號2</div>
+                            <div class="subOrderText subOrderTime">訂單時間</div>
+                        </div>
+                        <li class="row list-group-item d-flex justify-content-between align-items-start pe-0">
+
+                            <div class="col-3 px-0">
+                                <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
+                            </div>
+
+                            <div class="col-4">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold productName">品名</div>
+                                </div>
+                            </div>
+                            <div class="col-1 px-0">
+                                <div class="col text-center px-0">
+                                    <div class="col">2</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+
+                                <div class="productPrice">
+                                    <span>$</span>
+                                    <!-- <span class="originalprice">300</span>
+                                    <span> </span> -->
+                                    <span class="price">300</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="row list-group-item d-flex justify-content-between align-items-start pe-0">
+
+                            <div class="col-3 px-0">
+                                <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
+                            </div>
+
+                            <div class="col-4">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold productName">品名</div>
+                                </div>
+                            </div>
+                            <div class="col-1 px-0">
+                                <div class="col text-center px-0">
+                                    <div class="col">2</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+
+                                <div class="productPrice">
+                                    <span>$</span>
+                                    <!-- <span class="originalprice">300</span>
+                                    <span> </span> -->
+                                    <span class="price">300</span>
+                                </div>
+                            </div>
+                        </li>
+
+
+                        <div class="subTotal">小計: XXXX 元</div>
+
+                    </ol>
                     <hr>
-                    <div class="orderlistnum">第二筆</div>
-                    <li class="row list-group-item d-flex justify-content-between align-items-start pe-0">
-
-                        <div class="col-3 px-0">
-                            <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
-                        </div>
-
-                        <div class="col-4">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold productname">品名</div>
-                            </div>
-                        </div>
-                        <div class="col-1 px-0">
-                            <div class="col text-center px-0">
-                                <div class="col">2</div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-
-                            <div class="productprice">
-                                <span>$</span>
-                                <!-- <span class="originalprice">300</span>
-                                <span> </span> -->
-                                <span class="price">300</span>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="row list-group-item d-flex justify-content-between align-items-start pe-0">
-
-                        <div class="col-3 px-0">
-                            <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
-                        </div>
-
-                        <div class="col-4">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold productname">品名</div>
-                            </div>
-                        </div>
-                        <div class="col-1 px-0">
-                            <div class="col text-center px-0">
-                                <div class="col">2</div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-
-                            <div class="productprice">
-                                <span>$</span>
-                                <!-- <span class="originalprice">300</span>
-                                <span> </span> -->
-                                <span class="price">300</span>
-                            </div>
-                        </div>
-                    </li>
-
-
-                    <div class="subtotal">小計: XXXX 元</div>
-
-                </ol>
-                <hr>
-                <div class="carttotal">今日消費總計: XXX 元</div>
+                    <div class="cartTotal">今日消費總計: XXX 元</div>
+                </div>
+            </div>
+        </fieldset>
+        <form action="Check" method="post" class="d-none">
+            <input name="orderDate" v-model="orderDate" />
+            <button type="submit" ref="checkConfirm"></button>
+        </form>
+    </div>
+    <!-- 底部按鈕 -->
+    <div class="finalCheck">
+        <div class="container row w-100">
+            <div class="col col-xl-6 text-center">
+                <button type="button" class="bottombtntext btnBacktoMenu w-100 py-2">
+                    繼續加點
+                </button>
+            </div>
+            <div class="col col-xl-6 text-center">
+                <button type="button" class="bottombtntext btnPaymentConfirm w-100 py-2" data-bs-toggle="modal"
+                        data-bs-target="#delieveBackdrop">
+                    去結帳
+                </button>
             </div>
         </div>
-    </fieldset>
-</div>
-<!-- 底部按鈕 -->
-<div class="finalcheck">
-    <div class="container row w-100">
-        <div class="col col-xl-6 text-center">
-            <button type="button" class="bottombtntext btnbacktomenu w-100 py-2">
-                繼續加點
-            </button>
-        </div>
-        <div class="col col-xl-6 text-center">
-            <button type="button" class="bottombtntext btnpaymentconfirm w-100 py-2">
-                去結帳
-            </button>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="delieveBackdrop" data-bs-backdrop="delieve" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="delieveBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="delieveBackdropLabel">結帳提示</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    今日消費完畢，確認進入結帳程序?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btnInModal btnModalCancel" data-bs-dismiss="modal">取消</button>
+                    <button class="btnInModal btnModalConfirm" v-on:click="checkConfirm()">確認結帳</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    var app = new Vue({
+        el: '#orderTotal',
+        data: {
+            orderDate: '',
+        },
+        methods: {
+            checkConfirm: function () {
+                this.$refs.checkConfirm.click();
+            }
+        }
+    })
+</script>
