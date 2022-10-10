@@ -27,5 +27,10 @@ namespace Alcoholic.Controllers
         {
             return View();
         }
+
+        public IActionResult Payment()
+        {
+            return View();
+        }
     }
 }
