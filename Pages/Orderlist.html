@@ -1,245 +1,332 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
-    <link rel="stylesheet" href="bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous">
+    </script>
     <style>
-        body{
+        body {
             position: relative;
             background-color: #333;
         }
-        input { 
-            text-align: center; 
-        }
-        .collection{
-            background-color: #333;
-            position: sticky;
-            top: 0;
-            z-index: 99;
-        }
-
-        .title{
-            text-align: center;
-        }
-
+        /* banner */
         .banner {
             background-color: #721B29;
             color: snow;
         }
-        
-        .banner h1,p{
+
+        .banner h1,
+        p {
             margin: auto;
-            text-align: end;
+            text-align: start;
         }
-        .banner h1{
+
+        .banner h1 {
             font-size: 22px;
             height: 30px;
         }
-        
+        .bannerlogin{
+            text-align: end;
+        }
+        /* 產品 */
+        .collection {
+            background-color: #333;
+            position: sticky;
+            top: 0px;
+            z-index: 1;
+        }
 
-        .tabbtn{
+        .producttitle {
+            text-align: center;
+        }
+        /* 算命 */
+        .fate {
+            position: fixed;
+            right: 0px;
+            top: 20vh;            
+            width: 10vw;
+            max-width: 100px;          
+            z-index: 2;
+            display: inline;
+        }
+
+        .tabbtn {
             border-radius: 0 !important;
             margin: 12px 0 0 0;
         }
-        .itemtab{
+        .itemtab {
             background-color: #D8CDB9;
         }
-        .fa{
-            pointer-events: none;
+        /* 懸浮視窗 */
+        .mmodal-bodyimg{
+            text-align: center;
         }
         
+        /* 購物車 */
+        .cart {
+            position: sticky;
+            bottom: 0;
+            background-color: #333;
+        }
+        .cartbackgroundcolor {
+            text-align: center;
+            background-color: #721B29;
+        
+        }
+        .btncartbackgroundcolor {
+            color: white;
+            width:100% ;
+        }
+        .modal-image{            
+            max-height: 280px;
+        }
+        .modal-spec
+        {   overflow-y: auto;
+            max-height: 20vh;
+        }
+        .modal-bodyimg{
+            text-align: center;
+        }
+        .modal-footer{
+            background-color: #721B29;
+        }
     </style>
     <title>Document</title>
 </head>
 
 <body>
-    <!-- banner -->
-    <div class="banner">
-        <div class="container-fluid">
-            <div class="row align-items-center">
-                <div class="col-4">
-                    <h1>店家名稱</h1>
+    <div id="vueproductModal">
+        <!-- banner -->
+        <div class="banner">
+            <div class="container-fluid ">
+                <div class="row align-items-center ">
+                    <div class="col-4 ">
+                        <h1>店家名稱</h1>
+                    </div>
+                    <div class="col-4">
+                        <p>桌次 <span >{{tableid}}</span></p>
+                    </div>
+                    <div class="col-1 p-0">
+                        <p>訪客</p>
+                    </div>
+                    <div class="col-3 p-0 bannerlogin">
+                        <button class="btn btn-primary ">登錄<i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
                 </div>
-                <div class="col-4">
-                    <p>桌次 <span id="table"> 13</span></p>
-                </div>
-                <div class="col-2 p-0">
-                    <p >訪客</p>
-                </div>
-                <div class="col-2 p-0" >
-                    <a href="#" class="btn btn-primary btnlogin p-0 ">登錄</a>
-                </div>
-
             </div>
-        </div>        
-    </div>
-
-    <!-- 導覽列(sticky) -->
-    <div class="collection">
-        <ul class="nav nav-pills nav-justified" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-              <button class="tabbtn nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">特色調酒</button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="tabbtn nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">經典調酒</button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="tabbtn nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" type="button" role="tab" aria-controls="messages" aria-selected="false">推薦調酒</button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="tabbtn nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab" aria-controls="settings" aria-selected="false">客製化</button>
-            </li>
-        </ul>
-    </div>
-
-
-    <div class="menu">
-        <div class="tab-content">
-            <!-- 特色調酒 -->        
-            <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-                <div class="container-fluid signatureCT p-0">
-                    <nav class="navbar navbar-expand-lg navbar-light itemtab">
-                        <a class="navbar-brand" href="#">選單-特色調酒</a>              
-                    </nav>
-                    <div class="container">
-                        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-                            <div class="col">
-                                <div class="card h-100">
-                                    <img src="Images/TempImages/example.jpg">
-                                    <div class="card-body ">
-                                        <h5 class="card-title ">紅茶梅酒$350</h5>
-                                        <div class="container mt-5">
-                                            <div class="row">
-                                            <div class="col-sm-4"></div>
-                                            <div class="col-sm-4 col-sm-offset-4">
-                                                <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <button class="btn btn-dark btn-sm minus-btn"><i class="fa fa-minus"></i></button>
-                                                    </div>
-                                                    <input type="number" class="form-control form-control-sm qty_input" value="0" min="0" readonly>
-                                                    <div class="input-group-prepend">
-                                                        <button class="btn btn-dark btn-sm plus-btn"><i class="fa fa-plus"></i></button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4"></div>
+        </div>
+        <!-- 導覽列(sticky) -->
+        <div class="collection">
+            <ul class="nav nav-pills nav-justified" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="tabbtn nav-link active" id="signatureCT-tab" data-bs-toggle="tab"
+                        data-bs-target="#signatureCT" type="button" role="tab" aria-controls="signatureCT"
+                        aria-selected="true">特色調酒</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="tabbtn nav-link" id="classicCT-tab" data-bs-toggle="tab" data-bs-target="#classicCT"
+                        type="button" role="tab" aria-controls="classicCT" aria-selected="false">經典調酒</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="tabbtn nav-link" id="recommendedCT-tab" data-bs-toggle="tab"
+                        data-bs-target="#recommendedCT" type="button" role="tab" aria-controls="recommendedCT"
+                        aria-selected="false">推薦調酒</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="tabbtn nav-link" id="customizedCT-tab" data-bs-toggle="tab"
+                        data-bs-target="#customizedCT" type="button" role="tab" aria-controls="customizedCT"
+                        aria-selected="false">客製化</button>
+                </li>
+            </ul>
+        </div>
+        <!-- 算命 -->
+        <div class="divfate">
+            <img class="fate" src="./Images/Cocktails/fate.png">
+        </div>
+        <!-- 菜單 -->
+        <div class="menu">
+            <div class="tab-content">
+                <!-- 特色調酒 -->
+                <div class="tab-pane active" id="signatureCT" role="tabpanel" aria-labelledby="signatureCT-tab"
+                    tabindex="0">
+                    <div class="container-fluid signatureCT p-0">
+                        
+                        <div class="container">
+                            <div class="row g-4 mt-2">
+                                <div class="col col-sm-12 col-md-3 ">
+                                    <div class="card productcard w-100 h-100" id="0" data-bs-toggle="modal"
+                                        data-bs-target="#productModal" @click="selected">
+                                        <img :src="product[0].imagesrc">
+                                        <div class="card-body ">
+                                            <h5 class="card-title producttitle">{{product[0].head}}</h5>
                                         </div>
-                                    </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>            
-                    </div>
-
-                </div>
-            </div>
-            <!-- 經典調酒 -->
-            <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                <div class="container-fluid classicCT p-0">
-                    <nav class="navbar navbar-expand-lg navbar-light itemtab">
-                        <a class="navbar-brand" href="#">選單-經典調酒</a>              
-                    </nav>
-                    <div class="container">
-                        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-                            <div class="col">
-                                <div class="card h-100">
-                                    <img src="Images/TempImages/example.jpg">
-                                    <div class="card-body ">
-                                        <h5 class="card-title ">紅茶梅酒$350</h5>
-                                        <div class="container mt-5">
-                                            <div class="row">
-                                            <div class="col-sm-4"></div>
-                                            <div class="col-sm-4 col-sm-offset-4">
-                                                <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <button class="btn btn-dark btn-sm minus-btn"><i class="fa fa-minus"></i></button>
-                                                    </div>
-                                                    <input type="number" class="form-control form-control-sm qty_input" value="0" min="0" readonly>
-                                                    <div class="input-group-prepend">
-                                                        <button class="btn btn-dark btn-sm plus-btn"><i class="fa fa-plus"></i></button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4"></div>
+                                <div class="col col-sm-12 col-md-3 ">
+                                    <div class="card productcard w-100 h-100" id="1" data-bs-toggle="modal"
+                                        data-bs-target="#productModal" @click="selected">
+                                        <img :src="product[1].imagesrc">
+                                        <div class="card-body ">
+                                            <h5 class="card-title producttitle">{{product[1].head}}</h5>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col col-sm-12 col-md-3 ">
+                                    <div class="card productcard w-100 h-100" id="2" data-bs-toggle="modal"
+                                        data-bs-target="#productModal" @click="selected">
+                                        <img :src="product[2].imagesrc">
+                                        <div class="card-body ">
+                                            <h5 class="card-title producttitle">{{product[2].head}}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-sm-12 col-md-3 ">
+                                    <div class="card productcard w-100 h-100" id="3" data-bs-toggle="modal"
+                                        data-bs-target="#productModal" @click="selected">
+                                        <img :src="product[3].imagesrc">
+                                        <div class="card-body ">
+                                            <h5 class="card-title producttitle">{{product[3].head}}</h5>
+                                        </div>
+                                    </div>
+                                </div>                                                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 經典調酒 -->
+                <div class="tab-pane" id="classicCT" role="tabpanel" aria-labelledby="classicCT-tab" tabindex="0">
+                    <div class="container-fluid classicCT p-0">
+                        
+                        <div class="container">
+                            <div class="row g-4 mt-2">
+                                <div class="col col-sm-12 col-md-3 ">
+                                    <div class="card productcard w-100 h-100" id="4" data-bs-toggle="modal"
+                                        data-bs-target="#productModal" @click="selected">
+                                        <img :src="product[4].imagesrc">
+                                        <div class="card-body ">
+                                            <h5 class="card-title producttitle">{{product[4].head}}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-sm-12 col-md-3 ">
+                                    <div class="card productcard w-100 h-100" id="5" data-bs-toggle="modal"
+                                        data-bs-target="#productModal" @click="selected">
+                                        <img :src="product[5].imagesrc">
+                                        <div class="card-body ">
+                                            <h5 class="card-title producttitle">{{product[5].head}}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-sm-12 col-md-3 ">
+                                    <div class="card productcard w-100 h-100" id="6" data-bs-toggle="modal"
+                                        data-bs-target="#productModal" @click="selected">
+                                        <img :src="product[6].imagesrc">
+                                        <div class="card-body ">
+                                            <h5 class="card-title producttitle">{{product[6].head}}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-sm-12 col-md-3 ">
+                                    <div class="card productcard w-100 h-100" id="7" data-bs-toggle="modal"
+                                        data-bs-target="#productModal" @click="selected">
+                                        <img :src="product[7].imagesrc">
+                                        <div class="card-body ">
+                                            <h5 class="card-title producttitle">{{product[7].head}}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 推薦 -->
+                <div class="tab-pane" id="recommendedCT" role="tabpanel" aria-labelledby="recommendedCT-tab"
+                    tabindex="0">
+                    <div class="container-fluid recommendedCT p-0">                        
+                        <div class="container">
+                            <div class="row g-4 mt-2">
+                                <div class="col col-sm-12 col-md-3 ">
+                                    <div class="card productcard w-100 ">
+                                        <img src="/Project/example.jpg">
+                                        <div class="card-body ">
+                                            <h5 class="card-title producttitle">紅茶梅酒$350</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-sm-12 col-md-3 ">
+                                    <div class="card productcard w-100 ">
+                                        <img src="/Project/example.jpg">
+                                        <div class="card-body ">
+                                            <h5 class="card-title producttitle">紅茶梅酒$350</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-sm-12 col-md-3 ">
+                                    <div class="card productcard w-100 ">
+                                        <img src="/Project/example.jpg">
+                                        <div class="card-body ">
+                                            <h5 class="card-title producttitle">紅茶梅酒$350</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-sm-12 col-md-3 ">
+                                    <div class="card productcard w-100 ">
+                                        <img src="/Project/example.jpg">
+                                        <div class="card-body ">
+                                            <h5 class="card-title producttitle">紅茶梅酒$350</h5>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- 推薦 -->
-            <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab" tabindex="0">
-                <div class="container-fluid recommandCT p-0">
-                    <nav class="navbar navbar-expand-lg navbar-light itemtab">
-                        <a class="navbar-brand" href="#">選單-推薦調酒</a>              
-                    </nav>
-                    <div class="container">
-                        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-                            <div class="col">
-                                <div class="card h-100">
-                                    <img src="Images/TempImages/example.jpg">
-                                    <div class="card-body ">
-                                        <h5 class="card-title ">紅茶梅酒$350</h5>
-                                        <div class="container mt-5">
-                                            <div class="row">
-                                            <div class="col-sm-4"></div>
-                                            <div class="col-sm-4 col-sm-offset-4">
-                                                <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <button class="btn btn-dark btn-sm minus-btn"><i class="fa fa-minus"></i></button>
-                                                    </div>
-                                                    <input type="number" class="form-control form-control-sm qty_input" value="0" min="0" readonly>
-                                                    <div class="input-group-prepend">
-                                                        <button class="btn btn-dark btn-sm plus-btn"><i class="fa fa-plus"></i></button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4"></div>
+                <!-- 客製化 -->
+                <div class="tab-pane" id="customizedCT" role="tabpanel" aria-labelledby="customizedCT-tab" tabindex="0">
+                    <div class="container-fluid customizedCT p-0">
+                        <div class="container">
+                            <div class="row g-4 mt-2">
+                                <div class="col col-sm-12 col-md-3 ">
+                                    <div class="card productcard w-100 ">
+                                        <img src="/Project/example.jpg">
+                                        <div class="card-body ">
+                                            <h5 class="card-title producttitle">紅茶梅酒$350</h5>
                                         </div>
-                                    </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- 客製化 -->        
-            <div class="tab-pane" id="settings" role="tabpanel" aria-labelledby="settings-tab" tabindex="0">
-                <div class="container-fluid customizedCT p-0">
-                    <nav class="navbar navbar-expand-lg navbar-light itemtab">
-                        <a class="navbar-brand" href="#">選單-客製化調酒</a>              
-                    </nav>
-                    <div class="container">
-                        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-                            <div class="col">
-                                <div class="card h-100">
-                                    <img src="Images/TempImages/example.jpg">
-                                    <div class="card-body ">
-                                        <h5 class="card-title ">紅茶梅酒$350</h5>
-                                        <div class="container mt-5">
-                                            <div class="row">
-                                            <div class="col-sm-4"></div>
-                                            <div class="col-sm-4 col-sm-offset-4">
-                                                <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <button class="btn btn-dark btn-sm minus-btn"><i class="fa fa-minus"></i></button>
-                                                    </div>
-                                                    <input type="number" class="form-control form-control-sm qty_input" value="0" min="0" readonly>
-                                                    <div class="input-group-prepend">
-                                                        <button class="btn btn-dark btn-sm plus-btn"><i class="fa fa-plus"></i></button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4"></div>
+                                <div class="col col-sm-12 col-md-3 ">
+                                    <div class="card productcard w-100 ">
+                                        <img src="/Project/example.jpg">
+                                        <div class="card-body ">
+                                            <h5 class="card-title producttitle">紅茶梅酒$350</h5>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col col-sm-12 col-md-3 ">
+                                    <div class="card productcard w-100 ">
+                                        <img src="/Project/example.jpg">
+                                        <div class="card-body ">
+                                            <h5 class="card-title producttitle">紅茶梅酒$350</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-sm-12 col-md-3 ">
+                                    <div class="card productcard w-100 ">
+                                        <img src="/Project/example.jpg">
+                                        <div class="card-body ">
+                                            <h5 class="card-title producttitle">紅茶梅酒$350</h5>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -248,24 +335,167 @@
                 </div>
             </div>
         </div>
+        <div class="container cart ">
+            <div class="col-12 align-items-end cartbackgroundcolor">
+                                
+                <a class="btn btncartbackgroundcolor">查看購物車<i class="fa-solid fa-cart-shopping "></i></a>
+                
+            </div>            
+        </div>
+
+        <!-- 懸浮視窗Modal -->
+   <form action="/Project/Orderlist.html" method="post">
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >{{head}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-0">
+                    <div class="modal-bodyimg ">
+                    <img class="modal-image" :src="imagesrc" >
+                    </div>
+                    <div class="card-body modal-spec">
+                        <ul >
+                            <li v-for="feature in featurelist">{{feature}}</li>                            
+                        </ul>                        
+                    </div>  
+                </div>
+                <div class="container my-1">
+                    <div class="row justify-content-center ">
+                        <div class="col-1 p-0">
+                            <button type="button" @click="minus" class="btn btn-dark btn-sm minus-btn"><i
+                                    class="fa fa-minus"></i></button>
+                        </div>
+                        <div class="col-4 p-0">
+                            <input type="number" :name="head"
+                                class="form-control form-control-sm qty_input" :value="value" readonly>                            
+                        </div>
+                        <div class="col-1 p-0">
+                            <button type="button" @click="plus" class="btn btn-dark btn-sm plus-btn"><i
+                                    class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer p-0">
+                    <div class="container-fluid ">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-12 "><button type="submit" class="btn btncartbackgroundcolor">加到購物車<i
+                                class="fa-solid fa-cart-shopping ps-1"></i></button>
+                            </div>                                
+                        </div>
+                    </div>                        
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!--jQ-->
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>    
-    <script>
-        $('.plus-btn').click(function(e){
-            e.target.parentNode.parentNode.children[1].value = parseInt(e.target.parentNode.parentNode.children[1].value) + 1;
-            });
-        $('.minus-btn').click(function(e){
-            e.target.parentNode.parentNode.children[1].value = parseInt(e.target.parentNode.parentNode.children[1].value) - 1;
-            if (e.target.parentNode.parentNode.children[1].value == -1) {
-                e.target.parentNode.parentNode.children[1].value = 0;
-            }
-        });
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+   </form>
+    </div>
 </body>
+    <!--jQ-->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <!-- Vue -->
+    <script>
+        var app = new Vue({
+            el: '#vueproductModal',
+            data: {
+                tableid:13,
+                value: 0,
+                vueid: "",
+                imagesrc: "",
+                head: "",
+                discount: "",
+                featurelist: "",
+                // 產品資料
+                product: [
+                    // 特色
+                    {id: "0", imagesrc: './Images/Cocktails/example.jpg', head: "國盛-紅茶梅酒 $350", discount: "80%",
+                        allfeature: [
+                            "產區:日本愛知縣",
+                            "香味:梅酒甘酸味與紅茶甘香",
+                            "口感:甜美中帶點回甘",
+                            "特色:百分之百日本國產梅子加上大吉嶺紅茶萃取"]
+                    },
+                    {id: "1", imagesrc: './Images/Cocktails/example1.jpg', head: "OMAR-豐收系列NO.2 $400", discount: "70%",
+                        allfeature: [
+                            "產區:台灣",
+                            "香味:飽滿的煙燻烏梅、線香、辛香料的香氣，結合著熱帶水果與清新水果軟糖的香甜",
+                            "口感:濃厚飽實的酒體，有著青梅酸甜的口感，透露著絲絲波本桶的香草、奶油糖的風味",
+                            "特色:餘韻綿長甘草、橘皮及橡木繚繞不絕"]
+                    },
+                    {id: "2", imagesrc: './Images/Cocktails/example2.jpg', head: "OMAR-煙燻焦香 $500", discount: "80%",
+                        allfeature: [
+                            "產區:台灣",
+                            "香味:輕盈的花香、柑橘及些許花蜜甜香，帶出如同置身南投山林間的清新草地和杉木氛圍，繼而醞釀出傳統磚窯烘烤龍眼乾的煙薰氣息",
+                            "口感:如花蜜般的圓潤清甜，伴隨著柴燒甘蔗的溫暖風味",
+                            "特色:餘韻悠長回甘，窯烤番薯甜韻搭配些許菸草、奶油、果香慢慢浮現"]
+                    },
+                    {id: "3", imagesrc: './Images/Cocktails/example3.jpg', head: "OMAR-豐收系列NO.3限量套組 $350", discount: "80%",
+                        allfeature: [
+                            "產區:台灣",
+                            "香味:前香-黃色水果、橙皮 中香-黃箭口香糖(香蕉及芒果)、果香、臻果巧克力",
+                            "口感:口感豐厚甜潤，雪莉甜香為主香氣，中後段帶出烏龍茶香及橙皮",
+                            "特色:尾韻中偏長，回香是木頭、果香、堅果及巧克力"]
+                    },
+                    {id: "4", imagesrc: './Images/Cocktails/example4.jpg', head: "禾富-卡本內蘇維翁希哈紅酒2021 $250", discount: "95%",
+                        allfeature: [
+                            "產區:澳洲-南澳 ",
+                            "香味:深色水果如黑莓、成熟李子及卡本內品種特有的黑醋栗果香，還帶有些許辛香氣息",
+                            "口感:入口可感受希哈品種濃郁果香帶來的甜美口感，和飽滿紮實的橡木氣息及單寧形成完美的均衡",
+                            "特色:聯名限量版，建議搭配HBO「龍之家族」影集一起飲用"]
+                    },
+                    {id: "5", imagesrc: './Images/Cocktails/example5.jpg', head: "約瑟夫杜亨酒莊-一級園白酒2018 $400", discount: "70%",
+                        allfeature: [
+                            "產區:法國-勃根地",
+                            "香味:香氣優雅，醒酒後便活潑了起來，聞有山楂與杏桃香氣，並慢慢轉化為菸草氣息",
+                            "口感:陳年後，香氣愈益沉穩，有如水果乾與辛香料等。圓潤的口感令人回味無窮",
+                            "特色:榨出來的果汁澄清完後便放入來自法國的已風乾三年橡木桶中發酵與培養12個月"]
+                    },
+                    {id: "6", imagesrc: './Images/Cocktails/example6.jpg', head: "維迪加爾酒莊-三作家精選白酒 $150", discount: "80%",
+                        allfeature: [
+                            "產區:葡萄牙-綠酒區",
+                            "香味:清新淡雅的檸檬黃與青檸綠基調，混合了水果與鮮花的香氣沁人心脾",
+                            "口感:清爽優雅，果味十足，帶有回甘的餘韻細緻綿長",
+                            "特色:葡萄牙文的Vinho=Wine, Verde=Green, 在葡萄牙文中即為“綠酒”，因此又稱綠酒"]
+                    },
+                    {id: "7", imagesrc: './Images/Cocktails/example7.jpg', head: "喜格莊園-波爾多混釀紅酒2017 $230", discount: "60%",
+                        allfeature: [
+                            "產區:法國-波爾多",
+                            "香味:黑醋栗、紫羅蘭、煙草及草本植物的華麗香氣",
+                            "口感:入口充滿美妙純正果味有細膩單寧相伴，加上剛好足夠的新鮮度所構成。中後段得到很好的平衡，略顯精緻的辛香調且餘韻悠長",
+                            "特色:喜格莊園位於波爾多左岸的 Margaux 瑪歌產區，目前由Chanel香奈兒集團掌管。由前五大一級莊拉圖堡的總經理John Kolasa負責管理釀酒事宜"]
+                    },
+                ]
+            },    
+            methods: {
+                selected: function (e) {
+                    this.value=0;
+                    this.formdata=0;
+                    this.vueid = e.currentTarget.id;
+                    var item = this.product[this.vueid];
+                    this.imagesrc = item.imagesrc;
+                    this.head = item.head;
+                    this.discount = item.discount;
+                    this.featurelist = item.allfeature;
+                },    
+                plus: function () {
+                    this.value = this.value + 1;
+                },
+                minus: function () {
+                    if (this.value <= 0) {
+                        this.value = 0;
+                    }
+                    else {
+                        this.value = this.value - 1;
+                    }
+                }
+            },
+        })   
+    </script>
+    
+
+
 </html>
