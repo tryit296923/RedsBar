@@ -345,11 +345,11 @@
                 </div>
                 <form action="Success" method="post" class="d-none">
                     <input name="orderDate" v-model="orderDate"/>
-                    <button type="submit" hidden ref="orderingsend"></button>
+                    <button type="submit" ref="orderingSend"></button>
                 </form>
             </div>
             <hr>
-            <div class="cartTotal">此筆訂單總額: XXX 元</div>
+            <div class="cartTotal">此筆訂單總額: {{cartTotal()}} 元</div>
         </fieldset>
     </div>
 
@@ -386,7 +386,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btnInModal btnModalCancel" data-bs-dismiss="modal">取消</button>
-                    <button class="btnInModal btnModalConfirm" v-on:click="orderingsend()">確認送出</button>
+                    <button class="btnInModal btnModalConfirm" v-on:click="orderingSend()">確認送出</button>
                 </div>
             </div>
         </div>
@@ -462,13 +462,18 @@
             discountPrice: function (item) {
                 return Math.round(item.price * item.count * item.discount);
             },
-            cartTotal: function (p) {
-
+            cartTotal: function () {
+                var totalprice = 0;
+                for (let i = 0; i < this.itemList.length; i++) {
+                    totalprice += this.itemList[i].price * this.itemList[i].count * this.itemList[i].discount;
+                }
+                return Math.round(totalprice);
             },
-            orderingsend: function () {
+            orderingSend: function () {
                 //console.log('orderingsend');
-                this.$refs.orderingsend.click();
+                this.$refs.orderingSend.click();
             },
+
         },
     })
 </script>
