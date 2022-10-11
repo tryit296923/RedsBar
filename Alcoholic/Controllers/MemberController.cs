@@ -60,7 +60,7 @@ namespace Alcoholic.Controllers
             projectContext.Entry(deskInfo).State = EntityState.Modified;
             await projectContext.SaveChangesAsync();
             HttpContext.Response.Cookies.Append("Desk", deskInfo.Desk);
-            HttpContext.Response.Cookies.Append("Desk", deskInfo.Number);
+            HttpContext.Response.Cookies.Append("Number", deskInfo.Number);
             return View("LoginRegister");
         }
 
