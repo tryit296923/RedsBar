@@ -1,4 +1,4 @@
-﻿@model Alcoholic.Models.ViewModels.BookingSuccessViewModels
+﻿@model Alcoholic.Models.Entities.Reserves
 
 <style>
     body {
@@ -85,13 +85,13 @@
 <br>
 <div class="container check-area col-10 col-xl-4">
     <div class="check-title">
-        <p class="username">@Model.Name</p>
+        <p class="username">@Model.ReserveName</p>
         <p>您好，以下為訂位資訊：</p>
     </div>
     <hr>
     <div class="booking-detail">
-        <p class="booking-date">@Model.DatePicker &nbsp; @System.Globalization.DateTimeFormatInfo.CurrentInfo.DayNames[(byte)DateTime.Parse(Model.DatePicker).DayOfWeek]</p>
-        <p class="booking-people">@Model.People 位大人</p>
+        <p class="booking-date">@Model.ReserveDate.ToString("yyyy-MM-dd") &nbsp @Model.ReserveDate.ToString("dddd")</p>
+        <p class="booking-people">@Model.Number 位大人</p>
     </div>
     <hr>
     <div class="store-detial">

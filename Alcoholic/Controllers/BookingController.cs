@@ -1,4 +1,6 @@
-﻿using Alcoholic.Models.ViewModels;
+﻿using Alcoholic.Models.DTO;
+using Alcoholic.Models.Entities;
+using Alcoholic.Models.ViewModels;
 using Alcoholic.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,27 +9,33 @@ namespace Alcoholic.Controllers
     public class BookingController : Controller
     {
         private readonly MailService mailService;
+        private readonly db_a8de26_projectContext projectContext;
 
-        public BookingController(MailService mailService)
+        public BookingController(MailService mailService,db_a8de26_projectContext projectContext)
         {
             this.mailService = mailService;
+            this.projectContext = projectContext;
         }
         public IActionResult Index()
         {
             return View();
         }
-        public IActionResult Check(string datepicker,int people)
+        public IActionResult Check(string ReserveDate, int Number)
         {
-            ViewBag.Datepicker = datepicker;
-            ViewBag.People = people;
+            ViewBag.ReserveDate = ReserveDate;
+            ViewBag.Number = Number;
             return View();
         }
-        public async Task<IActionResult> Success(BookingSuccessViewModels data)
+        public async Task<IActionResult> Success(Reserves bookingData)
         {
-            var result = await Razor.Templating.Core.RazorTemplateEngine.RenderAsync<BookingSuccessViewModels>("Views/EmailTemplate/BookingTemplate.cshtml",data);
-            mailService.SendMail(data.Email,result,"感謝您的訂位");
+            bookingData.ReserveId = projectContext.Reserves.Count()+1;
+            bookingData.ReserveSet = DateTime.Now;
+            await projectContext.AddAsync(bookingData);
+            await projectContext.SaveChangesAsync();
+            var result = await Razor.Templating.Core.RazorTemplateEngine.RenderAsync<Reserves>("Views/EmailTemplate/BookingTemplate.cshtml", bookingData);
+            mailService.SendMail(bookingData.Email,result,"感謝您的訂位");
 
-            return View(data);
+            return View(bookingData);
         }
 
     }

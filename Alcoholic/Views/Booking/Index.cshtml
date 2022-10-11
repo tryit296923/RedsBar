@@ -11,11 +11,11 @@
         justify-content: space-around;
     }
 
-        .img-box img {
-            padding: 20px 0;
-            height: 80%;
-            width: 80%;
-        }
+    .img-box img {
+        padding: 20px 0;
+        height: 80%;
+        width: 80%;
+    }
 
     a {
         color: aliceblue;
@@ -28,13 +28,13 @@
         position: relative;
     }
 
-        .search img {
-            height: 20px;
-            width: 20px;
-            position: absolute;
-            top: 9px;
-            right: 9px;
-        }
+    .search img {
+        height: 20px;
+        width: 20px;
+        position: absolute;
+        top: 9px;
+        right: 9px;
+    }
 
     .breadcrumb a {
         color: #444;
@@ -84,9 +84,9 @@
         bottom: 0;
     }
 
-        .booking-check div {
-            height: 50px;
-        }
+    .booking-check div {
+        height: 50px;
+    }
 
     .booking-check-text {
         margin: 0;
@@ -118,9 +118,9 @@
         background-color: gray;
     }
 
-        .booking-uncheck-btn:hover {
-            color: white;
-        }
+    .booking-uncheck-btn:hover {
+        color: white;
+    }
 
     .logo {
         width: 50px;
@@ -161,9 +161,9 @@
         font-size: 14px;
     }
 
-        footer a {
-            color: #666;
-        }
+    footer a {
+        color: #666;
+    }
 
     .footleft,
     .footright {
@@ -187,7 +187,7 @@
 <!--Navbar-->
 <nav class="navbar navbar-expand-lg ">
     <div class="container-fluid">
-        <img src="Images/icons/logo-w.png" alt="" class="logo">
+        <img src="~/images/icons/logo-w.png" alt="" class="logo">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -197,7 +197,7 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <form class="searcharea2 search" role="search">
                     <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                    <a href=""><img src="Images/icons/search.png" alt=""></a>
+                    <a href=""><img src="~/images/icons/search.png" alt=""></a>
                 </form>
                 <li class="nav-item">
                     <a class="nav-link" href="#">推薦</a>
@@ -214,7 +214,7 @@
             </ul>
             <form class="d-flex searcharea search" role="search">
                 <input class=" form-control" type="search" placeholder="Search" aria-label="Search">
-                <a href=""><img src="Images/icons/search.png" alt=""></a>
+                <a href=""><img src="~/images/icons/search.png" alt=""></a>
             </form>
         </div>
     </div>
@@ -235,7 +235,7 @@
     <div class="backcolor">
         <div class="container">
             <div class="img-box">
-                <img src="Images/BackGround/bookingbanner.jpg" />
+                <img src="~/images/background/bookingbanner.jpg" />
             </div>
         </div>
     </div>
@@ -245,11 +245,11 @@
         <div class="row">
             <div class="col-12 col-xl-6">
                 <label for="datepicker" class="col-sm-12 col-form-label">用餐日期</label>
-                <input name="datepicker" type="date" id="datepicker" class="datepicker" placeholder="請選擇用餐日期" v-bind:min="mindate()" v-bind:max="maxdate()" v-model="datepick">
+                <input name="ReserveDate" type="date" id="datepicker" class="datepicker" placeholder="請選擇用餐日期" v-bind:min="mindate()" v-bind:max="maxdate()" v-model="ReserveDate">
             </div>
             <div class="col-12 col-xl-6">
                 <label for="people" class="col-sm-12 col-form-label">用餐人數</label>
-                <select name="people" id="people" class="form-select" v-model="selectpeople">
+                <select name="Number" id="people" class="form-select" v-model="Number">
                     <option value="" disabled>請選擇用餐人數</option>
                     <template v-for="peo in people">
                         <option :value="peo.value">{{peo.txt}}</option>
@@ -273,13 +273,13 @@
                 <hr class="d-xl-none">
                 <div class="map-item">
                     <p>Address</p>
-                    <img src="Images/icons/icon01.png" alt="" class="icon">
+                    <img src="~/images/icons/icon01.png" alt="" class="icon">
                     <a href="https://goo.gl/maps/VARMRkiZqDQLhgWbA">100 台北市中正區濟南路一段321號</a>
                 </div>
                 <hr>
                 <div class="map-item">
                     <p>Phone</p>
-                    <img src="Images/icons/phonering.png" alt="" class="icon">
+                    <img src="~/images/icons/phonering.png" alt="" class="icon">
                     <a href="tel:0233221368">02 3322 1368</a>
                 </div>
                 <hr>
@@ -296,9 +296,9 @@
         </div>
     </div>
     <form action="Check" method="post">
-        <input name="datepicker" v-bind:value="datepick" hidden/>
-        <input name="people" v-bind:value="selectpeople" hidden/>
-        <button type="submit" hidden ref="bookingcheck"></button>
+        <input name="ReserveDate" v-bind:value="ReserveDate" hidden />
+        <input name="Number" v-bind:value="Number" hidden />
+        <button type="submit" ref="bookingcheck" hidden></button>
     </form>
     <!--footer-->
     <footer>
@@ -324,23 +324,23 @@
         <div class="container">
             <p class="booking-check-text">
                 選擇預定
-                <template v-if="datepick==''">
+                <template v-if="ReserveDate==''">
                     <button class="booking-check-date">請選擇預定日期</button>
                 </template>
                 <template v-else>
-                    <button class="booking-check-date">{{datepick}}</button>
+                    <button class="booking-check-date">{{ReserveDate}}</button>
                 </template>
                 >
-                <template v-if="selectpeople==''">
+                <template v-if="Number==''">
                     <button class="booking-check-people">請選擇用餐人數</button>
                 </template>
                 <template v-else>
-                    <button class="booking-check-people">{{people[selectpeople-1].txt}}</button>
+                    <button class="booking-check-people">{{people[Number-1].txt}}</button>
                 </template>
             </p>
         </div>
         <div class="container">
-            <template v-if=" datepick == '' || selectpeople =='' ">
+            <template v-if=" ReserveDate == '' || Number =='' ">
                 <a class="col-12 booking-uncheck-btn" type="button">請選擇用餐日期與人數</a>
             </template>
             <template v-else>
@@ -355,8 +355,8 @@
         el: '#d1',
         data: {
             MyDate: new Date,
-            datepick: '',
-            selectpeople: '',
+            ReserveDate: '',
+            Number: '',
             people: [
                 { value: 1, txt: '1位成人' },
                 { value: 2, txt: '2位成人' },
@@ -464,7 +464,7 @@
         var marker = new google.maps.Marker(
             {
                 position: mapProp.center,
-                icon: "Images/icons/icon01.png",
+                icon: "~/images/icons/icon01.png",
                 animation: google.maps.Animation.BOUNCE
             });
         marker.setMap(map);

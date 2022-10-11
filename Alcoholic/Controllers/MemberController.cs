@@ -69,8 +69,7 @@ namespace Alcoholic.Controllers
             HttpContext.Response.Cookies.Append("Number", deskInfo.Number);
             return View("LoginRegister");
         }
-
-        // 登入 => 點餐(Order'Order)
+        // 會員登入 => 點餐(Order'Order)
         [HttpPost]
         public async Task<IActionResult> Login(Member memberData)
         {
@@ -102,7 +101,6 @@ namespace Alcoholic.Controllers
                 // 未登入也可以使用的API [AllowAnonymous]
             }
         }
-
         // 登出
         [HttpDelete]
         public string Logout()
@@ -110,8 +108,6 @@ namespace Alcoholic.Controllers
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return "Logout";
         }
-
-        // 選訪客登入 => 點餐(Order'Order)
         public async Task<IActionResult> GuestLogin()
         {
             Member? user = (from member in projectContext.Members
@@ -193,5 +189,6 @@ namespace Alcoholic.Controllers
         {
             return projectContext.Members.Any(member => member.MemberAccount == Account);
         }
+
     }
 }

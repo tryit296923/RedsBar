@@ -291,7 +291,7 @@
                 <div class="title w-100">
                     <div class="himessage">
                         <p>Hi, </p>
-                        <p class="user">XXX</p>
+                        <p class="user">@ViewBag.userName</p>
                     </div>
                 </div>
             </div>
@@ -319,12 +319,12 @@
                                     <div>描述</div>
                                     <div v-if="item.discount != 1">
                                         <span>$ </span>
-                                        <span class="originalPrice">{{item.price * item.count}} </span>
+                                        <span class="originalPrice">{{item.unitPrice * item.count}} </span>
                                         <span class="discountPrice" name="finalPrice">{{discountPrice(item)}}</span>
                                     </div>
                                     <div v-else>
                                         <span>$ </span>
-                                        <span name="finalPrice">{{item.price * item.count}} </span>
+                                        <span name="finalPrice">{{item.unitPrice * item.count}} </span>
                                     </div>
                                 </div>
                             </div>
@@ -400,46 +400,46 @@
             itemList: [
                 {
                     id: '1',
-                    imgUrl: '',
+                    imgSrc: '',
                     name: '蘭姆酒',
-                    itemDescript: '',
-                    price: '250',
+                    itemDescription: '',
+                    unitPrice: '250',
                     count: '1',
                     discount: '0.8',
                 },
                 {
                     id: '2',
-                    imgUrl: '',
+                    imgSrc: '',
                     name: '長島冰茶',
-                    itemDescript: '',
-                    price: '350',
+                    itemDescription: '',
+                    unitPrice: '350',
                     count: '1',
                     discount: '1',
                 },
                 {
                     id: '3',
-                    imgUrl: '',
+                    imgSrc: '',
                     name: '紅酒',
-                    itemDescript: '',
-                    price: '300',
+                    itemDescription: '',
+                    unitPrice: '300',
                     count: '1',
                     discount: '1',
                 },
                 {
                     id: '4',
-                    imgUrl: '',
+                    imgSrc: '',
                     name: '白酒',
-                    itemDescript: '',
-                    price: '250',
+                    itemDescription: '',
+                    unitPrice: '250',
                     count: '1',
                     discount: '0.95',
                 },
                 {
                     id: '5',
-                    imgUrl: '',
+                    imgSrc: '',
                     name: '威士忌',
-                    itemDescript: '',
-                    price: '300',
+                    itemDescription: '',
+                    unitPrice: '300',
                     count: '1',
                     discount: '0.9',
                 },
@@ -460,12 +460,12 @@
                 this.itemList.splice(index, 1);
             },
             discountPrice: function (item) {
-                return Math.round(item.price * item.count * item.discount);
+                return Math.round(item.unitPrice * item.count * item.discount);
             },
             cartTotal: function () {
                 var totalprice = 0;
                 for (let i = 0; i < this.itemList.length; i++) {
-                    totalprice += this.itemList[i].price * this.itemList[i].count * this.itemList[i].discount;
+                    totalprice += this.itemList[i].unitPrice * this.itemList[i].count * this.itemList[i].discount;
                 }
                 return Math.round(totalprice);
             },
