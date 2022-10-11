@@ -13,9 +13,9 @@ namespace Alcoholic.Controllers
         public IActionResult Success(OrderViewModel order)
         {
             var table = 4;
-            order.Table = table.ToString();
+            order.DeskNum = table.ToString();
             var people = 5;
-            order.People = people.ToString();
+            order.Number = people.ToString();
             var caseNo = 12345678;
             order.CaseNo = caseNo.ToString();
             var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
