@@ -26,13 +26,13 @@ namespace Alcoholic.Controllers
             ViewBag.Number = Number;
             return View();
         }
-        public async Task<IActionResult> Success(Reserf bookingData)
+        public async Task<IActionResult> Success(Reserves bookingData)
         {
             bookingData.ReserveId = projectContext.Reserves.Count()+1;
             bookingData.ReserveSet = DateTime.Now;
             await projectContext.AddAsync(bookingData);
             await projectContext.SaveChangesAsync();
-            var result = await Razor.Templating.Core.RazorTemplateEngine.RenderAsync<Reserf>("Views/EmailTemplate/BookingTemplate.cshtml", bookingData);
+            var result = await Razor.Templating.Core.RazorTemplateEngine.RenderAsync<Reserves>("Views/EmailTemplate/BookingTemplate.cshtml", bookingData);
             mailService.SendMail(bookingData.Email,result,"感謝您的訂位");
 
             return View(bookingData);
