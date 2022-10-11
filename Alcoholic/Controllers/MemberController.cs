@@ -150,10 +150,6 @@ namespace Alcoholic.Controllers
             await projectContext.SaveChangesAsync();
             return NoContent();
         }
-        public ActionResult FrontPage()
-        {
-            return View();
-        }
 
         private bool MemberExists(string Account)
         {
