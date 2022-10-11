@@ -33,6 +33,12 @@ namespace Alcoholic.Controllers
         {
             return await projectContext.Members.ToListAsync();
         }
+
+        public ActionResult FrontPage()
+        {
+            return View();
+        }
+
         //[Authorize(Roles ="moderate")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Member>> GetMember(Member memberData)
@@ -45,13 +51,77 @@ namespace Alcoholic.Controllers
             return member;
         }
 
-        [HttpGet]
-        public IActionResult LoginRegister()
+        // 入座 => 登入頁面 (導向)
+        [HttpPut]
+        public async Task<IActionResult> StartOrder(DeskInfo deskInfo)
         {
+            deskInfo.Occupied = 1;
+            deskInfo.StartTime = DateTime.Now.ToString("yyyyMMddHHmm");
+            projectContext.Entry(deskInfo).State = EntityState.Modified;
+            await projectContext.SaveChangesAsync();
+            HttpContext.Response.Cookies.Append("Desk", deskInfo.Desk);
+            HttpContext.Response.Cookies.Append("Desk", deskInfo.Number);
             return View("LoginRegister");
         }
 
-        // POST: Member/Register => Member/Getmember
+        // 登入 => 點餐(Order'Order)
+        [HttpPost]
+        public async Task<IActionResult> Login(Member memberData)
+        {
+            Member? user = (from member in projectContext.Members
+                            where member.MemberAccount == memberData.MemberAccount
+                            && member.MemberPassword == memberData.MemberPassword
+                            select member).SingleOrDefault();
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                // 驗證
+                var claims = new List<Claim>
+                {
+                    // new Claim(Claim.Role, "Administrator")
+                    new Claim(ClaimTypes.Name, user.MemberName),
+                    new Claim(ClaimTypes.Role, "moderate")
+                };
+
+                // 將 Claim 設定引入 ClaimsIdentity類別
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                // SignInAsync(scheme,principal)
+                // 將此類別(原則 ClaimsIdentity)，帶入方案(AuthenticationScheme)中
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                HttpContext.Response.Cookies.Append("MemberID", user.MemberID);
+
+                return RedirectToAction();
+                // 在想要經驗證後才可讀取的API上加 [Authorize]
+                // 未登入也可以使用的API [AllowAnonymous]
+            }
+        }
+
+        // 選訪客登入 => 點餐(Order'Order)
+        public async Task<IActionResult> GuestLogin()
+        {
+            Member? user = (from member in projectContext.Members
+                            where member.MemberAccount == "guestonly123"
+                            && member.MemberPassword == "guestonly123"
+                            select member).SingleOrDefault();
+                var claims = new List<Claim>
+                {
+                    // new Claim(Claim.Role, "Administrator")
+                    new Claim(ClaimTypes.Name, user.MemberName),
+                    new Claim(ClaimTypes.Role, "moderate")
+                };
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                HttpContext.Response.Cookies.Append("MemberID", user.MemberID);
+                return RedirectToAction("Order", "Order");
+        }
+
+        // : Member/Register => Member/Getmember
         [HttpPost]
         public async Task<ActionResult> Register(Member memberData)
         {
@@ -79,16 +149,6 @@ namespace Alcoholic.Controllers
             projectContext.Entry(memberData).State = EntityState.Modified;
             await projectContext.SaveChangesAsync();
             return NoContent();
-        }
-        public ActionResult FrontPage()
-        {
-            return View();
-        }
-        [HttpPost]
-        public bool StartOrder([FromBody] DeskInfo deskInfo)
-        {
-
-            return true;
         }
 
         private bool MemberExists(string Account)

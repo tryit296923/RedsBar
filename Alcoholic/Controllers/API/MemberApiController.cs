@@ -31,9 +31,22 @@ namespace Alcoholic.Controllers.API
             return await projectContext.Members.ToListAsync();
         }
 
-        // "api/Login"
+        // 入座 => 登入頁面
+        [HttpPut]
+        public async Task<IActionResult> StartOrder(DeskInfo deskInfo)
+        {
+            deskInfo.Occupied = 1;
+            deskInfo.StartTime = DateTime.Now.ToString("yyyyMMddHHmm");
+            projectContext.Entry(deskInfo).State = EntityState.Modified;
+            await projectContext.SaveChangesAsync();
+            HttpContext.Response.Cookies.Append("Desk", deskInfo.Desk);
+            HttpContext.Response.Cookies.Append("Desk", deskInfo.Number);
+            return RedirectToAction("Login", "MemberApi");
+        }
+
+        // 登入
         [HttpPost]
-        public string Login(Member memberData)
+        public async Task<IActionResult> Login(Member memberData)
         {
             Member? user = (from member in projectContext.Members
                                   where member.MemberAccount == memberData.MemberAccount
@@ -42,7 +55,7 @@ namespace Alcoholic.Controllers.API
 
             if (user == null)
             {
-                return "帳號密碼錯誤";
+                return NotFound();
             }
             else
             {
@@ -61,7 +74,9 @@ namespace Alcoholic.Controllers.API
                 // 將此類別(原則 ClaimsIdentity)，帶入方案(AuthenticationScheme)中
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                return "LoginSuccess";
+                HttpContext.Response.Cookies.Append("MemberID",user.MemberID);
+
+                return RedirectToAction();
                 // 在想要經驗證後才可讀取的API上加 [Authorize]
                 // 未登入也可以使用的API [AllowAnonymous]
             }
@@ -78,7 +93,7 @@ namespace Alcoholic.Controllers.API
         [HttpPost]
         public async Task<ActionResult> Register(Member memberData)
         {
-            if (MemberExists(memberData.MemberAccount))
+            if (MemberExists(memberData.MemberAccount) && memberData.MemberAccount.Length > 7 && memberData.MemberPassword.Length > 7)
             {
                 return NotFound();
             }
@@ -91,6 +106,7 @@ namespace Alcoholic.Controllers.API
             return Ok(memberData);
         }
 
+        [HttpPut]
         public async Task<bool> Authorize(Member memberData)
         {
             memberData.Qualified = "y";
@@ -99,15 +115,15 @@ namespace Alcoholic.Controllers.API
             return true;
         }
 
-
-        public string NoAccess()
+        // 離席
+        [HttpPut]
+        public async Task<IActionResult> Dismiss(DeskInfo deskInfo)
         {
-            return "沒有權限";
-        }
-
-        public string NoLogin()
-        {
-            return "尚未登入";
+            deskInfo.Occupied = 0;
+            deskInfo.EndTime = DateTime.Now.ToString("yyyyMMddHHmm");
+            projectContext.Entry(deskInfo).State = EntityState.Modified;
+            await projectContext.SaveChangesAsync();
+            return Ok();
         }
 
         private bool MemberExists(string Account)

@@ -5,6 +5,10 @@ namespace Alcoholic.Controllers
 {
     public class OrderController : Controller
     {
+        public IActionResult Order()
+        {
+            return RedirectToAction("Cart", "Order");
+        }
         public IActionResult Cart()
         {
             return View();
