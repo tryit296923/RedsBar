@@ -11,6 +11,8 @@ using System.Linq;
 using Alcoholic.Models.DTO;
 using Alcoholic.Services;
 using Newtonsoft.Json;
+using Razor.Templating.Core;
+using Microsoft.Net.Http.Headers;
 //using Microsoft.AspNetCore.Cors;
 
 namespace Alcoholic.Controllers
@@ -29,14 +31,9 @@ namespace Alcoholic.Controllers
         // GET: Member/Getmember
         //[Authorize]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Member>>> GetAllMember(Member memberData)
+        public async Task<ActionResult<IEnumerable<Member>>> GetAllMember()
         {
             return await projectContext.Members.ToListAsync();
-        }
-
-        public ActionResult FrontPage()
-        {
-            return View();
         }
 
         //[Authorize(Roles ="moderate")]
@@ -51,6 +48,15 @@ namespace Alcoholic.Controllers
             return member;
         }
 
+        public ActionResult FrontPage()
+        {
+            return View();
+        }
+        public ActionResult LoginRegister()
+        {
+            return View();
+        }
+
         // 入座 => 登入頁面 (導向)
         [HttpPut]
         public async Task<IActionResult> StartOrder(DeskInfo deskInfo)
@@ -60,7 +66,7 @@ namespace Alcoholic.Controllers
             projectContext.Entry(deskInfo).State = EntityState.Modified;
             await projectContext.SaveChangesAsync();
             HttpContext.Response.Cookies.Append("Desk", deskInfo.Desk);
-            HttpContext.Response.Cookies.Append("Desk", deskInfo.Number);
+            HttpContext.Response.Cookies.Append("Number", deskInfo.Number);
             return View("LoginRegister");
         }
 
@@ -72,7 +78,6 @@ namespace Alcoholic.Controllers
                             where member.MemberAccount == memberData.MemberAccount
                             && member.MemberPassword == memberData.MemberPassword
                             select member).SingleOrDefault();
-
             if (user == null)
             {
                 return NotFound();
@@ -86,20 +91,24 @@ namespace Alcoholic.Controllers
                     new Claim(ClaimTypes.Name, user.MemberName),
                     new Claim(ClaimTypes.Role, "moderate")
                 };
-
                 // 將 Claim 設定引入 ClaimsIdentity類別
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
                 // SignInAsync(scheme,principal)
                 // 將此類別(原則 ClaimsIdentity)，帶入方案(AuthenticationScheme)中
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-
                 HttpContext.Response.Cookies.Append("MemberID", user.MemberID);
-
-                return RedirectToAction();
+                return RedirectToAction("Order", "Order");
                 // 在想要經驗證後才可讀取的API上加 [Authorize]
                 // 未登入也可以使用的API [AllowAnonymous]
             }
+        }
+
+        // 登出
+        [HttpDelete]
+        public string Logout()
+        {
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return "Logout";
         }
 
         // 選訪客登入 => 點餐(Order'Order)
@@ -121,21 +130,50 @@ namespace Alcoholic.Controllers
                 return RedirectToAction("Order", "Order");
         }
 
-        // : Member/Register => Member/Getmember
-        [HttpPost]
-        public async Task<ActionResult> Register(Member memberData)
+        // 離席
+        [HttpPut]
+        public async Task<IActionResult> Dismiss(DeskInfo deskInfo)
         {
-            if (MemberExists(memberData.MemberAccount))
+            deskInfo.Occupied = 0;
+            deskInfo.EndTime = DateTime.Now.ToString("yyyyMMddHHmm");
+            projectContext.Entry(deskInfo).State = EntityState.Modified;
+            await projectContext.SaveChangesAsync();
+            return Ok();
+        }
+
+        // 註冊
+        [HttpPost]
+        public async Task<IActionResult> Register(Member memberData)
+        {
+            if (MemberExists(memberData.MemberAccount) && memberData.MemberAccount.Length > 7 && memberData.MemberPassword.Length > 7)
             {
                 return NotFound();
             }
             int number = projectContext.Members.Count() + 100;
+            string salt = Guid.NewGuid().ToString("N");
+            memberData.Salt = salt;
+            memberData.MemberPassword.Concat(salt);
             memberData.Qualified = "n";
             memberData.MemberID = DateTime.Now.ToString("yyyyMMdd") + number.ToString();
             await projectContext.AddAsync(memberData);
             await projectContext.SaveChangesAsync();
-            mailService.SendMail(memberData.Email, "請點擊下方連結", "RedsBar 會員認證信件");
+            var msg = await RazorTemplateEngine.RenderAsync<Member>("Views/Member/Authorize.cshtml", memberData);
+            mailService.SendMail(memberData.Email, msg, "RedsBar 會員認證信件");
+            HttpContext.Response.Cookies.Append("EmailID", memberData.EmailID.ToString());
             return Ok(memberData);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Authorize()
+        {
+            String cookie = Request.Cookies["EmailID"];
+            Member? memberData = (from member in projectContext.Members
+                                  where member.EmailID.ToString() == cookie
+                                  select member).FirstOrDefault();
+            memberData.Qualified = "y";
+            projectContext.Entry(memberData).State = EntityState.Modified;
+            await projectContext.SaveChangesAsync();
+            return Ok(cookie);
         }
 
         // PUT: Update

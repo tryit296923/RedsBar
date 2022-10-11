@@ -9,250 +9,269 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>登入&註冊</title>
     <link rel="stylesheet" href="~/css/bootstrap.css">
+    <link rel="stylesheet" href="~/sweetalert/sweetalert2.min.css">
     <link rel="stylesheet" href="~/css/theme.css">
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src="~/sweetalert/sweetalert2.min.js"></script>
     <script src="~/js/vue.min.js"></script>
     <style>
-        * {
+        *{
             margin: 0;
             padding: 0;
         }
-
-        a {
+        a{
             text-decoration: none;
         }
-
-        body {
+        body{
             background-color: #222220;
-        }
-
-        .logo img {
-            height: 40px;
-            margin: 8px;
-        }
-
-        .selectform {
             position: relative;
-            background-color: #fff;
-            height: 640px;
-            margin: 0 5%;
+            min-height: 844px;
+            min-width: 390px;
         }
-
-        .inputform {
-            padding: 20px 0 0 0;
-            text-align: center;
+        input{
+            border-radius: 00.375rem;
+            width: 130%;
         }
-
-            .inputform div {
-                padding: 10px;
-            }
-
-            .inputform input, select {
-                width: 70%;
-                height: 28px;
-                border: 1px solid #ccc;
-            }
-
-        .logreg {
-            display: flex;
-            justify-content: space-around;
-        }
-
-            .logreg button {
-                border: 0px;
-                border-radius: 10px;
-                box-shadow: 4px 4px 4px #666;
-                font-size: 1.5rem;
-                padding: 6px 20px;
-                margin: 40px 0 40px 0;
-                background-color: #721B29;
-                color: #fff;
-                width: 60%;
-            }
-
-        .OA {
-            text-align: center;
-            padding: 10px 0 0 0;
-        }
-
-            .OA h2 {
-                font-size: 1.5rem;
-                padding: 12px;
-            }
-
-        .img {
-            display: flex;
-            gap: 28px;
-            width: 100%;
-            margin: auto;
-            justify-content: center;
-            padding: 30px 0;
-        }
-
-        .split {
-            text-align: center;
-        }
-
-            .split h3 {
-                font-size: 1.5rem;
-            }
-
-        .forget {
-            text-align: right;
-            margin: 0 10%;
-        }
-
-        .registerform {
-            background-color: #fff;
-            height: 640px;
-            margin: 0% 5%;
-        }
-
-            .registerform h2 {
-                text-align: center;
-                font-size: 1.5rem;
-                padding: 24px 0 0 0;
-            }
-
-            .registerform .inputform div {
-                text-align: left;
-                margin: 0 5% 0 5%;
-                padding: 2px 0;
-            }
-
-            .registerform .inputform input {
-                width: 100%;
-                height: 32px;
-                border: 1px solid #ccc;
-            }
-
-            .registerform .register {
-                display: flex;
-                justify-content: space-around;
-            }
-
-        .registerbtn {
-            border: 0px;
-            border-radius: 10px;
+        .tab-content button{
             box-shadow: 4px 4px 4px #666;
-            font-size: 1.5rem;
+            padding: 4px;
+        }
+        .loginpage, .registerpage{
+            height: 100%;
+        }
+        /* nav */
+        .nav{
+            width: 390px;
+            position: absolute;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            top: 10%;
+        }
+        /* LoginForm */
+        .loginpage{
+            position: relative;
+            background-image: url("/images/background/loginform.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 844px;
+            width: 390px;
+        }
+        #Login a{
+            position: absolute;
+            right: 24%;
+            top: 54%;
+            font-size: 1rem;
+        }
+        .account{
+            position: absolute;
+            top: 38%;
+            left: 20%;
+        }
+        .password{
+            position: absolute;
+            top: 49%;
+            left: 20%;
+        }
+        .login{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .login button{
+            position: absolute;
+            top: 60%;
+            width: 50%;
+            border-radius: 00.375rem;
+            border: 0px;
             background-color: #721B29;
             color: #fff;
-            width: 240px;
-            padding: 4px;
-            margin: 30px 0 0 0;
         }
-
-        .pages {
+        .OAuth{
+            width: 100%;
             display: flex;
             justify-content: center;
-            margin: 10px 0;
+            position: absolute;
+            bottom: 14%;
+        }
+        .OAuth a img{
+            padding: 14px;
+        }
+        /* RegisterForm */
+        .registerpage{
+            position: relative;
+            background-image: url("/images/background/RegisterForm.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 844px;
+            width: 390px;
+        }
+        #Register{
+            height: 416px;
+            position: absolute;
+            left: 20%;
+            margin-top: 72%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .register{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .register button{
+            position: absolute;
+            bottom: 10%;
+            width: 50%;
+            border-radius: 00.375rem;
+            border: 0px;
+            background-color: #721B29;
+            color: #fff;
+        }
+
+        .valid {
+            background-color: #D8CDB9;
+        }
+
+        .incorrectText {
+            position: absolute;
+            color: #D8CDB9;
+            top: 24%;
+            left: 80%;
+            font-weight: bold;
+            width: 200px;
+        }
+        @@media screen and (min-width: 768px) {
+            body{
+                background-color: #222220;
+                position: relative;
+                font-size: 1.5rem;
+            }
+            input{
+                width: 170%;
+            }
+            .loginpage{
+                position: relative;
+                background-image: url("/images/background/login.jpg");
+                background-repeat: no-repeat;
+                background-size: cover;
+                height: 1060px;
+                width: 768px;
+            }
+            .registerpage{
+                position: relative;
+                background-image: url("/images/background/Register.jpg");
+                background-repeat: no-repeat;
+                background-size: cover;
+                height: 1060px;
+                width: 768px;
+            }
+            .nav{
+                width: 768px;
+                top: 8%;
+            }
+            #Register{
+                height: 464px;
+                left: 32%;
+                margin-top: 48%;
+            }
+            .account{
+                top: 39%;
+            }
+            .password{
+                top: 49%;
+            }
+            .OAuth{
+                bottom: 8%;                
+            }
+            .OAuth a img{
+                margin: 8px;
+                height: 100px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="logo">
-        <a href=""><img src="~/images/logo_pre.png" alt=""></a>
-    </div>
-    <ul class="nav nav-pills pages" id="pills-tab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">登入</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">註冊</button>
-        </li>
-    </ul>
-    <div class="selectform">
-        <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
-                <div class="loginpage" id="loginpage">
-                    <div class="OA">
-                        <h2>使用以下帳號</h2>
-                        <div class="img">
-                            <img src="~/images/icons/google.png" alt="">
-                            <img src="~/images/icons/IG.png" alt="">
-                            <img src="~/images/icons/FB.png" alt="">
-                        </div>
-                    </div>
-                    <div class="split">
-                        <img src="" alt="">
-                        <h3>直接登入</h3>
-                        <img src="" alt="">
-                    </div>
-                    <form class="inputform" id="Login" method="post" enctype="multipart/form-data">
-                        <div class="account">
-                            <label>帳號: </label>
-                            <input type="account" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
-                        </div>
-                        <div class="password">
-                            <label>密碼: </label>
-                            <input type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
-                        </div>
-                        <div class="forget">
-                            <a href="">忘記密碼?</a>
-                        </div>
-                        <div class="logreg">
-                            <button class="login">登入</button>
-                        </div>
-                    </form>
+    <div class="pageselect">
+        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">登入</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">註冊</button>
+            </li>
+        </ul>        
+    </div>       
+    <div class="tab-content " id="pills-tabContent">
+        <div class="loginpage m-0 tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+            <form id="Login" asp-controller="MemberApi" asp-action="Login" method="post" enctype="multipart/form-data">
+                <div class="account">
+                    <input type="account" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">                    
                 </div>
+                <div class="password">
+                    <input type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">                    
+                </div>
+                <a href="">忘記密碼?</a>
+                <div class="login">
+                    <button>登 入</button>
+                </div>
+            </form>                
+            <div class="OAuth">
+                <a href=""><img src="Images/icons/google.png" alt=""></a>
+                <a href=""><img src="Images/icons/IG.png" alt=""></a>
+                <a href=""><img src="Images/icons/FB.png" alt=""></a>
             </div>
-            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
-                <div class="registerform" id="registerpage">
-                    <h2>會員註冊</h2>
-                    <form class="inputform was-validated" id="Register" method="post" enctype="">
-                        <div class="text">
-                            <label>帳號: </label><br>
-                            <input v-model="Account" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
-                        </div>
-                        <div class="password">
-                            <label>密碼: </label><br>
-                            <input v-on:keyup="comfirmPassword" v-model="Password" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
-                        </div>
-                        <div class="repassword">
-                            <label>確認密碼: </label><br>
-                            <input v-on:keyup="comfirmPassword" v-model="rePassword" v-bind:class="incorrect" type="password" required maxlength="20" minlength="8" placeholder="請再次輸入密碼">
-                        </div>
-                        <div class="Email">
-                            <label>Email: </label><br>
-                            <input v-model="Email" type="email" required>
-                        </div>
-                        <div class="name">
-                            <label>姓名: </label><br>
-                            <input v-model="Name" required maxlength="20">
-                        </div>
-                        <div class="phone">
-                            <label>電話: </label><br>
-                            <input v-model="Phone" required maxlength="10" minlength="10" placeholder="請輸入連絡電話(09-開頭)">
-                        </div>
-                        <div class="birth">
-                            <label>生日: MemberBirth</label><br>
-                            <input v-model="Birth" type="date" value="2000-12-10" required>
-                        </div>
-                        <div class="register">
-                            <button v-on:click.prevent="login" class="registerbtn">註冊</button>
-                        </div>
-                    </form>
+        </div>
+        <div class="registerpage tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+            <form id="Register" method="post" enctype="">
+                <div class="text">
+                    <input v-model="Account" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
                 </div>
+                <div class="encryp">
+                    <input v-on:keyup="comfirmPassword" v-model="Password" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
+                </div>
+                <div class="repassword">
+                    <input v-on:keyup="comfirmPassword" v-model="rePassword" v-bind:class="incorrect" type="password" required maxlength="20" minlength="8" placeholder="請再次輸入密碼">
+                </div>
+                <div class="Email">
+                    <input v-model="Email" type="email" required>
+                </div>
+                <div class="name">
+                    <input v-model="Name" required maxlength="20">
+                </div>
+                <div class="phone">
+                    <input v-model="Phone" required maxlength="10" minlength="10" placeholder="請輸入連絡電話(09-開頭)">
+                </div>
+                <div class="birth">
+                    <input v-model="Birth" type="date" value="2000-12-10" required>
+                </div>
+                <div class="incorrectText" v-bind:style="incorrectText">
+                    <p>兩次密碼不相符!</p>
+                </div>
+            </form>
+            <div class="register">
+                <button v-on:click.prevent="login" class="registerbtn" >註 冊</button>
             </div>
         </div>
     </div>
+
 </body>
 <script>
     const vm = new Vue({
-        el: "#Register",
-        data: {
-            Account: "",
-            Password: "",
-            Name: "",
-            Birth: "2000-02-02",
-            Phone: "",
-            Email: "",
-            rePassword: "",
-            incorrect: ""
+        el:"#Register",
+        data:{
+            Account:"",
+            Password:"",
+            Name:"",
+            Birth:"2000-02-02",
+            Phone:"",
+            Email:"",
+            rePassword:"",
+            incorrect:"",
+            incorrectText: { 'opacity': 0 }
         },
-        methods: {
+        methods:{
             login: function () {
                 let fbody = {
                     "MemberID": "",
@@ -270,28 +289,22 @@
                     method: 'POST',
                     headers: { "Content-Type": "application/json" },
                     body: JsonString        // to JsonString
-                }).then((data) => 
-                if(data.status == 404){
-                    Swal.fire({
-                        icon: 'error',
-                        title: '註冊失敗!',
-                        text: '也許是帳號重複，或是不符合帳號密碼規範(長度需大於8個字元)',
-                    })
-                }else{
-                    Swal.fire({
-                        icon: 'success',
-                        title: '註冊成功!',
-                        text: '請至信箱收取認證信件，請稍待1~3分鐘',
-                        footer: '<a href="https://localhost:7273/Member/Authorize">未收到信件? 點擊此處以重發</a>'
-                    })
-                }).catch(error => console.error(error))
+                })
+                .then(() => Swal.fire({
+                    icon: 'success',
+                    title: '註冊成功!',
+                    text: '請至信箱收取認證信件，請稍待1~3分鐘',
+                    footer: '<a href="https://localhost:7273/Member/Authorize">未收到信件? 點擊此處以重發</a>'
+                }))
+                    .catch(error => console.error(error))
             },
-            comfirmPassword: function () {
+            comfirmPassword:function(){
                 if (this.Password != this.rePassword) {
-                    console.log("keydonw");
-                    this.incorrect = "form-control"
+                    this.incorrect = "valid";
+                    this.incorrectText = "";
                 } else {
-                    this.incorrect = ""
+                    this.incorrect = "";
+                    this.incorrectText = { 'opacity': 0 };
                 }
             }
         }

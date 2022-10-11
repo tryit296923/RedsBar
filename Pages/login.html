@@ -126,6 +126,17 @@
             background-color: #721B29;
             color: #fff;
         }
+        .valid{
+            background-color: #D8CDB9;
+        }
+        .incorrectText{
+            position: absolute;
+            color: #D8CDB9;
+            top: 24%;
+            left: 80%;
+            font-weight: bold;
+            width: 200px;
+        }
         @media screen and (min-width: 768px) {
             body{
                 background-color: #222220;
@@ -208,7 +219,7 @@
             </div>
         </div>
         <div class="registerpage tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
-            <form class="was-validated" id="Register" method="post" enctype="">
+            <form id="Register" method="post" enctype="">
                 <div class="text">
                     <input v-model="Account" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
                 </div>
@@ -216,7 +227,7 @@
                     <input v-on:keyup="comfirmPassword" v-model="Password" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
                 </div>
                 <div class="repassword">
-                    <input v-on:keyup="comfirmPassword" v-model="rePassword" v-bind:class="incorrect" type="password" required maxlength="20" minlength="8" placeholder="請再次輸入密碼">
+                    <input v-on:keyup="comfirmPassword" v-model="rePassword"  v-bind:class="incorrect" type="password" required maxlength="20" minlength="8" placeholder="請再次輸入密碼">
                 </div>
                 <div class="Email">
                     <input v-model="Email" type="email" required>
@@ -229,7 +240,10 @@
                 </div>
                 <div class="birth">
                     <input v-model="Birth" type="date" value="2000-12-10" required>
-                </div>         
+                </div>    
+                <div class="incorrectText" v-bind:style="incorrectText">
+                    <p>兩次密碼不相符!</p>
+                </div>
             </form>
             <div class="register">
                 <button v-on:click.prevent="login" class="registerbtn" >註 冊</button>
@@ -249,7 +263,8 @@
             Phone:"",
             Email:"",
             rePassword:"",
-            incorrect:""
+            incorrect:"",
+            incorrectText:{'opacity': 0}
         },
         methods:{
             login: function () {
@@ -280,10 +295,11 @@
             },
             comfirmPassword:function(){
                 if(this.Password != this.rePassword){
-                    console.log("keydonw");
-                    this.incorrect = "form-control"
+                    this.incorrect = "valid";
+                    this.incorrectText = "";
                 }else{
-                    this.incorrect = ""
+                    this.incorrect = "";
+                    this.incorrectText = {'opacity': 0};
                 }
             }
         }

@@ -80,7 +80,7 @@ namespace Alcoholic.Models.DTO
 
                 entity.Property(e => e.MemberName).HasMaxLength(20);
 
-                entity.Property(e => e.MemberPassword).HasMaxLength(20);
+                entity.Property(e => e.MemberPassword).HasMaxLength(225);
 
                 entity.Property(e => e.Phone).HasMaxLength(20);
 
