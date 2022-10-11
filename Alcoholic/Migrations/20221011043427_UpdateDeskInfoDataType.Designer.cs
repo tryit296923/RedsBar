@@ -4,6 +4,7 @@ using Alcoholic.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alcoholic.Migrations
 {
     [DbContext(typeof(db_a8de26_projectContext))]
-    partial class db_a8de26_projectContextModelSnapshot : ModelSnapshot
+    [Migration("20221011043427_UpdateDeskInfoDataType")]
+    partial class UpdateDeskInfoDataType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -282,6 +284,9 @@ namespace Alcoholic.Migrations
                     b.Property<int?>("LemonNade")
                         .HasColumnType("int");
 
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -297,9 +302,6 @@ namespace Alcoholic.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("Tequila")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UnitPrice")
                         .HasColumnType("int");
 
                     b.Property<int?>("Vermouth")
@@ -326,8 +328,10 @@ namespace Alcoholic.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReserveId"), 1L, 1);
 
                     b.Property<string>("Email")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasDefaultValueSql("(getdate())");
 
                     b.Property<int>("Number")
                         .HasColumnType("int");

@@ -6,9 +6,10 @@ namespace Alcoholic.Models.Entities
     {
         [Key]
         public string? Desk { get; set; }
+        public string? StartTime { get; set; }       
         public string? Number { get; set; }
-        public DateTime? StartTime { get; set; }
-        public DateTime? EndTime { get; set; }
+        public string? EndTime { get; set; }
+        public int Occupied { get; set; }
 
     }
 }

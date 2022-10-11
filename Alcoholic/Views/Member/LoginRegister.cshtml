@@ -270,13 +270,21 @@
                     method: 'POST',
                     headers: { "Content-Type": "application/json" },
                     body: JsonString        // to JsonString
-                }).then(() => Swal.fire({
-                    icon: 'success',
-                    title: '註冊成功!',
-                    text: '請至信箱收取認證信件，請稍待1~3分鐘',
-                    footer: '<a href="https://localhost:7273/Member/Authorize">未收到信件? 點擊此處以重發</a>'
-                }))
-                    .catch(error => console.error(error))
+                }).then((data) => 
+                if(data.status == 404){
+                    Swal.fire({
+                        icon: 'error',
+                        title: '註冊失敗!',
+                        text: '也許是帳號重複，或是不符合帳號密碼規範(長度需大於8個字元)',
+                    })
+                }else{
+                    Swal.fire({
+                        icon: 'success',
+                        title: '註冊成功!',
+                        text: '請至信箱收取認證信件，請稍待1~3分鐘',
+                        footer: '<a href="https://localhost:7273/Member/Authorize">未收到信件? 點擊此處以重發</a>'
+                    })
+                }).catch(error => console.error(error))
             },
             comfirmPassword: function () {
                 if (this.Password != this.rePassword) {
