@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Policy;
 using Alcoholic.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -24,7 +25,9 @@ namespace Alcoholic.Models.DTO
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
-        public virtual DbSet<Reserf> Reserves { get; set; } = null!;
+        public virtual DbSet<Reserves> Reserves { get; set; } = null!;
+        public virtual DbSet<DeskInfo> DeskInfo { get; set; } = null!;
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -161,16 +164,14 @@ namespace Alcoholic.Models.DTO
                 entity.Property(e => e.ProductName).HasMaxLength(50);
             });
 
-            modelBuilder.Entity<Reserf>(entity =>
+            modelBuilder.Entity<Reserves>(entity =>
             {
                 entity.HasKey(e => e.ReserveId)
                     .HasName("PK_Reserves_1");
 
                 entity.Property(e => e.ReserveId).HasColumnName("ReserveID");
 
-                entity.Property(e => e.Email)
-                    .HasMaxLength(20)
-                    .HasDefaultValueSql("(getdate())");
+                entity.Property(e => e.Email).HasMaxLength(50);
 
                 entity.Property(e => e.Phone).HasMaxLength(20);
 

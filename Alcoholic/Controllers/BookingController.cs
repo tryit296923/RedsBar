@@ -22,9 +22,9 @@ namespace Alcoholic.Controllers
             ViewBag.People = people;
             return View();
         }
-        public async Task<IActionResult> Success(BookingSuccessViewModels data)
+        public async Task<IActionResult> Success(BookingSuccessViewModel data)
         {
-            var result = await Razor.Templating.Core.RazorTemplateEngine.RenderAsync<BookingSuccessViewModels>("Views/EmailTemplate/BookingTemplate.cshtml",data);
+            var result = await Razor.Templating.Core.RazorTemplateEngine.RenderAsync<BookingSuccessViewModel>("Views/EmailTemplate/BookingTemplate.cshtml",data);
             mailService.SendMail(data.Email,result,"感謝您的訂位");
 
             return View(data);

@@ -10,6 +10,7 @@
     <title>登入&註冊</title>
     <link rel="stylesheet" href="~/css/bootstrap.css">
     <link rel="stylesheet" href="~/css/theme.css">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/vue.min.js"></script>
     <style>
@@ -200,18 +201,18 @@
             <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
                 <div class="registerform" id="registerpage">
                     <h2>會員註冊</h2>
-                    <form class="inputform" id="Register" method="post" enctype="">
+                    <form class="inputform was-validated" id="Register" method="post" enctype="">
                         <div class="text">
                             <label>帳號: </label><br>
                             <input v-model="Account" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
                         </div>
                         <div class="password">
                             <label>密碼: </label><br>
-                            <input v-model="Password" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
+                            <input v-on:keyup="comfirmPassword" v-model="Password" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
                         </div>
                         <div class="repassword">
                             <label>確認密碼: </label><br>
-                            <input type="password" required maxlength="20" minlength="8" placeholder="請再次輸入密碼">
+                            <input v-on:keyup="comfirmPassword" v-model="rePassword" v-bind:class="incorrect" type="password" required maxlength="20" minlength="8" placeholder="請再次輸入密碼">
                         </div>
                         <div class="Email">
                             <label>Email: </label><br>
@@ -248,6 +249,8 @@
             Birth: "2000-02-02",
             Phone: "",
             Email: "",
+            rePassword: "",
+            incorrect: ""
         },
         methods: {
             login: function () {
@@ -267,9 +270,29 @@
                     method: 'POST',
                     headers: { "Content-Type": "application/json" },
                     body: JsonString        // to JsonString
-                }).then(data => console.log(data))
-                    .catch(error => console.error(error))
-
+                }).then((data) => 
+                if(data.status == 404){
+                    Swal.fire({
+                        icon: 'error',
+                        title: '註冊失敗!',
+                        text: '也許是帳號重複，或是不符合帳號密碼規範(長度需大於8個字元)',
+                    })
+                }else{
+                    Swal.fire({
+                        icon: 'success',
+                        title: '註冊成功!',
+                        text: '請至信箱收取認證信件，請稍待1~3分鐘',
+                        footer: '<a href="https://localhost:7273/Member/Authorize">未收到信件? 點擊此處以重發</a>'
+                    })
+                }).catch(error => console.error(error))
+            },
+            comfirmPassword: function () {
+                if (this.Password != this.rePassword) {
+                    console.log("keydonw");
+                    this.incorrect = "form-control"
+                } else {
+                    this.incorrect = ""
+                }
             }
         }
     })

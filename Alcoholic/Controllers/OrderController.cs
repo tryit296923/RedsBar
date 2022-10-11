@@ -5,6 +5,10 @@ namespace Alcoholic.Controllers
 {
     public class OrderController : Controller
     {
+        public IActionResult Order()
+        {
+            return RedirectToAction("Cart", "Order");
+        }
         public IActionResult Cart()
         {
             return View();
@@ -12,6 +16,10 @@ namespace Alcoholic.Controllers
 
         public IActionResult Success(OrderViewModel order)
         {
+            var table = 4;
+            order.Table = table.ToString();
+            var people = 5;
+            order.People = people.ToString();
             var caseNo = 12345678;
             order.CaseNo = caseNo.ToString();
             var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
@@ -25,11 +33,8 @@ namespace Alcoholic.Controllers
         }
         public IActionResult Check()
         {
-            return View();
-        }
-
-        public IActionResult Payment()
-        {
+            var now = DateTime.Now.ToString("yyyy/MM/dd");
+            ViewBag.orderDate = now;
             return View();
         }
     }
