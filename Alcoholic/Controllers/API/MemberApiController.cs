@@ -31,57 +31,6 @@ namespace Alcoholic.Controllers.API
             return await projectContext.Members.ToListAsync();
         }
 
-        // 入座 => 登入頁面
-        [HttpPut]
-        public async Task<IActionResult> StartOrder(DeskInfo deskInfo)
-        {
-            deskInfo.Occupied = 1;
-            deskInfo.StartTime = DateTime.Now.ToString("yyyyMMddHHmm");
-            projectContext.Entry(deskInfo).State = EntityState.Modified;
-            await projectContext.SaveChangesAsync();
-            HttpContext.Response.Cookies.Append("Desk", deskInfo.Desk);
-            HttpContext.Response.Cookies.Append("Desk", deskInfo.Number);
-            return RedirectToAction("Login", "MemberApi");
-        }
-
-        // 登入
-        [HttpPost]
-        public async Task<IActionResult> Login(Member memberData)
-        {
-            Member? user = (from member in projectContext.Members
-                                  where member.MemberAccount == memberData.MemberAccount
-                                  && member.MemberPassword == memberData.MemberPassword
-                                  select member).SingleOrDefault();
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                // 驗證
-                var claims = new List<Claim>
-                {
-                    // new Claim(Claim.Role, "Administrator")
-                    new Claim(ClaimTypes.Name, user.MemberName),
-                    new Claim(ClaimTypes.Role, "moderate")
-                };
-
-                // 將 Claim 設定引入 ClaimsIdentity類別
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                // SignInAsync(scheme,principal)
-                // 將此類別(原則 ClaimsIdentity)，帶入方案(AuthenticationScheme)中
-                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-
-                HttpContext.Response.Cookies.Append("MemberID",user.MemberID);
-
-                return RedirectToAction();
-                // 在想要經驗證後才可讀取的API上加 [Authorize]
-                // 未登入也可以使用的API [AllowAnonymous]
-            }
-        }
-
         [HttpDelete]
         public string Logout()
         {
@@ -124,6 +73,19 @@ namespace Alcoholic.Controllers.API
             projectContext.Entry(deskInfo).State = EntityState.Modified;
             await projectContext.SaveChangesAsync();
             return Ok();
+        }
+
+        // 更新會員資料
+        [HttpPut]
+        public async Task<IActionResult> ModifyData(string id, Member memberData)
+        {
+            if (id != memberData.MemberID)
+            {
+                return BadRequest();
+            }
+            projectContext.Entry(memberData).State = EntityState.Modified;
+            await projectContext.SaveChangesAsync();
+            return NoContent();
         }
 
         private bool MemberExists(string Account)

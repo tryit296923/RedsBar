@@ -73,28 +73,28 @@
 <h2>確認訂位與填寫聯絡資訊</h2>
 <div class="container check-area col-10">
     <label for="date">預定日期 : </label>
-    <p id="date" class="date">@ViewBag.Datepicker</p>
+    <p id="date" class="date">@ViewBag.ReserveDate</p>
     <hr>
     <label for="people">預定人數 : </label>
-    <p id="people" class="people">@ViewBag.People<span>位</span></p>
+    <p id="people" class="people">@ViewBag.Number<span>位</span></p>
 </div>
 <br>
 <div class="container col-10 col-xl-5">
-    <form class="inputform" action="Success" method="post">
-        <input name="datepicker" value="@ViewBag.Datepicker" hidden/>
-        <input name="people" value="@ViewBag.People" hidden/>
+    <form id="booking" class="inputform" action="Success" method="post">
+        <input name="ReserveDate" value="@ViewBag.ReserveDate" hidden />
+        <input name="Number" value="@ViewBag.Number" hidden />
         <div class="input-detail m-0">
             <div class="name">
                 <label for="name">姓名 : </label>
-                <input name="name" type="text" id="name" required maxlength="20">
+                <input name="ReserveName" type="text" id="name" required maxlength="20">
             </div>
             <div class="phone">
                 <label for="phone">電話 : </label>
-                <input name="phone" type="text" id="phone" required maxlength="10" minlength="10" placeholder="09xxxxxxxx">
+                <input name="Phone" type="text" id="phone" required maxlength="10" minlength="10" placeholder="09xxxxxxxx">
             </div>
             <div class="Email">
                 <label for="Email">Email : </label>
-                <input name="email" type="email" id="Email" required>
+                <input name="Email" type="email" id="Email" required>
             </div>
         </div>
         <br>

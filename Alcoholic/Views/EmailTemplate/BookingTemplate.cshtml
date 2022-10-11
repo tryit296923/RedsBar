@@ -1,4 +1,4 @@
-﻿@model Alcoholic.Models.ViewModels.BookingSuccessViewModel
+﻿@model Alcoholic.Models.Entities.Reserves
 @{
     Layout = null;
 }
@@ -28,9 +28,9 @@
         <div class="content">
             <img src="~/images/icons/logo-w.png" />
             <div>
-                親愛的 @Model.Name
+                親愛的 @Model.ReserveName
             </div>
-            <p>感謝您預定 @Model.DatePicker 共計 @Model.People 兩位</p>
+            <p>感謝您預定Red's Bar @Model.ReserveDate.ToString("yyyy-MM-dd") &nbsp @Model.ReserveDate.ToString("dddd") 共計 @Model.Number 位</p>
         </div>
     </div>
     </body>

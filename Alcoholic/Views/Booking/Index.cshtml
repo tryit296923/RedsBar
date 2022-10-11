@@ -245,11 +245,11 @@
         <div class="row">
             <div class="col-12 col-xl-6">
                 <label for="datepicker" class="col-sm-12 col-form-label">用餐日期</label>
-                <input name="datepicker" type="date" id="datepicker" class="datepicker" placeholder="請選擇用餐日期" v-bind:min="mindate()" v-bind:max="maxdate()" v-model="datepick">
+                <input name="ReserveDate" type="date" id="datepicker" class="datepicker" placeholder="請選擇用餐日期" v-bind:min="mindate()" v-bind:max="maxdate()" v-model="ReserveDate">
             </div>
             <div class="col-12 col-xl-6">
                 <label for="people" class="col-sm-12 col-form-label">用餐人數</label>
-                <select name="people" id="people" class="form-select" v-model="selectpeople">
+                <select name="Number" id="people" class="form-select" v-model="Number">
                     <option value="" disabled>請選擇用餐人數</option>
                     <template v-for="peo in people">
                         <option :value="peo.value">{{peo.txt}}</option>
@@ -296,9 +296,9 @@
         </div>
     </div>
     <form action="Check" method="post">
-        <input name="datepicker" v-bind:value="datepick" hidden/>
-        <input name="people" v-bind:value="selectpeople" hidden/>
-        <button type="submit" hidden ref="bookingcheck"></button>
+        <input name="ReserveDate" v-bind:value="ReserveDate" hidden />
+        <input name="Number" v-bind:value="Number" hidden />
+        <button type="submit" ref="bookingcheck" hidden></button>
     </form>
     <!--footer-->
     <footer>
@@ -324,23 +324,23 @@
         <div class="container">
             <p class="booking-check-text">
                 選擇預定
-                <template v-if="datepick==''">
+                <template v-if="ReserveDate==''">
                     <button class="booking-check-date">請選擇預定日期</button>
                 </template>
                 <template v-else>
-                    <button class="booking-check-date">{{datepick}}</button>
+                    <button class="booking-check-date">{{ReserveDate}}</button>
                 </template>
                 >
-                <template v-if="selectpeople==''">
+                <template v-if="Number==''">
                     <button class="booking-check-people">請選擇用餐人數</button>
                 </template>
                 <template v-else>
-                    <button class="booking-check-people">{{people[selectpeople-1].txt}}</button>
+                    <button class="booking-check-people">{{people[Number-1].txt}}</button>
                 </template>
             </p>
         </div>
         <div class="container">
-            <template v-if=" datepick == '' || selectpeople =='' ">
+            <template v-if=" ReserveDate == '' || Number =='' ">
                 <a class="col-12 booking-uncheck-btn" type="button">請選擇用餐日期與人數</a>
             </template>
             <template v-else>
@@ -355,8 +355,8 @@
         el: '#d1',
         data: {
             MyDate: new Date,
-            datepick: '',
-            selectpeople: '',
+            ReserveDate: '',
+            Number: '',
             people: [
                 { value: 1, txt: '1位成人' },
                 { value: 2, txt: '2位成人' },
@@ -464,7 +464,7 @@
         var marker = new google.maps.Marker(
             {
                 position: mapProp.center,
-                icon: "Images/icons/icon01.png",
+                icon: "~/images/icons/icon01.png",
                 animation: google.maps.Animation.BOUNCE
             });
         marker.setMap(map);

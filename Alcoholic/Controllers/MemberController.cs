@@ -64,7 +64,7 @@ namespace Alcoholic.Controllers
             return View("LoginRegister");
         }
 
-        // 登入 => 點餐(Order'Order)
+        // 會員登入 => 點餐(Order'Order)
         [HttpPost]
         public async Task<IActionResult> Login(Member memberData)
         {
@@ -72,7 +72,6 @@ namespace Alcoholic.Controllers
                             where member.MemberAccount == memberData.MemberAccount
                             && member.MemberPassword == memberData.MemberPassword
                             select member).SingleOrDefault();
-
             if (user == null)
             {
                 return NotFound();
@@ -102,7 +101,7 @@ namespace Alcoholic.Controllers
             }
         }
 
-        // 選訪客登入 => 點餐(Order'Order)
+        // 訪客登入 => 點餐(Order'Order)
         public async Task<IActionResult> GuestLogin()
         {
             Member? user = (from member in projectContext.Members
@@ -121,39 +120,5 @@ namespace Alcoholic.Controllers
                 return RedirectToAction("Order", "Order");
         }
 
-        // : Member/Register => Member/Getmember
-        [HttpPost]
-        public async Task<ActionResult> Register(Member memberData)
-        {
-            if (MemberExists(memberData.MemberAccount))
-            {
-                return NotFound();
-            }
-            int number = projectContext.Members.Count() + 100;
-            memberData.Qualified = "n";
-            memberData.MemberID = DateTime.Now.ToString("yyyyMMdd") + number.ToString();
-            await projectContext.AddAsync(memberData);
-            await projectContext.SaveChangesAsync();
-            mailService.SendMail(memberData.Email, "請點擊下方連結", "RedsBar 會員認證信件");
-            return Ok(memberData);
-        }
-
-        // PUT: Update
-        [HttpPut]
-        public async Task<IActionResult> ModifyData(string id, Member memberData)
-        {
-            if (id != memberData.MemberID)
-            {
-                return BadRequest();
-            }
-            projectContext.Entry(memberData).State = EntityState.Modified;
-            await projectContext.SaveChangesAsync();
-            return NoContent();
-        }
-
-        private bool MemberExists(string Account)
-        {
-            return projectContext.Members.Any(member => member.MemberAccount == Account);
-        }
     }
 }
