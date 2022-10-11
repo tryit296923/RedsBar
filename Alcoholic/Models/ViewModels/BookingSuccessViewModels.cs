@@ -1,6 +1,6 @@
 ﻿namespace Alcoholic.Models.ViewModels
 {
-    public class BookingSuccessViewModels
+    public class BookingSuccessViewModel
     {
         public string DatePicker { get; set; }
         public string People { get; set; }
