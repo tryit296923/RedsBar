@@ -140,7 +140,7 @@
                 </select>
             </div>
             <div class="idenchoice">
-                <button v-bind:disabled=btn v-bind:style="disable" v-on:click.prevent="StartOrder" class="cust">訪客點餐</button>
+                <button v-bind:disabled=btn v-bind:style="disable" v-on:click.prevent="StartOrderGuest" class="cust">訪客點餐</button>
                 <button v-bind:disabled=btn v-bind:style="disable" v-on:click.prevent="StartOrder" class="member">會員點餐</button>
             </div>
         </form>
@@ -184,16 +184,34 @@
                 StartOrder: function () {
                     let fetchbody = {
                         "Desk": this.desknum,
-                        "Number": this.number
+                        "Number": this.number,
+                        "StartTime" : "",
+                        "EndTime":"",
+                        "Occupied":1
                     };
                     let jsonStr = JSON.stringify(fetchbody);
                     console.log(jsonStr);
                     console.log(fetchbody);
-                    fetch("https://localhost:7273/Member/StartOrder", {
-                        method: "POST",
+                    fetch("https://localhost:7273/api/StartOrder", {
+                        method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         body: jsonStr
-                    }).then(window.location.assign("https://localhost:7273/Member/LoginRegister")).catch(err => console.log(err))
+                    }).then(data => console.log(data)).catch(err => console.log(err))
+                },
+                StartOrderGuest:function(){
+                    let fetchbody = {
+                        "Desk": this.desknum,
+                        "Number": this.number,
+                        "StartTime": "",
+                        "EndTime": "",
+                        "Occupied": 1
+                    };
+                    let jsonStr = JSON.stringify(fetchbody);
+                    fetch("https://localhost:7273/api/StartOrder", {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: jsonStr
+                    }).then(data => console.log(data)).then(() => { window.location.assign("https://localhost:7273/member/GuestLogin") }).catch(err => console.log(err))
                 }
             }
         })
