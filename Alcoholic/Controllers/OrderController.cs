@@ -22,10 +22,10 @@ namespace Alcoholic.Controllers
         {
             string MemberIdCookie = Request.Cookies["MemberID"];
 
-            //寫判斷式確定userName不為空
-            Member userName = (from member in projectContext.Members
+            
+            string userName = (from member in projectContext.Members
                             where member.MemberID == MemberIdCookie
-                               select member).SingleOrDefault();
+                               select member).SingleOrDefault().MemberName;
 
             ViewBag.userName = userName;
             return View();
