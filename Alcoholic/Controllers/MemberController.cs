@@ -3,20 +3,12 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing.Text;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Policy;
-using System.Linq;
 using Alcoholic.Models.DTO;
 using Alcoholic.Services;
-using Newtonsoft.Json;
 using Razor.Templating.Core;
-using Microsoft.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
-using System.Collections;
-//using Microsoft.AspNetCore.Cors;
 
 namespace Alcoholic.Controllers
 {
