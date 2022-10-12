@@ -28,8 +28,11 @@
             min-height: 844px;
             min-width: 390px;
         }
-        input{
+
+        input {
+            border: 0px;
             border-radius: 00.375rem;
+            padding: 4px;
             width: 130%;
         }
         .tab-content button{
@@ -51,7 +54,7 @@
         /* LoginForm */
         .loginpage{
             position: relative;
-            background-image: url("/images/background/loginform.jpg");
+            background-image: url(/images/BackGround/LoginForm.jpg);
             background-repeat: no-repeat;
             background-size: cover;
             height: 844px;
@@ -100,13 +103,13 @@
         /* RegisterForm */
         .registerpage{
             position: relative;
-            background-image: url("/images/background/RegisterForm.jpg");
+            background-image: url(/images/BackGround/RegisterForm.jpg);
             background-repeat: no-repeat;
             background-size: cover;
             height: 844px;
             width: 390px;
         }
-        #Register{
+        .Register{
             height: 416px;
             position: absolute;
             left: 20%;
@@ -142,6 +145,7 @@
             font-weight: bold;
             width: 200px;
         }
+
         @@media screen and (min-width: 768px) {
             body{
                 background-color: #222220;
@@ -153,7 +157,7 @@
             }
             .loginpage{
                 position: relative;
-                background-image: url("/images/background/login.jpg");
+                background-image: url(/images/BackGround/login.jpg);
                 background-repeat: no-repeat;
                 background-size: cover;
                 height: 1060px;
@@ -161,7 +165,7 @@
             }
             .registerpage{
                 position: relative;
-                background-image: url("/images/background/Register.jpg");
+                background-image: url(/images/BackGround/Register.jpg);
                 background-repeat: no-repeat;
                 background-size: cover;
                 height: 1060px;
@@ -171,7 +175,7 @@
                 width: 768px;
                 top: 8%;
             }
-            #Register{
+            .Register{
                 height: 464px;
                 left: 32%;
                 margin-top: 48%;
@@ -202,56 +206,58 @@
                 <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">註冊</button>
             </li>
         </ul>        
-    </div>       
+    </div>
     <div class="tab-content " id="pills-tabContent">
         <div class="loginpage m-0 tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
-            <form id="Login" asp-controller="MemberApi" asp-action="Login" method="post" enctype="multipart/form-data">
+            <form id="Login" method="post" enctype="">
                 <div class="account">
-                    <input type="account" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">                    
+                    <input v-model="loginaccount" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
                 </div>
                 <div class="password">
-                    <input type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">                    
+                    <input v-model="loginpassword" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
                 </div>
                 <a href="">忘記密碼?</a>
                 <div class="login">
-                    <button>登 入</button>
+                    <button v-on:click.prevent="login">登 入</button>
                 </div>
             </form>                
             <div class="OAuth">
-                <a href=""><img src="Images/icons/google.png" alt=""></a>
-                <a href=""><img src="Images/icons/IG.png" alt=""></a>
-                <a href=""><img src="Images/icons/FB.png" alt=""></a>
+                <a href=""><img src="~/images/icons/google.png" alt=""></a>
+                <a href=""><img src="~/images/icons/IG.png" alt=""></a>
+                <a href=""><img src="~/images/icons/FB.png" alt=""></a>
             </div>
         </div>
         <div class="registerpage tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
-            <form id="Register" method="post" enctype="">
-                <div class="text">
-                    <input v-model="Account" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
+            <div id="Register">
+                <form class="Register" method="post" enctype="">
+                    <div class="text">
+                        <input v-model="Account" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
+                    </div>
+                    <div class="encryp">
+                        <input v-model="Password" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
+                    </div>
+                    <div class="repassword">
+                        <input v-model="rePassword" v-bind:class="incorrect" type="password" required maxlength="20" minlength="8" placeholder="請再次輸入密碼">
+                    </div>
+                    <div class="Email">
+                        <input v-model.lazy="Email" v-bind:class="validEmail" type="email" required>
+                    </div>
+                    <div class="name">
+                        <input v-model="Name" required maxlength="20">
+                    </div>
+                    <div class="phone">
+                        <input v-model="Phone" required maxlength="10" minlength="10" placeholder="請輸入連絡電話(09-開頭)">
+                    </div>
+                    <div class="birth">
+                        <input v-model="Birth" type="date" value="2000-12-10" required>
+                    </div>
+                    <div class="incorrectText" v-bind:style="incorrectText">
+                        <p>兩次密碼不相符!</p>
+                    </div>
+                </form>
+                <div class="register">
+                    <button v-on:click.prevent="register" class="registerbtn">註 冊</button>
                 </div>
-                <div class="encryp">
-                    <input v-on:keyup="comfirmPassword" v-model="Password" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
-                </div>
-                <div class="repassword">
-                    <input v-on:keyup="comfirmPassword" v-model="rePassword" v-bind:class="incorrect" type="password" required maxlength="20" minlength="8" placeholder="請再次輸入密碼">
-                </div>
-                <div class="Email">
-                    <input v-model="Email" type="email" required>
-                </div>
-                <div class="name">
-                    <input v-model="Name" required maxlength="20">
-                </div>
-                <div class="phone">
-                    <input v-model="Phone" required maxlength="10" minlength="10" placeholder="請輸入連絡電話(09-開頭)">
-                </div>
-                <div class="birth">
-                    <input v-model="Birth" type="date" value="2000-12-10" required>
-                </div>
-                <div class="incorrectText" v-bind:style="incorrectText">
-                    <p>兩次密碼不相符!</p>
-                </div>
-            </form>
-            <div class="register">
-                <button v-on:click.prevent="login" class="registerbtn" >註 冊</button>
             </div>
         </div>
     </div>
@@ -269,10 +275,24 @@
             Email:"",
             rePassword:"",
             incorrect:"",
-            incorrectText: { 'opacity': 0 }
+            incorrectText:{'opacity': 0},
+            validEmail:"",
+        },
+        watch:{
+            rePassword:function(){
+                this.incorrect = this.Password != this.rePassword? "valid":"";
+                this.incorrectText = this.Password != this.rePassword? {}:{'opacity': 0};
+            },
+            Password:function(){
+                this.incorrect = this.Password != this.rePassword? "valid":"";
+                this.incorrectText = this.Password != this.rePassword? {}:{'opacity': 0};
+            },
+            Email:function(){
+                this.validEmail = this.Email.includes("@@")? "":"valid"
+            }
         },
         methods:{
-            login: function () {
+            register: function () {
                 let fbody = {
                     "MemberID": "",
                     "MemberAccount": this.Account,
@@ -285,7 +305,7 @@
                 let JsonString = JSON.stringify(fbody);
                 console.log(JsonString);    // JSON
                 console.log(fbody);         // Obj
-                fetch("https://localhost:7273/api/Register", {
+                fetch("https://localhost:7273/Member/Register", {
                     method: 'POST',
                     headers: { "Content-Type": "application/json" },
                     body: JsonString        // to JsonString
@@ -298,14 +318,36 @@
                 }))
                     .catch(error => console.error(error))
             },
-            comfirmPassword:function(){
-                if (this.Password != this.rePassword) {
-                    this.incorrect = "valid";
-                    this.incorrectText = "";
-                } else {
-                    this.incorrect = "";
-                    this.incorrectText = { 'opacity': 0 };
-                }
+
+        }
+    })
+    const logvm = new Vue({
+        el:"#Login",
+        data:{
+            loginaccount: "",
+            loginpassword: "",
+        },
+        methods:{
+            login: function () {
+                let loginbody = {
+                    "MemberAccount": this.loginaccount,
+                    "MemberPassword": this.loginpassword,
+                };
+                let loginJsonString = JSON.stringify(loginbody);
+                console.log(loginJsonString);    // JSON
+                console.log(loginbody);         // Obj
+                fetch("https://localhost:7273/Member/Login", {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: loginJsonString        // to JsonString
+                    })
+                    .then(() => Swal.fire({
+                        icon: 'success',
+                        title: '註冊成功!',
+                        text: '請至信箱收取認證信件，請稍待1~3分鐘',
+                        footer: '<a href="https://localhost:7273/Member/Login">未收到信件? 點擊此處以重發</a>'
+                    }))
+                    .catch(error => console.log(error))
             }
         }
     })

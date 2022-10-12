@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -102,7 +105,7 @@
 </head>
 <body>
     <div class="logo">
-        <a href=""><img src="images/icons/logo-y.png" alt=""></a>
+        <a href=""><img src="~/images/icons/logo-y.png" alt=""></a>
     </div>
     <div class="message">
         <h3>歡迎您!</h3>
@@ -192,11 +195,11 @@
                     let jsonStr = JSON.stringify(fetchbody);
                     console.log(jsonStr);
                     console.log(fetchbody);
-                    fetch("https://localhost:7273/api/StartOrder", {
+                    fetch("https://localhost:7273/member/StartOrder", {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         body: jsonStr
-                    }).then(data => console.log(data)).catch(err => console.log(err))
+                    }).then(data => console.log(data)).then(() => { window.location.assign("https://localhost:7273/member/GuestLogin") }).catch(err => console.log(err))
                 },
                 StartOrderGuest:function(){
                     let fetchbody = {
@@ -207,7 +210,7 @@
                         "Occupied": 1
                     };
                     let jsonStr = JSON.stringify(fetchbody);
-                    fetch("https://localhost:7273/api/StartOrder", {
+                    fetch("https://localhost:7273/member/StartOrder", {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         body: jsonStr

@@ -4,6 +4,7 @@ using Alcoholic.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alcoholic.Migrations
 {
     [DbContext(typeof(db_a8de26_projectContext))]
-    partial class db_a8de26_projectContextModelSnapshot : ModelSnapshot
+    [Migration("20221012030105_fixedLostDeskInfo")]
+    partial class fixedLostDeskInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -134,10 +136,10 @@ namespace Alcoholic.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<byte[]>("MemberPassword")
+                    b.Property<string>("MemberPassword")
                         .IsRequired()
                         .HasMaxLength(225)
-                        .HasColumnType("varbinary(225)");
+                        .HasColumnType("nvarchar(225)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
