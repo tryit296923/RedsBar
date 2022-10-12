@@ -13,6 +13,9 @@ using Alcoholic.Services;
 using Newtonsoft.Json;
 using Razor.Templating.Core;
 using Microsoft.Net.Http.Headers;
+using System.Security.Cryptography;
+using System.Text;
+using System.Collections;
 //using Microsoft.AspNetCore.Cors;
 
 namespace Alcoholic.Controllers
@@ -47,7 +50,10 @@ namespace Alcoholic.Controllers
             }
             return member;
         }
-
+        public ActionResult AuthorizeP()
+        {
+            return View("Authorize");
+        }
         public ActionResult FrontPage()
         {
             return View();
@@ -59,25 +65,31 @@ namespace Alcoholic.Controllers
 
         // 入座 => 登入頁面 (導向)
         [HttpPut]
-        public async Task<IActionResult> StartOrder(DeskInfo deskInfo)
+        public async Task<IActionResult> StartOrder([FromBody]DeskInfo deskInfo)
         {
             deskInfo.Occupied = 1;
             deskInfo.StartTime = DateTime.Now.ToString("yyyyMMddHHmm");
             projectContext.Entry(deskInfo).State = EntityState.Modified;
             await projectContext.SaveChangesAsync();
-            HttpContext.Response.Cookies.Append("Desk", deskInfo.Desk);
-            HttpContext.Response.Cookies.Append("Number", deskInfo.Number);
-            return View("LoginRegister");
+            CookieOptions cookieOptions = new CookieOptions();
+            cookieOptions.Expires = new DateTimeOffset(DateTime.Now.AddHours(2));
+            HttpContext.Response.Cookies.Append("Number", deskInfo.Number, cookieOptions);
+            HttpContext.Response.Cookies.Append("Desk", deskInfo.Desk, cookieOptions);
+            return Ok("LoginRegister");
         }
         // 會員登入 => 點餐(Order'Order)
         [HttpPost]
-        public async Task<IActionResult> Login(Member memberData)
+        public IActionResult Login([FromBody] Member memberData)
         {
-            Member? user = (from member in projectContext.Members
-                            where member.MemberAccount == memberData.MemberAccount
-                            && member.MemberPassword == memberData.MemberPassword
-                            select member).SingleOrDefault();
+            Member ? user = (from member in projectContext.Members
+                             where member.MemberAccount == memberData.MemberAccount
+                             select member).SingleOrDefault();
             if (user == null)
+            {
+                return NotFound();
+            }
+            String password = GetHash(memberData.MemberPassword.Concat(user.Salt).ToString());
+            if (password != user.MemberPassword)
             {
                 return NotFound();
             }
@@ -112,7 +124,7 @@ namespace Alcoholic.Controllers
         {
             Member? user = (from member in projectContext.Members
                             where member.MemberAccount == "guestonly123"
-                            && member.MemberPassword == "guestonly123"
+                            && member.MemberPassword == "d87c5439b038afaf5ada19a23322ca2ac4fd37a74df11559e25784c69ae4"
                             select member).SingleOrDefault();
                 var claims = new List<Claim>
                 {
@@ -139,7 +151,7 @@ namespace Alcoholic.Controllers
 
         // 註冊
         [HttpPost]
-        public async Task<IActionResult> Register(Member memberData)
+        public async Task<IActionResult> Register([FromBody] Member memberData)
         {
             if (MemberExists(memberData.MemberAccount) && memberData.MemberAccount.Length > 7 && memberData.MemberPassword.Length > 7)
             {
@@ -148,7 +160,7 @@ namespace Alcoholic.Controllers
             int number = projectContext.Members.Count() + 100;
             string salt = Guid.NewGuid().ToString("N");
             memberData.Salt = salt;
-            memberData.MemberPassword.Concat(salt);
+            memberData.MemberPassword = GetHash(memberData.MemberPassword.Concat(salt).ToString());
             memberData.Qualified = "n";
             memberData.MemberID = DateTime.Now.ToString("yyyyMMdd") + number.ToString();
             await projectContext.AddAsync(memberData);
@@ -188,6 +200,18 @@ namespace Alcoholic.Controllers
         private bool MemberExists(string Account)
         {
             return projectContext.Members.Any(member => member.MemberAccount == Account);
+        }
+
+        public string GetHash(string input)
+        {
+            SHA256 sHA256 = SHA256.Create();
+            byte[] bytes = sHA256.ComputeHash(Encoding.UTF8.GetBytes(input));
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                builder.Append(bytes[i].ToString("X"));
+            }
+            return builder.ToString().ToLower();
         }
 
     }

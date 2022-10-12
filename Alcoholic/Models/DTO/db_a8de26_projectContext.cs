@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Policy;
 using Alcoholic.Models.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -29,7 +30,7 @@ namespace Alcoholic.Models.DTO
         public virtual DbSet<DeskInfo> DeskInfo { get; set; } = null!;
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating([FromBody] ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>(entity =>
             {
