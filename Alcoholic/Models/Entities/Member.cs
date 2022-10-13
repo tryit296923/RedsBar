@@ -13,6 +13,7 @@ namespace Alcoholic.Models.Entities
         public string MemberID { get; set; } = null!;
         public string MemberAccount { get; set; } = null!;
         public string MemberPassword { get; set; } = null!;
+        public int MemberLevel { get; set; }
         public string Salt { get; set; } = null!;
         public string MemberName { get; set; } = null!;
         public DateTime MemberBirth { get; set; }
