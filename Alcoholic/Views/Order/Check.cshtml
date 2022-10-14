@@ -35,7 +35,7 @@
     .checkdetail {
         border: 1px solid #D8CDB9;
         border-radius: 0.375rem;
-        padding: 20px 12px 20px 12px !important;
+        
     }
 
     .checkdetail p {
@@ -46,8 +46,14 @@
         font-size: larger;
     }
 
-    .checkinfotitle {
-        font-weight: bold;
+    ul {
+        padding-left: 20px;
+    }
+
+    .orderDetail{
+        display:flex;
+        justify-content:space-between;
+        font-size:large;
     }
 
     .total {
@@ -94,24 +100,38 @@
     .btnfrontdesk:active {
         background-color: #C28C2E;
     }
+
+    .modal-content{
+        color:black;
+    }
+
+    .modal-footer{
+        justify-content:center;
+    }
 </style>
 
 <div class="container">
     <div class="row">
         <!-- 標題 -->
         <div class="container-fluid colorbox py-2 col-10 col-xl-8 text-center">
-            <div class="thankmessage">謝謝您的光臨!</div>
+            <div class="thankmessage">本日消費明細</div>
         </div>
         <br>
         <div class="detailbox container-fluid col-10 col-xl-8 px-0">
             <!-- 訂單簡單資訊 -->
-            <div class="checkdetail text-center py-2">
-                <p class="checkinfotext checkinfotitle">今日消費資訊 :</p>
-                <hr>
-                <p class="checkinfotext orderdate">消費日期 : @ViewBag.orderDate</p>
-                <hr>
+            <div class="checkdetail p-3">
+                <div class="px-3">
+                <p class="checkinfotext orderdate">日期 : @ViewBag.orderDate</p>
                 <p class="checkinfotext tablenum">桌號 : </p>
                 <p class="checkinfotext custnum">用餐人數 :  人</p>
+                </div>
+                <hr>
+                <ul>
+                    <li class="orderDetail">
+                        <span>商品名稱</span>
+                        <span class="pe-3">2</span>
+                    </li>
+                </ul>
                 <hr>
                 <p class="colorbox total mt-0">今日消費總計 : XXX 元</p>
             </div>
@@ -120,7 +140,7 @@
             <div class="paymentway">
                 <div class="container row w-100 px-0">
                     <div class="col col-xl-6 text-center">
-                        <button type="button" class="btnonlinepay w-100 py-2">
+                        <button type="button" class="btnonlinepay w-100 py-2"data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                             線上支付
                         </button>
                     </div>
@@ -128,6 +148,21 @@
                         <button type="button" class="btnfrontdesk w-100 py-2">
                             櫃台結帳
                         </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">請選擇線上支付工具</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary">信用卡支付</button>
+                            <button type="button" class="btn btn-secondary">Google Pay</button>
+                            <button type="button" class="btn btn-secondary">Line Pay</button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -21,6 +21,11 @@
         background-color: #721B29;
     }
 
+    .logo {
+        width: 50px;
+        margin-right: 20px;
+    }
+
     .navbar-brand {
         color: white;
     }
@@ -244,7 +249,7 @@
         <div class="topnavbar">
             <nav class="navbar navbar-expand-lg navbarposition">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#">店家名稱</a>
+                    <a asp-controller="Home" asp-action="Index"><img src="~/images/icons/logo-w.png" alt="" class="logo"></a>
                     <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
@@ -375,7 +380,7 @@
     <!-- Modal -->
     <div class="modal fade" id="delieveBackdrop" data-bs-backdrop="delieve" data-bs-keyboard="false" tabindex="-1"
          aria-labelledby="delieveBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="delieveBackdropLabel">訂單送出提示</h5>

@@ -82,15 +82,19 @@
                 },
                 send:function(product){
                     let body ={
-                        ProductId:product.ProductId,
-                        ProductName:product.ProductName,
-                        UnitPrice:product.UnitPrice 
+                        ProductId:product.productId.toString(),
+                        ProductName:product.productName,
+                        UnitPrice:product.unitPrice.toString()
                     }
+                    let JsonStr = JSON.stringify(body)  
+                    // console.log(body);
+                    // console.log(JsonStr);
                     fetch("https://localhost:7273/Product/AddToCart",{
-                        body: JSON.stringify(body),
                         headers:{'content-type':'application/json'},
+                        body: JsonStr,
                         method:'POST'
                     }).then((response)=>console.log(response)).catch((err)=>console.log(err))
+                    
                 }
             },
             mounted:function(){
