@@ -17,7 +17,7 @@ namespace Alcoholic.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "6.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -134,10 +134,10 @@ namespace Alcoholic.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<byte[]>("MemberPassword")
+                    b.Property<string>("MemberPassword")
                         .IsRequired()
                         .HasMaxLength(225)
-                        .HasColumnType("varbinary(225)");
+                        .HasColumnType("nvarchar(225)");
 
                     b.Property<string>("Phone")
                         .IsRequired()

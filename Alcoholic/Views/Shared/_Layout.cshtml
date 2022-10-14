@@ -4,12 +4,30 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Alcoholic</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Alcoholic.styles.css" asp-append-version="true" />
     <link rel="shortcut icon" type="image/ico" href="@Url.Content("~/images/icons/logoicon-r.png")">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10"></script>
     <style>
         /* NAV */
+        .logo {
+            width: 50px;
+            margin-right: 20px;
+        }
+
+        .navbar {
+            background-color: #721B29;
+        }
+
+        .navbar-brand {
+            color: white;
+        }
+
+        .nav-link {
+            color: white;
+        }
+
         .search {
             height: 38px;
             margin: 10px;
@@ -24,17 +42,8 @@
                 right: 9px;
             }
 
-        .logo {
-            width: 50px;
-            margin-right: 20px;
-        }
-
-        .navbar {
-            background-color: #721B29;
-        }
-
-        .navbar-brand, .nav-link {
-            color: white;
+        .searcharea2 {
+            display: none;
         }
 
         @@media screen and (max-width: 992px) {
@@ -77,7 +86,7 @@
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
                         <form class="searcharea2 search" role="search">
                             <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                            <a href=""><img src="Images/icons/search.png" alt=""></a>
+                            <a href=""><img src="~/images/icons/search.png" alt=""></a>
                         </form>
                         <li class="nav-item">
                             <a class="nav-link" href="#">推薦</a>
