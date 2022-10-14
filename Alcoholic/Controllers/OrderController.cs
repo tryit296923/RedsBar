@@ -20,25 +20,20 @@ namespace Alcoholic.Controllers
         }
         public IActionResult Cart(Member memberData)
         {
-            string MemberIdCookie = Request.Cookies["MemberID"];
+            string memberIdCookie = Request.Cookies["MemberID"];
 
             
-            string userName = (from member in projectContext.Members
-                            where member.MemberID == MemberIdCookie
-                               select member).SingleOrDefault().MemberName;
+            //string? userName = (from member in projectContext.Members
+            //                where member.MemberID == memberIdCookie
+            //                   select member).SingleOrDefault().MemberName;
 
-            ViewBag.userName = userName;
+            //ViewBag.userName = userName;
             return View();
         }
 
-        public IActionResult Success(OrderViewModel order)
+        public IActionResult Success()
         {
-            //var table = 4;
-            //order.DeskNum = table.ToString();
-            //var people = 5;
-            //order.Number = people.ToString();
-            var caseNo = 12345678;
-            order.CaseNo = caseNo.ToString();
+
 
             string deskCookie = Request.Cookies["Desk"];
             string numberCookie = Request.Cookies["Number"];
@@ -48,10 +43,14 @@ namespace Alcoholic.Controllers
             ViewBag.deskCookie = deskCookie;
             ViewBag.numberCookie = numberCookie;
             ViewBag.orderDate = now;
-            return View(order);
+            return View();
         }
 
         public IActionResult Total()
+        {
+            return View();
+        }
+        public IActionResult OrderList()
         {
             return View();
         }

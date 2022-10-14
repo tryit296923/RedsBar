@@ -367,6 +367,7 @@
         var app = new Vue({
             el: '#d1',
             data: {
+                bookingController:'',
                 MyDate: new Date,
                 datepick:'',
                 selectpeople:'',
@@ -391,6 +392,11 @@
                 ],
             },
             methods: {
+                GetBookings:function(){
+                    fetch('https://localhost:7273/Booking/GetAllBookings')
+                    .then(function(response){return response})
+                    .then(function(result){self.products = result})
+                },
                 bold:function(day,getDay){
                     if(day.id==getDay){
                         return 'open-hours-bold';
@@ -407,6 +413,9 @@
                     return maxdate.toJSON().substr(0,10);
                 }
             },
+            mounted:function(){
+                this.GetBookings();
+            }
         });
 
         function myMap() {

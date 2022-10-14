@@ -1,4 +1,4 @@
-﻿@model Alcoholic.Models.ViewModels.OrderViewModel
+﻿@model Alcoholic.Models.ViewModels.SendProductsModel
 @{
     ViewData["Title"] = "訂單送出成功!";
     Layout = "_LayoutMobile";
@@ -113,7 +113,7 @@
                 <p class="orderinfotext tablenum">桌號 : @ViewBag.deskCookie</p>
                 <p class="orderinfotext custnum">用餐人數 : @ViewBag.numberCookie 人</p>
                 <hr>
-                <p class="orderinfotext orderid">訂單單號 : @Model.CaseNo</p>
+                <p class="orderinfotext orderid">訂單單號 : </p>
                 <p class="orderinfotext ordertime">訂單成立時間 : @ViewBag.orderDate</p>
             </div>
 

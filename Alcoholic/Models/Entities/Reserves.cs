@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Alcoholic.Models.Entities
 {
     public partial class Reserves
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public int ReserveId { get; set; }
         public DateTime ReserveDate { get; set; }
         public string ReserveName { get; set; } = null!;

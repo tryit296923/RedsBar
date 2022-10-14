@@ -12,14 +12,19 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alcoholic.Migrations
 {
     [DbContext(typeof(db_a8de26_projectContext))]
-    [Migration("20221014085039_changeMemberIdtype")]
-    partial class changeMemberIdtype
+<<<<<<<< HEAD:Alcoholic/Migrations/20221014021011_NewTableDiscount.Designer.cs
+    [Migration("20221014021011_NewTableDiscount")]
+    partial class NewTableDiscount
+========
+    [Migration("20221014083911_AddReserveIdentity")]
+    partial class AddReserveIdentity
+>>>>>>>> dev1:Alcoholic/Migrations/20221014083911_AddReserveIdentity.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "6.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -152,10 +157,6 @@ namespace Alcoholic.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("emailID")
                         .HasDefaultValueSql("(newid())");
-
-                    b.Property<string>("Level")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MemberAccount")
                         .IsRequired()

@@ -1,4 +1,4 @@
-﻿using Alcoholic.Models.Entities;
+using Alcoholic.Models.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -150,8 +150,8 @@ namespace Alcoholic.Controllers
                 return NotFound();
             }
             string salt = Guid.NewGuid().ToString("N");
-            memberData.MemberID = Guid.NewGuid().ToString("N");
             memberData.Salt = salt;
+            memberData.MemberID = Guid.NewGuid().ToString("N");
             memberData.MemberPassword = GetHash(memberData.MemberPassword.Concat(salt).ToString());
             memberData.Qualified = "n";
             await projectContext.AddAsync(memberData);
