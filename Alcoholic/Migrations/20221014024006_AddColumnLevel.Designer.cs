@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alcoholic.Migrations
 {
     [DbContext(typeof(db_a8de26_projectContext))]
-    [Migration("20221011074827_UpdateReserfTableEmailColumnToNotNull504")]
-    partial class UpdateReserfTableEmailColumnToNotNull504
+    [Migration("20221014024006_AddColumnLevel")]
+    partial class AddColumnLevel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,6 +44,36 @@ namespace Alcoholic.Migrations
                     b.HasKey("Desk");
 
                     b.ToTable("DeskInfo");
+                });
+
+            modelBuilder.Entity("Alcoholic.Models.Entities.Discount", b =>
+                {
+                    b.Property<int>("DiscountId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DiscountId"), 1L, 1);
+
+                    b.Property<float>("DiscountAmount")
+                        .HasColumnType("real");
+
+                    b.Property<string>("DiscountName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Frequency")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Qualify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DiscountId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Discount");
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Employee", b =>
@@ -123,6 +153,10 @@ namespace Alcoholic.Migrations
                         .HasColumnName("emailID")
                         .HasDefaultValueSql("(newid())");
 
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("MemberAccount")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -131,6 +165,9 @@ namespace Alcoholic.Migrations
                     b.Property<DateTime>("MemberBirth")
                         .HasColumnType("date");
 
+                    b.Property<int>("MemberLevel")
+                        .HasColumnType("int");
+
                     b.Property<string>("MemberName")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -138,8 +175,8 @@ namespace Alcoholic.Migrations
 
                     b.Property<string>("MemberPassword")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(225)
+                        .HasColumnType("nvarchar(225)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
@@ -153,6 +190,10 @@ namespace Alcoholic.Migrations
                         .HasColumnName("qualified")
                         .HasDefaultValueSql("(N'n')")
                         .IsFixedLength();
+
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("MemberID");
 
@@ -281,6 +322,10 @@ namespace Alcoholic.Migrations
                     b.Property<int?>("Gin")
                         .HasColumnType("int");
 
+                    b.Property<string>("ImgPath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("LemonNade")
                         .HasColumnType("int");
 
@@ -318,7 +363,7 @@ namespace Alcoholic.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Alcoholic.Models.Entities.Reserf", b =>
+            modelBuilder.Entity("Alcoholic.Models.Entities.Reserves", b =>
                 {
                     b.Property<int>("ReserveId")
                         .ValueGeneratedOnAdd()
@@ -354,6 +399,17 @@ namespace Alcoholic.Migrations
                         .HasName("PK_Reserves_1");
 
                     b.ToTable("Reserves");
+                });
+
+            modelBuilder.Entity("Alcoholic.Models.Entities.Discount", b =>
+                {
+                    b.HasOne("Alcoholic.Models.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Order", b =>

@@ -10,7 +10,7 @@ namespace Alcoholic.Models.Entities
             Orders = new HashSet<Order>();
         }
 
-        public string MemberID { get; set; } = null!;
+        public string MemberID { get; set; } 
         public string MemberAccount { get; set; } = null!;
         public string MemberPassword { get; set; } = null!;
         public int MemberLevel { get; set; }
@@ -22,6 +22,7 @@ namespace Alcoholic.Models.Entities
         public int? Age { get; set; }
         public Guid? EmailID { get; set; }
         public string? Qualified { get; set; }
+        public string Level { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
     }

@@ -28,6 +28,8 @@ namespace Alcoholic.Models.DTO
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<Reserves> Reserves { get; set; } = null!;
         public virtual DbSet<DeskInfo> DeskInfo { get; set; } = null!;
+        public virtual DbSet<Discount> Discount { get; set; } = null!;
+
 
 
         protected override void OnModelCreating([FromBody] ModelBuilder modelBuilder)

@@ -14,6 +14,10 @@ namespace Alcoholic.Controllers
         {
             this.projectContext = projectContext;
         }
+        public ActionResult OrderTemplate()
+        {
+            return View();
+        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts(Product product)

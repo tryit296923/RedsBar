@@ -343,10 +343,9 @@
                     })
                     .then(() => Swal.fire({
                         icon: 'success',
-                        title: '註冊成功!',
-                        text: '請至信箱收取認證信件，請稍待1~3分鐘',
-                        footer: '<a href="https://localhost:7273/Member/Login">未收到信件? 點擊此處以重發</a>'
+                        title: '成功!',
                     }))
+                    .then(() => { window.location.assign("https://localhost:7273/Product/OrderTemplate") })
                     .catch(error => console.log(error))
             }
         }

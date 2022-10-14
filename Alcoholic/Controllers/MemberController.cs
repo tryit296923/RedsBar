@@ -127,7 +127,7 @@ namespace Alcoholic.Controllers
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
                 HttpContext.Response.Cookies.Append("MemberID", user.MemberID);
-                return RedirectToAction("Order", "Order");
+                return RedirectToAction("Product", "OrderTemplate");
         }
 
         // 離席
@@ -149,12 +149,11 @@ namespace Alcoholic.Controllers
             {
                 return NotFound();
             }
-            int number = projectContext.Members.Count() + 100;
             string salt = Guid.NewGuid().ToString("N");
+            memberData.MemberID = Guid.NewGuid().ToString("N");
             memberData.Salt = salt;
             memberData.MemberPassword = GetHash(memberData.MemberPassword.Concat(salt).ToString());
             memberData.Qualified = "n";
-            memberData.MemberID = DateTime.Now.ToString("yyyyMMdd") + number.ToString();
             await projectContext.AddAsync(memberData);
             await projectContext.SaveChangesAsync();
             var msg = await RazorTemplateEngine.RenderAsync<Member>("Views/Member/Authorize.cshtml", memberData);

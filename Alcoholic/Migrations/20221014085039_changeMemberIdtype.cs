@@ -4,7 +4,7 @@
 
 namespace Alcoholic.Migrations
 {
-    public partial class fixedLostDeskInfo : Migration
+    public partial class changeMemberIdtype : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
