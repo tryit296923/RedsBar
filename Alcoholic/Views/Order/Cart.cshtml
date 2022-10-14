@@ -291,7 +291,7 @@
                 <div class="title w-100">
                     <div class="himessage">
                         <p>Hi, </p>
-                        <p class="user">{{member.userName}}</p>
+                        <p class="user">@ViewBag.userName</p>
                     </div>
                 </div>
             </div>
@@ -479,13 +479,13 @@
             },
 
         },
-        mounted:function(){
-            var arr = document.cookie.split("=");
-            if(arr[0]=="memberinfo"){
-                var obj = JSON.parse(arr[1]);
-                this.member.userName = obj.userName;
-                this.member.userId = obj.userId;
-            }
-        }
+        //mounted:function(){
+        //    var arr = document.cookie.split("=");
+        //    if(arr[0]=="memberinfo"){
+        //        var obj = JSON.parse(arr[1]);
+        //        this.member.userName = obj.userName;
+        //        this.member.userId = obj.userId;
+        //    }
+        //}
     })
 </script>

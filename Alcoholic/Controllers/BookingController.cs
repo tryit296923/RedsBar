@@ -16,7 +16,7 @@ namespace Alcoholic.Controllers
             this.mailService = mailService;
             this.projectContext = projectContext;
         }
-        public IActionResult Index()
+        public IActionResult Booking()
         {
             return View();
         }

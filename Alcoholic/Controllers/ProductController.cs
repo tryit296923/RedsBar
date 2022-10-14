@@ -16,7 +16,7 @@ namespace Alcoholic.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts(Product product)
+        public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
         {
             return await projectContext.Products.ToListAsync();
         }
