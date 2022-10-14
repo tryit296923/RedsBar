@@ -28,12 +28,15 @@
             min-height: 844px;
             min-width: 390px;
         }
-
         input {
             border: 0px;
             border-radius: 00.375rem;
             padding: 4px;
             width: 130%;
+        }
+        .tab-content{
+            display: flex;
+            justify-content: center;
         }
         .tab-content button{
             box-shadow: 4px 4px 4px #666;
@@ -41,6 +44,11 @@
         }
         .loginpage, .registerpage{
             height: 100%;
+        }
+
+        .pageselect{
+            display: flex;
+            justify-content: center;
         }
         /* nav */
         .nav{
@@ -197,70 +205,73 @@
     </style>
 </head>
 <body>
-    <div class="pageselect">
-        <ul class="nav nav-pills" id="pills-tab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">登入</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">註冊</button>
-            </li>
-        </ul>        
-    </div>
-    <div class="tab-content " id="pills-tabContent">
-        <div class="loginpage m-0 tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
-            <form id="Login" method="post" enctype="">
-                <div class="account">
-                    <input v-model="loginaccount" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
-                </div>
-                <div class="password">
-                    <input v-model="loginpassword" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
-                </div>
-                <a href="">忘記密碼?</a>
-                <div class="login">
-                    <button v-on:click.prevent="login">登 入</button>
-                </div>
-            </form>                
-            <div class="OAuth">
-                <a href=""><img src="~/images/icons/google.png" alt=""></a>
-                <a href=""><img src="~/images/icons/IG.png" alt=""></a>
-                <a href=""><img src="~/images/icons/FB.png" alt=""></a>
-            </div>
+    <div>
+        <div class="pageselect">
+            <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">登入</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">註冊</button>
+                </li>
+            </ul>
         </div>
-        <div class="registerpage tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
-            <div id="Register">
-                <form class="Register" method="post" enctype="">
-                    <div class="text">
-                        <input v-model="Account" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
+        <div class="tab-content" id="pills-tabContent">
+            <div class="loginpage m-0 tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                <form id="Login" method="post" enctype="">
+                    <div class="account">
+                        <input v-model="loginaccount" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
                     </div>
-                    <div class="encryp">
-                        <input v-model="Password" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
+                    <div class="password">
+                        <input v-model="loginpassword" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
                     </div>
-                    <div class="repassword">
-                        <input v-model="rePassword" v-bind:class="incorrect" type="password" required maxlength="20" minlength="8" placeholder="請再次輸入密碼">
-                    </div>
-                    <div class="Email">
-                        <input v-model.lazy="Email" v-bind:class="validEmail" type="email" required>
-                    </div>
-                    <div class="name">
-                        <input v-model="Name" required maxlength="20">
-                    </div>
-                    <div class="phone">
-                        <input v-model="Phone" required maxlength="10" minlength="10" placeholder="請輸入連絡電話(09-開頭)">
-                    </div>
-                    <div class="birth">
-                        <input v-model="Birth" type="date" value="2000-12-10" required>
-                    </div>
-                    <div class="incorrectText" v-bind:style="incorrectText">
-                        <p>兩次密碼不相符!</p>
+                    <a href="">忘記密碼?</a>
+                    <div class="login">
+                        <button v-on:click.prevent="login">登 入</button>
                     </div>
                 </form>
-                <div class="register">
-                    <button v-on:click.prevent="register" class="registerbtn">註 冊</button>
+                <div class="OAuth">
+                    <a href=""><img src="~/images/icons/google.png" alt=""></a>
+                    <a href=""><img src="~/images/icons/IG.png" alt=""></a>
+                    <a href=""><img src="~/images/icons/FB.png" alt=""></a>
+                </div>
+            </div>
+            <div class="registerpage tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+                <div id="Register">
+                    <form class="Register" method="post" enctype="">
+                        <div class="text">
+                            <input v-model="Account" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
+                        </div>
+                        <div class="encryp">
+                            <input v-model="Password" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
+                        </div>
+                        <div class="repassword">
+                            <input v-model="rePassword" v-bind:class="incorrect" type="password" required maxlength="20" minlength="8" placeholder="請再次輸入密碼">
+                        </div>
+                        <div class="Email">
+                            <input v-model.lazy="Email" v-bind:class="validEmail" type="email" required>
+                        </div>
+                        <div class="name">
+                            <input v-model="Name" required maxlength="20">
+                        </div>
+                        <div class="phone">
+                            <input v-model="Phone" required maxlength="10" minlength="10" placeholder="請輸入連絡電話(09-開頭)">
+                        </div>
+                        <div class="birth">
+                            <input v-model="Birth" type="date" value="2000-12-10" required>
+                        </div>
+                        <div class="incorrectText" v-bind:style="incorrectText">
+                            <p>兩次密碼不相符!</p>
+                        </div>
+                    </form>
+                    <div class="register">
+                        <button v-on:click.prevent="register" class="registerbtn">註 冊</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 
 </body>
 <script>

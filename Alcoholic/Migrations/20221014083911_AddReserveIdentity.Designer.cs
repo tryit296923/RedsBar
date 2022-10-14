@@ -11,14 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Alcoholic.Migrations
 {
-    [DbContext(typeof(db_a8de26_projectContext))]
-<<<<<<<< HEAD:Alcoholic/Migrations/20221014021011_NewTableDiscount.Designer.cs
-    [Migration("20221014021011_NewTableDiscount")]
-    partial class NewTableDiscount
-========
     [Migration("20221014083911_AddReserveIdentity")]
     partial class AddReserveIdentity
->>>>>>>> dev1:Alcoholic/Migrations/20221014083911_AddReserveIdentity.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

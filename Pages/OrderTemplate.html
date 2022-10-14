@@ -59,12 +59,6 @@
                 products:[],
             },
             methods:{
-                GetProducts:function(){
-                    let self = this;
-                    fetch("https://localhost:7273/Product/GetAllProducts")
-                    .then(function(response){return response.json()})
-                    .then(function(result){self.products = result})
-                },
                 addone:function(e){
                     if(e.target.parentElement.children[1].value < 10){
                         e.target.parentElement.children[1].value = e.target.parentElement.children[1].value*1  + 1
@@ -90,12 +84,14 @@
                         headers:{'content-type':'application/json'},
                         body: JsonStr,
                         method:'POST'
-                    }).then((response)=>console.log(response)).catch((err)=>console.log(err))
-                    
+                    }).then((response)=>console.log(response)).catch((err)=>console.log(err));
                 }
             },
-            mounted:function(){
-                this.GetProducts();
+            beforeCreate:function(){
+                    let self = this;
+                    fetch("https://localhost:7273/Product/GetAllProducts")
+                    .then(function(response){return response.json()})
+                    .then(function(result){self.products = result})
             }
         })
     </script>

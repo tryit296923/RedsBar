@@ -4,15 +4,64 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Alcoholic</title>
-    <link rel="stylesheet" href="/css/bootstrap.css" />
-    <link href="https://use.fontawesome.com/releases/v6.2.0/css/all.css" rel="stylesheet">
+    <script src="~/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/vue.min.js"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap.css" />
     <link rel="shortcut icon" type="image/ico" href="@Url.Content("~/images/icons/logoicon-r.png")">
+    <style>
+        body {
+            background-color: #222220;
+        }
+        .navbar {
+            background-color: #721B29;
+        }
+        .logo {
+            width: 50px;
+            margin-right: 20px;
+        }
+        a {
+            color: aliceblue;
+            text-decoration: none;
+        }
+        .nav-link {
+            color: white;
+        }
+
+        .search {
+            height: 38px;
+            margin: 10px;
+            position: relative;
+        }
+
+            .search img {
+                height: 20px;
+                width: 20px;
+                position: absolute;
+                top: 9px;
+                right: 9px;
+            }
+
+        .searcharea2 {
+            display: none;
+        }
+
+        @@media screen and (max-width: 992px) {
+            .searcharea {
+                display: none !important;
+            }
+
+            .searcharea2 {
+                display: block;
+            }
+        }
+    </style>
 </head>
 <body>
     @RenderBody()
 
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

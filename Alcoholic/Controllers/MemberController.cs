@@ -26,43 +26,43 @@ namespace Alcoholic.Controllers
         // GET: Member/Getmember
         //[Authorize]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Member>>> GetAllMember()
+        public ActionResult<IEnumerable<Member>> GetAllMember()
         {
-            return await projectContext.Members.ToListAsync();
+            return projectContext.Members.ToList();
         }
 
         //[Authorize(Roles ="moderate")]
         [HttpGet("{id}")]
-        public async Task<ActionResult<Member>> GetMember(Member memberData)
+        public IActionResult GetMember(Member memberData)
         {
-            Member? member = await projectContext.Members.FindAsync(memberData);
+            Member? member = projectContext.Members.Find(memberData);
             if (member == null)
             {
                 return NotFound();
             }
-            return member;
+            return Ok(member);
         }
-        public ActionResult AuthorizeP()
+        public IActionResult AuthorizeP()
         {
             return View("Authorize");
         }
-        public ActionResult FrontPage()
+        public IActionResult FrontPage()
         {
             return View();
         }
-        public ActionResult LoginRegister()
+        public IActionResult LoginRegister()
         {
             return View();
         }
 
         // 入座 => 登入頁面 (導向)
         [HttpPut]
-        public async Task<IActionResult> StartOrder([FromBody]DeskInfo deskInfo)
+        public IActionResult StartOrder([FromBody]DeskInfo deskInfo)
         {
             deskInfo.Occupied = 1;
             deskInfo.StartTime = DateTime.Now.ToString("yyyyMMddHHmm");
             projectContext.Entry(deskInfo).State = EntityState.Modified;
-            await projectContext.SaveChangesAsync();
+            projectContext.SaveChanges();
             CookieOptions cookieOptions = new CookieOptions();
             cookieOptions.Expires = new DateTimeOffset(DateTime.Now.AddHours(2));
             HttpContext.Response.Cookies.Append("Number", deskInfo.Number, cookieOptions);
@@ -125,19 +125,19 @@ namespace Alcoholic.Controllers
                     new Claim(ClaimTypes.Role, "moderate")
                 };
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
                 HttpContext.Response.Cookies.Append("MemberID", user.MemberID);
-                return RedirectToAction("Product", "OrderTemplate");
+                return RedirectToAction("OrderTemplate","Product");
         }
 
         // 離席
         [HttpPut]
-        public async Task<IActionResult> Dismiss(DeskInfo deskInfo)
+        public IActionResult Dismiss(DeskInfo deskInfo)
         {
             deskInfo.Occupied = 0;
             deskInfo.EndTime = DateTime.Now.ToString("yyyyMMddHHmm");
             projectContext.Entry(deskInfo).State = EntityState.Modified;
-            await projectContext.SaveChangesAsync();
+            projectContext.SaveChanges();
             return Ok();
         }
 
@@ -154,8 +154,8 @@ namespace Alcoholic.Controllers
             memberData.MemberID = Guid.NewGuid().ToString("N");
             memberData.MemberPassword = GetHash(memberData.MemberPassword.Concat(salt).ToString());
             memberData.Qualified = "n";
-            await projectContext.AddAsync(memberData);
-            await projectContext.SaveChangesAsync();
+            projectContext.Add(memberData);
+            projectContext.SaveChanges();
             var msg = await RazorTemplateEngine.RenderAsync<Member>("Views/Member/Authorize.cshtml", memberData);
             mailService.SendMail(memberData.Email, msg, "RedsBar 會員認證信件");
             HttpContext.Response.Cookies.Append("EmailID", memberData.EmailID.ToString());
@@ -163,7 +163,7 @@ namespace Alcoholic.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Authorize()
+        public IActionResult Authorize()
         {
             String cookie = Request.Cookies["EmailID"];
             Member? memberData = (from member in projectContext.Members
@@ -171,7 +171,7 @@ namespace Alcoholic.Controllers
                                   select member).FirstOrDefault();
             memberData.Qualified = "y";
             projectContext.Entry(memberData).State = EntityState.Modified;
-            await projectContext.SaveChangesAsync();
+            projectContext.SaveChanges();
             return Ok(cookie);
         }
 

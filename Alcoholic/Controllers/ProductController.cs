@@ -18,7 +18,7 @@ namespace Alcoholic.Controllers
         }
         public ActionResult OrderTemplate()
         {
-            return View();
+            return Ok();
         }
 
         [HttpGet]

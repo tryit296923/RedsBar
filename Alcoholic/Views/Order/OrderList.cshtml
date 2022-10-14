@@ -1,115 +1,61 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@{
+    ViewData["Title"] = "購物車";
+    Layout = "_LayoutMobile";
+}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
-    <title>@ViewData["Title"] - Alcoholic</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Alcoholic.styles.css" asp-append-version="true" />
-    <link rel="shortcut icon" type="image/ico" href="@Url.Content("~/images/icons/logoicon-r.png")">
-    <style>
-        body {
-            position: relative;
-            background-color: #333;
-        }
+<style>
+    /*導覽列*/
+    .nav-pills .nav-link.active,
+    .nav-pills .show>.nav-link {
+        --bs-nav-pills-link-active-bg: #333;
+        border-bottom: #D8CDB9 1px solid;
+        font-weight: bold;
+        color: #D8CDB9;
+        border-radius: 0;
+    }
+    .topnavbar {
+        position: sticky;
+        top: -1px;
+        z-index: 1;
+        background-color: rgba(22,22,20,0.8);
+    }
+    .nav-link:hover, .nav-link:focus{
+        color: #D8CDB9;
+    }
+    /* 產品 */
+    .signatureCT p,
+    .classicCT p,
+    .recommendedCT p,
+    .customizedCT p {
+        font-size: small;
+        height: 40px;
+    }
 
-        /*banner*/
-        .navbar {
-            background-color: #721B29;
-        }
+    .price {
+        color: #333;
+        text-decoration: line-through;
+    }
 
-        .navbar-brand {
-            color: white;
-        }
+    .discount {
+        color: red;
+        font-weight: bold;
+    }
 
-        .topnavbar p {
-            color: aliceblue;
-            margin: auto;
-            text-align: start;
-        }
+    .sale {
+        background-color:rgba(200,0,0,0.8);
+        font-weight: bold;
+        float: right;
+        color: #FFF;
+        border-radius: 0 0 0.375rem 0;
+    }
 
-        .navbutton {
-            border-radius: 0.375rem;
-            border: 0;
-            background-color: #D8CDB9;
-            height: 35px;
-        }
-
-        .navbarposition {
-            z-index: 1;
-        }
-
-        .logo {
-            width: 50px;
-            margin-right: 20px;
-        }
-
-        /*導覽列*/
-        .nav-pills .nav-link {
-            top: 0;
-            background-color: #333;
-            border-radius: 0;
-        }
-
-        .nav-pills .nav-link.active,
-        .nav-pills .show>.nav-link {
-            background-color: #333;
-            font-weight: bold;
-            color: #D8CDB9;
-            border-bottom: #D8CDB9 1px solid;
-            border-radius: 0;
-        }
-
-        .collection {
-            position: sticky;
-            top: -1px;
-            z-index: 1;
-        }
-
-        .collection button {
-            padding: 8px;
-        }
-
-        /* 產品 */
-
-        .signatureCT p,
-        .classicCT p,
-        .recommendedCT p,
-        .customizedCT p {
-            font-size: small;
-            height: 40px;
-        }
-
-        .price {
-            color: #333;
-            text-decoration: line-through;
-        }
-
-        .discount {
-            color: red;
-            font-weight: bold;
-        }
-
-        .sale {
-            border: 1px solid red;
-            font-size: small;
-            float: right;
-            color: red;
-        }
-
-        .minus-btn,
-        .plus-btn {
-            background-color: white;
-            color: #D8CDB9;
-            border: 0;
-            border-radius: 0;
-        }
+    .minus-btn,
+    .plus-btn {
+        background-color: white;
+        color: #D8CDB9;
+        border: 0;
+        border-radius: 0;
+    }
 
         .minus-btn:hover,
         .plus-btn:hover {
@@ -117,356 +63,517 @@
             color: white;
         }
 
-        .qty_input {
-            color: #333;
-            border: 0;
-        }
 
-        .quantitygroup {
-            border: #D8CDB9 solid 1px;
-        }
+    .qty_input {
+        color: #333;
+        border: 0;
+    }
 
-        .btnaddtocart {
+    .quantitygroup {
+        border: #D8CDB9 solid 1px;
+    }
+
+    .btnaddtocart {
+        background-color: #721B29;
+        color: white;
+        border: 0;
+    }
+
+    /* 算命 */
+    .fate {
+        position: fixed;
+        right: 0px;
+        top: 20vh;
+        width: 10vw;
+        max-width: 100px;
+        z-index: 2;
+        display: inline;
+    }
+
+    /*model*/
+    .btncartbackgroundcolor {
+        width: 100%;
+    }
+
+    .btncartbackgroundcolor:hover {
+            background-color: #B8AD89;
+            border-bottom: 1px solid #721B29;
+    }
+
+    .modal-image {
+        max-height: 280px;
+    }
+
+    .modal-spec {
+        overflow-y: auto;
+        max-height: 20vh;
+    }
+
+    .modal-bodyimg {
+        text-align: center;
+    }
+
+    .modal-footer {
+        background-color: #721B29;
+    }
+
+    /* 客製化 */
+    .modal-content {
+        background-color: #D8CDB9;
+    }
+    .modalinput {
+        border: 0;
+        background-color: transparent;
+        font-size: 1rem;
+        transition: ease;
+        transition-duration: 0.3s;
+    }
+
+        .modalinput:hover{
+            background-color: #B8AD89;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #721B29;
+            transition: ease;
+            transition-duration: 0.3s;
+        }
+    .modal-header{
+        border: 0;
+    }
+
+    .modal-headbackgroundcolor {
+        background-color: #721B29;
+        color: white;
+    }
+    /*購物車*/
+    .shopCartToggle > button{
+        border: 0;
+        position: fixed;
+        top:66px;
+        right: 10px;
+        z-index:1;
+        color: #D8CDB9;
+        background-color: transparent;
+        font-size:2rem;
+    }
+    .offcanvas-header{
+        background-color: #721B29;
+    }
+
+@*購物車css*@
+    .offcanvas{
+        background-color: rgba(0,0,0,0.7);
+    }
+    fieldset {
+        font-family: sans-serif;
+        border: 3px solid #D8CDB9;
+        background: white;
+        border-radius: 0.375rem;
+        padding: 15px;
+    }
+
+    .shopCart {
+        background: #C28C2E;
+        color: white;
+        font-size: 20px;
+        border-radius: 0.375rem;
+        box-shadow: 0 0 0 3px #D8CDB9;
+        width: 40%;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .cartList {
+        border-radius: 0.375rem;
+    }
+
+    .list-group-item,
+    .cartTotal {
+        color: #222220;
+    }
+
+    .productName {
+        font-size: 1.5rem;
+    }
+
+    .originalPrice {
+        text-decoration: line-through;
+    }
+
+    .discountPrice {
+        color: darkred;
+    }
+
+    .btnDelete {
+        border: none;
+        background-color: transparent;
+        font-size: 1.4rem;
+        line-height: 1rem;
+        border-radius: 0.25em;
+    }
+
+        .btnDelete:active {
             background-color: #721B29;
             color: white;
-            border: 0;
         }
 
-        /* 算命 */
-        .fate {
-            position: fixed;
-            right: 0px;
-            top: 20vh;
-            width: 10vw;
-            max-width: 100px;
-            z-index: 2;
-            display: inline;
-        }
+    .btnCount {
+        border: none;
+        background-color: transparent;
+        border-radius: 0.25em;
+    }
 
-        /* 購物車 */
-        .cart {
-            border-top: 1px solid #D8CDB9;
-            background-color: #222220;
-            height: 70px;
-            width: 100%;
-            position: sticky;
-            bottom: -1px;
-        }
-
-        .btncheckcart {
-            text-align: center;
-            background-color: #721B29;
-            border-radius: 0.375rem;
-            color: aliceblue;
-        }
-
-        /*model*/
-        .btncartbackgroundcolor {
-            color: white;
-            width: 100%;
-        }
-
-        .modal-image {
-            max-height: 280px;
-        }
-
-        .modal-spec {
-            overflow-y: auto;
-            max-height: 20vh;
-        }
-
-        .modal-bodyimg {
-            text-align: center;
-        }
-
-        .modal-footer {
-            background-color: #721B29;
-        }
-
-        /* 客製化 */
-        .modalbody {
-            background-color: #333;
-        }
-
-        .modal-bodycolor {
+        .btnCount:active {
             background-color: #D8CDB9;
         }
 
-        .modalinput {
-            border: 0;
-        }
+    .align-items-start {
+        display: flex !important;
+        align-items: center !important;
+    }
 
-        .modal-headerclose {
-            text-align: end;
-        }
+    .cartTotal {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
 
-        .modal-headbackgroundcolor {
-            background-color: #721B29;
+    .orderCheck {
+        width: 100%;
+        background-color: #222220;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+    }
+
+    .bottombtntext {
+        border: none;
+        border-radius: 0.375rem;
+        font-weight: bold;
+    }
+
+    .btnBacktoMenu,
+    .btnModalCancel {
+        background-color: #D8CDB9;
+        color: #222220;
+    }
+
+        .btnBacktoMenu:active,
+        .btnModalCancel:active {
+            background-color: #C28C2E;
             color: white;
         }
-    </style>
-    <title>Document</title>
-</head>
 
-<body>
-    <div id="vueproductModal">
-        <!-- banner -->
-        <div class="topnavbar">
-            <nav class="navbar navbar-expand-lg navbarposition">
-                <div class="container-fluid">
-                    <img src="Images/icons/logo-w.png" alt="" class="logo">
-                    <p>桌次 <span>{{tableid}}</span></p>
-                    <button class="navbutton px-3"><i class="fa-solid fa-user"> 訪客登入</i></button>
-                </div>
-            </nav>
+    .btnCartConfirm,
+    .btnModalConfirm {
+        background-color: #721B29;
+        color: white;
+    }
+
+        .btnCartConfirm:active,
+        .btnModalConfirm:active {
+            background-color: #C28C2E;
+        }
+
+    .btnInModal {
+        border: none;
+        border-radius: 0.375rem;
+        width: 90px;
+        display: flex;
+        justify-content: center;
+        height: 30px;
+        align-items: center;
+    }
+</style>
+
+
+<!-- navbar -->
+<div class="topnavbar">
+    <nav class="navbar navbar-expand-lg navbarposition">
+        <div class="container-fluid">
+            <a asp-controller="Home" asp-action="Index"><img src="~/images/icons/logo-w.png" alt="" class="logo"></a>
+            <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <form class="searcharea2 search" role="search">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                        <a href=""><img src="/images/icons/search.png" alt=""></a>
+                    </form>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">推薦</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">經典酒款</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">算命調酒</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">線上訂位</a>
+                    </li>
+                </ul>
+                <form class="d-flex searcharea search" role="search">
+                    <input class=" form-control" type="search" placeholder="Search" aria-label="Search">
+                    <a href=""><img src="/images/icons/search.png" alt=""></a>
+                </form>
+            </div>
         </div>
-        <!-- 導覽列(sticky) -->
-        <div class="collection container">
-            <ul class="nav nav-justified mt-3 nav-pills" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="signatureCT-tab" data-bs-toggle="tab"
+    </nav>
+    <!-- 導覽列(sticky) -->
+    <div class="collection container">
+        <ul class="nav nav-justified p-2 nav-pills" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="signatureCT-tab" data-bs-toggle="tab"
                         data-bs-target="#signatureCT" type="button" role="tab" aria-controls="signatureCT"
-                        aria-selected="true">特色調酒</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="classicCT-tab" data-bs-toggle="tab" data-bs-target="#classicCT"
-                        type="button" role="tab" aria-controls="classicCT" aria-selected="false">經典調酒</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="recommendedCT-tab" data-bs-toggle="tab" data-bs-target="#recommendedCT"
-                        type="button" role="tab" aria-controls="recommendedCT" aria-selected="false">推薦調酒</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="tabbtn nav-link" id="customizedCT-tab" type="button" role="tab" @@click="resetoptions"
-                        data-bs-toggle="modal" href="#optionModalToggle">客製化<i
-                            class="fa-solid fa-clipboard-question"></i></button>
-                </li>
-            </ul>
-        </div>
-        <!-- 算命 -->
-        <div class="divfate">
-            <img class="fate" src="~/images/Cocktails/fate.png">
-        </div>
-        <!-- 菜單 -->
-        <div class="menu">
-            <div class="tab-content">
-                <!-- 特色調酒 -->
-                <div class="tab-pane active" id="signatureCT" role="tabpanel" aria-labelledby="signatureCT-tab"
-                    tabindex="0">
-                    <div class="container signatureCT">
-                        <div class="container">
-                            <div class="row g-4 mt-2">
-                                <template v-for="item in product">
-                                    <div class="col-6 col-md-4 p-1">
-                                        <div class="card productcard w-100 h-100">
-                                            <img :src="item.imagesrc" class="m-2" :id="item.id" data-bs-toggle="modal"
-                                                data-bs-target="#productModal" @@click="selected">
-                                            <div class="card-body">
-                                                <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal"
-                                                    @@click="selected">
-                                                    <p class="card-title">{{item.head}}</p>
-                                                    <span class="price">${{item.price}}</span>
-                                                    <span
-                                                        class="discount">${{Math.round(item.price*item.discount)}}</span>
-                                                    <span class="sale px-2">SALE</span>
-                                                </div>
-                                                <div class="row justify-content-center my-2 mx-0 quantitygroup">
-                                                    <button type="button" @@click="minus"
-                                                        class="col-2 p-0 btn btn-dark btn-sm minus-btn">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                    <div class="col-8 p-0">
-                                                        <input type="number" :name="item.head"
-                                                            class="form-control form-control-sm qty_input text-center"
-                                                            value="0" readonly>
-                                                    </div>
-                                                    <button type="button" @@click="plus"
-                                                        class="col-2 p-0 btn btn-dark btn-sm plus-btn">
-                                                        <i class="fa fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                                <button type="button" class="col-12 btn btnaddtocart">加到購物車</button>
+                        aria-selected="true">
+                    特色調酒
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="classicCT-tab" data-bs-toggle="tab" data-bs-target="#classicCT"
+                        type="button" role="tab" aria-controls="classicCT" aria-selected="false">
+                    經典調酒
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="recommendedCT-tab" data-bs-toggle="tab" data-bs-target="#recommendedCT"
+                        type="button" role="tab" aria-controls="recommendedCT" aria-selected="false">
+                    推薦調酒
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="tabbtn nav-link" id="customizedCT-tab" type="button" role="tab" @@click="resetoptions"
+                        data-bs-toggle="modal" href="#optionModalToggle">
+                    客製化<i class="fa-solid fa-clipboard-question"></i>
+                </button>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div id="vueproductModal">
+    <!-- banner -->
+
+    <!-- 算命 -->
+    <div class="divfate">
+        <img class="fate" src="~/images/Cocktails/fate.png">
+    </div>
+    <!-- 菜單 -->
+    <div class="menu">
+        <div class="tab-content">
+            <!-- 特色調酒 -->
+            <div class="tab-pane fade show  active" id="signatureCT" role="tabpanel" aria-labelledby="signatureCT-tab"
+                tabindex="0">
+                <div class="container signatureCT">
+                    <div class="row g-4 mt-2">
+                        <template v-for="item in product">
+                            <div class="col-6 col-md-4 p-1">
+                                <div class="card productcard w-100 h-100">
+                                    <img :src="item.imgPath" class="m-2" :id="item.productId" data-bs-toggle="modal"
+                                        data-bs-target="#productModal" @@click="selected">
+                                    <div class="card-body">
+                                        <div :id="item.productId" data-bs-toggle="modal" data-bs-target="#productModal"
+                                            @@click="selected">
+                                            <p class="card-title">{{item.productName}}</p>
+                                            <span class="price">${{item.unitPrice}}</span>
+                                            <span class="discount">${{Math.round(item.unitPrice*0.8@*item.discount*@)}}</span>
+                                            <span class="sale px-2">SALE</span>
+                                        </div>
+                                        <div class="row justify-content-center my-2 mx-0 quantitygroup">
+                                            <button type="button" @@click="minus"
+                                                class="col-2 p-0 btn btn-dark btn-sm minus-btn">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                            <div class="col-8 p-0">
+                                                <input type="number" :name="item.productName"
+                                                    class="form-control form-control-sm qty_input text-center"
+                                                    value="0" readonly>
                                             </div>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- 經典調酒 -->
-                <div class="tab-pane" id="classicCT" role="tabpanel" aria-labelledby="classicCT-tab" tabindex="0">
-                    <div class="container classicCT">
-                        <div class="container">
-                            <div class="row g-4 mt-2">
-                                <template v-for="item in product">
-                                    <div class="col-6 col-md-4 p-1">
-                                        <div class="card productcard w-100 h-100">
-                                            <img :src="item.imagesrc" class="m-2" :id="item.id" data-bs-toggle="modal"
-                                                data-bs-target="#productModal" @@click="selected">
-                                            <div class="card-body">
-                                                <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal"
-                                                    @@click="selected">
-                                                    <p class="card-title">{{item.head}}</p>
-                                                    <span class="price">${{item.price}}</span>
-                                                    <span
-                                                        class="discount">${{Math.round(item.price*item.discount)}}</span>
-                                                    <span class="sale px-2">SALE</span>
-                                                </div>
-                                                <div class="row justify-content-center my-2 mx-0 quantitygroup">
-                                                    <button type="button" @@click="minus"
-                                                        class="col-2 p-0 btn btn-dark btn-sm minus-btn">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                    <div class="col-8 p-0">
-                                                        <input type="number" :name="item.head"
-                                                            class="form-control form-control-sm qty_input text-center"
-                                                            value="0" readonly>
-                                                    </div>
-                                                    <button type="button" @@click="plus"
-                                                        class="col-2 p-0 btn btn-dark btn-sm plus-btn">
-                                                        <i class="fa fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                                <button type="button" class="col-12 btn btnaddtocart">加到購物車</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- 推薦 -->
-                <div class="tab-pane" id="recommendedCT" role="tabpanel" aria-labelledby="recommendedCT-tab"
-                    tabindex="0">
-                    <div class="container recommendedCT">
-                        <div class="container">
-                            <div class="row g-4 mt-2">
-                                <div id="carouselrecommendCaptions" class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-indicators">
-                                      <button type="button" data-bs-target="#carouselrecommendCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                                      <button type="button" data-bs-target="#carouselrecommendCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                                      <button type="button" data-bs-target="#carouselrecommendCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                                    </div>
-                                    <div class="carousel-inner">
-                                      <div class="carousel-item active" data-bs-interval="2000">
-                                        <img src="~/images/Cocktails/example1.jpg" class="d-block w-100" >
-                                        <div class="carousel-caption d-none d-md-block">
-                                          <h5>"OMAR-豐收系列NO.2</h5>
-                                          <p>推銷的文案</p>
-                                        </div>
-                                      </div>
-                                      <div class="carousel-item" data-bs-interval="2000">
-                                        <img src="~/images/Cocktails/example2.jpg" class="d-block w-100" >
-                                        <div class="carousel-caption d-none d-md-block">
-                                          <h5>"OMAR-豐收系列NO.2</h5>
-                                          <p>推銷的文案</p>
-                                        </div>
-                                      </div>
-                                      <div class="carousel-item" >
-                                        <img src="~/images/Cocktails/example3.jpg" class="d-block w-100" >
-                                        <div class="carousel-caption d-none d-md-block">
-                                          <h5>"OMAR-豐收系列NO.2</h5>
-                                          <p>推銷的文案</p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselrecommendCaptions" data-bs-slide="prev">
-                                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                      <span class="visually-hidden">Previous</span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselrecommendCaptions" data-bs-slide="next">
-                                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                      <span class="visually-hidden">Next</span>
-                                    </button>
-                                  </div>
-                                  <template v-for="item in product">
-                                    <div class="col-6 col-md-4 p-1">
-                                        <div class="card productcard w-100 h-100">
-                                            <img :src="item.imagesrc" class="m-2" :id="item.id" data-bs-toggle="modal"
-                                            data-bs-target="#productModal" @@click="selected">
-                                            <div class="card-body">
-                                                <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal" @@click="selected">
-                                                    <p class="card-title">{{item.head}}</p>
-                                                    <span class="price">${{item.price}}</span>
-                                                    <span class="discount">${{Math.round(item.price*item.discount)}}</span>
-                                                    <span class="sale px-2">SALE</span>
-                                                </div>
-                                                <div class="row justify-content-center my-2 mx-0 quantitygroup">                                                
-                                                    <button type="button" @@click="minus"
-                                                        class="col-2 p-0 btn btn-dark btn-sm minus-btn">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                    <div class="col-8 p-0">
-                                                        <input type="number" :name="item.head"
-                                                            class="form-control form-control-sm qty_input text-center"
-                                                            value="0" readonly>
-                                                    </div>
-                                                    <button type="button" @@click="plus"
-                                                        class="col-2 p-0 btn btn-dark btn-sm plus-btn">
-                                                        <i  class="fa fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                                <button type="button" class="col-12 btn btnaddtocart">加到購物車</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-            </div>
-        </div>
-        <div class="cart">
-            <div class="container p-3">
-                <a class="col-12 btn btncheckcart"><i class="fa-solid fa-cart-shopping "></i> 查看購物車</a>
-            </div>
-        </div>
-        <!-- 產品懸浮視窗Modal -->
-        <form action="./Orderlist.html" method="post">
-            <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">{{head}}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body py-0">
-                            <div class="modal-bodyimg ">
-                                <img class="modal-image" :src="imagesrc">
-                            </div>
-                            <div class="card-body modal-spec">
-                                <ul>
-                                    <li v-for="feature in featurelist">{{feature}}</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="container  my-1">
-                            <div class="row justify-content-center quantitygroup">
-                                <button type="button" @@click="minus" class="col-1 p-0 btn btn-dark btn-sm minus-btn ">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                                <div class="col-4 p-0">
-                                    <input type="number" :name="head"
-                                        class="form-control form-control-sm qty_input text-center" value="0" readonly>
-                                </div>
-                                <button type="button" @@click="plus" class="col-1 p-0 btn btn-dark btn-sm plus-btn ">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="modal-footer p-0">
-                            <div class="container-fluid ">
-                                <div class="container">
-                                    <div class="row justify-content-center">
-                                        <div class="col-12 ">
-                                            <button type="submit" class="btn btncartbackgroundcolor">加到購物車
-                                                <i class="fa-solid fa-cart-shopping ps-1"></i>
+                                            <button type="button" @@click="plus"
+                                                class="col-2 p-0 btn btn-dark btn-sm plus-btn">
+                                                <i class="fa fa-plus"></i>
                                             </button>
                                         </div>
+                                        <button type="button" class="col-12 btn btnaddtocart">加到購物車</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <!-- 經典調酒 -->
+            <div class="tab-pane fade" id="classicCT" role="tabpanel" aria-labelledby="classicCT-tab" tabindex="0">
+                <div class="container classicCT">
+
+                    <div class="row g-4 mt-2">
+                        <template v-for="item in product">
+                            <div class="col-6 col-md-4 p-1">
+                                <div class="card productcard w-100 h-100">
+                                    <img :src="item.imgPath" class="m-2" :id="item.productId" data-bs-toggle="modal"
+                                        data-bs-target="#productModal" @@click="selected">
+                                    <div class="card-body">
+                                        <div :id="item.productId" data-bs-toggle="modal" data-bs-target="#productModal"
+                                            @@click="selected">
+                                            <p class="card-title">{{item.productName}}</p>
+                                            <span class="price">${{item.unitPrice}}</span>
+                                            <span class="discount">${{Math.round(item.unitPrice*0.8@*item.discount*@)}}</span>
+                                            <span class="sale px-2">SALE</span>
+                                        </div>
+                                        <div class="row justify-content-center my-2 mx-0 quantitygroup">
+                                            <button type="button" @@click="minus"
+                                                class="col-2 p-0 btn btn-dark btn-sm minus-btn">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                            <div class="col-8 p-0">
+                                                <input type="number" :name="item.productName"
+                                                    class="form-control form-control-sm qty_input text-center"
+                                                    value="0" readonly>
+                                            </div>
+                                            <button type="button" @@click="plus"
+                                                class="col-2 p-0 btn btn-dark btn-sm plus-btn">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <button type="button" class="col-12 btn btnaddtocart">加到購物車</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <!-- 推薦 -->
+            <div class="tab-pane fade" id="recommendedCT" role="tabpanel" aria-labelledby="recommendedCT-tab"
+                tabindex="0">
+                <div class="container recommendedCT">
+                    <div class="row g-4 mt-2">
+                        <div id="carouselrecommendCaptions" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#carouselrecommendCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                                <button type="button" data-bs-target="#carouselrecommendCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                                <button type="button" data-bs-target="#carouselrecommendCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                            </div>
+                            <div class="carousel-inner">
+                                <div class="carousel-item active" data-bs-interval="2000">
+                                <img src="~/images/Cocktails/example1.jpg" class="d-block w-100" >
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>"OMAR-豐收系列NO.2</h5>
+                                    <p>推銷的文案</p>
+                                </div>
+                                </div>
+                                <div class="carousel-item" data-bs-interval="2000">
+                                <img src="~/images/Cocktails/example2.jpg" class="d-block w-100" >
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>"OMAR-豐收系列NO.2</h5>
+                                    <p>推銷的文案</p>
+                                </div>
+                                </div>
+                                <div class="carousel-item" >
+                                <img src="~/images/Cocktails/example3.jpg" class="d-block w-100" >
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>"OMAR-豐收系列NO.2</h5>
+                                    <p>推銷的文案</p>
+                                </div>
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselrecommendCaptions" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselrecommendCaptions" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                            </div>
+                            <template v-for="item in product">
+                            <div class="col-6 col-md-4 p-1">
+                                <div class="card productcard w-100 h-100">
+                                    <img :src="item.imgPath" class="m-2" :id="item.productId" data-bs-toggle="modal"
+                                    data-bs-target="#productModal" @@click="selected">
+                                    <div class="card-body">
+                                        <div :id="item.productId" data-bs-toggle="modal" data-bs-target="#productModal" @@click="selected">
+                                            <p class="card-title">{{item.productName}}</p>
+                                            <span class="price">${{item.unitPrice}}</span>
+                                            <span class="discount">${{Math.round(item.unitPrice*0.8@*item.discount*@)}}</span>
+                                            <span class="sale px-2">SALE</span>
+                                        </div>
+                                        <div class="row justify-content-center my-2 mx-0 quantitygroup">                                                
+                                            <button type="button" @@click="minus"
+                                                class="col-2 p-0 btn btn-dark btn-sm minus-btn">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                            <div class="col-8 p-0">
+                                                <input type="number" :name="item.productName"
+                                                    class="form-control form-control-sm qty_input text-center"
+                                                    value="0" readonly>
+                                            </div>
+                                            <button type="button" @@click="plus"
+                                                class="col-2 p-0 btn btn-dark btn-sm plus-btn">
+                                                <i  class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <button type="button" class="col-12 btn btnaddtocart">加到購物車</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 產品懸浮視窗Modal -->
+    <form action="./Orderlist.html" method="post">
+        <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{head}}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body py-0">
+                        <div class="modal-bodyimg ">
+                            <img class="modal-image" :src="imagesrc">
+                        </div>
+                        <div class="card-body modal-spec">
+                            <ul>
+                                <li v-for="feature in featurelist">{{feature}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="container  my-1">
+                        <div class="row justify-content-center quantitygroup">
+                            <button type="button" @@click="minus" class="col-1 p-0 btn btn-dark btn-sm minus-btn ">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                            <div class="col-4 p-0">
+                                <input type="number" :name="head"
+                                    class="form-control form-control-sm qty_input text-center" value="0" readonly>
+                            </div>
+                            <button type="button" @@click="plus" class="col-1 p-0 btn btn-dark btn-sm plus-btn ">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-footer p-0">
+                        <div class="container-fluid ">
+                            <div class="container">
+                                <div class="row justify-content-center">
+                                    <div class="col-12 ">
+                                        <button type="submit" class="btn btncartbackgroundcolor">加到購物車
+                                            <i class="fa-solid fa-cart-shopping ps-1"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -474,156 +581,250 @@
                     </div>
                 </div>
             </div>
-        </form>
-        <!-- 客製化modal懸浮視窗 -->
-        <div class="modaloptions">
-            <!-- 第一題 -->
-            <div class="modal fade" id="optionModalToggle" aria-hidden="true" aria-labelledby="optionModalToggleLabel"
-                tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="container-fluid modal-headbackgroundcolor w-100 h-100">
-                            <div class="modal-headerclose ">
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+        </div>
+    </form>
+    <!-- 客製化modal懸浮視窗 -->
+    <div class="modaloptions">
+        <!-- 第一題 -->
+        <div class="modal fade" id="optionModalToggle" aria-hidden="true" aria-labelledby="optionModalToggleLabel"
+            tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="container-fluid modal-headbackgroundcolor w-100 h-100">
+                        <div class="modal-header gx-0">
+                            <h5 class="modal-title" id="optionModalToggleLabel">請選擇一種基酒</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
-                            </div>
-                            <div class="modal-header justify-content-center p-0">
-                                <h5 class="modal-title" id="optionModalToggleLabel">請選擇一種基酒</h5>
-                            </div>
                         </div>
-                        <div class="modal-body p-0">
-                            <div class="container modal-bodycolor">
-
-                                <div class="optionbutton" v-for="option in optionsection1">
-                                    <input class="w-100 modalinput" type="button" :name="option" :value="option.base"
-                                        @@click="optionselected" data-bs-target="#optionModalToggle2"
-                                        data-bs-toggle="modal" data-bs-dismiss="modal">
-                                </div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="modal-bodycolor">
+                            <div class="optionbutton m-2" v-for="option in optionsection1">
+                                <input class="w-100 modalinput" type="button" :name="option" :value="option.base"
+                                    @@click="optionselected" data-bs-target="#optionModalToggle2"
+                                    data-bs-toggle="modal" data-bs-dismiss="modal">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- 第二題 -->
-            <div class="modal fade" id="optionModalToggle2" aria-hidden="true" aria-labelledby="optionModalToggleLabel2"
-                tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="container-fluid modal-headbackgroundcolor w-100 h-100">
-                            <div class="modal-headerclose ">
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+        </div>
+        <!-- 第二題 -->
+        <div class="modal fade" id="optionModalToggle2" aria-hidden="true" aria-labelledby="optionModalToggleLabel2"
+            tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="container-fluid modal-headbackgroundcolor w-100 h-100">
+                        <div class="modal-header gx-0">
+                            <h5 class="modal-title" id="optionModalToggleLabel2">請選擇調酒的香味</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
-                            </div>
-                            <div class="modal-header justify-content-center p-0">
-                                <h5 class="modal-title" id="optionModalToggleLabel2">請選擇調酒的香味</h5>
-                            </div>
                         </div>
-                        <div class="modal-body p-0">
-                            <div class="container modal-bodycolor">
-                                <div class="optionbutton" v-for="option in optionsection2">
-                                    <input class="w-100 modalinput" type="button" name="香氣" :value="option.smell"
-                                        @@click="optionselected" data-bs-target="#optionModalToggle3"
-                                        data-bs-toggle="modal" data-bs-dismiss="modal">
-                                </div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="container modal-bodycolor">
+                            <div class="optionbutton m-2" v-for="option in optionsection2">
+                                <input class="w-100 modalinput" type="button" name="香氣" :value="option.smell"
+                                    @@click="optionselected" data-bs-target="#optionModalToggle3"
+                                    data-bs-toggle="modal" data-bs-dismiss="modal">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- 第三題 -->
-            <div class="modal fade" id="optionModalToggle3" aria-hidden="true" aria-labelledby="optionModalToggleLabel3"
-                tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="container-fluid modal-headbackgroundcolor w-100 h-100">
-                            <div class="modal-headerclose ">
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-header justify-content-center p-0">
-                                <h5 class="modal-title" id="optionModalToggleLabel3">請選擇調酒主要呈現的味道</h5>
-                            </div>
+        </div>
+        <!-- 第三題 -->
+        <div class="modal fade" id="optionModalToggle3" aria-hidden="true" aria-labelledby="optionModalToggleLabel3"
+            tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="container-fluid modal-headbackgroundcolor w-100 h-100">
+                        <div class="modal-header gx-0">
+                            <h5 class="modal-title" id="optionModalToggleLabel3">請選擇調酒主要呈現的味道</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                             aria-label="Close"></button>
                         </div>
-                        <div class="modal-body p-0">
-                            <div class="container modal-bodycolor">
-                                <div class="optionbutton" v-for="option in optionsection3">
-                                    <input class="w-100 modalinput" type="button" name="口感" :value="option.taste"
-                                        @@click="optionselected" data-bs-target="#optionModalToggle4"
-                                        data-bs-toggle="modal" data-bs-dismiss="modal">
-                                </div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="container modal-bodycolor">
+                            <div class="optionbutton m-2" v-for="option in optionsection3">
+                                <input class="w-100 modalinput" type="button" name="口感" :value="option.taste"
+                                    @@click="optionselected" data-bs-target="#optionModalToggle4"
+                                    data-bs-toggle="modal" data-bs-dismiss="modal">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- 第四題 -->
-            <div class="modal fade" id="optionModalToggle4" aria-hidden="true" aria-labelledby="optionModalToggleLabel4"
-                tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="container-fluid modal-headbackgroundcolor w-100 h-100">
-                            <div class="modal-headerclose ">
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+        </div>
+        <!-- 第四題 -->
+        <div class="modal fade" id="optionModalToggle4" aria-hidden="true" aria-labelledby="optionModalToggleLabel4"
+            tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="container-fluid modal-headbackgroundcolor w-100 h-100">
+                        <div class="modal-header gx-0">
+                            <h5 class="modal-title" id="optionModalToggleLabel4">請選擇調酒的酒感</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
-                            </div>
-                            <div class="modal-header justify-content-center p-0">
-                                <h5 class="modal-title" id="optionModalToggleLabel4">請選擇調酒的酒感</h5>
-                            </div>
                         </div>
-                        <div class="modal-body p-0">
-                            <div class="container modal-bodycolor">
-                                <div class="optionbutton" v-for="option in optionsection4 ">
-                                    <input class="w-100 modalinput" type="button" name="酒感" :value="option.body"
-                                        @@click="optionselected" data-bs-target="#optionModalToggle5"
-                                        data-bs-toggle="modal" data-bs-dismiss="modal">
-                                </div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="container modal-bodycolor">
+                            <div class="optionbutton m-2" v-for="option in optionsection4 ">
+                                <input class="w-100 modalinput" type="button" name="酒感" :value="option.body"
+                                    @@click="optionselected" data-bs-target="#optionModalToggle5"
+                                    data-bs-toggle="modal" data-bs-dismiss="modal">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- 提交 -->
-            <div class="modal fade" id="optionModalToggle5" aria-hidden="true" aria-labelledby="optionModalToggleLabel5"
-                tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="container-fluid modal-headbackgroundcolor w-100 h-100">
-                            <div class="modal-headerclose ">
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-header justify-content-center p-0">
-                                <h5 class="modal-title" id="optionModalToggleLabel5">完成!</h5>
-                            </div>
+        </div>
+        <!-- 提交 -->
+        <div class="modal fade" id="optionModalToggle5" aria-hidden="true" aria-labelledby="optionModalToggleLabel5"
+            tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="container-fluid modal-headbackgroundcolor w-100 h-100">
+                        <div class="modal-header gx-0">
+                            <h5 class="modal-title" id="optionModalToggleLabel5">完成!</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
-                        <div class="modal-body p-0">
-                            <div class="container modal-bodycolor">
-                                <button type="submit" name="選項" :value="optionsform"
-                                    class="btn btncartbackgroundcolor">加到購物車<i
-                                        class="fa-solid fa-cart-shopping ps-1"></i></button>
-                                
-                            </div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="container modal-bodycolor">
+                            <button type="submit" name="選項" :value="optionsform"
+                                class="btn btncartbackgroundcolor">加到購物車<i
+                                    class="fa-solid fa-cart-shopping ps-1"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</body>
+</div>
+
+@*購物車*@
+<div class="shopCartToggle">
+    <button class="" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+        <i class="fa-sharp fa-solid fa-cart-shopping"></i>
+    </button>
+    <div class="offcanvas offcanvas-end w-100" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">ShopCart</h5>
+        </div>
+        <div class="scrollregion">
+            <fieldset class="mx-3 my-4">
+                <div class="shopCart m-3">
+                    <i class="fa-sharp fa-solid fa-cart-shopping me-2"></i>
+                    <b>購物車</b>
+                </div>
+                <!-- 購物車清單 -->
+                <div id="cartList" class="container-fluid">
+                    <div class="cartList" v-for="(item,index) in itemList" v-bind:key="item.id">
+                        <ol class="list-group">
+                            <li class="row list-group-item d-flex justify-content-between align-items-start">
+                                <div class="col-3 px-0">
+                                    <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
+                                </div>
+                                <div class="col-5 px-0">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold productName">{{item.name}}</div>
+                                        <div>描述</div>
+                                        <div v-if="item.discount != 1">
+                                            <span>$ </span>
+                                            <span class="originalPrice">{{item.unitPrice * item.count}} </span>
+                                            <span class="discountPrice" name="finalPrice">{{discountPrice(item)}}</span>
+                                        </div>
+                                        <div v-else>
+                                            <span>$ </span>
+                                            <span name="finalPrice">{{item.unitPrice * item.count}} </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row col-4 px-0">
+                                    <div class="col-6 text-center px-0">
+                                        <button class="btnCount" v-on:click="increase(item)">▲</button>
+                                        <div>{{item.count}}</div>
+                                        <button class="btnCount" v-on:click="decrease(item)">▼</button>
+                                    </div>
+                                    <div class="col-6 text-center d-flex align-items-center justify-content-center">
+                                        <div>
+                                            <button class="btnDelete" v-on:click="deleteItem(index)">
+                                                <i class="fa-sharp fa-solid fa-xmark"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+                    <form action="Success" method="post" class="d-none">
+                        <input name="orderDate" v-model="orderDate" />
+                        <button type="submit" ref="orderingSend"></button>
+                    </form>
+                </div>
+                <hr>
+                <div class="cartTotal">此筆訂單總額: {{cartTotal()}} 元</div>
+            </fieldset>
+
+        </div>
+
+
+        <!-- 底部按鈕 -->
+        <div class="container orderCheck my-3">
+            <div class="row">
+                <div class="col col-xl-6 text-center">
+                    <button type="button" class="bottombtntext btnBacktoMenu py-2" data-bs-dismiss="offcanvas" aria-label="Close"">
+                        繼續點餐
+                    </button>
+                </div>
+                <div class="col col-xl-6 text-center">
+                    <button type="button" class="bottombtntext btnCartConfirm py-2" data-bs-toggle="modal"
+                            data-bs-target="#delieveBackdrop">
+                        送出訂單
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="delieveBackdrop" data-bs-backdrop="delieve" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="delieveBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="delieveBackdropLabel">訂單送出提示</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        確認訂單無誤並送出?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btnInModal btnModalCancel" data-bs-dismiss="modal">取消</button>
+                        <button class="btnInModal btnModalConfirm" v-on:click="orderingSend()">確認送出</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Vue -->
 <script>
     var app = new Vue({
         el: '#vueproductModal',
         data: {
             tableid: 13,
-            value: 0,
             vueid: "",
             imagesrc: "",
             head: "",
             discount: "",
             featurelist: "",
-            optionsform: [
-            ]
+            optionsform: []
             ,
             optionsection1: [
                 { base: 'Vodka' }, { base: 'Rum' }, { base: 'Tequila' }, { base: 'Whiskey' }, { base: 'Gin' }, { base: 'Brandy' }
@@ -638,73 +839,7 @@
                 { body: '無感' }, { body: '中等' }, { body: '厚重' }
             ],
             // 產品資料
-            product: [
-                // 特色
-                {
-                    id: "0", imagesrc: '../images/Cocktails/example.jpg', head: "國盛-紅茶梅酒", price: "350", discount: "0.8",
-                    allfeature: [
-                        "產區:日本愛知縣",
-                        "香味:梅酒甘酸味與紅茶甘香",
-                        "口感:甜美中帶點回甘",
-                        "特色:百分之百日本國產梅子加上大吉嶺紅茶萃取"]
-                },
-                {
-                    id: "1", imagesrc: '../images/Cocktails/example1.jpg', head: "OMAR-豐收系列NO.2", price: "400", discount: "0.7",
-                    allfeature: [
-                        "產區:台灣",
-                        "香味:飽滿的煙燻烏梅、線香、辛香料的香氣，結合著熱帶水果與清新水果軟糖的香甜",
-                        "口感:濃厚飽實的酒體，有著青梅酸甜的口感，透露著絲絲波本桶的香草、奶油糖的風味",
-                        "特色:餘韻綿長甘草、橘皮及橡木繚繞不絕"]
-                },
-                {
-                    id: "2", imagesrc: '../images/Cocktails/example2.jpg', head: "OMAR-煙燻焦香", price: "500", discount: "0.8",
-                    allfeature: [
-                        "產區:台灣",
-                        "香味:輕盈的花香、柑橘及些許花蜜甜香，帶出如同置身南投山林間的清新草地和杉木氛圍，繼而醞釀出傳統磚窯烘烤龍眼乾的煙薰氣息",
-                        "口感:如花蜜般的圓潤清甜，伴隨著柴燒甘蔗的溫暖風味",
-                        "特色:餘韻悠長回甘，窯烤番薯甜韻搭配些許菸草、奶油、果香慢慢浮現"]
-                },
-                {
-                    id: "3", imagesrc: '../images/Cocktails/example3.jpg', head: "OMAR-豐收系列NO.3限量套組", price: "350", discount: "0.8",
-                    allfeature: [
-                        "產區:台灣",
-                        "香味:前香-黃色水果、橙皮 中香-黃箭口香糖(香蕉及芒果)、果香、臻果巧克力",
-                        "口感:口感豐厚甜潤，雪莉甜香為主香氣，中後段帶出烏龍茶香及橙皮",
-                        "特色:尾韻中偏長，回香是木頭、果香、堅果及巧克力"]
-                },
-                {
-                    id: "4", imagesrc: '../images/Cocktails/example4.jpg', head: "禾富-卡本內蘇維翁希哈紅酒2021", price: "250", discount: "0.95",
-                    allfeature: [
-                        "產區:澳洲-南澳 ",
-                        "香味:深色水果如黑莓、成熟李子及卡本內品種特有的黑醋栗果香，還帶有些許辛香氣息",
-                        "口感:入口可感受希哈品種濃郁果香帶來的甜美口感，和飽滿紮實的橡木氣息及單寧形成完美的均衡",
-                        "特色:聯名限量版，建議搭配HBO「龍之家族」影集一起飲用"]
-                },
-                {
-                    id: "5", imagesrc: '../images/Cocktails/example5.jpg', head: "約瑟夫杜亨酒莊-一級園白酒2018", price: "400", discount: "0.7",
-                    allfeature: [
-                        "產區:法國-勃根地",
-                        "香味:香氣優雅，醒酒後便活潑了起來，聞有山楂與杏桃香氣，並慢慢轉化為菸草氣息",
-                        "口感:陳年後，香氣愈益沉穩，有如水果乾與辛香料等。圓潤的口感令人回味無窮",
-                        "特色:榨出來的果汁澄清完後便放入來自法國的已風乾三年橡木桶中發酵與培養12個月"]
-                },
-                {
-                    id: "6", imagesrc: '../images/Cocktails/example6.jpg', head: "維迪加爾酒莊-三作家精選白酒", price: "150", discount: "0.8",
-                    allfeature: [
-                        "產區:葡萄牙-綠酒區",
-                        "香味:清新淡雅的檸檬黃與青檸綠基調，混合了水果與鮮花的香氣沁人心脾",
-                        "口感:清爽優雅，果味十足，帶有回甘的餘韻細緻綿長",
-                        "特色:葡萄牙文的Vinho=Wine, Verde=Green, 在葡萄牙文中即為“綠酒”，因此又稱綠酒"]
-                },
-                {
-                    id: "7", imagesrc: '../images/Cocktails/example7.jpg', head: "喜格莊園-波爾多混釀紅酒2017", price: "230", discount: "0.6",
-                    allfeature: [
-                        "產區:法國-波爾多",
-                        "香味:黑醋栗、紫羅蘭、煙草及草本植物的華麗香氣",
-                        "口感:入口充滿美妙純正果味有細膩單寧相伴，加上剛好足夠的新鮮度所構成。中後段得到很好的平衡，略顯精緻的辛香調且餘韻悠長",
-                        "特色:喜格莊園位於波爾多左岸的 Margaux 瑪歌產區，目前由Chanel香奈兒集團掌管。由前五大一級莊拉圖堡的總經理John Kolasa負責管理釀酒事宜"]
-                },
-            ]
+            product: []
         },
         methods: {
             selected: function (e) {
@@ -712,9 +847,9 @@
                 this.formdata = 0;
                 this.vueid = e.currentTarget.id;
                 var item = this.product[this.vueid];
-                this.imagesrc = item.imagesrc;
+                this.imagesrc = item.imgPath;
                 this.head = item.head;
-                this.discount = item.discount;
+                //this.discount = item.discount;
                 this.featurelist = item.allfeature;
             },
             plus: function (e) {
@@ -739,9 +874,11 @@
 
             },
         },
+        created: function () {
+            let self = this;
+            fetch("https://localhost:7273/Product/GetAllProducts")
+                .then(function (response) { return response.json() })
+                .then(function (result) { self.product = result })
+        }
     })   
 </script>
-
-
-
-</html>
