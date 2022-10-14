@@ -50,6 +50,10 @@ namespace Alcoholic.Controllers
         {
             return View();
         }
+        public IActionResult OrderList()
+        {
+            return View();
+        }
         public IActionResult Check()
         {
             var now = DateTime.Now.ToString("yyyy/MM/dd");

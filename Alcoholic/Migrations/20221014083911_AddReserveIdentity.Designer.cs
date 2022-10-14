@@ -12,14 +12,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alcoholic.Migrations
 {
     [DbContext(typeof(db_a8de26_projectContext))]
-    [Migration("20221011074607_UpdateReserfTableEmailColumnToNotNull502")]
-    partial class UpdateReserfTableEmailColumnToNotNull502
+    [Migration("20221014083911_AddReserveIdentity")]
+    partial class AddReserveIdentity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "6.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -138,8 +138,8 @@ namespace Alcoholic.Migrations
 
                     b.Property<string>("MemberPassword")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(225)
+                        .HasColumnType("nvarchar(225)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
@@ -153,6 +153,10 @@ namespace Alcoholic.Migrations
                         .HasColumnName("qualified")
                         .HasDefaultValueSql("(N'n')")
                         .IsFixedLength();
+
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("MemberID");
 
@@ -318,7 +322,7 @@ namespace Alcoholic.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Alcoholic.Models.Entities.Reserf", b =>
+            modelBuilder.Entity("Alcoholic.Models.Entities.Reserves", b =>
                 {
                     b.Property<int>("ReserveId")
                         .ValueGeneratedOnAdd()
@@ -326,6 +330,10 @@ namespace Alcoholic.Migrations
                         .HasColumnName("ReserveID");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReserveId"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Number")
                         .HasColumnType("int");

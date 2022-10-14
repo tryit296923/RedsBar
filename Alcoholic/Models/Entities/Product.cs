@@ -14,6 +14,7 @@ namespace Alcoholic.Models.Entities
         public string ProductName { get; set; } = null!;
         public int Cost { get; set; }
         public int UnitPrice { get; set; }
+        //public string ImgPath { get; set; }
         public int SaleAt { get; set; }
         public int? Vodka { get; set; }
         public int? Gin { get; set; }
