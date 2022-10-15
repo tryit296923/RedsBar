@@ -1,15 +1,14 @@
 using Alcoholic.Models.DTO;
 using Alcoholic.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Plugins;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<MailService>();
+builder.Services.AddTransient<HashService>();
 builder.Services.AddRazorTemplating();
 
 builder.Services.AddDbContext<db_a8de26_projectContext>(option =>
@@ -30,7 +29,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
 {
     // 為登入自動導至此網址
-    option.LoginPath = new PathString("/api/Login/NoLogin");
+    option.LoginPath = new PathString("/member/LoginRegister");
     option.AccessDeniedPath = new PathString("/api/Login/NoAccess");
 });
 
