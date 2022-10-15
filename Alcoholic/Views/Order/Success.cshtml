@@ -98,7 +98,7 @@
 
 </style>
 
-<div class="container">
+<div class="container" id="orderSucceed">
     <div class="row">
         <!-- 標題 -->
         <div class="container-fluid colorbox py-2 col-10 col-xl-8 text-center">
@@ -113,14 +113,20 @@
                 <p class="orderinfotext tablenum">桌號 : @ViewBag.deskCookie</p>
                 <p class="orderinfotext custnum">用餐人數 : @ViewBag.numberCookie 人</p>
                 <hr>
-                <p class="orderinfotext orderid">訂單單號 : </p>
-                <p class="orderinfotext ordertime">訂單成立時間 : @ViewBag.orderDate</p>
+                <p class="orderinfotext orderid">訂單單號 : @ViewBag.orderId</p>
+                <p class="orderinfotext ordertime">訂單成立時間 : @ViewBag.orderTime</p>
             </div>
 
             <!-- 餐點準備提示 -->
             <div>
                 <p class="colorbox waitingmessage">飲品準備中，稍後為您送上</p>
             </div>
+
+            <form action="Total" method="post" class="d-none">
+                <input name="orderTime" v-model="orderTime" />
+                <button type="submit" ref="orderDetail"></button>
+            </form>
+
             <!-- 底部選單按鈕 -->
             <div class="ordercheck">
                 <div class="container row w-100 px-0">
@@ -130,12 +136,28 @@
                         </button>
                     </div>
                     <div class="col col-xl-6 text-center">
-                        <a href="/Order/Total" class="btn btnlistchecking w-100">
+                        <button class="btnlistchecking w-100" v-on:click="orderDetail">
                             查看訂單明細
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    var app = new Vue({
+        el:"#orderSucceed",
+        data(){
+            return {
+                orderTime: '',
+            }
+
+        },
+        methods: {
+            orderDetail: function() {
+                this.$refs.orderDetail.click();
+            },
+        },
+    })
+</script>
