@@ -74,34 +74,6 @@ namespace Alcoholic.Migrations
                     b.ToTable("Discount");
                 });
 
-            modelBuilder.Entity("Alcoholic.Models.Entities.Employee", b =>
-                {
-                    b.Property<string>("EmpId")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasColumnName("EmpID");
-
-                    b.Property<string>("EmpAccount")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("EmpName")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("EmpPassword")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.HasKey("EmpId")
-                        .HasName("PK_Employee_1");
-
-                    b.ToTable("Employee", (string)null);
-                });
-
             modelBuilder.Entity("Alcoholic.Models.Entities.Material", b =>
                 {
                     b.Property<string>("Brand")
@@ -150,10 +122,6 @@ namespace Alcoholic.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("emailID")
                         .HasDefaultValueSql("(newid())");
-
-                    b.Property<string>("Level")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MemberAccount")
                         .IsRequired()
