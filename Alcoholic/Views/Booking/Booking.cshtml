@@ -1,4 +1,4 @@
-﻿
+﻿<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.css">
 <style>
     body {
         color: aliceblue;
@@ -81,11 +81,12 @@
     /*booking*/
     .datepicker {
         width: 100%;
-        height: 38px;
-        border: 1px solid #ced4da;
-        border-radius: 0.375rem;
-        padding: 6px 12px 6px 12px;
+        border: 0px;
     }
+
+        .datepicker input {
+            height: 38px;
+        }
 
     .people-member:focus {
         background-color: #D8CDB9;
@@ -212,7 +213,7 @@
         <div class="row">
             <div class="col-12 col-xl-6">
                 <label for="datepicker" class="col-sm-12 col-form-label">用餐日期</label>
-                <input name="ReserveDate" type="date" id="datepicker" class="datepicker" placeholder="請選擇用餐日期" v-bind:min="mindate()" v-bind:max="maxdate()" v-model="ReserveDate">
+                <date-picker v-model="ReserveDate" valueType="format" name="ReserveDate" id="datepicker" class="datepicker p-0" placeholder="請選擇用餐日期" :disabled-date="disablerange"></date-picker>
             </div>
             <div class="col-12 col-xl-6">
                 <label for="people" class="col-sm-12 col-form-label">用餐人數</label>
@@ -285,7 +286,7 @@
                     <button class="booking-check-date">請選擇預定日期</button>
                 </template>
                 <template v-else>
-                    <button class="booking-check-date">{{ReserveDate}}</button>
+                    <button class="booking-check-date">{{ReserveDate.toLocaleDateString()}}</button>
                 </template>
                 >
                 <template v-if="Number==''">
@@ -306,7 +307,7 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.js"></script>
 <script>
     var app = new Vue({
         el: '#d1',
@@ -340,16 +341,13 @@
                     return 'open-hours-bold';
                 }
             },
-            mindate: function () {
-                var mindate = new Date;
-                mindate.setDate(mindate.getDate() + 1);
-                return mindate.toJSON().substr(0, 10);
-            },
-            maxdate: function () {
-                var maxdate = new Date;
-                maxdate.setDate(maxdate.getDate() + 31);
-                return maxdate.toJSON().substr(0, 10);
-            },
+            disablerange: function (date) {
+                var today = new Date();
+                today.setHours(0, 0, 0, 0);
+                var mindate = new Date(today.getTime() + 1 * 24 * 3600 * 1000);
+                var maxdate = new Date(today.getTime() + 30 * 24 * 3600 * 1000);
+                return date < mindate || date > maxdate || date.getDay() % 7 === 1;
+            },,
             bookingcheck: function () {
                 this.$refs.bookingcheck.click();
             }

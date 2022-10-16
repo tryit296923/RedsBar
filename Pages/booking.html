@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bootstrap/bootstrap.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10"></script>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.css">
     <title>線上訂位</title>
     <style type="text/css">
         body {
@@ -33,10 +33,11 @@
 
         .datepicker {
             width: 100%;
+            border: 0px;
+        }
+
+        .datepicker input {
             height: 38px;
-            border: 1px solid #ced4da;
-            border-radius: 0.375rem;
-            padding: 6px 12px 6px 12px;
         }
 
         /*info*/
@@ -262,7 +263,7 @@
         <div class="row">
             <div class="col-12 col-xl-6">
                 <label for="datepicker" class="col-sm-12 col-form-label">用餐日期</label>
-                <input type="date" id="datepicker" class="datepicker" placeholder="請選擇用餐日期" v-bind:min="mindate()" v-bind:max="maxdate()" v-model="datepick">
+                <date-picker v-model="datepick" valueType="format" class="datepicker p-0" id="datepicker" placeholder="請選擇用餐日期" :disabled-date="disablerange"></date-picker>
             </div>
             <div class="col-12 col-xl-6">
                 <label for="people" class="col-sm-12 col-form-label" >用餐人數</label>
@@ -339,7 +340,7 @@
                     <button class="booking-check-date">請選擇預定日期</button>
                 </template>
                 <template v-else>
-                    <button class="booking-check-date">{{datepick}}</button>
+                    <button class="booking-check-date">{{datepick.toLocaleDateString()}}</button>
                 </template>
                 >
                 <template v-if="selectpeople==''">
@@ -363,9 +364,11 @@
 
     <!--JS-->
     <script src="bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.js"></script>
     <script>
         var app = new Vue({
             el: '#d1',
+            components: { DatePicker },
             data: {
                 bookingController:'',
                 MyDate: new Date,
@@ -397,20 +400,17 @@
                     .then(function(response){return response})
                     .then(function(result){self.products = result})
                 },
+                disablerange:function(date){
+                    var today = new Date();
+                    today.setHours(0,0,0,0);
+                    var mindate = new Date(today.getTime() + 1 * 24 * 3600 * 1000);
+                    var maxdate = new Date(today.getTime() + 30 * 24 * 3600 * 1000);
+                    return date < mindate || date > maxdate || date.getDay() % 7 === 1;
+                },
                 bold:function(day,getDay){
                     if(day.id==getDay){
                         return 'open-hours-bold';
                     }
-                },
-                mindate:function(){
-                    var mindate = new Date;
-                    mindate.setDate(mindate.getDate()+1);
-                    return mindate.toJSON().substr(0,10);
-                },
-                maxdate:function(){
-                    var maxdate = new Date;
-                    maxdate.setDate(maxdate.getDate()+31);
-                    return maxdate.toJSON().substr(0,10);
                 }
             },
             mounted:function(){
