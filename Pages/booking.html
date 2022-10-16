@@ -370,7 +370,7 @@
             el: '#d1',
             components: { DatePicker },
             data: {
-                bookingController:'',
+                bookingCon:[],
                 MyDate: new Date,
                 datepick:'',
                 selectpeople:'',
@@ -395,10 +395,11 @@
                 ],
             },
             methods: {
+                /**/
                 GetBookings:function(){
                     fetch('https://localhost:7273/Booking/GetAllBookings')
                     .then(function(response){return response})
-                    .then(function(result){self.products = result})
+                    .then(function(result){this.bookingCon = result})
                 },
                 disablerange:function(date){
                     var today = new Date();

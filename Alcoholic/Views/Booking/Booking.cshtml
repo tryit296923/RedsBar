@@ -213,7 +213,9 @@
         <div class="row">
             <div class="col-12 col-xl-6">
                 <label for="datepicker" class="col-sm-12 col-form-label">用餐日期</label>
-                <date-picker v-model="ReserveDate" valueType="format" name="ReserveDate" id="datepicker" class="datepicker p-0" placeholder="請選擇用餐日期" :disabled-date="disablerange"></date-picker>
+                <date-picker v-model="ReserveDate" value-type="format" format="YYYY-MM-DD"
+                             name="ReserveDate" id="datepicker" class="datepicker p-0" 
+                             placeholder="請選擇用餐日期" :disabled-date="disablerange"></date-picker>
             </div>
             <div class="col-12 col-xl-6">
                 <label for="people" class="col-sm-12 col-form-label">用餐人數</label>
@@ -253,12 +255,16 @@
                 <hr>
                 <div class="map-item">
                     <p>Opening</p>
-                    <button class="form-select open-hours" type="button" data-bs-toggle="dropdown">{{Weekday[MyDate.getDay()].name}}</button>
-                    <ul class="dropdown-menu">
-                        <li v-for="day in Weekday">
-                            <button v-bind:class="bold(day,MyDate.getDay())" class="dropdown-item" type="button">{{day.name}}</button>
-                        </li>
-                    </ul>
+                    <div class="dropdown">
+                        <button class="form-select open-hours" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{Weekday[MyDate.getDay()].name}}
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li v-for="day in Weekday">
+                                <button v-bind:class="bold(day,MyDate.getDay())" class="dropdown-item" type="button">{{day.name}}</button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -286,7 +292,7 @@
                     <button class="booking-check-date">請選擇預定日期</button>
                 </template>
                 <template v-else>
-                    <button class="booking-check-date">{{ReserveDate.toLocaleDateString()}}</button>
+                    <button class="booking-check-date">{{ReserveDate}}</button>
                 </template>
                 >
                 <template v-if="Number==''">
@@ -347,7 +353,7 @@
                 var mindate = new Date(today.getTime() + 1 * 24 * 3600 * 1000);
                 var maxdate = new Date(today.getTime() + 30 * 24 * 3600 * 1000);
                 return date < mindate || date > maxdate || date.getDay() % 7 === 1;
-            },,
+            },
             bookingcheck: function () {
                 this.$refs.bookingcheck.click();
             }
