@@ -20,6 +20,7 @@ namespace Alcoholic.Controllers
             this.hash = hash;
         }
 
+        [Authorize(Roles = "moderater,leader,staff")]
         public IActionResult BackIndex()
         {
             return View();
@@ -34,15 +35,14 @@ namespace Alcoholic.Controllers
         [HttpPost]
         public IActionResult Login([FromBody] Employee emp)
         {
-            Employee? employee = (from em in db.Employee
+            Employee? employee = (from em in db.Employees
                                   where emp.EmpAccount == em.EmpAccount
-                                  && emp.EmpPassword == em.EmpPassword
                                   select em).SingleOrDefault();
             if (employee == null)
             {
                 return NotFound();
             }
-            else
+            if(hash.GetHash(emp.EmpPassword) == employee.EmpPassword)
             {
                 List<Claim> claims = new()
                 {
@@ -53,7 +53,9 @@ namespace Alcoholic.Controllers
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
                 return Ok();
             }
+            return NotFound();
         }
+        [Authorize(Roles = "moderater,leader,staff")]
         public IActionResult LogOut()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
