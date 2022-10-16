@@ -309,7 +309,7 @@
                 <div class="title w-100">
                     <div class="himessage">
                         <p>Hi, </p>
-                        <p class="user">XXX</p>
+                        <p class="user">@ViewBag.memberName</p>
                     </div>
 
                 </div>
@@ -376,78 +376,21 @@
                                 </div>
                             </div>
                             <div class="col-4">
-
-                                <div class="productPrice">
-                                    <span>$</span>
-                                    <span class="originalPrice">300</span>
-                                    <span> </span>
-                                    <span class="discountPrice">270</span>
+                                @*<div v-if="item.discount != 1">
+                                    <span>$ </span>
+                                    <span class="originalPrice">{{item.unitPrice * item.quantity}} </span>
+                                    <span class="discountPrice" name="finalPrice">{{discountPrice(item)}}</span>
                                 </div>
+                                <div v-else>
+                                    <span>$ </span>
+                                    <span name="finalPrice">{{item.unitPrice * item.quantity}} </span>
+                                </div>*@
                             </div>
                         </li>
 
                         <div class="subTotal">小計: XXXX 元</div>
                         <hr>
-                        <div class="subOrderTitle">
-                            <div class="subOrderText subOrderId">訂單單號2</div>
-                            <div class="subOrderText subOrderTime">訂單時間</div>
-                        </div>
-                        <li class="row list-group-item d-flex justify-content-between align-items-start pe-0">
-
-                            <div class="col-3 px-0">
-                                <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
-                            </div>
-
-                            <div class="col-4">
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold productName">品名</div>
-                                </div>
-                            </div>
-                            <div class="col-1 px-0">
-                                <div class="col text-center px-0">
-                                    <div class="col">2</div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-
-                                <div class="productPrice">
-                                    <span>$</span>
-                                    <!-- <span class="originalprice">300</span>
-                                    <span> </span> -->
-                                    <span class="price">300</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="row list-group-item d-flex justify-content-between align-items-start pe-0">
-
-                            <div class="col-3 px-0">
-                                <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
-                            </div>
-
-                            <div class="col-4">
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold productName">品名</div>
-                                </div>
-                            </div>
-                            <div class="col-1 px-0">
-                                <div class="col text-center px-0">
-                                    <div class="col">2</div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-
-                                <div class="productPrice">
-                                    <span>$</span>
-                                    <!-- <span class="originalprice">300</span>
-                                    <span> </span> -->
-                                    <span class="price">300</span>
-                                </div>
-                            </div>
-                        </li>
-
-
-                        <div class="subTotal">小計: XXXX 元</div>
-
+                        
                     </ol>
                     <hr>
                     <div class="cartTotal">今日消費總計: XXX 元</div>
@@ -455,7 +398,7 @@
             </div>
         </fieldset>
         <form action="Check" method="post" class="d-none">
-            <input name="orderDate" v-model="orderDate" />
+            <input name="orderTime" v-model="orderTime" />
             <button type="submit" ref="checkConfirm"></button>
         </form>
     </div>
@@ -500,7 +443,7 @@
     var app = new Vue({
         el: '#orderTotal',
         data: {
-            orderDate: '',
+            orderTime: '',
         },
         methods: {
             checkConfirm: function () {

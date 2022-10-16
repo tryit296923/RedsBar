@@ -4,35 +4,51 @@
 }
 
 <style>
-    body{
+    body {
         overflow: hidden;
     }
-    .topnavbar{
+
+    .topnavbar {
         position: sticky;
         top: 0px;
     }
+
     .img-box img {
         filter: blur(1.5px);
         padding: 20px 0;
     }
+
     .userarea {
         position: relative;
+        top: -1.5vh;
     }
 
-    .scrollregion{
-        height: 85vh;
+    .scrollregion {
+        height: 86vh;
         overflow: scroll;
         overflow-x: hidden;
     }
+
     .title {
         color: white;
         position: absolute;
-        top: -20px;
-        right: 100px
+        top: 0px;
     }
+
         .title p {
             display: inline;
         }
+
+    .himessage {
+        text-align: end;
+        padding-right: 20%;
+    }
+
+    .user {
+        color: white;
+        text-align: right;
+    }
+
     fieldset {
         font-family: sans-serif;
         border: 3px solid #D8CDB9;
@@ -40,34 +56,43 @@
         border-radius: 0.375rem;
         padding: 15px;
     }
-    .shopCart{
-        background: #C28C2E;
-        color: white;
-        font-size: 20px;
-        border-radius: 0.375rem;
-        box-shadow: 0 0 0 3px #D8CDB9;
-        width: 40%;
-        height: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+
+        fieldset legend {
+            background: #C28C2E;
+            color: white;
+            font-size: 20px;
+            border-radius: 0.375rem;
+            box-shadow: 0 0 0 3px #D8CDB9;
+            width: 40%;
+            height: 50px;
+            margin-left: 5%;
+            float: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
     .cartList {
         border-radius: 0.375rem;
     }
+
     .list-group-item,
     .cartTotal {
         color: #222220;
     }
+
     .productName {
         font-size: 1.5rem;
     }
+
     .originalPrice {
         text-decoration: line-through;
     }
+
     .discountPrice {
         color: darkred;
     }
+
     .btnDelete {
         border: none;
         background-color: transparent;
@@ -75,15 +100,18 @@
         line-height: 1rem;
         border-radius: 0.25em;
     }
+
         .btnDelete:active {
             background-color: #721B29;
             color: white;
         }
+
     .btnCount {
         border: none;
         background-color: transparent;
         border-radius: 0.25em;
     }
+
         .btnCount:active {
             background-color: #D8CDB9;
         }
@@ -103,13 +131,14 @@
 
     .orderCheck {
         width: 100%;
-        position: fixed;
+        position: sticky;
         bottom: 0%;
         background-color: #222220;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 1.3rem;
+        height: 7vh;
     }
 
     .bottombtntext {
@@ -118,7 +147,11 @@
         font-weight: bold;
     }
 
-    .btnBacktoMenu,
+    .btnBacktoMenu {
+        font-size: inherit;
+        background-color: #D8CDB9;
+        color: #222220;
+    }
     .btnModalCancel {
         background-color: #D8CDB9;
         color: #222220;
@@ -151,204 +184,214 @@
         align-items: center;
     }
 </style>
-
+<div id="cartList">
     <!-- navbar -->
-<div class="topnavbar">
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a asp-controller="Home" asp-action="Index"><img src="~/images/icons/logo-w.png" alt="" class="logo"></a>
-            <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <form class="searcharea2 search" role="search">
-                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+    <div class="topnavbar">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a asp-controller="Home" asp-action="Index"><img src="~/images/icons/logo-w.png" alt="" class="logo"></a>
+                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <form class="searcharea2 search" role="search">
+                            <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                            <a href=""><img src="/images/icons/search.png" alt=""></a>
+                        </form>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">推薦</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">經典酒款</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">算命調酒</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">線上訂位</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex searcharea search" role="search">
+                        <input class=" form-control" type="search" placeholder="Search" aria-label="Search">
                         <a href=""><img src="/images/icons/search.png" alt=""></a>
                     </form>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">推薦</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">經典酒款</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">算命調酒</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">線上訂位</a>
-                    </li>
-                </ul>
-                <form class="d-flex searcharea search" role="search">
-                    <input class=" form-control" type="search" placeholder="Search" aria-label="Search">
-                    <a href=""><img src="/images/icons/search.png" alt=""></a>
-                </form>
+                </div>
             </div>
-        </div>
-    </nav>
-</div>
+        </nav>
+    </div>
 
-<div class="scrollregion">
-    <div>
-        <!-- banner -->
-        <div class="backColor container-fluid mb-3">
-            <div class="img-box">
-                <img src="https://picsum.photos/id/24/1200/300" class="img-fluid w-100" />
+    <div class="scrollregion">
+        <div>
+            <!-- banner -->
+            <div class="backColor container-fluid mb-3">
+                <div class="img-box">
+                    <img src="https://picsum.photos/id/24/1200/300" class="img-fluid w-100" />
+                </div>
             </div>
-        </div>
-        <!-- 標題 -->
-        <div class="container col userarea">
-            <div class="title">
-                <div class="himessage">
-                    <p>Hi, @ViewBag.userName</p>
+            <!-- 標題 -->
+            <div class="container col userarea">
+                <div class="title w-100">
+                    <div class="himessage">
+                        <p>Hi, </p>
+                        <p class="user">@ViewBag.memberName</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <fieldset class="mx-3 my-4">
-        <div class="shopCart m-3">
-            <i class="fa-sharp fa-solid fa-cart-shopping me-2"></i>
-            <b>購物車</b>
-        </div>
-        <!-- 購物車清單 -->
-        <div id="cartList" class="container-fluid">
-            <div class="cartList" v-for="(item,index) in itemList" v-bind:key="item.id">
-                <ol class="list-group">
-                    <li class="row list-group-item d-flex justify-content-between align-items-start">
-                        <div class="col-3 px-0">
-                            <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
-                        </div>
-                        <div class="col-5 px-0">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold productName">{{item.name}}</div>
-                                <div>描述</div>
-                                <div v-if="item.discount != 1">
-                                    <span>$ </span>
-                                    <span class="originalPrice">{{item.unitPrice * item.count}} </span>
-                                    <span class="discountPrice" name="finalPrice">{{discountPrice(item)}}</span>
-                                </div>
-                                <div v-else>
-                                    <span>$ </span>
-                                    <span name="finalPrice">{{item.unitPrice * item.count}} </span>
-                                </div>
+        <fieldset class="mx-3 my-4">
+            <legend>
+                <div>
+                    <i class="fa-sharp fa-solid fa-cart-shopping me-2"></i>
+                    <b>購物車</b>
+                </div>
+            </legend>
+            <!-- 購物車清單 -->
+            <div class="container-fluid">
+                <div class="cartList" v-for="(item,index) in itemList" v-bind:key="item.id">
+                    <ol class="list-group">
+                        <li class="row list-group-item d-flex justify-content-between align-items-start">
+                            <div class="col-3 px-0">
+                                <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
                             </div>
-                        </div>
-                        <div class="row col-4 px-0">
-                            <div class="col-6 text-center px-0">
-                                <button class="btnCount" v-on:click="increase(item)">▲</button>
-                                <div>{{item.count}}</div>
-                                <button class="btnCount" v-on:click="decrease(item)">▼</button>
-                            </div>
-                            <div class="col-6 text-center d-flex align-items-center justify-content-center">
-                                <div>
-                                    <button class="btnDelete" v-on:click="deleteItem(index)">
-                                        <i class="fa-sharp fa-solid fa-xmark"></i>
-                                    </button>
+                            <div class="col-5 px-0">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold productName">{{item.productName}}</div>
+                                    <div>描述</div>
+                                    <div v-if="item.discount != 1">
+                                        <span>$ </span>
+                                        <span class="originalPrice">{{item.unitPrice * item.quantity}} </span>
+                                        <span class="discountPrice" name="finalPrice">{{discountPrice(item)}}</span>
+                                    </div>
+                                    <div v-else>
+                                        <span>$ </span>
+                                        <span name="finalPrice">{{item.unitPrice * item.quantity}} </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </li>
-                </ol>
+                            <div class="row col-4 px-0">
+                                <div class="col-6 text-center px-0">
+                                    <button class="btnCount" v-on:click="increase(item)">▲</button>
+                                    <div>{{item.quantity}}</div>
+                                    <button class="btnCount" v-on:click="decrease(item)">▼</button>
+                                </div>
+                                <div class="col-6 text-center d-flex align-items-center justify-content-center">
+                                    <div>
+                                        <button class="btnDelete" v-on:click="deleteItem(index)">
+                                            <i class="fa-sharp fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+                <form action="Success" method="post" class="d-none">
+                    <input name="orderTime" v-model="orderTime" />
+                    <input name="itemList" v-model="itemList" />
+                    <button type="submit" ref="orderingSend"></button>
+                </form>
             </div>
-            <form action="Success" method="post" class="d-none">
-                <input name="orderDate" v-model="orderDate"/>
-                <button type="submit" ref="orderingSend"></button>
-            </form>
-        </div>
-        <hr>
-        <div class="cartTotal">此筆訂單總額: {{cartTotal()}} 元</div>
-    </fieldset>
-</div>
-
-
-<!-- 底部按鈕 -->
-<div class="orderCheck my-3">
-    <div class="container row w-100">
-        <div class="col col-xl-6 text-center">
-            <button type="button" class="bottombtntext btnBacktoMenu w-100 py-2">
-                繼續點餐
-            </button>
-        </div>
-        <div class="col col-xl-6 text-center">
-            <button type="button" class="bottombtntext btnCartConfirm w-100 py-2" data-bs-toggle="modal"
-                    data-bs-target="#delieveBackdrop">
-                送出訂單
-            </button>
-        </div>
+            <hr>
+            <div class="cartTotal">此筆訂單總額: {{cartTotal()}} 元</div>
+        </fieldset>
     </div>
-</div>
 
-    <!-- Modal -->
-<div class="modal fade" id="delieveBackdrop" data-bs-backdrop="delieve" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="delieveBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="delieveBackdropLabel">訂單送出提示</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                確認訂單無誤並送出?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btnInModal btnModalCancel" data-bs-dismiss="modal">取消</button>
-                <button class="btnInModal btnModalConfirm" v-on:click="orderingSend()">確認送出</button>
+        <!-- 底部按鈕 -->
+        <div class="orderCheck my-3">
+            <div class="container row w-100">
+                <div class="col col-xl-6 text-center">
+                    <button class="bottombtntext btnBacktoMenu w-100 py-2">
+                        繼續點餐
+                    </button>
+                </div>
+                <div class="col col-xl-6 text-center">
+                    <button type="button" class="bottombtntext btnCartConfirm w-100 py-2" data-bs-toggle="modal"
+                            data-bs-target="#delieveBackdrop">
+                        送出訂單
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-<script>
-    var app = new Vue({
-        el: '#cartList',
-        data: {
-            orderDate: '',
-            member:{
-                userName:'',
-                userId:''
-            },
-            itemList: [];
-        },
-        methods: {
-            decrease: function (item) {
-                console.log(item);
-                if (item.count > 1) {
-                    item.count--;
+        <!-- Modal -->
+        <div class="modal fade" id="delieveBackdrop" data-bs-backdrop="delieve" data-bs-keyboard="false" tabindex="-1"
+             aria-labelledby="delieveBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="delieveBackdropLabel">訂單送出提示</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        確認訂單無誤並送出?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btnInModal btnModalCancel" data-bs-dismiss="modal">取消</button>
+                        <button class="btnInModal btnModalConfirm" v-on:click="orderingSend">確認送出</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    <script>
+        var app = new Vue({
+            el: '#cartList',
+            data() {
+                return {
+                    orderTime: '',
+                    itemList: this.getProductCookie(),
                 }
             },
-            increase: function (item) {
-                console.log(item);
-                item.count++;
-            },
-            deleteItem: function (index) {
-                this.itemList.splice(index, 1);
-            },
-            discountPrice: function (item) {
-                return Math.round(item.unitPrice * item.count * item.discount);
-            },
-            cartTotal: function () {
-                var totalprice = 0;
-                for (let i = 0; i < this.itemList.length; i++) {
-                    totalprice += this.itemList[i].unitPrice * this.itemList[i].count * this.itemList[i].discount;
-                }
-                return Math.round(totalprice);
-            },
-            orderingSend: function () {
-                //console.log('orderingsend');
-                this.$refs.orderingSend.click();
-            },
 
-        },
-        //mounted:function(){
-        //    var arr = document.cookie.split("=");
-        //    if(arr[0]=="memberinfo"){
-        //        var obj = JSON.parse(arr[1]);
-        //        this.member.userName = obj.userName;
-        //        this.member.userId = obj.userId;
-        //    }
-        //}
-    })
-</script>
+            methods: {
+                decrease: function (item) {
+                    //console.log(item);
+                    if (item.quantity > 1) {
+                        item.quantity--;
+                    }
+                },
+                increase: function (item) {
+                    //console.log(item);
+                    item.quantity++;
+                },
+                deleteItem: function (index) {
+                    //console.log(index);
+                    //console.log(this.itemList);
+                    this.itemList.splice(index, 1);
+                },
+                discountPrice: function (item) {
+                    return Math.round(item.unitPrice * item.quantity * item.discount);
+                },
+                cartTotal: function () {
+                    var totalprice = 0;
+                    for (let i = 0; i < this.itemList.length; i++) {
+                        totalprice += this.itemList[i].unitPrice * this.itemList[i].quantity * this.itemList[i].discount;
+                    }
+                    return Math.round(totalprice);
+                },
+                orderingSend: function () {
+                    this.$refs.orderingSend.click();
+                },
+                seperate: function (obj, ary) {
+                    var key = obj.split('=')[0].trim();
+                    var val = obj.split('=')[1];
+
+                    ary[key] = val; //用屬性加到object
+                },
+                getProductCookie() {
+                    var ary = {};
+                    var result = document.cookie.split(";").map(x => this.seperate(x, ary));
+                    //console.log(ary);
+                    //console.log(ary['products']);
+                    //console.log(JSON.parse(ary['products']));
+                    this.itemList = JSON.parse(ary['fakecookie']);
+                    return this.itemList;
+                }
+            },
+        })
+    </script>

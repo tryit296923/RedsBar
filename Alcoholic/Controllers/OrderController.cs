@@ -3,6 +3,7 @@ using Alcoholic.Models.Entities;
 using Alcoholic.Models.ViewModels;
 using Alcoholic.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Alcoholic.Controllers
 {
@@ -22,32 +23,54 @@ namespace Alcoholic.Controllers
         {
             string memberIdCookie = Request.Cookies["MemberID"];
 
-            
-            //string? userName = (from member in projectContext.Members
-            //                where member.MemberID == memberIdCookie
-            //                   select member).SingleOrDefault().MemberName;
-
-            //ViewBag.userName = userName;
+            if(memberIdCookie != null)
+            {
+                //string memberName = (from x in projectContext.Members
+                //                     where x.MemberID == memberIdCookie
+                //                     select x).FirstOrDefault().MemberName;
+                string memberName = "Matt";
+                ViewBag.memberName = memberName;
+            }
+            else
+            {
+                return NotFound();
+            }
+           
             return View();
         }
 
+
         public IActionResult Success()
         {
-
-
             string deskCookie = Request.Cookies["Desk"];
             string numberCookie = Request.Cookies["Number"];
 
             var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
+            var orderId = DateTime.Now.ToString("yyyyMMddHHmmss");
 
             ViewBag.deskCookie = deskCookie;
             ViewBag.numberCookie = numberCookie;
-            ViewBag.orderDate = now;
+            ViewBag.orderTime = now;
+            ViewBag.orderId = orderId;
+
+
             return View();
         }
 
         public IActionResult Total()
         {
+            string memberIdCookie = Request.Cookies["MemberID"];
+
+            if (memberIdCookie != null)
+            {
+                
+                string memberName = "Matt";
+                ViewBag.memberName = memberName;
+            }
+            else
+            {
+                return NotFound();
+            }
             return View();
         }
         public IActionResult OrderList()
@@ -57,8 +80,9 @@ namespace Alcoholic.Controllers
         public IActionResult Check()
         {
             var now = DateTime.Now.ToString("yyyy/MM/dd");
-            ViewBag.orderDate = now;
+            ViewBag.orderTime = now;
             return View();
         }
+
     }
 }
