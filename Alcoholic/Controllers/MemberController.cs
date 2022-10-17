@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using Alcoholic.Models.DTO;
 using Alcoholic.Services;
 using Razor.Templating.Core;
 using Microsoft.AspNetCore.Authorization;
@@ -23,22 +22,6 @@ namespace Alcoholic.Controllers
             this.hash = hash;
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<Member>> GetAllMember()
-        {
-            return db.Members.ToList();
-        }
-
-        [HttpGet]
-        public IActionResult GetMember(Member memberData)
-        {
-            Member? member = db.Members.Find(memberData);
-            if (member == null)
-            {
-                return NotFound();
-            }
-            return Ok(member);
-        }
         public IActionResult AuthorizeP()
         {
             return View("Authorize");
@@ -63,24 +46,25 @@ namespace Alcoholic.Controllers
             CookieOptions cookieOptions = new CookieOptions();
             cookieOptions.Expires = new DateTimeOffset(DateTime.Now.AddHours(2));
             HttpContext.Response.Cookies.Append("Number", deskInfo.Number, cookieOptions);
-            HttpContext.Response.Cookies.Append("Desk", deskInfo.Desk, cookieOptions);
+            HttpContext.Response.Cookies.Append("Desk", deskInfo.Desk.ToString(), cookieOptions);
             return Ok("LoginRegister");
         }
+
         // 會員登入 => 點餐(Order'Order)
         [HttpPost]
-        public IActionResult Login([FromBody] Member memberData)
+        public bool Login([FromBody] Member memberData)
         {
             Member? user = (from member in db.Members
                              where member.MemberAccount == memberData.MemberAccount
                              select member).SingleOrDefault();
             if (user == null)
             {
-                return NotFound();
+                return false;
             }
             String password = hash.GetHash(memberData.MemberPassword.Concat(user.Salt).ToString());
             if (password != user.MemberPassword)
             {
-                return NotFound();
+                return false;
             }
             else
             {
@@ -96,8 +80,8 @@ namespace Alcoholic.Controllers
                 // SignInAsync(scheme,principal)
                 // 將此類別(原則 ClaimsIdentity)，帶入方案(AuthenticationScheme)中
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-                HttpContext.Response.Cookies.Append("MemberID", user.MemberID);
-                return RedirectToAction("Order", "Order");
+                HttpContext.Response.Cookies.Append("MemberID", user.MemberID.ToString());
+                return true;
                 // 在想要經驗證後才可讀取的API上加 [Authorize]
                 // 未登入也可以使用的API [AllowAnonymous]
             }
@@ -112,7 +96,6 @@ namespace Alcoholic.Controllers
         }
 
         // 訪客登入 => 點餐(Order'Order)
-        [HttpPost]
         public async Task<IActionResult> GuestLogin()
         {
             Member? user = (from member in db.Members
@@ -126,8 +109,8 @@ namespace Alcoholic.Controllers
             };
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-            HttpContext.Response.Cookies.Append("MemberID", user.MemberID);
-            return RedirectToAction("OrderTemplate","Product");
+            HttpContext.Response.Cookies.Append("MemberID", user.MemberID.ToString());
+            return RedirectToAction("Cart", "Order");
         }
 
         // 離席
@@ -153,7 +136,7 @@ namespace Alcoholic.Controllers
             {
                 string salt = Guid.NewGuid().ToString("N");
                 memberData.Salt = salt;
-                memberData.MemberID = Guid.NewGuid().ToString("N");
+                memberData.MemberID = Guid.NewGuid();
                 memberData.MemberPassword = hash.GetHash(memberData.MemberPassword.Concat(salt).ToString());
                 memberData.Qualified = "n";
                 db.Add(memberData);
@@ -181,7 +164,7 @@ namespace Alcoholic.Controllers
         [HttpPut]
         public async Task<IActionResult> ModifyData(string id, Member memberData)
         {
-            if (id != memberData.MemberID)
+            if (id != memberData.MemberID.ToString())
             {
                 return BadRequest();
             }

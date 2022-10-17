@@ -1,5 +1,4 @@
-﻿using Alcoholic.Models.DTO;
-using Alcoholic.Models.Entities;
+﻿using Alcoholic.Models.Entities;
 using Alcoholic.Models.ViewModels;
 using Alcoholic.Services;
 using Microsoft.AspNetCore.Mvc;

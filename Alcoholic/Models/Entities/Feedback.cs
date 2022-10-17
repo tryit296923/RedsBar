@@ -7,8 +7,8 @@ namespace Alcoholic.Models.Entities
     {
         [ForeignKey("Order")]
         [Key]
-        public string OrderId { get; set; } = null!;
-        public string FeedbackName { get; set; } = null!;
+        public Guid OrderId { get; set; }
+        public string FeedbackName { get; set; }
         public string Email { get; set; }
         public string Age { get; set; }
         public int Frequency { get; set; }

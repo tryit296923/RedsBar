@@ -1,5 +1,4 @@
-﻿using Alcoholic.Models.DTO;
-using Alcoholic.Models.Entities;
+﻿using Alcoholic.Models.Entities;
 using Alcoholic.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -7,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace Alcoholic.Controllers
+namespace Alcoholic.Areas.BackCenter.Controllers
 {
     [Authorize(Roles = "Moderater")]
     public class BackController : Controller
@@ -42,7 +41,7 @@ namespace Alcoholic.Controllers
             {
                 return NotFound();
             }
-            if(hash.GetHash(emp.EmpPassword) == employee.EmpPassword)
+            if (hash.GetHash(emp.EmpPassword) == employee.EmpPassword)
             {
                 List<Claim> claims = new()
                 {
