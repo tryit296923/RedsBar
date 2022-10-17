@@ -23,22 +23,6 @@ namespace Alcoholic.Controllers
             this.hash = hash;
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<Member>> GetAllMember()
-        {
-            return db.Members.ToList();
-        }
-
-        [HttpGet]
-        public IActionResult GetMember(Member memberData)
-        {
-            Member? member = db.Members.Find(memberData);
-            if (member == null)
-            {
-                return NotFound();
-            }
-            return Ok(member);
-        }
         public IActionResult AuthorizeP()
         {
             return View("Authorize");
