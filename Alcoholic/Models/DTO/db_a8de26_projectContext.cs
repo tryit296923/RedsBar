@@ -29,6 +29,7 @@ namespace Alcoholic.Models.DTO
         public virtual DbSet<Reserves> Reserves { get; set; } = null!;
         public virtual DbSet<DeskInfo> DeskInfo { get; set; } = null!;
         public virtual DbSet<Discount> Discount { get; set; } = null!;
+        public virtual DbSet<Feedback> Feedback { get; set; } = null!;
 
 
 

@@ -382,16 +382,12 @@
                     {value:1,txt:'1位成人'},
                     {value:2,txt:'2位成人'},
                     {value:3,txt:'3位成人'},
-                    {value:4,txt:'4位成人'},
-                    {value:5,txt:'5位成人'},
-                    {value:6,txt:'6位成人'},
-                    {value:7,txt:'7位成人'},
-                    {value:8,txt:'8位成人'}
+                    {value:4,txt:'4位成人'}
                 ],
                 Weekday: [
                     {id:0,name:'星期日 18:00-00:00'},
                     {id:1,name:'星期一 公休'},
-                    {id:2,name:'星期二 18:00-00:00'} ,
+                    {id:2,name:'星期二 18:00-00:00'},
                     {id:3,name:'星期三 18:00-00:00'},
                     {id:4,name:'星期四 18:00-00:00'},
                     {id:5,name:'星期五 18:00-02:00'},
@@ -401,10 +397,15 @@
             methods: {
                 disablerange:function(date){
                     var today = new Date();
+                    var disableArr='';
                     today.setHours(0,0,0,0);
                     var mindate = new Date(today.getTime() + 1 * 24 * 3600 * 1000);
                     var maxdate = new Date(today.getTime() + 30 * 24 * 3600 * 1000);
-                    return date < mindate || date > maxdate || date.getDay() % 7 === 1 ;
+                    this.bookingInfos.forEach(function(x) {
+                        if(x.total === 12)
+                            disableArr=new Date(x.date);
+                    });
+                    return date < mindate || date > maxdate || date.getDay() % 7 == 1;
                 },
                 bold:function(day,getDay){
                     if(day.id==getDay){
@@ -419,6 +420,9 @@
                     .then(function(result){self.bookingInfos = result})
             }
         });
+
+        var datecell = document.getElementsByClassName('cell');
+
 
         function myMap() {
             var mapProp = {

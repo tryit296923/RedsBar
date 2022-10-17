@@ -34,13 +34,13 @@ namespace Alcoholic.Controllers
             _db.Add(bookingData);
             _db.SaveChanges();
             var result = await task;
-            mailService.SendMail(bookingData.Email, result, "[訂位成功]感謝您的訂位");
+            mailService.SendMail(bookingData.Email, result, "Reds Bar感謝您的訂位");
 
             return View(bookingData);
         }
 
         [HttpGet]
-        public object GetAllBookings()
+        public IQueryable GetAllBookings()
         {
             DateTime mindate = DateTime.Now;
             var bookingArr1 = (from x in _db.Reserves

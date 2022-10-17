@@ -64,7 +64,6 @@
         }
         .inpName,.inpEmail,.inpDetail{
             padding: 6px 12px 6px 12px;
-            height: 38px;
             width: 100%;
         }
         .satisfaction{
@@ -119,31 +118,27 @@
             </div>
             <div>
                 <h5>Email <span>*</span></h5>
-                <input type="email" id="Email" class="inpEmail" name="FeedbackEmail" required>
+                <input type="email" id="Email" class="inpEmail" name="Email" required>
             </div>
             <hr>
             <div>
                 <h5>年齡 <span>*</span></h5>
-                <template v-for="item in age">
-                    <input type="radio" :id="item.value" :value="item.value" name="Age" required>
-                    <label :for="item.value">{{item.txt}}</label>
-                </template>
+                <div class="row m-0">
+                    <div v-for="item in age" class="col-4 m-0 p-0">
+                        <input type="radio" :id="item.value" :value="item.value" name="Age" required>
+                        <label :for="item.value">{{item.txt}}</label>
+                    </div>
+                </div>
             </div>
             <hr>
             <div>
                 <h5>請問您是第幾次光臨本店 <span>*</span></h5>
-                <template v-for="item in freq">
-                    <input type="radio" :id="item.value" :value="item.value" name="Frequency" required>
-                    <label :for="item.value">{{item.txt}}</label>
-                </template>
-            </div>
-            <hr>
-            <div>
-                <h5>請問您偏好的基酒為(可複選)</h5>
-                <template v-for="item in baseWine">
-                    <input type="checkbox" :id="item.value" :value="item.value" name="BaseWine">
-                    <label :for="item.value">{{item.txt}}</label>
-                </template>
+                <div class="row m-0">
+                    <div v-for="item in freq" class="col-6 m-0 p-0">
+                        <input type="radio" :id="item.value" :value="item.value" name="Frequency" required>
+                        <label :for="item.value">{{item.txt}}</label>
+                    </div>
+                </div>
             </div>
             <hr>
             <div>
@@ -189,7 +184,7 @@
             <hr>
             <div>
                 <h5 for="detail">其他建議: </h5>
-                <input type="text" id="detail" class="inpDetail"></input>
+                <input type="text" id="detail" class="inpDetail" name="Suggestion"></input>
             </div>
             <hr>
             <div class="input-btn">
@@ -218,14 +213,6 @@
                     {value:2,txt:'第2-3次'},
                     {value:4,txt:'第4-6次'},
                     {value:7,txt:'7次以上'},
-                ],
-                baseWine:[
-                    {value:'Vodka',txt:'伏特加'},
-                    {value:'Rum',txt:'蘭姆酒'},
-                    {value:'Gin',txt:'琴酒'},
-                    {value:'Tequila',txt:'龍舌蘭'},
-                    {value:'Whiskey',txt:'威士忌'},
-                    {value:'Brandy',txt:'白蘭地'},
                 ],
                 env:[{value:'e-5'},{value:'e-4'},{value:'e-3'},{value:'e-2'},{value:'e-1'}],
                 serve:[{value:'s-5'},{value:'s-4'},{value:'s-3'},{value:'s-2'},{value:'s-1'}],
