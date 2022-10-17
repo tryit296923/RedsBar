@@ -4,6 +4,7 @@ using Alcoholic.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alcoholic.Migrations
 {
     [DbContext(typeof(db_a8de26_projectContext))]
-    partial class db_a8de26_projectContextModelSnapshot : ModelSnapshot
+    [Migration("20221016063326_addstatus_unitprice")]
+    partial class addstatus_unitprice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -255,11 +257,6 @@ namespace Alcoholic.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("OrderID");
-
-                    b.Property<string>("Desk")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("varchar(10)");
 
                     b.Property<string>("MemberId")
                         .IsRequired()
