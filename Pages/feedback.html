@@ -5,39 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="bootstrap/bootstrap.css">
+    <link href="https://use.fontawesome.com/releases/v6.2.0/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="sweetalert/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10"></script>
-    <title>顧客意見表</title>
+    <title>顧客滿意度調查</title>
     <style type="text/css">
         body {
             color: aliceblue;
             background-color: #222220;
         }
-                a {
-            color: aliceblue;
-            text-decoration: none;
-        }
-        .search {
-            height: 38px;
-            margin: 10px;
-            position: relative;
-        }
-
-        .search img {
-            height: 20px;
-            width: 20px;
-            position: absolute;
-            top: 9px;
-            right: 9px;
-        }
-
-        .breadcrumb a {
-            color: #444;
-        }
-
-        .check-area {
-            padding-top: 20px;
-        }
-
         .datepicker {
             width: 100%;
             height: 38px;
@@ -45,105 +21,71 @@
             border-radius: 0.375rem;
             padding: 6px 12px 6px 12px;
         }
-
-        .icon {
-            height: 25px;
-            padding: 0 10px 5px 10px;
-        }
-
         h2 {
             text-align: center;
             padding: 50px 0px 30px 0px;
             color: white;
         }
-
+        h5{
+            margin: 10px 0 10px 0;
+            font-size: medium;
+        }
+        p{
+            text-align: center;
+        }
+        span{
+            color: red;
+        }
         .check-area {
             border: 1px solid #D8CDB9;
             padding: 20px 0px 20px 0px;
             border-radius: 0.375rem;
-            text-align: center;
             color: white;
         }
-        .inputform {
-            text-align: center;
-        }
-
         .inputform div {
             text-align: left;
             margin: 0 5% 0 5%;
         }
-
         .inputform input {
             border: 1px solid #D8CDB9;
             border-radius: 0.375rem;
-            width: 100%;
-            height: 38px;
         }
-        textarea{
+        .detaildata{
             border: 1px solid #D8CDB9;
             border-radius: 0.375rem;
             width: 100%;
             height: 200px;
         }
         label{
-            padding: 5px 0 5px 0;
+            padding: 5px 10px 5px 0;
         }
         .input-btn{
             margin: 0;
         }
-
-        .logo{
-            width: 50px;
-            margin-right: 20px;
+        .inpName,.inpEmail,.inpDetail{
+            padding: 6px 12px 6px 12px;
+            height: 38px;
+            width: 100%;
         }
-        .navbar {
-            background-color: #721B29;
+        .satisfaction{
+            line-height: 34px;
         }
-
-        .navbar-brand {
-            color: white;
-        }
-
-        .nav-link {
-            color: white;
-        }
-
-        .breadcrumb {
-            margin-bottom: 0;
-            height: 30px;
-        }
-
-        .path {
-            background-color: #D8CDB9;
-            height: 30px;
-            line-height: 30px;
-        }
-
-        .searcharea2 {
+        /*star*/
+        .star-widget input{
             display: none;
         }
-
-        footer {
-            background-color: #D8CDB9;
-            margin-top: 40px;
-            color: #666;
-            font-size: 14px;
+        .star-widget label{
+            color: #999;
+            float: right;
+            transition: all 0.2s ease;
+        }
+        .star-widget input:not(:checked) ~ label:hover,
+        .star-widget input:not(:checked) ~ label:hover ~ label,
+        .star-widget input:checked ~ label{
+            color: #fd4;
         }
 
-        footer a {
-            color: #666;
-        }
-
-        .footleft,
-        .footright {
-            margin: auto;
-            padding: 20px 10px 10px 10px;
-            width: 50%;
-        }
-        .namedata,.emaildata,.detaildata{
-            padding: 6px 12px 6px 12px;
-        }
-
+        /*button*/
         .btn-return,.btn-submit {
             border: 0;
             border-radius: 0.375rem;
@@ -151,137 +93,145 @@
             height: 38px;
             display: inline;
         }
-
         .btn-return {
             background-color: white;
             color: #222220;
         }
-
         .btn-submit {
             background-color: #721B29;
             color: white;
         }
-
         .btn-submit:active ,.btn-return:active {
             background-color: #C28C2E;
             color: #222220;
         }
 
-        @media screen and (max-width: 992px) {
-            .searcharea {
-                display: none !important;
-            }
-
-            .searcharea2 {
-                display: block;
-            }
-        }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg ">
-        <div class="container-fluid">
-            <img src="/Images/icons/logo-w.png" alt="" class="logo">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <form class="searcharea2 search" role="search">
-                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                        <a href=""><img src="/Images/icons/search.png" alt=""></a>
-                    </form>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">推薦</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">經典酒款</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">算命調酒</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">線上訂位</a>
-                    </li>
-                </ul>
-                <form class="d-flex searcharea search" role="search">
-                    <input class=" form-control" type="search" placeholder="Search" aria-label="Search">
-                    <a href=""><img src="/Images/icons/search.png" alt=""></a>
-                </form>
-            </div>
-        </div>
-    </nav>
-    <div class="path">
-        <div class="container">
-            <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">feedback</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
-    <h2>顧客意見表</h2>
+    <h2>顧客滿意度調查</h2>
+    <p class="container">本問卷蒐集之資訊僅作為內部服務改善使用，</br>絕不外洩或另作其他用途，敬請放心填寫。</p>
     <div class="container col-10 col-xl-6 check-area" id="app">
         <form action="" class="inputform">
             <div>
-                <label for="name">姓名 : </label>
-                <input type="text" id="name" required maxlength="20" class="namedata">
+                <h5>姓名 <span>*</span></h5>
+                <input type="text" id="name" class="inpName" name="FeedbackName" required maxlength="20">
             </div>
             <div>
-                <label for="Email">Email : </label>
-                <input type="email" id="Email" required class="emaildata">
+                <h5>Email <span>*</span></h5>
+                <input type="email" id="Email" class="inpEmail" name="FeedbackEmail" required>
             </div>
+            <hr>
             <div>
-                <label for="date">用餐日期 : </label>
-                <input type="date" id="date" class="datepicker" v-bind:min="mindate()" v-bind:max="maxdate()" required>
+                <h5>年齡 <span>*</span></h5>
+                <template v-for="item in age">
+                    <input type="radio" :id="item.value" :value="item.value" name="Age" required>
+                    <label :for="item.value">{{item.txt}}</label>
+                </template>
             </div>
+            <hr>
             <div>
-                <label for="detail">回饋內容 : </label>
-                <textarea type="text" id="detail" required class="detaildata"></textarea>
+                <h5>請問您是第幾次光臨本店 <span>*</span></h5>
+                <template v-for="item in freq">
+                    <input type="radio" :id="item.value" :value="item.value" name="Frequency" required>
+                    <label :for="item.value">{{item.txt}}</label>
+                </template>
             </div>
+            <hr>
+            <div>
+                <h5>請問您偏好的基酒為(可複選)</h5>
+                <template v-for="item in baseWine">
+                    <input type="checkbox" :id="item.value" :value="item.value" name="BaseWine">
+                    <label :for="item.value">{{item.txt}}</label>
+                </template>
+            </div>
+            <hr>
+            <div>
+                <h5>請問您今日用餐滿意度</h5>
+                <div class="row">
+                    <div class="satisfaction col-3 m-0">環境<span>*</span></div>
+                    <div class="col-9 m-0 star-widget">
+                        <template v-for="item in env">
+                            <input type="radio"  :id="item.value" :value="item.value" name="Environment" required>
+                            <label :for="item.value"><i class="fa-solid fa-star"></i></label>
+                        </template>
+                    </div>
+                    <div class="satisfaction col-3 m-0">服務<span>*</span></div>
+                    <div class="col-9 m-0 star-widget">
+                        <template v-for="item in serve">
+                            <input type="radio"  :id="item.value" :value="item.value" name="Serve" required>
+                            <label :for="item.value"><i class="fa-solid fa-star"></i></label>
+                        </template>
+                    </div>
+                    <div class="satisfaction col-3 m-0">餐點<span>*</span></div>
+                    <div class="col-9 m-0 star-widget">
+                        <template v-for="item in dish">
+                            <input type="radio"  :id="item.value" :value="item.value" name="Dish" required>
+                            <label :for="item.value"><i class="fa-solid fa-star"></i></label>
+                        </template>
+                    </div>
+                    <div class="satisfaction col-3 m-0">價位<span>*</span></div>
+                    <div class="col-9 m-0 star-widget">
+                        <template v-for="item in price">
+                            <input type="radio"  :id="item.value" :value="item.value" name="Price" required>
+                            <label :for="item.value"><i class="fa-solid fa-star"></i></label>
+                        </template>
+                    </div>
+                    <div class="satisfaction col-3 m-0">整體<span>*</span></div>
+                    <div class="col-9 m-0 star-widget">
+                        <template v-for="item in overall">
+                            <input type="radio"  :id="item.value" :value="item.value" name="Overall" required>
+                            <label :for="item.value"><i class="fa-solid fa-star"></i></label>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <h5 for="detail">其他建議: </h5>
+                <input type="text" id="detail" class="inpDetail"></input>
+            </div>
+            <hr>
             <div class="input-btn">
                 <div class="row m-0">
-                    <button class=" col btn-return m-1" type="button">取消</button>
-                    <button class=" col btn-submit m-1" type="submit">送出</button>
+                    <!-- <button class=" col btn-return m-1" type="button">取消</button> -->
+                    <button class="col btn-submit"  type="submit">送出</button>
                 </div>
             </div>
         </form>
     </div>
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="footleft col-5">
-                    <p><a href="">僅為製作範本之參考</a></p>
-                    <p><a href="">顧客意見表</a></p>
-                    <p><a href="">僅為製作範本之參考</a></p>
-                </div>
-                <div class="footright col-5">
-                    <p>訂單詢問: 0900-XXX-XXX</p>
-                    <p>客服專線: 0911-XXX-XXX</p>
-                    <p>Mail: xxx.xxx@gmail.com</p>
-                </div>
-            </div>
-        </div>
-
-    </footer>
-    <script src="/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="bootstrap/bootstrap.bundle.min.js"></script>
     <script>
         var app = new Vue({
             el:'#app',
-            methods: {
-                mindate:function(){
-                    var mindate = new Date;
-                    mindate.setDate(mindate.getDate()-30);
-                    return mindate.toJSON().substr(0,10);
-                },
-                maxdate:function(){
-                    var maxdate = new Date;
-                    maxdate.setDate(maxdate.getDate()-1);
-                    return maxdate.toJSON().substr(0,10);
-                }
+            data: {
+                age:[
+                    {value:18,txt:'18-19歲'},
+                    {value:20,txt:'20-29歲'},
+                    {value:30,txt:'30-39歲'},
+                    {value:40,txt:'40-49歲'},
+                    {value:50,txt:'50-59歲'},
+                    {value:60,txt:'60歲以上'}
+                ],
+                freq:[
+                    {value:1,txt:'第1次'},
+                    {value:2,txt:'第2-3次'},
+                    {value:4,txt:'第4-6次'},
+                    {value:7,txt:'7次以上'},
+                ],
+                baseWine:[
+                    {value:'Vodka',txt:'伏特加'},
+                    {value:'Rum',txt:'蘭姆酒'},
+                    {value:'Gin',txt:'琴酒'},
+                    {value:'Tequila',txt:'龍舌蘭'},
+                    {value:'Whiskey',txt:'威士忌'},
+                    {value:'Brandy',txt:'白蘭地'},
+                ],
+                env:[{value:'e-5'},{value:'e-4'},{value:'e-3'},{value:'e-2'},{value:'e-1'}],
+                serve:[{value:'s-5'},{value:'s-4'},{value:'s-3'},{value:'s-2'},{value:'s-1'}],
+                dish:[{value:'d-5'},{value:'d-4'},{value:'d-3'},{value:'d-2'},{value:'d-1'}],
+                price:[{value:'p-5'},{value:'p-4'},{value:'p-3'},{value:'p-2'},{value:'p-1'}],
+                overall:[{value:'o-5'},{value:'o-4'},{value:'o-3'},{value:'o-2'},{value:'o-1'}]
             },
         });
     </script>
