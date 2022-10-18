@@ -25,7 +25,7 @@ namespace Alcoholic.Controllers
         }
         public IActionResult Cart(Member memberData)
         {
-            string memberIdCookie = Request.Cookies["MemberID"];
+            Guid memberIdCookie = Guid.Parse(Request.Cookies["MemberID"]);
 
             if (memberIdCookie != null)
             {
@@ -46,7 +46,7 @@ namespace Alcoholic.Controllers
         [HttpPost]
         public IActionResult Confirm([FromBody] OrderViewModel orderdata)
         {
-            string memberIdCookie = Request.Cookies["MemberID"];
+            Guid memberIdCookie = Guid.Parse(Request.Cookies["MemberID"]);
             string numberCookie = Request.Cookies["Number"];
             string deskCookie = Request.Cookies["Desk"];
 
@@ -59,9 +59,9 @@ namespace Alcoholic.Controllers
                 var order = new Order
                 {
                     MemberId = memberIdCookie,
-                    OrderId = orderId,
+                    OrderId = Guid.Parse(orderId),
                     Number = int.Parse(numberCookie),
-                    Desk = deskCookie,
+                    DeskNum = deskCookie,
                     OrderTime = Convert.ToDateTime(now),
                 };
                 projectContext.Add(order);
@@ -70,7 +70,7 @@ namespace Alcoholic.Controllers
                 {
                     var orderDetail = new OrderDetail
                     {
-                        OrderId = orderId,
+                        OrderId = Guid.Parse(orderId),
                         ProductId = item.ProductId,
                         Quantity = item.Quantity,
                         UnitPrice = item.UnitPrice,
@@ -98,7 +98,7 @@ namespace Alcoholic.Controllers
             string deskCookie = Request.Cookies["Desk"];
             string numberCookie = Request.Cookies["Number"];
 
-            var order = (from x in projectContext.Orders where x.OrderId == orderId select x).FirstOrDefault();
+            var order = (from x in projectContext.Orders where x.OrderId == Guid.Parse(orderId) select x).FirstOrDefault();
 
             ViewBag.deskCookie = deskCookie;
             ViewBag.numberCookie = numberCookie;
@@ -116,12 +116,12 @@ namespace Alcoholic.Controllers
             if (memberIdCookie != null)
             {
                 string memberName = (from x in projectContext.Members
-                                     where x.MemberID == memberIdCookie
+                                     where x.MemberID == Guid.Parse(memberIdCookie)
                                      select x).FirstOrDefault().MemberName;
                 ViewBag.memberName = memberName;
 
                 orderList.Orders = (from x in projectContext.Orders
-                                    where /*x.OrderTime.Date == DateTime.Now.Date &&*/ x.Status == "N" && x.Desk == deskCookie
+                                    where x.Status == "N" && x.DeskNum == deskCookie
                                     select x).ToList();
                 var temp = orderList.Orders.Select(x => x.OrderId).ToList();
 
@@ -132,7 +132,7 @@ namespace Alcoholic.Controllers
                                      {
                                          OrderId = od.OrderId,
                                          ProductName = od.Product.ProductName,
-                                         ImgPath = od.Product.ImgPath,
+                                         //Path = od.Product.Images,
                                          Quantity = od.Quantity,
                                          UnitPrice = od.UnitPrice,
                                          Discount = od.Discount,
