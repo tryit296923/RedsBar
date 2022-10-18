@@ -39,7 +39,7 @@ namespace Alcoholic.Controllers
         }
 
         [HttpGet]
-        public IQueryable GetAllBookings()
+        public object GetAllBookings()
         {
             DateTime mindate = DateTime.Now;
             var bookingArr1 = (from x in _db.Reserves
@@ -48,8 +48,6 @@ namespace Alcoholic.Controllers
                                orderby g.Key
                                select new { Date = g.Key, Total = g.Sum(x=>x.Number) });
 
-            //var bookingArr2 = _db.Reserves.Where(x => x.ReserveDate > mindate).GroupBy(x => x.ReserveDate)
-            //                                .ToDictionary(k => k.Key, v => v.Sum(n => n.Number));
             return bookingArr1;
         }
     }
