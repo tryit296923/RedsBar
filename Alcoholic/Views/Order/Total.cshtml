@@ -1,6 +1,14 @@
-﻿@{
+﻿@model Alcoholic.Models.ViewModels.OrderListViewModel
+@using Newtonsoft.Json;
+@using System.Web;
+
+@{
     ViewData["Title"] = "本日訂單總覽";
     Layout = "_LayoutMobile";
+    var orderList = Model.Orders;
+    var temp = JsonConvert.SerializeObject(Model.Details);
+    var temp2 = Html.Raw(Model.Details);
+    var temp3 = "";
 }
 
 <style>
@@ -49,13 +57,13 @@
         position: relative;
     }
 
-    .search img {
-        height: 20px;
-        width: 20px;
-        position: absolute;
-        top: 9px;
-        right: 9px;
-    }
+        .search img {
+            height: 20px;
+            width: 20px;
+            position: absolute;
+            top: 9px;
+            right: 9px;
+        }
 
     .searcharea2 {
         display: none;
@@ -94,21 +102,21 @@
         padding: 15px;
     }
 
-    fieldset legend {
-        background: #C28C2E;
-        color: white;
-        padding: 5px 10px;
-        font-size: 20px;
-        border-radius: 0.375rem;
-        box-shadow: 0 0 0 3px #D8CDB9;
-        width: 40%;
-        height: 50px;
-        margin-left: 5%;
-        float: none;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+        fieldset legend {
+            background: #C28C2E;
+            color: white;
+            padding: 5px 10px;
+            font-size: 20px;
+            border-radius: 0.375rem;
+            box-shadow: 0 0 0 3px #D8CDB9;
+            width: 40%;
+            height: 50px;
+            margin-left: 5%;
+            float: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
     .title {
         color: white;
@@ -116,9 +124,9 @@
         top: 0px;
     }
 
-    .title p {
-        display: inline;
-    }
+        .title p {
+            display: inline;
+        }
 
     .himessage {
         text-align: end;
@@ -135,9 +143,9 @@
         border-radius: 0.375rem;
     }
 
-    .subOrderTitle{
-        display:flex;
-        justify-content:space-between;
+    .subOrderTitle {
+        display: flex;
+        justify-content: space-between;
     }
 
     .productName {
@@ -145,7 +153,6 @@
     }
 
     .subOrderText {
-        
         font-weight: bold;
         margin-bottom: 5px;
         padding-left: 1rem;
@@ -157,7 +164,7 @@
 
     .subOrderTime {
         font-size: large;
-        color:gray;
+        color: gray;
     }
 
     .align-items-start {
@@ -224,11 +231,11 @@
         color: #222220;
     }
 
-    .btnBacktoMenu:active,
-    .btnModalCancel:active {
-        background-color: #C28C2E;
-        color: white;
-    }
+        .btnBacktoMenu:active,
+        .btnModalCancel:active {
+            background-color: #C28C2E;
+            color: white;
+        }
 
     .btnPaymentConfirm,
     .btnModalConfirm {
@@ -236,10 +243,10 @@
         color: white;
     }
 
-    .btnPaymentConfirm:active,
-    .btnModalConfirm:active {
-        background-color: #C28C2E;
-    }
+        .btnPaymentConfirm:active,
+        .btnModalConfirm:active {
+            background-color: #C28C2E;
+        }
 
     .btnInModal {
         border: none;
@@ -328,72 +335,47 @@
             <!-- 購物車清單 -->
             <div class="container-fluid px-0">
                 <div class="cartList px-3">
-                    <ol class="list-group">
+                    <ol class="list-group" v-for="order in orderList">
                         <div class="subOrderTitle">
-                            <div class="subOrderText subOrderId">訂單單號1</div>
-                            <div class="subOrderText subOrderTime">訂單時間</div>
+                            <div class="subOrderText subOrderId">{{order.orderId}}</div>
+                            <div class="subOrderText subOrderTime">{{order.orderTime}}</div>
                         </div>
-                        <li class="row list-group-item d-flex justify-content-between align-items-start pe-0">
-
+                        <li class="row list-group-item d-flex justify-content-between align-items-start pe-0" 
+                        v-for="(item,index) in detail(order.orderId)"@* v-bind:key="item.orderId"*@>
                             <div class="col-3 px-0">
-                                <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
+                                <img :src="item.imgPath" class="w-100 rounded">
                             </div>
 
                             <div class="col-4">
                                 <div class="ms-2 me-auto">
-                                    <div class="fw-bold productName">品名</div>
+                                    <div class="fw-bold productName">{{item.productName}}</div>
                                 </div>
                             </div>
                             <div class="col-1 px-0">
                                 <div class="col text-center px-0">
-                                    <div class="col">2</div>
+                                    <div class="col">{{item.quantity}}</div>
                                 </div>
                             </div>
                             <div class="col-4">
 
                                 <div class="productPrice">
-                                    <span>$</span>
-                                    <!-- <span class="originalprice">300</span>
-                                    <span> </span> -->
-                                    <span class="price">300</span>
+                                    <div v-if="item.discount != 1">
+                                        <span>$ </span>
+                                        <span class="originalPrice">{{item.unitPrice * item.quantity}} </span>
+                                        <span class="discountPrice" name="finalPrice">{{discountPrice(item)}}</span>
+                                    </div>
+                                    <div v-else>
+                                        <span>$ </span>
+                                        <span name="finalPrice">{{item.unitPrice * item.quantity}} </span>
+                                    </div>
                                 </div>
                             </div>
                         </li>
-                        <li class="row list-group-item d-flex justify-content-between align-items-start pe-0">
+                        <div class="subTotal">小計: {{subTotal()}} 元</div>
 
-                            <div class="col-3 px-0">
-                                <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
-                            </div>
-
-                            <div class="col-4">
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold productName">品名</div>
-                                </div>
-                            </div>
-                            <div class="col-1 px-0">
-                                <div class="col text-center px-0">
-                                    <div class="col">2</div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                @*<div v-if="item.discount != 1">
-                                    <span>$ </span>
-                                    <span class="originalPrice">{{item.unitPrice * item.quantity}} </span>
-                                    <span class="discountPrice" name="finalPrice">{{discountPrice(item)}}</span>
-                                </div>
-                                <div v-else>
-                                    <span>$ </span>
-                                    <span name="finalPrice">{{item.unitPrice * item.quantity}} </span>
-                                </div>*@
-                            </div>
-                        </li>
-
-                        <div class="subTotal">小計: XXXX 元</div>
-                        <hr>
-                        
+                        <hr />
                     </ol>
-                    <hr>
-                    <div class="cartTotal">今日消費總計: XXX 元</div>
+                    <div class="cartTotal">今日消費總計: 元</div>
                 </div>
             </div>
         </fieldset>
@@ -440,15 +422,41 @@
 </div>
 
 <script>
+
     var app = new Vue({
         el: '#orderTotal',
-        data: {
-            orderTime: '',
+        data() {
+            return {
+                orderTime: '',
+                orderList: @Html.Raw(Json.Serialize(Model.Orders)),
+                orderDetail: @Html.Raw(Json.Serialize(Model.Details))
+                }
         },
         methods: {
+            getOrderList: function () {
+                var list = {};
+                this.orderList = JSON.parse(orderList);
+                return this.orderList;
+            },
+            detail: function (orderid) {
+                console.log(orderid);
+                console.log(this.orderDetail.filter(x => x.orderId == orderid));
+                return this.orderDetail.filter(x => x.orderId == orderid);
+            },
             checkConfirm: function () {
                 this.$refs.checkConfirm.click();
-            }
-        }
+            },
+            discountPrice: function (item) {
+                return Math.round(item.unitPrice * item.quantity * item.discount);
+            },
+            subTotal: function (orderid) {
+                var subTotal = 0;
+                var s = this.orderDetail.filter(x => x.orderId == orderid);
+                for (let i = 0; i < s.length; i++) {
+                    subTotal += s[i].unitPrice * s[i].quantity * s[i].discount;
+                }
+                return Math.round(subTotal);
+            },
+        },
     })
 </script>

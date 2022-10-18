@@ -305,15 +305,12 @@
         methods:{
             register: function () {
                 let fbody = {
-                    "MemberID": "",
                     "MemberAccount": this.Account,
                     "MemberPassword": this.Password,
-                    "MemberLevel":0,
                     "MemberName": this.Name,
                     "MemberBirth": this.Birth,
                     "Phone": this.Phone,
                     "Email": this.Email,
-                    "Qualified":"n"
                 };
                 let JsonString = JSON.stringify(fbody);
                 console.log(JsonString);    // JSON
@@ -347,18 +344,22 @@
                     "MemberPassword": this.loginpassword,
                 };
                 let loginJsonString = JSON.stringify(loginbody);
-                console.log(loginJsonString);    // JSON
-                console.log(loginbody);         // Obj
                 fetch("https://localhost:7273/Member/Login", {
                     method: 'POST',
                     headers: { "Content-Type": "application/json" },
                     body: loginJsonString        // to JsonString
                     })
-                    .then(() => Swal.fire({
-                        icon: 'success',
-                        title: '成功!',
-                    }))
-                    .then(() => { window.location.assign("https://localhost:7273/Product/OrderTemplate") })
+                    .then((e) => console.log(e))
+                    .then((result)=>{
+                        if (result) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '成功!',
+                            })
+                        }else{
+
+                        }
+                    })
                     .catch(error => console.log(error))
             }
         }

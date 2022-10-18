@@ -2,7 +2,12 @@
 using Alcoholic.Models.ViewModels;
 using Alcoholic.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
+using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace Alcoholic.Controllers
 {
@@ -22,55 +27,126 @@ namespace Alcoholic.Controllers
         {
             string memberIdCookie = Request.Cookies["MemberID"];
 
-            if(memberIdCookie != null)
+            if (memberIdCookie != null)
             {
-                //string memberName = (from x in projectContext.Members
-                //                     where x.MemberID == memberIdCookie
-                //                     select x).FirstOrDefault().MemberName;
-                string memberName = "Matt";
+                string memberName = (from x in projectContext.Members
+                                     where x.MemberID == memberIdCookie
+                                     select x).FirstOrDefault().MemberName;
+                //string memberName = "Matt";
                 ViewBag.memberName = memberName;
             }
             else
             {
                 return NotFound();
             }
-           
+
             return View();
         }
 
-
-        public IActionResult Success()
+        [HttpPost]
+        public IActionResult Confirm([FromBody] OrderViewModel orderdata)
         {
-            string deskCookie = Request.Cookies["Desk"];
+            string memberIdCookie = Request.Cookies["MemberID"];
             string numberCookie = Request.Cookies["Number"];
+            string deskCookie = Request.Cookies["Desk"];
 
             var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
             var orderId = DateTime.Now.ToString("yyyyMMddHHmmss");
 
+            try
+            {
+                //分別存入Order, OrderDetail
+                var order = new Order
+                {
+                    MemberId = memberIdCookie,
+                    OrderId = orderId,
+                    Number = int.Parse(numberCookie),
+                    Desk = deskCookie,
+                    OrderTime = Convert.ToDateTime(now),
+                };
+                projectContext.Add(order);
+
+                foreach (var item in orderdata.ItemList)
+                {
+                    var orderDetail = new OrderDetail
+                    {
+                        OrderId = orderId,
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity,
+                        UnitPrice = item.UnitPrice,
+                        Discount = item.Discount,
+                        Total = Convert.ToInt32(item.Quantity * item.UnitPrice * item.Discount),
+                    };
+                    projectContext.Add(orderDetail);
+                }
+                projectContext.SaveChanges();
+
+                return new JsonResult(new { Status = 1, Message = "Save Success", OrderId = orderId });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { Status = 2, Message = "Save Fail" });
+            }
+
+        }
+
+
+        [HttpPost]
+        public IActionResult Success(string orderId)
+        {
+
+            string deskCookie = Request.Cookies["Desk"];
+            string numberCookie = Request.Cookies["Number"];
+
+            var order = (from x in projectContext.Orders where x.OrderId == orderId select x).FirstOrDefault();
+
             ViewBag.deskCookie = deskCookie;
             ViewBag.numberCookie = numberCookie;
-            ViewBag.orderTime = now;
-            ViewBag.orderId = orderId;
 
-
-            return View();
+            return View(order);
         }
 
         public IActionResult Total()
         {
+            OrderListViewModel orderList = new OrderListViewModel();
             string memberIdCookie = Request.Cookies["MemberID"];
+            string deskCookie = Request.Cookies["Desk"];
+
 
             if (memberIdCookie != null)
             {
-                
-                string memberName = "Matt";
+                string memberName = (from x in projectContext.Members
+                                     where x.MemberID == memberIdCookie
+                                     select x).FirstOrDefault().MemberName;
                 ViewBag.memberName = memberName;
+
+                orderList.Orders = (from x in projectContext.Orders
+                                    where /*x.OrderTime.Date == DateTime.Now.Date &&*/ x.Status == "N" && x.Desk == deskCookie
+                                    select x).ToList();
+                var temp = orderList.Orders.Select(x => x.OrderId).ToList();
+
+                //var product = projectContext.Products.FirstOrDefault();
+                orderList.Details = (from od in projectContext.OrderDetails
+                                     where temp.Contains(od.OrderId)
+                                     select new OrderDetailViewModel
+                                     {
+                                         OrderId = od.OrderId,
+                                         ProductName = od.Product.ProductName,
+                                         ImgPath = od.Product.ImgPath,
+                                         Quantity = od.Quantity,
+                                         UnitPrice = od.UnitPrice,
+                                         Discount = od.Discount,
+                                         ProductId = od.ProductId,
+                                     }).ToList();
+
+
+                return View(orderList);
             }
             else
             {
                 return NotFound();
             }
-            return View();
+
         }
         public IActionResult OrderList()
         {

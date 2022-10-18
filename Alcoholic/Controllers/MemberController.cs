@@ -7,6 +7,7 @@ using System.Security.Claims;
 using Alcoholic.Services;
 using Razor.Templating.Core;
 using Microsoft.AspNetCore.Authorization;
+using Alcoholic.Models.ViewModels;
 
 namespace Alcoholic.Controllers
 {
@@ -52,19 +53,19 @@ namespace Alcoholic.Controllers
 
         // 會員登入 => 點餐(Order'Order)
         [HttpPost]
-        public bool Login([FromBody] Member memberData)
+        public IActionResult Login([FromBody] LoginViewModel memberData)
         {
             Member? user = (from member in db.Members
-                             where member.MemberAccount == memberData.MemberAccount
+                             where member.MemberAccount == memberData.Account
                              select member).SingleOrDefault();
             if (user == null)
             {
-                return false;
+                return Ok(false);
             }
-            String password = hash.GetHash(memberData.MemberPassword.Concat(user.Salt).ToString());
+            string password = hash.GetHash(memberData.Password.Concat(user.Salt).ToString());
             if (password != user.MemberPassword)
             {
-                return false;
+                return Ok(false);
             }
             else
             {
@@ -81,7 +82,7 @@ namespace Alcoholic.Controllers
                 // 將此類別(原則 ClaimsIdentity)，帶入方案(AuthenticationScheme)中
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
                 HttpContext.Response.Cookies.Append("MemberID", user.MemberID.ToString());
-                return true;
+                return Ok(true);
                 // 在想要經驗證後才可讀取的API上加 [Authorize]
                 // 未登入也可以使用的API [AllowAnonymous]
             }
@@ -126,25 +127,30 @@ namespace Alcoholic.Controllers
 
         // 註冊
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] Member memberData)
+        public async Task<IActionResult> Register([FromBody] MmeberViewModel memberData)
         {
-            if (MemberExists(memberData.MemberAccount))
+            if (MemberExists(memberData.Account))
             {
                 return NotFound();
             }
             else
             {
+                Member user = new();
                 string salt = Guid.NewGuid().ToString("N");
-                memberData.Salt = salt;
-                memberData.MemberID = Guid.NewGuid();
-                memberData.MemberPassword = hash.GetHash(memberData.MemberPassword.Concat(salt).ToString());
-                memberData.Qualified = "n";
+                user.MemberAccount = memberData.Account;
+                user.MemberBirth = memberData.Birth;
+                user.MemberName = memberData.Name;
+                user.Phone = memberData.Phone;
+                user.Email = memberData.Email;
+                user.MemberLevel = 0;
+                user.Salt = salt;
+                user.MemberPassword = hash.GetHash(memberData.Password.Concat(salt).ToString());
                 db.Add(memberData);
                 db.SaveChanges();
-                var msg = await RazorTemplateEngine.RenderAsync<Member>("Views/Member/Authorize.cshtml", memberData);
+                var msg = await RazorTemplateEngine.RenderAsync<Member>("Views/Member/Authorize.cshtml", user);
                 mail.SendMail(memberData.Email, msg, "RedsBar 會員認證信件");
-                HttpContext.Response.Cookies.Append("EmailID", memberData.EmailID.ToString());
-                return Ok(memberData);
+                HttpContext.Response.Cookies.Append("EmailID", memberData.Email.ToString());
+                return Ok(user);
             }
         }
 

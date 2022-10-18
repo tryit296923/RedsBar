@@ -158,11 +158,6 @@ namespace Alcoholic.Models.Entities
                     .HasForeignKey(d => d.MemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Order_Members");
-
-                entity.HasOne(o => o.Feedback)
-                    .WithOne(f => f.Order)
-                    .HasForeignKey<Feedback>(o => o.OrderId);
-
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
@@ -180,7 +175,7 @@ namespace Alcoholic.Models.Entities
 
                 entity.Property(e => e.UnitPrice).HasColumnType("int");
 
-                entity.Property(e => e.Status).HasColumnType("nvarchar(max)");
+
 
                 entity.Property(e => e.Total).HasColumnType("int");
 
@@ -199,6 +194,7 @@ namespace Alcoholic.Models.Entities
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderDetail_Products");
+
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -285,8 +281,7 @@ namespace Alcoholic.Models.Entities
 
             modelBuilder.Entity<Feedback>( entity =>
             {
-                entity.Property(e => e.OrderId)
-                .HasColumnName("OrderId");
+                entity.HasKey(e=> e.OrderId);
 
                 entity.Property(e => e.Age)
                     .IsRequired()
@@ -322,16 +317,9 @@ namespace Alcoholic.Models.Entities
                     .IsRequired()
                     .HasColumnType("nvarchar(max)");
 
-                entity.HasKey("OrderId");
-
-                entity.ToTable("Feedback");
-            });
-
-            modelBuilder.Entity<Category>(e =>
-            {
-                e.HasKey(x => x.CategoryId);
-                e.Property(x => x.CategoryName).HasColumnType("nvarchar(max)");
-                e.HasMany(x => x.Materials).WithOne(x => x.Category);
+                entity.HasOne(f => f.Order)
+                    .WithOne(o => o.Feedback)
+                    .HasForeignKey<Order>(f => f.OrderId);
             });
 
                 OnModelCreatingPartial(modelBuilder);
