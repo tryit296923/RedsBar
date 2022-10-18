@@ -401,11 +401,9 @@
                     today.setHours(0,0,0,0);
                     var mindate = new Date(today.getTime() + 1 * 24 * 3600 * 1000);
                     var maxdate = new Date(today.getTime() + 30 * 24 * 3600 * 1000);
-                    this.bookingInfos.forEach(function(x) {
-                        if(x.total === 12)
-                            disableArr=new Date(x.date);
-                    });
-                    return date < mindate || date > maxdate || date.getDay() % 7 == 1;
+                    var isBooking = this.bookingInfos.some(x=> new Date(x.key).getTime() == date.getTime());
+                    return date < mindate || date > maxdate || date.getDay() % 7 == 1 || isBooking;
+                    
                 },
                 bold:function(day,getDay){
                     if(day.id==getDay){

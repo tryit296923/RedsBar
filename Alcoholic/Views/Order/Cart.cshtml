@@ -152,6 +152,7 @@
         background-color: #D8CDB9;
         color: #222220;
     }
+
     .btnModalCancel {
         background-color: #D8CDB9;
         color: #222220;
@@ -255,7 +256,7 @@
                     <ol class="list-group">
                         <li class="row list-group-item d-flex justify-content-between align-items-start">
                             <div class="col-3 px-0">
-                                <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
+                                <img :src="item.imgPath" class="w-100 rounded">
                             </div>
                             <div class="col-5 px-0">
                                 <div class="ms-2 me-auto">
@@ -289,9 +290,8 @@
                         </li>
                     </ol>
                 </div>
-                <form action="Success" method="post" class="d-none">
-                    <input name="orderTime" v-model="orderTime" />
-                    <input name="itemList" v-model="itemList" />
+                <form action="Success" method="post" class="d-none" id="cart">
+                    <input name="orderId" v-model="orderId" />
                     <button type="submit" ref="orderingSend"></button>
                 </form>
             </div>
@@ -300,42 +300,42 @@
         </fieldset>
     </div>
 
-        <!-- 底部按鈕 -->
-        <div class="orderCheck my-3">
-            <div class="container row w-100">
-                <div class="col col-xl-6 text-center">
-                    <button class="bottombtntext btnBacktoMenu w-100 py-2">
-                        繼續點餐
-                    </button>
-                </div>
-                <div class="col col-xl-6 text-center">
-                    <button type="button" class="bottombtntext btnCartConfirm w-100 py-2" data-bs-toggle="modal"
-                            data-bs-target="#delieveBackdrop">
-                        送出訂單
-                    </button>
-                </div>
+    <!-- 底部按鈕 -->
+    <div class="orderCheck my-3">
+        <div class="container row w-100">
+            <div class="col col-xl-6 text-center">
+                <button class="bottombtntext btnBacktoMenu w-100 py-2">
+                    繼續點餐
+                </button>
+            </div>
+            <div class="col col-xl-6 text-center">
+                <button type="button" class="bottombtntext btnCartConfirm w-100 py-2" data-bs-toggle="modal"
+                        data-bs-target="#delieveBackdrop">
+                    送出訂單
+                </button>
             </div>
         </div>
+    </div>
 
-        <!-- Modal -->
-        <div class="modal fade" id="delieveBackdrop" data-bs-backdrop="delieve" data-bs-keyboard="false" tabindex="-1"
-             aria-labelledby="delieveBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="delieveBackdropLabel">訂單送出提示</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        確認訂單無誤並送出?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btnInModal btnModalCancel" data-bs-dismiss="modal">取消</button>
-                        <button class="btnInModal btnModalConfirm" v-on:click="orderingSend">確認送出</button>
-                    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="delieveBackdrop" data-bs-backdrop="delieve" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="delieveBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="delieveBackdropLabel">訂單送出提示</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    確認訂單無誤並送出?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btnInModal btnModalCancel" data-bs-dismiss="modal">取消</button>
+                    <button class="btnInModal btnModalConfirm" v-on:click="orderingSend">確認送出</button>
                 </div>
             </div>
         </div>
+    </div>
 
 
     <script>
@@ -345,9 +345,9 @@
                 return {
                     orderTime: '',
                     itemList: this.getProductCookie(),
+                    orderId: ''
                 }
             },
-
             methods: {
                 decrease: function (item) {
                     //console.log(item);
@@ -375,13 +375,13 @@
                     return Math.round(totalprice);
                 },
                 orderingSend: function () {
-                    this.$refs.orderingSend.click();
+                    this.confirmSend();
                 },
                 seperate: function (obj, ary) {
                     var key = obj.split('=')[0].trim();
                     var val = obj.split('=')[1];
 
-                    ary[key] = val; //用屬性加到object
+                    ary[key] = val; //ary的key屬性值是val
                 },
                 getProductCookie() {
                     var ary = {};
@@ -390,7 +390,32 @@
                     //console.log(ary['products']);
                     //console.log(JSON.parse(ary['products']));
                     this.itemList = JSON.parse(ary['fakecookie']);
+                    console.log(this.itemList);
                     return this.itemList;
+                },
+                confirmSend() {
+                    let x = {
+                        ItemList: this.itemList
+                    }
+                    fetch("/Order/Confirm", {
+                        body: JSON.stringify(x),
+                        headers: { 'content-type': 'application/json' },
+                        method: 'POST'
+                    })
+                        .then(result => result.json())
+                        .then(result => {
+
+                            if (result.status == 1) {
+                                console.log(result);
+                                //console.log(this.orderId);
+                                this.orderId = result.orderId;
+                                console.log(this.orderId);
+                                setTimeout(() => { this.$refs.orderingSend.click() }, 1)
+                            }
+                        });
+                    //this.itemList.forEach(x => {
+                    //    console.log(x);
+                    //})
                 }
             },
         })

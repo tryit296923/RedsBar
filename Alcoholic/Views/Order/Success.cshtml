@@ -1,4 +1,4 @@
-﻿@model Alcoholic.Models.ViewModels.SendProductsModel
+﻿@model Alcoholic.Models.Entities.Order
 @{
     ViewData["Title"] = "訂單送出成功!";
     Layout = "_LayoutMobile";
@@ -113,8 +113,8 @@
                 <p class="orderinfotext tablenum">桌號 : @ViewBag.deskCookie</p>
                 <p class="orderinfotext custnum">用餐人數 : @ViewBag.numberCookie 人</p>
                 <hr>
-                <p class="orderinfotext orderid">訂單單號 : @ViewBag.orderId</p>
-                <p class="orderinfotext ordertime">訂單成立時間 : @ViewBag.orderTime</p>
+                <p class="orderinfotext orderid">訂單單號 : @Model.OrderId</p>
+                <p class="orderinfotext ordertime">訂單成立時間 : @Model.OrderTime</p>
             </div>
 
             <!-- 餐點準備提示 -->
@@ -124,6 +124,7 @@
 
             <form action="Total" method="post" class="d-none">
                 <input name="orderTime" v-model="orderTime" />
+                <input name="orderId" v-model="orderId" />
                 <button type="submit" ref="orderDetail"></button>
             </form>
 
@@ -151,6 +152,7 @@
         data(){
             return {
                 orderTime: '',
+                orderId:'@Model.OrderId'
             }
 
         },
