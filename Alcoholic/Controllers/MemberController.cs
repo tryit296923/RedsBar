@@ -7,6 +7,8 @@ using System.Security.Claims;
 using Alcoholic.Services;
 using Razor.Templating.Core;
 using Microsoft.AspNetCore.Authorization;
+using Alcoholic.Models.DTO;
+using LoginViewModel = Alcoholic.Models.DTO.LoginViewModel;
 using Alcoholic.Models.ViewModels;
 
 namespace Alcoholic.Controllers
@@ -38,16 +40,21 @@ namespace Alcoholic.Controllers
 
         // 入座 => 登入頁面 (導向)
         [HttpPut]
-        public IActionResult StartOrder([FromBody]DeskInfo deskInfo)
+        public IActionResult StartOrder([FromBody]DeskModel desk)
         {
+            
+            DeskInfo? deskInfo = (from d in db.DeskInfo
+                                where  d.Desk == desk.Desk
+                                select d).FirstOrDefault();
             deskInfo.Occupied = 1;
             deskInfo.StartTime = DateTime.Now.ToString("yyyyMMddHHmm");
             db.Entry(deskInfo).State = EntityState.Modified;
             db.SaveChanges();
-            CookieOptions cookieOptions = new CookieOptions();
+            CookieOptions cookieOptions = new();
             cookieOptions.Expires = new DateTimeOffset(DateTime.Now.AddHours(2));
             HttpContext.Response.Cookies.Append("Number", deskInfo.Number, cookieOptions);
             HttpContext.Response.Cookies.Append("Desk", deskInfo.Desk.ToString(), cookieOptions);
+
             return Ok("LoginRegister");
         }
 
@@ -82,7 +89,7 @@ namespace Alcoholic.Controllers
                 // 將此類別(原則 ClaimsIdentity)，帶入方案(AuthenticationScheme)中
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
                 HttpContext.Response.Cookies.Append("MemberID", user.MemberID.ToString());
-                return Ok(true);
+                return Ok(memberData);
                 // 在想要經驗證後才可讀取的API上加 [Authorize]
                 // 未登入也可以使用的API [AllowAnonymous]
             }
@@ -127,7 +134,7 @@ namespace Alcoholic.Controllers
 
         // 註冊
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] MmeberViewModel memberData)
+        public async Task<IActionResult> Register([FromBody] MemberModel memberData)
         {
             if (MemberExists(memberData.Account))
             {
@@ -144,8 +151,9 @@ namespace Alcoholic.Controllers
                 user.Email = memberData.Email;
                 user.MemberLevel = 0;
                 user.Salt = salt;
+                user.Qualified = "n";
                 user.MemberPassword = hash.GetHash(memberData.Password.Concat(salt).ToString());
-                db.Add(memberData);
+                db.Add(user);
                 db.SaveChanges();
                 var msg = await RazorTemplateEngine.RenderAsync<Member>("Views/Member/Authorize.cshtml", user);
                 mail.SendMail(memberData.Email, msg, "RedsBar 會員認證信件");
