@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Alcoholic.Migrations
 {
-    public partial class initialize : Migration
+    public partial class Initialize1018 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -54,6 +54,27 @@ namespace Alcoholic.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Employee_1", x => x.EmpID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Feedback",
+                columns: table => new
+                {
+                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FeedbackName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Age = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Frequency = table.Column<int>(type: "int", nullable: false),
+                    Environment = table.Column<int>(type: "int", nullable: false),
+                    Serve = table.Column<int>(type: "int", nullable: false),
+                    Dish = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
+                    Overall = table.Column<int>(type: "int", nullable: false),
+                    Suggestion = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Feedback", x => x.OrderId);
                 });
 
             migrationBuilder.CreateTable(
@@ -163,11 +184,19 @@ namespace Alcoholic.Migrations
                     OrderID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MemberID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Number = table.Column<int>(type: "int", nullable: false),
-                    OrderTime = table.Column<DateTime>(type: "smalldatetime", nullable: false)
+                    OrderTime = table.Column<DateTime>(type: "smalldatetime", nullable: false),
+                    DeskNum = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Order_1", x => x.OrderID);
+                    table.ForeignKey(
+                        name: "FK_Order_Feedback_OrderID",
+                        column: x => x.OrderID,
+                        principalTable: "Feedback",
+                        principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Order_Members",
                         column: x => x.MemberID,
@@ -245,33 +274,6 @@ namespace Alcoholic.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Feedback",
-                columns: table => new
-                {
-                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FeedbackName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Age = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Frequency = table.Column<int>(type: "int", nullable: false),
-                    Environment = table.Column<int>(type: "int", nullable: false),
-                    Serve = table.Column<int>(type: "int", nullable: false),
-                    Dish = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<int>(type: "int", nullable: false),
-                    Overall = table.Column<int>(type: "int", nullable: false),
-                    Suggestion = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Feedback", x => x.OrderId);
-                    table.ForeignKey(
-                        name: "FK_Feedback_Order_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Order",
-                        principalColumn: "OrderID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "OrderDetail",
                 columns: table => new
                 {
@@ -280,7 +282,6 @@ namespace Alcoholic.Migrations
                     UnitPrice = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Total = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Discount = table.Column<decimal>(type: "decimal(38,17)", nullable: false),
                     Rate = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -347,9 +348,6 @@ namespace Alcoholic.Migrations
                 name: "Employee");
 
             migrationBuilder.DropTable(
-                name: "Feedback");
-
-            migrationBuilder.DropTable(
                 name: "MonthlyRecord");
 
             migrationBuilder.DropTable(
@@ -372,6 +370,9 @@ namespace Alcoholic.Migrations
 
             migrationBuilder.DropTable(
                 name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "Feedback");
 
             migrationBuilder.DropTable(
                 name: "Members");

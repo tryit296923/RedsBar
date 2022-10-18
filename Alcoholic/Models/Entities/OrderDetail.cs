@@ -7,7 +7,7 @@
         public int UnitPrice { get; set; }
         public int Quantity { get; set; }
         public int Total { get; set; }
-        public string Status { get; set; }
+
         public double Discount { get; set; }
         public string? Rate { get; set; }
         public virtual Order Order { get; set; }
