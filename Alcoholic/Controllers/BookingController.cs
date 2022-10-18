@@ -1,5 +1,4 @@
-﻿using Alcoholic.Models.DTO;
-using Alcoholic.Models.Entities;
+﻿using Alcoholic.Models.Entities;
 using Alcoholic.Models.ViewModels;
 using Alcoholic.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -34,18 +33,24 @@ namespace Alcoholic.Controllers
             _db.Add(bookingData);
             _db.SaveChanges();
             var result = await task;
-            mailService.SendMail(bookingData.Email, result, "感謝您的訂位");
+            mailService.SendMail(bookingData.Email, result, "Reds Bar感謝您的訂位");
 
             return View(bookingData);
         }
 
         [HttpGet]
-        public Dictionary<DateTime,int> GetAllBookings()
+        public IQueryable GetAllBookings()
         {
-            DateTime mindate = DateTime.Now.AddDays(1);
-            var bookingArr2 = _db.Reserves.Where(x => x.ReserveDate > mindate).GroupBy(x => x.ReserveDate)
-                                            .ToDictionary(k => k.Key, v => v.Sum(n => n.Number));
-            return bookingArr2;
+            DateTime mindate = DateTime.Now;
+            var bookingArr1 = (from x in _db.Reserves
+                               where x.ReserveDate > mindate
+                               group x by x.ReserveDate into g
+                               orderby g.Key
+                               select new { Date = g.Key, Total = g.Sum(x=>x.Number) });
+
+            //var bookingArr2 = _db.Reserves.Where(x => x.ReserveDate > mindate).GroupBy(x => x.ReserveDate)
+            //                                .ToDictionary(k => k.Key, v => v.Sum(n => n.Number));
+            return bookingArr1;
         }
     }
 }

@@ -5,13 +5,11 @@ namespace Alcoholic.Models.Entities
 {
     public partial class Employee
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key]
-        public string EmpId { get; set; } = null!;
-        public string EmpName { get; set; } = null!;
-        public string EmpAccount { get; set; } = null!;
-        public string EmpPassword { get; set; } = null!;
-        public string Salt { get; set; } = null!;
-        public string Role { get; set; } = null!;
+        public Guid EmpId { get; set; }
+        public string EmpName { get; set; }
+        public string EmpAccount { get; set; }
+        public string EmpPassword { get; set; }
+        public string Salt { get; set; }
+        public string Role { get; set; }
     }
 }

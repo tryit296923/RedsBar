@@ -148,7 +148,7 @@
     .shopCartToggle > button{
         border: 0;
         position: fixed;
-        top:66px;
+        top:75px;
         right: 10px;
         z-index:1;
         color: #D8CDB9;
@@ -393,7 +393,7 @@
                                                 <i class="fa fa-minus"></i>
                                             </button>
                                             <div class="col-8 p-0">
-                                                <input type="number" :name="item.productName"
+                                                <input type="number" :name="item.productName" :id="item.productId"
                                                     class="form-control form-control-sm qty_input text-center"
                                                     value="0" readonly>
                                             </div>
@@ -402,7 +402,7 @@
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </div>
-                                        <button type="button" class="col-12 btn btnaddtocart">加到購物車</button>
+                                        <button type="button" class="col-12 btn btnaddtocart" onclick="addcookie(event)">加到購物車</button>
                                     </div>
                                 </div>
                             </div>
@@ -813,6 +813,8 @@
 </div>
 
 
+<!-- Cookie -->
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
 <!-- Vue -->
 <script>
     var app = new Vue({
@@ -881,4 +883,53 @@
                 .then(function (result) { self.product = result })
         }
     })   
+</script>
+
+<script>        
+        var cart=Cookies.get("cartItem");  
+        var cartArray=[0];
+        var cartStr="";
+        function addcookie(e){      
+        var selProd=e.target.parentElement.children[1].children[1].children[0];
+        if(selProd.value>0){        
+        var item={
+             id:selProd.id,
+             name:selProd.name,
+            };    
+        for(i=0;i<cartArray.length;i++){
+        //初始化
+        if(cartArray[i]==0 && cartArray.length<2){
+            console.log("初次");
+            item.qty=selProd.value
+            cartArray.push(item);
+            cartArray.shift();
+            cartStr=JSON.stringify(item);
+            return;
+        }
+        //已添加至購物車
+        else if(item.id==cartArray[i].id){
+        console.log("重複");
+        item.qty=selProd.value;
+        cartArray[i].qty=(cartArray[i].qty*1+item.qty*1).toString();
+        cartStr=JSON.stringify(cartArray);
+        return;
+        }
+        //找完陣列且尚未添加至購物車
+        else if(item.id!=cartArray[i].id && i==cartArray.length-1){            
+        console.log("不重複");
+        item.qty=selProd.value;
+        cartArray.push(item);
+        cartStr=JSON.stringify(cartArray);
+        console.log(cartStr);
+        //cartArray.forEach(function(obj){
+        //    cartStr=cartStr+"\,"+(JSON.stringify(obj));
+        //});    
+        break;}
+        //陣列回圈跑完前持續找
+        else{
+            console.log("繼續找");
+        }
+        }};
+        Cookies.set("cartItem",cartStr);
+        }
 </script>

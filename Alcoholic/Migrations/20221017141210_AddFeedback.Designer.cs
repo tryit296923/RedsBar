@@ -12,14 +12,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alcoholic.Migrations
 {
     [DbContext(typeof(db_a8de26_projectContext))]
-    [Migration("20221014024006_AddColumnLevel")]
-    partial class AddColumnLevel
+    [Migration("20221017141210_AddFeedback")]
+    partial class AddFeedback
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "6.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -79,6 +79,7 @@ namespace Alcoholic.Migrations
             modelBuilder.Entity("Alcoholic.Models.Entities.Employee", b =>
                 {
                     b.Property<string>("EmpId")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("EmpID");
@@ -98,10 +99,62 @@ namespace Alcoholic.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("EmpId")
                         .HasName("PK_Employee_1");
 
                     b.ToTable("Employee", (string)null);
+                });
+
+            modelBuilder.Entity("Alcoholic.Models.Entities.Feedback", b =>
+                {
+                    b.Property<string>("OrderId")
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Age")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Dish")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Environment")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FeedbackName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Frequency")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Overall")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Serve")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Suggestion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("OrderId");
+
+                    b.ToTable("Feedback");
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Material", b =>
@@ -152,10 +205,6 @@ namespace Alcoholic.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("emailID")
                         .HasDefaultValueSql("(newid())");
-
-                    b.Property<string>("Level")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MemberAccount")
                         .IsRequired()
@@ -291,9 +340,6 @@ namespace Alcoholic.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("Sum")
-                        .HasColumnType("int");
-
                     b.Property<int>("Total")
                         .HasColumnType("int");
 
@@ -410,6 +456,17 @@ namespace Alcoholic.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Alcoholic.Models.Entities.Feedback", b =>
+                {
+                    b.HasOne("Alcoholic.Models.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Order", b =>
