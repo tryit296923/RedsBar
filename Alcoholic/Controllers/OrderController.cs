@@ -125,7 +125,7 @@ namespace Alcoholic.Controllers
                                     select x).ToList();
                 var temp = orderList.Orders.Select(x => x.OrderId).ToList();
 
-                //var product = projectContext.Products.FirstOrDefault();
+                //var product = _db.Products.FirstOrDefault();
                 orderList.Details = (from od in projectContext.OrderDetails
                                      where temp.Contains(od.OrderId)
                                      select new OrderDetailViewModel

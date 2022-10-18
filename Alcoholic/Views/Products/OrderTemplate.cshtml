@@ -64,7 +64,7 @@
             methods:{
                 GetProducts:function(){
                     let self = this;
-                    fetch("/Product/GetAllProducts")
+                    fetch("api/Products/GetAllProducts")
                     .then(function(response){return response.json()})
                     .then(function(result){self.products = result})
                 },
@@ -88,7 +88,7 @@
                         ProductName:product.ProductName,
                         UnitPrice:product.UnitPrice
                     }
-                    fetch("/Product/AddToCart",{
+                    fetch("api/Products/AddToCart",{
                         body: JSON.stringify(body),
                         headers:{'content-type':'application/json'},
                         method:'POST'
