@@ -25,7 +25,6 @@
   <ItemGroup>
     <Folder Include="Areas\BackCenter\Data\" />
     <Folder Include="Areas\BackCenter\Models\" />
-    <Folder Include="Controllers\API\" />
     <Folder Include="ViewModels\" />
     <Folder Include="wwwroot\images\Products\" />
   </ItemGroup>
