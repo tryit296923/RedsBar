@@ -269,12 +269,12 @@
             <div class="row">
                 <div class="col-12 col-xl-6">
                     <label for="datepicker" class="col-sm-12 col-form-label">用餐日期</label>
-                    <date-picker v-model="datepick" valueType="format" class="datepicker p-0" id="datepicker"
+                    <date-picker v-model="ReserveDate" valueType="format" class="datepicker p-0" id="datepicker"
                         placeholder="請選擇用餐日期" :disabled-date="disablerange"></date-picker>
                 </div>
                 <div class="col-12 col-xl-6">
                     <label for="people" class="col-sm-12 col-form-label">用餐人數</label>
-                    <select id="people" class="form-select" v-model="selectpeople">
+                    <select id="people" class="form-select" v-model="Number">
                         <option value="" disabled>請選擇用餐人數</option>
                         <template v-for="peo in people">
                             <option :disabled="maxPeople(peo.value)" :value="peo.value">{{peo.txt}}</option>
@@ -345,23 +345,23 @@
         <div class="booking-check">
             <div class="container">
                 <p class="booking-check-text">選擇預定
-                    <template v-if="datepick==''">
-                        <button class="booking-check-date">請選擇預定日期</button>
+                    <template v-if="ReserveDate!=null">
+                        <button class="booking-check-date">{{ReserveDate.toLocaleDateString()}}</button>
                     </template>
                     <template v-else>
-                        <button class="booking-check-date">{{datepick.toLocaleDateString()}}</button>
+                        <button class="booking-check-date">請選擇預定日期</button>
                     </template>
                     >
-                    <template v-if="selectpeople==''">
+                    <template v-if="Number==''">
                         <button class="booking-check-people">請選擇用餐人數</button>
                     </template>
                     <template v-else>
-                        <button class="booking-check-people">{{people[selectpeople-1].txt}}</button>
+                        <button class="booking-check-people">{{people[Number-1].txt}}</button>
                     </template>
                 </p>
             </div>
             <div class="container">
-                <template v-if=" datepick == '' || selectpeople =='' ">
+                <template v-if=" ReserveDate == '' || Number =='' ">
                     <a class="col-12 booking-uncheck-btn" type="button">請選擇用餐日期與人數</a>
                 </template>
                 <template v-else>
@@ -381,8 +381,8 @@
             data: {
                 bookingInfos: [],
                 MyDate: new Date,
-                datepick: '',
-                selectpeople: '',
+                ReserveDate: null,
+                Number: '',
                 people: [
                     { value: 1, txt: '1位成人' },
                     { value: 2, txt: '2位成人' },
@@ -409,12 +409,14 @@
                     return date < mindate || date > maxdate || date.getDay() % 7 == 1 || isBooking;
                 },
                 maxPeople: function (people) {
-                    if (this.datepick) {
-                        let pickTime = this.datepick.getTime();
+                    if (this.ReserveDate) {
+                        let pickTime = this.ReserveDate.getTime();
                         let currectBookingInfo = this.bookingInfos.find(x => new Date(x.date).getTime() == pickTime);
-                        return 16 - currectBookingInfo.total < people;
+                        if(currectBookingInfo!=null){
+                            return 16 - currectBookingInfo.total < people;
+                        }
+                        return false;
                     }
-                    return false;
                 },
                 bold: function (day, getDay) {
                     if (day.id == getDay) {
@@ -424,7 +426,7 @@
             },
             beforeCreate: function () {
                 let self = this;
-                fetch('https://localhost:7273/Booking/GetAllBookings')
+                fetch('https://localhost:7273/api/Booking/GetAllBookings')
                     .then(function (response) { return response.json() })
                     .then(function (result) { self.bookingInfos = result })
             }

@@ -140,38 +140,37 @@ namespace Alcoholic.Migrations
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Feedback", b =>
                 {
-                    b.Property<Guid>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("OrderId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Age")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Dish")
+                    b.Property<int?>("Dish")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Environment")
+                    b.Property<int?>("Environment")
                         .HasColumnType("int");
 
                     b.Property<string>("FeedbackName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Frequency")
+                    b.Property<int?>("Frequency")
                         .HasColumnType("int");
 
-                    b.Property<int>("Overall")
+                    b.Property<int?>("Overall")
                         .HasColumnType("int");
 
-                    b.Property<int>("Price")
+                    b.Property<int?>("Price")
                         .HasColumnType("int");
 
-                    b.Property<int>("Serve")
+                    b.Property<int?>("Serve")
                         .HasColumnType("int");
 
                     b.Property<string>("Suggestion")
@@ -324,10 +323,8 @@ namespace Alcoholic.Migrations
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Order", b =>
                 {
-                    b.Property<Guid>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("OrderID");
+                    b.Property<string>("OrderId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DeskNum")
                         .IsRequired()
@@ -347,19 +344,17 @@ namespace Alcoholic.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("OrderId")
-                        .HasName("PK_Order_1");
+                    b.HasKey("OrderId");
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("Order", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.OrderDetail", b =>
                 {
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("OrderID");
+                    b.Property<string>("OrderId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -383,7 +378,7 @@ namespace Alcoholic.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderDetail", (string)null);
+                    b.ToTable("OrderDetails");
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Product", b =>
