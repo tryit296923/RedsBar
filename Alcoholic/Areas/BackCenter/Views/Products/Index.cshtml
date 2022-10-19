@@ -1,0 +1,181 @@
+﻿@{
+    ViewData["Title"] = "商品管理";
+    Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue2-dropzone@3.6.0/dist/vue2Dropzone.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue2-dropzone@3.6.0/dist/vue2Dropzone.min.js"></script>
+
+<div class="productmanage container-fluid p-5">
+    <div class="spacebetween row-cols-2 mb-3">
+        <h3>商品管理</h3>
+        <button type="button" class="addbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <i class="fa-sharp fa-solid fa-plus"></i> 新增商品
+        </button>
+    </div>
+    <hr>
+    <div class="products">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" colspan="2">商品內容</th>
+                    <th scope="col">售價</th>
+                    <th scope="col">成本</th>
+                    <th scope="col">庫存</th>
+                    <th scope="col">叫貨時長</th>
+                    <th scope="col">刪除 編輯</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row"><img src="~/Images/Cocktails/bloodymary.jpeg" alt=""></th>
+                    <td>bloodymary</td>
+                    <td>300</td>
+                    <td>100</td>
+                    <td>80</td>
+                    <td>2 month</td>
+                    <td>
+                        <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
+                        <button class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><img src="~/Images/Cocktails/highball.jpg" alt=""></th>
+                    <td>highball</td>
+                    <td>300</td>
+                    <td>100</td>
+                    <td>80</td>
+                    <td>2 month</td>
+                    <td>
+                        <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
+                        <button class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><img src="~/Images/Cocktails/junglebird.jpg" alt=""></th>
+                    <td>junglebird</td>
+                    <td>300</td>
+                    <td>100</td>
+                    <td>80</td>
+                    <td>2 month</td>
+                    <td>
+                        <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
+                        <button class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+     data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="staticBackdropLabel">新增商品</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body container productAdding">
+                <label for="productPic"> </label>
+                圖片：
+                <div>
+                    <vue-dropzone ref="myVueDropzone" id="dropzone"
+                                  :options="dropzoneOptions"
+                                  v-on:vdropzone-files-added="fileAdd"></vue-dropzone>
+                </div>
+                <label for="productName">商品名稱：</label><input type="text" id="productName" class="w-100" v-model="createProductData.productName">
+                <label for="productPrice">商品售價：</label><input type="text" id="productPrice" class="w-100" v-model="createProductData.productPrice">
+                <label for="productCost">商品成本：</label><input type="text" id="productCost" class="w-100" v-model="createProductData.productCost">
+                <label for="productDescription">商品敘述：</label><input type="text" id="productDescription" class="w-100" v-model="createProductData.productDescription">
+
+            </div>
+            <div class="modal-footer">
+                <div class="row m-0">
+                    <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                    <button class=" col btneditproducts m-1" type="button" v-on:click="send"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    let app = new Vue({
+        el: "#staticBackdrop",
+        data: {
+            createProductData: {
+                productName: "",
+                productPrice: "",
+                productCost: "",
+                productDescription: "",
+                images: []
+            },
+            fileRecords: [
+                {
+                    "name": "Some Invalid.exe",
+                    "size": 8165824,
+                    "type": "application/vnd.microsoft.portable-executable",
+                    "ext": "exe",
+                },
+                {
+                    "name": "Golf.mp4",
+                    "lastModified": 1576563996233,
+                    "sizeText": "549 KB",
+                    "size": 561813,
+                    "type": "video/mp4",
+                    "ext": "mp4",
+                    "dimensions": {
+                        "width": 640,
+                        "height": 360
+                    },
+                    "url": "https://safrazik.github.io/vue-file-agent/website/assets/files/Golf.mp4",
+                    "videoThumbnail": "https://safrazik.github.io/vue-file-agent/website/assets/files/Golf-thumb.jpg",
+                    "imageColor": [66, 62, 45]
+                },
+                {
+                    "name": "Some Large File.zip",
+                    "size": 25165824, // 24 MB
+                    "type": "application/zip",
+                    "ext": "zip",
+                },
+            ],
+            dropzoneOptions: {
+                url: 'https://httpbin.org/post',
+                thumbnailWidth: 150,
+                maxFilesize: 0.5,
+                autoProcessQueue: false,
+                addRemoveLinks: true,
+                headers: { "My-Awesome-Header": "header value" }
+            }
+        },
+        components: {
+            vueDropzone: vue2Dropzone
+        },
+        methods: {
+            fileAdd: function (file) {
+                document.querySelectorAll(".dz-progress").forEach(x => x.remove())
+            },
+            send: function () {
+                let data = new FormData();
+                data.append("ProductName", this.createProductData.productName)
+                data.append("Cost", this.createProductData.productCost)
+                data.append("UnitPrice", this.createProductData.productPrice)
+                data.append("ProductDescription", this.createProductData.productDescription)
+                var img = this.$refs.myVueDropzone.getQueuedFiles();
+                img.forEach(x => data.append("Images",x))
+                
+
+                fetch("/api/Products/CreateProduct", {
+                    method: 'POST',
+                    //headers: { "Content-Type": "multipart/form-data" },
+                    body: data
+                })
+            }
+        }
+    })
+</script>

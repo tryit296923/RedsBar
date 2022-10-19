@@ -395,7 +395,7 @@
                                             <div class="col-8 p-0">
                                                 <input type="number" :name="item.productName" :id="item.productId"
                                                     class="form-control form-control-sm qty_input text-center"
-                                                    value="0" readonly>
+                                                    value="0" :unitPrice="item.unitPrice" :discount="item.discount"  readonly>
                                             </div>
                                             <button type="button" @@click="plus"
                                                 class="col-2 p-0 btn btn-dark btn-sm plus-btn">
@@ -822,7 +822,7 @@
         data: {
             tableid: 13,
             vueid: "",
-            imagesrc: "",
+            imgPath: "",
             head: "",
             discount: "",
             featurelist: "",
@@ -893,8 +893,10 @@
         var selProd=e.target.parentElement.children[1].children[1].children[0];
         if(selProd.value>0){        
         var item={
-             id:selProd.id,
-             name:selProd.name,
+             productId:selProd.id,
+             productName:selProd.name,
+             discount:selProd.discount,
+             imgPath:selProd.imgPath
             };    
         for(i=0;i<cartArray.length;i++){
         //初始化
