@@ -1,4 +1,4 @@
-﻿
+﻿@model Alcoholic.Models.ViewModels.BookingCheckModel
 <style>
     body {
         background-color: #222220;
@@ -72,10 +72,10 @@
 <h2>確認訂位與填寫聯絡資訊</h2>
 <div class="container check-area col-10">
     <label for="date">預定日期 : </label>
-    <p id="date" class="date">@ViewBag.ReserveDate</p>
+    <p id="date" class="date">@Model.ReserveDate.ToString()</p>
     <hr>
     <label for="people">預定人數 : </label>
-    <p id="people" class="people">@ViewBag.Number<span>位</span></p>
+    <p id="people" class="people">@Model.Number<span>位</span></p>
 </div>
 <br>
 <div class="container col-10 col-xl-5">
