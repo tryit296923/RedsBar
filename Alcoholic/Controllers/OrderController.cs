@@ -7,6 +7,7 @@ using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Alcoholic.Controllers
@@ -59,7 +60,7 @@ namespace Alcoholic.Controllers
                 var order = new Order
                 {
                     MemberId = memberIdCookie,
-                    OrderId = Guid.Parse(orderId),
+                    OrderId = orderId,
                     Number = int.Parse(numberCookie),
                     DeskNum = deskCookie,
                     OrderTime = Convert.ToDateTime(now),
@@ -70,7 +71,7 @@ namespace Alcoholic.Controllers
                 {
                     var orderDetail = new OrderDetail
                     {
-                        OrderId = Guid.Parse(orderId),
+                        OrderId = orderId,
                         ProductId = item.ProductId,
                         Quantity = item.Quantity,
                         UnitPrice = item.UnitPrice,
@@ -98,7 +99,7 @@ namespace Alcoholic.Controllers
             string deskCookie = Request.Cookies["Desk"];
             string numberCookie = Request.Cookies["Number"];
 
-            var order = (from x in projectContext.Orders where x.OrderId == Guid.Parse(orderId) select x).FirstOrDefault();
+            var order = (from x in projectContext.Orders where x.OrderId == orderId select x).FirstOrDefault();
 
             ViewBag.deskCookie = deskCookie;
             ViewBag.numberCookie = numberCookie;

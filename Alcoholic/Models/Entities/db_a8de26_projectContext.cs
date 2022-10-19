@@ -32,9 +32,6 @@ namespace Alcoholic.Models.Entities
         public virtual DbSet<Feedback> Feedback { get; set; }
         public virtual DbSet<ProductsMaterials> ProductsMaterials { get; set; }
 
-
-
-
         protected override void OnModelCreating([FromBody] ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>(entity =>
@@ -99,8 +96,6 @@ namespace Alcoholic.Models.Entities
 
                 entity.Property(e => e.MemberPassword).HasColumnType("nvarchar(max)");
 
-                entity.Property(e => e.MemberLevel).HasColumnType("int");
-
                 entity.Property(e => e.Phone).HasColumnType("nvarchar(max)");
 
                 entity.Property(e => e.Qualified)
@@ -123,33 +118,17 @@ namespace Alcoholic.Models.Entities
 
                 entity.Property(e => e.Percentage).HasColumnType("decimal");
 
-                entity.Property(e => e.CustNumber).HasColumnType("int");
-
                 entity.Property(e => e.HotProduct1).HasColumnType("nvarchar(max)");
-                entity.Property(e => e.Quantity1).HasColumnType("int");
-
                 entity.Property(e => e.HotProduct2).HasColumnType("nvarchar(max)");
-                entity.Property(e => e.Quantity2).HasColumnType("int");
-
                 entity.Property(e => e.HotProduct3).HasColumnType("nvarchar(max)");
-                entity.Property(e => e.Quantity3).HasColumnType("int");
             });
 
             modelBuilder.Entity<Order>(entity =>
             {
-                entity.HasKey(e => e.OrderId).HasName("PK_Order_1");
-
-                entity.ToTable("Order");
-
-                entity.Property(e => e.OrderId)
-                    .HasColumnName("OrderID")
-                    .ValueGeneratedOnAdd();
+                entity.HasKey(e => e.OrderId);
 
                 entity.Property(e => e.MemberId)
                     .HasColumnName("MemberID");
-
-                entity.Property(e => e.Number)
-                    .HasColumnType("int");
 
                 entity.Property(e => e.OrderTime).HasColumnType("smalldatetime");
 
@@ -163,21 +142,6 @@ namespace Alcoholic.Models.Entities
             modelBuilder.Entity<OrderDetail>(entity =>
             {
                 entity.HasKey(e => new { e.OrderId, e.ProductId });
-
-                entity.ToTable("OrderDetail");
-
-                entity.Property(e => e.OrderId)
-                    .HasColumnName("OrderID");
-
-                entity.Property(e => e.ProductId).HasColumnType("int");
-
-                entity.Property(e => e.Quantity).HasColumnType("int");
-
-                entity.Property(e => e.UnitPrice).HasColumnType("int");
-
-
-
-                entity.Property(e => e.Total).HasColumnType("int");
 
                 entity.Property(e => e.Discount).HasColumnType("decimal");
 
@@ -231,8 +195,6 @@ namespace Alcoholic.Models.Entities
                 
                 entity.Property(e => e.Email).HasColumnType("nvarchar(max)");
 
-                entity.Property(e => e.Number).HasColumnType("int");
-
                 entity.Property(e => e.ReserveSet).HasColumnType("date");
             });
 
@@ -242,17 +204,11 @@ namespace Alcoholic.Models.Entities
 
                 entity.Property(e => e.DeskId).HasColumnType("int").ValueGeneratedOnAdd();
 
-                entity.Property(e => e.DeskType).HasColumnType("int");
-
-                entity.Property(e => e.Desk).HasColumnType("int");
-
                 entity.Property(e => e.StartTime).HasColumnType("nvarchar(max)");
 
                 entity.Property(e => e.Number).HasColumnType("nvarchar(max)");
 
                 entity.Property(e => e.EndTime).HasColumnType("nvarchar(max)");
-
-                entity.Property(e => e.Occupied).HasColumnType("int");
             });
 
             modelBuilder.Entity<Discount>(entity =>
@@ -267,8 +223,6 @@ namespace Alcoholic.Models.Entities
                 entity.Property(e => e.DiscountName).HasColumnType("nvarchar(max)");
 
                 entity.Property(e => e.DiscountAmount).HasColumnType("decimal");
-
-                entity.Property(e => e.Frequency).HasColumnType("int");
 
                 entity.Property(e => e.Qualify).HasColumnType("nvarchar(max)");
 
@@ -287,31 +241,13 @@ namespace Alcoholic.Models.Entities
                     .IsRequired()
                     .HasColumnType("nvarchar(max)");
 
-                entity.Property(e => e.Dish)
-                    .HasColumnType("int");
-
                 entity.Property(e => e.Email)
                     .IsRequired()
                     .HasColumnType("nvarchar(max)");
 
-                entity.Property(e => e.Environment)
-                    .HasColumnType("int");
-
                 entity.Property(e => e.FeedbackName)
                     .IsRequired()
                     .HasColumnType("nvarchar(max)");
-
-                entity.Property(e => e.Frequency)
-                    .HasColumnType("int");
-
-                entity.Property(e => e.Overall)
-                    .HasColumnType("int");
-
-                entity.Property(e => e.Price)
-                    .HasColumnType("int");
-
-                entity.Property(e => e.Serve)
-                    .HasColumnType("int");
 
                 entity.Property(e => e.Suggestion)
                     .IsRequired()
@@ -319,7 +255,8 @@ namespace Alcoholic.Models.Entities
 
                 entity.HasOne(f => f.Order)
                     .WithOne(o => o.Feedback)
-                    .HasForeignKey<Order>(f => f.OrderId);
+                    .HasForeignKey<Order>(f => f.OrderId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
                 OnModelCreatingPartial(modelBuilder);
