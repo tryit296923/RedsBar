@@ -1,13 +1,9 @@
-﻿using Alcoholic.Models.Entities;
-using Alcoholic.Models.ViewModels;
-using Alcoholic.Services;
+﻿using Alcoholic.Models.DTO;
+using Alcoholic.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
-using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Newtonsoft.Json;
-using System.Runtime.CompilerServices;
+
 
 namespace Alcoholic.Controllers
 {
@@ -51,7 +47,7 @@ namespace Alcoholic.Controllers
             string deskCookie = Request.Cookies["Desk"];
 
             var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
-            var orderId = DateTime.Now.ToString("yyyyMMddHHmmss");
+            var orderId = DateTime.Now.ToString("yyyyMMddHHmm")+ deskCookie;
 
             try
             {
@@ -59,10 +55,11 @@ namespace Alcoholic.Controllers
                 var order = new Order
                 {
                     MemberId = memberIdCookie,
-                    OrderId = Guid.Parse(orderId),
+                    OrderId = orderId,
                     Number = int.Parse(numberCookie),
                     DeskNum = deskCookie,
                     OrderTime = Convert.ToDateTime(now),
+                    Feedback = null
                 };
                 projectContext.Add(order);
 
@@ -70,12 +67,12 @@ namespace Alcoholic.Controllers
                 {
                     var orderDetail = new OrderDetail
                     {
-                        OrderId = Guid.Parse(orderId),
+                        OrderId = orderId,
                         ProductId = item.ProductId,
                         Quantity = item.Quantity,
                         UnitPrice = item.UnitPrice,
-                        Discount = item.Discount,
-                        Total = Convert.ToInt32(item.Quantity * item.UnitPrice * item.Discount),
+                        Discount = item.DiscountAmount,
+                        Total = Convert.ToInt32(item.Quantity * item.UnitPrice * item.DiscountAmount),
                     };
                     projectContext.Add(orderDetail);
                 }
@@ -95,22 +92,22 @@ namespace Alcoholic.Controllers
         public IActionResult Success(string orderId)
         {
 
-            string deskCookie = Request.Cookies["Desk"];
-            string numberCookie = Request.Cookies["Number"];
+            string deskCookieSuccess = Request.Cookies["Desk"];
+            string numberCookieSuccess = Request.Cookies["Number"];
 
-            var order = (from x in projectContext.Orders where x.OrderId == Guid.Parse(orderId) select x).FirstOrDefault();
+            var order = (from x in projectContext.Orders where x.OrderId == orderId select x).FirstOrDefault();
 
-            ViewBag.deskCookie = deskCookie;
-            ViewBag.numberCookie = numberCookie;
+            ViewBag.deskCookieSuccess = deskCookieSuccess;
+            ViewBag.numberCookieSuccess = numberCookieSuccess;
 
             return View(order);
         }
 
         public IActionResult Total()
         {
-            OrderListViewModel orderList = new OrderListViewModel();
+            OrderTotalViewModel orderList = new OrderTotalViewModel();
             string memberIdCookie = Request.Cookies["MemberID"];
-            string deskCookie = Request.Cookies["Desk"];
+            string deskCookieTotal = Request.Cookies["Desk"];
 
 
             if (memberIdCookie != null)
@@ -121,14 +118,23 @@ namespace Alcoholic.Controllers
                 ViewBag.memberName = memberName;
 
                 orderList.Orders = (from x in projectContext.Orders
-                                    where x.Status == "N" && x.DeskNum == deskCookie
-                                    select x).ToList();
+                                    where x.Status == "N" && x.DeskNum == deskCookieTotal
+                                    select new OrderListViewModel
+                                    {
+                                        OrderId = x.OrderId,
+                                        MemberId = x.MemberId,
+                                        Number = x.Number,
+                                        OrderTime = x.OrderTime,
+                                        DeskNum = x.DeskNum,
+                                        Status = x.Status
+                                    }).ToList();
+
                 var temp = orderList.Orders.Select(x => x.OrderId).ToList();
 
                 //var product = _db.Products.FirstOrDefault();
                 orderList.Details = (from od in projectContext.OrderDetails
                                      where temp.Contains(od.OrderId)
-                                     select new OrderDetailViewModel
+                                     select new DetailViewModel
                                      {
                                          OrderId = od.OrderId,
                                          ProductName = od.Product.ProductName,
@@ -138,7 +144,6 @@ namespace Alcoholic.Controllers
                                          Discount = od.Discount,
                                          ProductId = od.ProductId,
                                      }).ToList();
-
 
                 return View(orderList);
             }

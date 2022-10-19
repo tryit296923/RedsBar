@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alcoholic.Migrations
 {
     [DbContext(typeof(db_a8de26_projectContext))]
-    [Migration("20221019061955_ProductSaleAtToProductDescription")]
-    partial class ProductSaleAtToProductDescription
+    [Migration("20221019120731_changefk_for_feedback")]
+    partial class changefk_for_feedback
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -142,38 +142,37 @@ namespace Alcoholic.Migrations
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Feedback", b =>
                 {
-                    b.Property<Guid>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("OrderId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Age")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Dish")
+                    b.Property<int?>("Dish")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Environment")
+                    b.Property<int?>("Environment")
                         .HasColumnType("int");
 
                     b.Property<string>("FeedbackName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Frequency")
+                    b.Property<int?>("Frequency")
                         .HasColumnType("int");
 
-                    b.Property<int>("Overall")
+                    b.Property<int?>("Overall")
                         .HasColumnType("int");
 
-                    b.Property<int>("Price")
+                    b.Property<int?>("Price")
                         .HasColumnType("int");
 
-                    b.Property<int>("Serve")
+                    b.Property<int?>("Serve")
                         .HasColumnType("int");
 
                     b.Property<string>("Suggestion")
@@ -326,10 +325,8 @@ namespace Alcoholic.Migrations
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Order", b =>
                 {
-                    b.Property<Guid>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("OrderID");
+                    b.Property<string>("OrderId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DeskNum")
                         .IsRequired()
@@ -349,19 +346,17 @@ namespace Alcoholic.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("OrderId")
-                        .HasName("PK_Order_1");
+                    b.HasKey("OrderId");
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("Order", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.OrderDetail", b =>
                 {
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("OrderID");
+                    b.Property<string>("OrderId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -385,7 +380,7 @@ namespace Alcoholic.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderDetail", (string)null);
+                    b.ToTable("OrderDetails");
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Product", b =>
@@ -510,6 +505,17 @@ namespace Alcoholic.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Alcoholic.Models.Entities.Feedback", b =>
+                {
+                    b.HasOne("Alcoholic.Models.Entities.Order", "Order")
+                        .WithOne("Feedback")
+                        .HasForeignKey("Alcoholic.Models.Entities.Feedback", "OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("Alcoholic.Models.Entities.Material", b =>
                 {
                     b.HasOne("Alcoholic.Models.Entities.Category", "Category")
@@ -528,14 +534,6 @@ namespace Alcoholic.Migrations
                         .HasForeignKey("MemberId")
                         .IsRequired()
                         .HasConstraintName("FK_Order_Members");
-
-                    b.HasOne("Alcoholic.Models.Entities.Feedback", "Feedback")
-                        .WithOne("Order")
-                        .HasForeignKey("Alcoholic.Models.Entities.Order", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Feedback");
 
                     b.Navigation("Member");
                 });
@@ -594,12 +592,6 @@ namespace Alcoholic.Migrations
                     b.Navigation("Materials");
                 });
 
-            modelBuilder.Entity("Alcoholic.Models.Entities.Feedback", b =>
-                {
-                    b.Navigation("Order")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Alcoholic.Models.Entities.Material", b =>
                 {
                     b.Navigation("ProductsMaterials");
@@ -612,6 +604,9 @@ namespace Alcoholic.Migrations
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Order", b =>
                 {
+                    b.Navigation("Feedback")
+                        .IsRequired();
+
                     b.Navigation("OrderDetails");
                 });
 
