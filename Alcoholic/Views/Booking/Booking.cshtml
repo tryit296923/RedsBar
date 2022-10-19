@@ -187,7 +187,6 @@
     }
 </style>
 
-<!--Breadcrumb-->
 <div class="path">
     <div class="container">
         <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
@@ -199,7 +198,6 @@
     </div>
 </div>
 <div id="d1">
-    <!--pic-->
     <div class="backcolor">
         <div class="container">
             <div class="img-box">
@@ -207,13 +205,12 @@
             </div>
         </div>
     </div>
-
     <!--日期/人數選擇-->
     <div class="container check-area">
         <div class="row">
             <div class="col-12 col-xl-6">
                 <label for="datepicker" class="col-sm-12 col-form-label">用餐日期</label>
-                <date-picker v-model="ReserveDate" value-type="format" format="YYYY-MM-DD"
+                <date-picker v-model="ReserveDate" valueType="format"
                              name="ReserveDate" id="datepicker" class="datepicker p-0" 
                              placeholder="請選擇用餐日期" :disabled-date="disablerange"></date-picker>
             </div>
@@ -222,17 +219,15 @@
                 <select name="Number" id="people" class="form-select" v-model="Number">
                     <option value="" disabled>請選擇用餐人數</option>
                     <template v-for="peo in people">
-                        <option :value="peo.value">{{peo.txt}}</option>
+                        <option :disabled="maxPeople(peo.value)" :value="peo.value">{{peo.txt}}</option>
                     </template>
                 </select>
             </div>
         </div>
     </div>
-    <!--分隔線-->
     <div class="container">
         <hr>
     </div>
-    <!--地圖/店家資訊-->
     <div class="container">
         <div class="row">
             <h4>餐廳資訊</h4>
@@ -274,7 +269,6 @@
         <input name="Number" v-bind:value="Number" hidden />
         <button type="submit" ref="bookingcheck" hidden></button>
     </form>
-    <!--footer-->
     <footer>
         <div class="container footright">
             <p><a href="https://goo.gl/maps/VARMRkiZqDQLhgWbA">100 台北市中正區濟南路一段321號</a></p>
@@ -282,17 +276,15 @@
             <p>© 2022 Alcoholic</p>
         </div>
     </footer>
-
-    <!--底部浮動框-->
     <div class="booking-check">
         <div class="container">
             <p class="booking-check-text">
                 選擇預定
-                <template v-if="ReserveDate==''">
-                    <button class="booking-check-date">請選擇預定日期</button>
+                <template v-if="ReserveDate!=null">
+                    <button class="booking-check-date">{{ReserveDate.toLocaleDateString()}}</button>
                 </template>
                 <template v-else>
-                    <button class="booking-check-date">{{ReserveDate}}</button>
+                    <button class="booking-check-date">請選擇預定日期</button>
                 </template>
                 >
                 <template v-if="Number==''">
@@ -304,7 +296,7 @@
             </p>
         </div>
         <div class="container">
-            <template v-if=" ReserveDate == '' || Number =='' ">
+            <template v-if=" ReserveDate == null || Number =='' ">
                 <a class="col-12 booking-uncheck-btn" type="button">請選擇用餐日期與人數</a>
             </template>
             <template v-else>
@@ -318,18 +310,15 @@
     var app = new Vue({
         el: '#d1',
         data: {
+            bookingInfos: [],
             MyDate: new Date,
-            ReserveDate: '',
+            ReserveDate: null,
             Number: '',
             people: [
                 { value: 1, txt: '1位成人' },
                 { value: 2, txt: '2位成人' },
                 { value: 3, txt: '3位成人' },
-                { value: 4, txt: '4位成人' },
-                { value: 5, txt: '5位成人' },
-                { value: 6, txt: '6位成人' },
-                { value: 7, txt: '7位成人' },
-                { value: 8, txt: '8位成人' }
+                { value: 4, txt: '4位成人' }
             ],
             Weekday: [
                 { id: 0, name: '星期日 18:00-00:00' },
@@ -342,22 +331,39 @@
             ],
         },
         methods: {
-            bold: function (day, getDay) {
-                if (day.id == getDay) {
-                    return 'open-hours-bold';
-                }
-            },
             disablerange: function (date) {
                 var today = new Date();
                 today.setHours(0, 0, 0, 0);
                 var mindate = new Date(today.getTime() + 1 * 24 * 3600 * 1000);
                 var maxdate = new Date(today.getTime() + 30 * 24 * 3600 * 1000);
-                return date < mindate || date > maxdate || date.getDay() % 7 === 1;
+                var isBooking = this.bookingInfos.some(x => new Date(x.date).getTime() == date.getTime() && x.total >= 16);
+                return date < mindate || date > maxdate || date.getDay() % 7 == 1 || isBooking;
+            },
+            maxPeople: function (people) {
+                if (this.ReserveDate) {
+                    let pickTime = this.ReserveDate.getTime();
+                    let currectBookingInfo = this.bookingInfos.find(x => new Date(x.date).getTime() == pickTime);
+                    if (currectBookingInfo != null) {
+                        return 16 - currectBookingInfo.total < people;
+                    }
+                    return false;
+                }
+            },
+            bold: function (day, getDay) {
+                if (day.id == getDay) {
+                    return 'open-hours-bold';
+                }
             },
             bookingcheck: function () {
                 this.$refs.bookingcheck.click();
             }
         },
+        beforeCreate: function () {
+            let self = this;
+            fetch('https://localhost:7273/api/Booking/GetAllBookings')
+                .then(function (response) { return response.json() })
+                .then(function (result) { self.bookingInfos = result })
+        }
     });
     function myMap() {
         var mapProp = {
