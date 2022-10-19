@@ -5,7 +5,7 @@ namespace Alcoholic.Models.Entities
 {
     public partial class Order
     {
-        public Guid OrderId { get; set; }
+        public string OrderId { get; set; }
         public Guid MemberId { get; set; }
         public int Number { get; set; }
         public DateTime OrderTime { get; set; }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Alcoholic.Migrations
 {
-    public partial class Initialize1018 : Migration
+    public partial class init1019 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -60,16 +60,16 @@ namespace Alcoholic.Migrations
                 name: "Feedback",
                 columns: table => new
                 {
-                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FeedbackName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Age = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Frequency = table.Column<int>(type: "int", nullable: false),
-                    Environment = table.Column<int>(type: "int", nullable: false),
-                    Serve = table.Column<int>(type: "int", nullable: false),
-                    Dish = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<int>(type: "int", nullable: false),
-                    Overall = table.Column<int>(type: "int", nullable: false),
+                    Frequency = table.Column<int>(type: "int", nullable: true),
+                    Environment = table.Column<int>(type: "int", nullable: true),
+                    Serve = table.Column<int>(type: "int", nullable: true),
+                    Dish = table.Column<int>(type: "int", nullable: true),
+                    Price = table.Column<int>(type: "int", nullable: true),
+                    Overall = table.Column<int>(type: "int", nullable: true),
                     Suggestion = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -128,7 +128,7 @@ namespace Alcoholic.Migrations
                     ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Cost = table.Column<int>(type: "int", nullable: false),
                     UnitPrice = table.Column<int>(type: "int", nullable: false),
-                    SaleAt = table.Column<int>(type: "int", nullable: false)
+                    ProductDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -178,10 +178,10 @@ namespace Alcoholic.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Order",
+                name: "Orders",
                 columns: table => new
                 {
-                    OrderID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MemberID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Number = table.Column<int>(type: "int", nullable: false),
                     OrderTime = table.Column<DateTime>(type: "smalldatetime", nullable: false),
@@ -190,18 +190,18 @@ namespace Alcoholic.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Order_1", x => x.OrderID);
-                    table.ForeignKey(
-                        name: "FK_Order_Feedback_OrderID",
-                        column: x => x.OrderID,
-                        principalTable: "Feedback",
-                        principalColumn: "OrderId",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_Orders", x => x.OrderId);
                     table.ForeignKey(
                         name: "FK_Order_Members",
                         column: x => x.MemberID,
                         principalTable: "Members",
                         principalColumn: "MemberID");
+                    table.ForeignKey(
+                        name: "FK_Orders_Feedback_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Feedback",
+                        principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -274,10 +274,10 @@ namespace Alcoholic.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderDetail",
+                name: "OrderDetails",
                 columns: table => new
                 {
-                    OrderID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     UnitPrice = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
@@ -287,12 +287,12 @@ namespace Alcoholic.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderDetail", x => new { x.OrderID, x.ProductId });
+                    table.PrimaryKey("PK_OrderDetails", x => new { x.OrderId, x.ProductId });
                     table.ForeignKey(
                         name: "FK_OrderDetail_Order",
-                        column: x => x.OrderID,
-                        principalTable: "Order",
-                        principalColumn: "OrderID");
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "OrderId");
                     table.ForeignKey(
                         name: "FK_OrderDetail_Products",
                         column: x => x.ProductId,
@@ -311,14 +311,14 @@ namespace Alcoholic.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Order_MemberID",
-                table: "Order",
-                column: "MemberID");
+                name: "IX_OrderDetails_ProductId",
+                table: "OrderDetails",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderDetail_ProductId",
-                table: "OrderDetail",
-                column: "ProductId");
+                name: "IX_Orders_MemberID",
+                table: "Orders",
+                column: "MemberID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductImage_ProductId",
@@ -351,7 +351,7 @@ namespace Alcoholic.Migrations
                 name: "MonthlyRecord");
 
             migrationBuilder.DropTable(
-                name: "OrderDetail");
+                name: "OrderDetails");
 
             migrationBuilder.DropTable(
                 name: "ProductImage");
@@ -363,7 +363,7 @@ namespace Alcoholic.Migrations
                 name: "Reserves");
 
             migrationBuilder.DropTable(
-                name: "Order");
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Materials");
@@ -372,10 +372,10 @@ namespace Alcoholic.Migrations
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Feedback");
+                name: "Members");
 
             migrationBuilder.DropTable(
-                name: "Members");
+                name: "Feedback");
 
             migrationBuilder.DropTable(
                 name: "Category");
