@@ -124,20 +124,26 @@
         <form class="inputform">
             <div class="desk">
                 <label>桌號: </label>
-                <select name="desknum" id="desknum" v-on:change="checkNumber();checkRequire();" v-model="desknum" required>
-                    <option value="X00">坐在哪裡呢...?</option>
-                    <option value="A01">A01</option>
-                    <option value="A02">A02</option>
-                    <option value="A03">A03</option>
-                    <option value="A04">A04</option>
-                    <option value="A05">A05</option>
-                    <option value="A06">A06</option>
-                    <option value="B07">B07</option>
-                    <option value="B08">B08</option>
-                    <option value="B09">B09</option>
-                    <option value="B10">B10</option>
-                    <option value="C11">C11</option>
-                    <option value="C12">C12</option>
+                <select name="deskType" id="deskType" v-on:change="checkNumber();checkRequire();" v-model="deskType" required>
+                    <option value=0 disabled="true" selected>坐在哪裡呢...?</option>
+                    <option value=1>吧檯</option>
+                    <option value=2>兩人座</option>
+                    <option value=3>四人桌(方)</option>
+                    <option value=4>四人桌(圓)</option>
+                </select>
+            </div>
+            <div class="deskNum">
+                <label>桌號: </label>
+                <select name="deskNum" id="deskNum" v-on:change="checkNumber();checkRequire();" v-model="deskNum" required>
+                    <option value=0 disabled="true" selected>請選擇桌號...</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                    <option value=6>6</option>
+                    <option value=7>7</option>
+                    <option value=8>8</option>
                 </select>
             </div>
             <div class="people">
@@ -161,7 +167,8 @@
         const vm = new Vue({
             el: "#form",
             data: {
-                desknum: "X00",
+                deskType: 0,
+                deskNum:0,
                 one: true,
                 two: true,
                 thr: true,
@@ -172,15 +179,18 @@
             },
             methods: {
                 checkNumber: function () {
-                    let deskType = this.desknum[0];
+                    let desk = this.deskType;
                     this.startOrder;
-                    switch (deskType) {
-                        case "A": this.one = false;
+                    switch (desk) {
+                        case "1": this.one = false; this.two = true; this.thr = true; this.ftr = true;
                             break;
-                        case "B": this.two = false;
+                        case "2": this.one = false; this.two = false; this.thr = true; this.ftr = true;
                             break;
-                        case "C": this.thr = false; this.ftr = false;
+                        case "3": this.one = true; this.two = true; this.thr = false; this.ftr = false;
                             break;
+                        case "4": this.one = true; this.two = true; this.thr = false; this.ftr = false;
+                            break;
+                        default: this.one = true; this.two = true; this.thr = true; this.ftr = true;
                     }
                 },
                 checkRequire: function () {
@@ -193,12 +203,14 @@
                     }
                 },
                 StartOrder: function () {
+                    var desk = this.deskType + this.deskNum;
+                    console.log(desk)
+                    console.log(this.deskType)
+                    console.log(this.deskNum)
                     let fetchbody = {
-                        "Desk": this.desknum,
-                        "Number": this.number,
-                        "StartTime" : "",
-                        "EndTime":"",
-                        "Occupied":1
+                        DeskType: this.deskType,
+                        Desk: desk,
+                        Number: this.number,
                     };
                     let jsonStr = JSON.stringify(fetchbody);
                     console.log(jsonStr);
@@ -210,14 +222,18 @@
                     }).then(data => console.log(data)).then(() => { window.location.assign("https://localhost:7273/member/LoginRegister") }).catch(err => console.log(err))
                 },
                 StartOrderGuest:function(){
+                    var desk = this.deskType + this.deskNum;
+                    console.log(desk)
+                    console.log(this.deskType)
+                    console.log(this.deskNum)
                     let fetchbody = {
-                        "Desk": this.desknum,
-                        "Number": this.number,
-                        "StartTime": "",
-                        "EndTime": "",
-                        "Occupied": 1
+                        DeskType: this.deskType,
+                        Desk: desk,
+                        Number: this.number,
                     };
                     let jsonStr = JSON.stringify(fetchbody);
+                    console.log(jsonStr);
+                    console.log(fetchbody);
                     fetch("https://localhost:7273/member/StartOrder", {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },

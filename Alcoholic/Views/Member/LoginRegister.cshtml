@@ -305,10 +305,10 @@
         methods:{
             register: function () {
                 let fbody = {
-                    "MemberAccount": this.Account,
-                    "MemberPassword": this.Password,
-                    "MemberName": this.Name,
-                    "MemberBirth": this.Birth,
+                    "Account": this.Account,
+                    "Password": this.Password,
+                    "Name": this.Name,
+                    "Birth": this.Birth,
                     "Phone": this.Phone,
                     "Email": this.Email,
                 };
@@ -332,12 +332,12 @@
         }
     })
     const logvm = new Vue({
-        el:"#Login",
-        data:{
+        el: "#Login",
+        data: {
             loginaccount: "",
             loginpassword: "",
         },
-        methods:{
+        methods: {
             login: function () {
                 let loginbody = {
                     "MemberAccount": this.loginaccount,
@@ -348,16 +348,19 @@
                     method: 'POST',
                     headers: { "Content-Type": "application/json" },
                     body: loginJsonString        // to JsonString
-                    })
-                    .then((e) => console.log(e))
-                    .then((result)=>{
+                })
+                    .then((e) => JSON.)
+                    .then((result) => {
                         if (result) {
                             Swal.fire({
                                 icon: 'success',
                                 title: '成功!',
                             })
-                        }else{
-
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '帳號密碼錯誤!登入大失敗!',
+                            })
                         }
                     })
                     .catch(error => console.log(error))

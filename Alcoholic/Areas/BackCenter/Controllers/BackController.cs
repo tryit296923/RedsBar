@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Alcoholic.Areas.BackCenter.Controllers
 {
-    [Authorize(Roles = "Moderater")]
+    [Area("BackCenter")]
     public class BackController : Controller
     {
         private readonly db_a8de26_projectContext db;
@@ -19,7 +19,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             this.hash = hash;
         }
 
-        [Authorize(Roles = "moderater,leader,staff")]
+
         public IActionResult BackIndex()
         {
             return View();
