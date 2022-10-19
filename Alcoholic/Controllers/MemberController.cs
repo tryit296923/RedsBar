@@ -8,8 +8,6 @@ using Alcoholic.Services;
 using Razor.Templating.Core;
 using Microsoft.AspNetCore.Authorization;
 using Alcoholic.Models.DTO;
-using LoginViewModel = Alcoholic.Models.DTO.LoginViewModel;
-using Alcoholic.Models.ViewModels;
 
 namespace Alcoholic.Controllers
 {
@@ -42,7 +40,6 @@ namespace Alcoholic.Controllers
         [HttpPut]
         public IActionResult StartOrder([FromBody]DeskModel desk)
         {
-            
             DeskInfo? deskInfo = (from d in db.DeskInfo
                                 where  d.Desk == desk.Desk
                                 select d).FirstOrDefault();
@@ -55,7 +52,7 @@ namespace Alcoholic.Controllers
             HttpContext.Response.Cookies.Append("Number", deskInfo.Number, cookieOptions);
             HttpContext.Response.Cookies.Append("Desk", deskInfo.Desk.ToString(), cookieOptions);
 
-            return Ok("LoginRegister");
+            return Ok();
         }
 
         // 會員登入 => 點餐(Order'Order)
