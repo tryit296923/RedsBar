@@ -28,7 +28,7 @@ namespace Alcoholic.Controllers
             };
             return View(model);
         }
-        public async Task<IActionResult> Success(BookingModel bookingData)
+        public async Task<IActionResult> Success([FromForm] BookingModel bookingData)
         {
             Reserves reserves = new Reserves();
             var task = Razor.Templating.Core.RazorTemplateEngine.RenderAsync<BookingModel>
@@ -45,7 +45,7 @@ namespace Alcoholic.Controllers
             var result = await task;
             mail.SendMail(bookingData.Email, result, "RedsBar感謝您的訂位");
 
-            return View(reserves);
+            return View(bookingData);
         }
     }
 }

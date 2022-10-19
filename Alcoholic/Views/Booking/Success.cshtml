@@ -1,4 +1,4 @@
-﻿@model Alcoholic.Models.Entities.Reserves
+﻿@model Alcoholic.Models.DTO.BookingModel
 
 <style>
     body {
@@ -88,7 +88,7 @@
     </div>
     <hr>
     <div class="booking-detail">
-        <p class="booking-date">@Model.ReserveDate.ToString("yyyy-MM-dd") &nbsp @Model.ReserveDate.ToString("dddd")</p>
+        <p class="booking-date">@Model.ReserveDate.ToString().Substring(0,10) &nbsp @Model.ReserveDate.ToString("dddd")</p>
         <p class="booking-people">@Model.Number 位大人</p>
     </div>
     <hr>

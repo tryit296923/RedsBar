@@ -268,7 +268,7 @@
         <input name="ReserveDate" v-bind:value="SendDate" hidden />
         <input name="Number" v-bind:value="Number" hidden />
         <button type="submit" ref="bookingcheck" hidden></button>
-    </form>S
+    </form>
     <footer>
         <div class="container footright">
             <p><a href="https://goo.gl/maps/VARMRkiZqDQLhgWbA">100 台北市中正區濟南路一段321號</a></p>
@@ -333,7 +333,7 @@
         },
         watch:{
             ReserveDate:function(){
-                this.SendDate = this.ReserveDate.getTime();
+                this.SendDate = this.ReserveDate.toJSON();
             }
         },
         methods: {
