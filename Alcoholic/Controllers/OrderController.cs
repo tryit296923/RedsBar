@@ -23,7 +23,7 @@ namespace Alcoholic.Controllers
         {
             return RedirectToAction("Cart", "Order");
         }
-        public IActionResult Cart(Member memberData)
+        public IActionResult Cart()
         {
             Guid memberIdCookie = Guid.Parse(Request.Cookies["MemberID"]);
 
