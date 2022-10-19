@@ -51,7 +51,7 @@ namespace Alcoholic.Controllers
             string deskCookie = Request.Cookies["Desk"];
 
             var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
-            var orderId = DateTime.Now.ToString("yyyyMMddHHmmss");
+            var orderId = Guid.NewGuid();
 
             try
             {
@@ -59,7 +59,7 @@ namespace Alcoholic.Controllers
                 var order = new Order
                 {
                     MemberId = memberIdCookie,
-                    OrderId = Guid.Parse(orderId),
+                    OrderId = orderId,
                     Number = int.Parse(numberCookie),
                     DeskNum = deskCookie,
                     OrderTime = Convert.ToDateTime(now),
@@ -70,12 +70,12 @@ namespace Alcoholic.Controllers
                 {
                     var orderDetail = new OrderDetail
                     {
-                        OrderId = Guid.Parse(orderId),
+                        OrderId = orderId,
                         ProductId = item.ProductId,
                         Quantity = item.Quantity,
                         UnitPrice = item.UnitPrice,
-                        Discount = item.Discount,
-                        Total = Convert.ToInt32(item.Quantity * item.UnitPrice * item.Discount),
+                        Discount = item.DiscountAmount,
+                        Total = Convert.ToInt32(item.Quantity * item.UnitPrice * item.DiscountAmount),
                     };
                     projectContext.Add(orderDetail);
                 }

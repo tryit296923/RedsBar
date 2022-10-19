@@ -256,27 +256,27 @@
                     <ol class="list-group">
                         <li class="row list-group-item d-flex justify-content-between align-items-start">
                             <div class="col-3 px-0">
-                                <img :src="item.imgPath" class="w-100 rounded">
+                                <img :src="item.Path" class="w-100 rounded">
                             </div>
                             <div class="col-5 px-0">
                                 <div class="ms-2 me-auto">
-                                    <div class="fw-bold productName">{{item.productName}}</div>
+                                    <div class="fw-bold productName">{{item.ProductName}}</div>
                                     <div>描述</div>
-                                    <div v-if="item.discount != 1">
+                                    <div v-if="item.DiscountAmount != 1">
                                         <span>$ </span>
-                                        <span class="originalPrice">{{item.unitPrice * item.quantity}} </span>
+                                        <span class="originalPrice">{{item.UnitPrice * item.Quantity}} </span>
                                         <span class="discountPrice" name="finalPrice">{{discountPrice(item)}}</span>
                                     </div>
                                     <div v-else>
                                         <span>$ </span>
-                                        <span name="finalPrice">{{item.unitPrice * item.quantity}} </span>
+                                        <span name="finalPrice">{{item.UnitPrice * item.Quantity}} </span>
                                     </div>
                                 </div>
                             </div>
                             <div class="row col-4 px-0">
                                 <div class="col-6 text-center px-0">
                                     <button class="btnCount" v-on:click="increase(item)">▲</button>
-                                    <div>{{item.quantity}}</div>
+                                    <div>{{item.Quantity}}</div>
                                     <button class="btnCount" v-on:click="decrease(item)">▼</button>
                                 </div>
                                 <div class="col-6 text-center d-flex align-items-center justify-content-center">
@@ -336,7 +336,7 @@
             </div>
         </div>
     </div>
-
+</div>
 
     <script>
         var app = new Vue({
@@ -351,13 +351,13 @@
             methods: {
                 decrease: function (item) {
                     //console.log(item);
-                    if (item.quantity > 1) {
-                        item.quantity--;
+                    if (item.Quantity > 1) {
+                        item.Quantity--;
                     }
                 },
                 increase: function (item) {
                     //console.log(item);
-                    item.quantity++;
+                    item.Quantity++;
                 },
                 deleteItem: function (index) {
                     //console.log(index);
@@ -365,12 +365,12 @@
                     this.itemList.splice(index, 1);
                 },
                 discountPrice: function (item) {
-                    return Math.round(item.unitPrice * item.quantity * item.discount);
+                    return Math.round(item.UnitPrice * item.Quantity * item.DiscountAmount);
                 },
                 cartTotal: function () {
                     var totalprice = 0;
                     for (let i = 0; i < this.itemList.length; i++) {
-                        totalprice += this.itemList[i].unitPrice * this.itemList[i].quantity * this.itemList[i].discount;
+                        totalprice += this.itemList[i].UnitPrice * this.itemList[i].Quantity * this.itemList[i].DiscountAmount;
                     }
                     return Math.round(totalprice);
                 },
