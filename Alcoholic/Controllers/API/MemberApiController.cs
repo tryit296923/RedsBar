@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Alcoholic.Controllers.API
 {
-    [Route("api/[controller]")]
+    [Route("api/member/[action]")]
     [ApiController]
     public class MemberApiController : ControllerBase
     {
@@ -26,6 +26,10 @@ namespace Alcoholic.Controllers.API
             DeskInfo? deskInfo = (from d in db.DeskInfo
                                   where d.Desk == desk.Desk
                                   select d).FirstOrDefault();
+            if(deskInfo == null)
+            {
+                return NotFound();
+            }
             deskInfo.Occupied = 1;
             deskInfo.StartTime = DateTime.Now.ToString("yyyyMMddHHmm");
             db.Entry(deskInfo).State = EntityState.Modified;
@@ -36,6 +40,19 @@ namespace Alcoholic.Controllers.API
             HttpContext.Response.Cookies.Append("Desk", deskInfo.Desk.ToString(), cookieOptions);
 
             return Ok();
+        }
+
+        [HttpPut]
+        public IActionResult Authorize()
+        {
+            string cookie = Request.Cookies["EmailID"];
+            Member? memberData = (from member in db.Members
+                                  where member.EmailID.ToString() == cookie
+                                  select member).FirstOrDefault();
+            memberData.Qualified = "y";
+            db.Entry(memberData).State = EntityState.Modified;
+            db.SaveChanges();
+            return Ok(cookie);
         }
     }
 }

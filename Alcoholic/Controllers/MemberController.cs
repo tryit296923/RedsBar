@@ -36,25 +36,6 @@ namespace Alcoholic.Controllers
             return View();
         }
 
-        // 入座 => 登入頁面 (導向)
-        [HttpPut]
-        public IActionResult StartOrder([FromBody]DeskModel desk)
-        {
-            DeskInfo? deskInfo = (from d in db.DeskInfo
-                                where  d.Desk == desk.Desk
-                                select d).FirstOrDefault();
-            deskInfo.Occupied = 1;
-            deskInfo.StartTime = DateTime.Now.ToString("yyyyMMddHHmm");
-            db.Entry(deskInfo).State = EntityState.Modified;
-            db.SaveChanges();
-            CookieOptions cookieOptions = new();
-            cookieOptions.Expires = new DateTimeOffset(DateTime.Now.AddHours(2));
-            HttpContext.Response.Cookies.Append("Number", deskInfo.Number, cookieOptions);
-            HttpContext.Response.Cookies.Append("Desk", deskInfo.Desk.ToString(), cookieOptions);
-
-            return Ok();
-        }
-
         // 會員登入 => 點餐(Order'Order)
         [HttpPost]
         public IActionResult Login([FromBody] LoginViewModel memberData)
@@ -66,7 +47,7 @@ namespace Alcoholic.Controllers
             {
                 return Ok(false);
             }
-            string password = hash.GetHash(memberData.Password.Concat(user.Salt).ToString());
+            string password = hash.GetHash(string.Concat(memberData.Password, user.Salt).ToString());
             if (password != user.MemberPassword)
             {
                 return Ok(false);
@@ -86,7 +67,7 @@ namespace Alcoholic.Controllers
                 // 將此類別(原則 ClaimsIdentity)，帶入方案(AuthenticationScheme)中
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
                 HttpContext.Response.Cookies.Append("MemberID", user.MemberID.ToString());
-                return Ok(memberData);
+                return Ok(true);
                 // 在想要經驗證後才可讀取的API上加 [Authorize]
                 // 未登入也可以使用的API [AllowAnonymous]
             }
@@ -135,7 +116,7 @@ namespace Alcoholic.Controllers
         {
             if (MemberExists(memberData.Account))
             {
-                return NotFound();
+                return Ok(false);
             }
             else
             {
@@ -149,28 +130,17 @@ namespace Alcoholic.Controllers
                 user.MemberLevel = 0;
                 user.Salt = salt;
                 user.Qualified = "n";
-                user.MemberPassword = hash.GetHash(memberData.Password.Concat(salt).ToString());
+                user.MemberPassword = hash.GetHash(string.Concat(memberData.Password,salt).ToString());
                 db.Add(user);
                 db.SaveChanges();
                 var msg = await RazorTemplateEngine.RenderAsync<Member>("Views/Member/Authorize.cshtml", user);
                 mail.SendMail(memberData.Email, msg, "RedsBar 會員認證信件");
                 HttpContext.Response.Cookies.Append("EmailID", memberData.Email.ToString());
-                return Ok(user);
+                return Ok(true);
             }
         }
 
-        [HttpPut]
-        public IActionResult Authorize()
-        {
-            string cookie = Request.Cookies["EmailID"];
-            Member? memberData = (from member in db.Members
-                                  where member.EmailID.ToString() == cookie
-                                  select member).FirstOrDefault();
-            memberData.Qualified = "y";
-            db.Entry(memberData).State = EntityState.Modified;
-            db.SaveChanges();
-            return Ok(cookie);
-        }
+
 
         [HttpPut]
         public async Task<IActionResult> ModifyData(string id, Member memberData)

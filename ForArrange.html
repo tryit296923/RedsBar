@@ -1,0 +1,79 @@
+<script>
+    const vm = new Vue({
+        el: "#form",
+        data: {
+            deskType: 0,
+            deskNum: 0,
+            one: true,
+            two: true,
+            thr: true,
+            ftr: true,
+            number: "0",
+            btn: false,
+            disable: "opacity:0.5"
+        },
+        methods: {
+            checkNumber: function () {
+                let desk = this.deskType;
+                this.startOrder;
+                switch (desk) {
+                    case "1": this.one = false; this.two = true; this.thr = true; this.ftr = true;
+                        break;
+                    case "2": this.one = false; this.two = false; this.thr = true; this.ftr = true;
+                        break;
+                    case "3": this.one = true; this.two = true; this.thr = false; this.ftr = false;
+                        break;
+                    case "4": this.one = true; this.two = true; this.thr = false; this.ftr = false;
+                        break;
+                    default: this.one = true; this.two = true; this.thr = true; this.ftr = true;
+                }
+            },
+            checkRequire: function () {
+                if (this.number == "0") {
+                    this.btn = true;
+                    this.disable = "opacity:0.5";
+                } else {
+                    this.btn = false;
+                    this.disable = "opacity:1";
+                }
+            },
+            StartOrder: function () {
+                var desk = this.deskType + this.deskNum;
+                let fetchbody = {
+                    DeskType: this.deskType,
+                    Desk: desk,
+                    Number: this.number,
+                };
+                let jsonStr = JSON.stringify(fetchbody);
+                fetch("https://localhost:7273/api/member/StartOrder", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: jsonStr
+                }).then(data => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '您好 歡迎光臨Reds\'Bar!',
+                    }); window.location.assign("https://localhost:7273/member/LoginRegister")
+                }).catch(err => console.log(err))
+            },
+            StartOrderGuest: function() {
+                var desk = this.deskType + this.deskNum;
+                let fetchbody = {
+                    DeskType: this.deskType,
+                    Desk: desk,
+                    Number: this.number,
+                };
+                let jsonStr = JSON.stringify(fetchbody);
+                fetch("https://localhost:7273/api/member/StartOrder", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: jsonStr
+                }).then(data => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '您好 歡迎光臨Reds\'Bar!',
+                    });window.location.assign("https://localhost:7273/member/LoginRegister")
+                }).catch(err => console.log(err))
+            }
+        }})
+</script>

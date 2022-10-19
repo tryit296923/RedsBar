@@ -9,10 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>登入&註冊</title>
     <link rel="stylesheet" href="~/css/bootstrap.css">
-    <link rel="stylesheet" href="~/sweetalert/sweetalert2.min.css">
     <link rel="stylesheet" href="~/css/theme.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.2/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.2/dist/sweetalert2.min.js"></script>
     <script src="~/js/bootstrap.bundle.min.js"></script>
-    <script src="~/sweetalert/sweetalert2.min.js"></script>
     <script src="~/js/vue.min.js"></script>
     <style>
         *{
@@ -312,6 +312,18 @@
                     "Phone": this.Phone,
                     "Email": this.Email,
                 };
+                if (vm.Account == "" || vm.Password == "" || vm.Name == "" || vm.Account == "" || vm.Birth == "" || vm.Phone == "" || "Email" == vm.Email) {
+                    Swal.fire({
+                        icon: 'error',
+                        color: '#FFF',
+                        iconColor: '#D8CDB9',
+                        confirmButtonColor: '#721B29',
+                        background: '#333',
+                        title: '註冊失敗!',
+                        text: '有地方還沒填喔!',
+                    })
+                    return;
+                }
                 let JsonString = JSON.stringify(fbody);
                 console.log(JsonString);    // JSON
                 console.log(fbody);         // Obj
@@ -320,13 +332,31 @@
                     headers: { "Content-Type": "application/json" },
                     body: JsonString        // to JsonString
                 })
-                .then(() => Swal.fire({
-                    icon: 'success',
-                    title: '註冊成功!',
-                    text: '請至信箱收取認證信件，請稍待1~3分鐘',
-                    footer: '<a href="https://localhost:7273/Member/Authorize">未收到信件? 點擊此處以重發</a>'
-                }))
-                    .catch(error => console.error(error))
+                .then((e)=> e.json())
+                .then((result) => {
+                    if(result){
+                        Swal.fire({
+                            icon: 'success',
+                            color: '#FFF',
+                            iconColor: '#D8CDB9',
+                            confirmButtonColor: '#721B29',
+                            background: '#333',
+                            title: '註冊成功!',
+                            text: '請至信箱收取認證信件，請稍待1~3分鐘',
+                            footer: '<a href="https://localhost:7273/Member/Authorize">未收到信件? 點擊此處以重發</a>'
+                        })
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            color: '#FFF',
+                            iconColor: '#D8CDB9',
+                            confirmButtonColor: '#721B29',
+                            background: '#333',
+                            title: '註冊失敗!',
+                            text: '帳號有人使用過囉!',
+                        })
+                    }
+                }).catch(error => console.error(error))
             },
 
         }
@@ -340,8 +370,8 @@
         methods: {
             login: function () {
                 let loginbody = {
-                    "MemberAccount": this.loginaccount,
-                    "MemberPassword": this.loginpassword,
+                    Account: this.loginaccount,
+                    Password: this.loginpassword,
                 };
                 let loginJsonString = JSON.stringify(loginbody);
                 fetch("https://localhost:7273/Member/Login", {
@@ -349,17 +379,26 @@
                     headers: { "Content-Type": "application/json" },
                     body: loginJsonString        // to JsonString
                 })
-                    .then((e) => JSON.)
+                    .then((e) => e.json())
                     .then((result) => {
+                        console.log(result);
                         if (result) {
                             Swal.fire({
+                                color:'#FFF',
+                                iconColor: '#D8CDB9',
+                                confirmButtonColor: '#721B29',
+                                background: '#333',
                                 icon: 'success',
-                                title: '成功!',
+                                title: '登入成功!',
                             })
                         } else {
                             Swal.fire({
+                                color: '#FFF',
+                                iconColor: '#D8CDB9',
+                                confirmButtonColor: '#721B29',
                                 icon: 'error',
                                 title: '帳號密碼錯誤!登入大失敗!',
+                                background: '#333',
                             })
                         }
                     })
