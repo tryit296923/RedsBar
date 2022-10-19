@@ -97,8 +97,8 @@ namespace Alcoholic.Controllers
 
             var order = (from x in projectContext.Orders where x.OrderId == orderId select x).FirstOrDefault();
 
-            ViewBag.deskCookie = deskCookieSuccess;
-            ViewBag.numberCookie = numberCookieSuccess;
+            ViewBag.deskCookieSuccess = deskCookieSuccess;
+            ViewBag.numberCookieSuccess = numberCookieSuccess;
 
             return View(order);
         }
