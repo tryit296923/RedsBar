@@ -2,8 +2,9 @@
     ViewData["Title"] = "商品管理";
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue2-dropzone@3.6.0/dist/vue2Dropzone.min.css">
+<link rel="stylesheet" href="~/css/vue2Dropzone.min.css">
 <script src="https://cdn.jsdelivr.net/npm/vue2-dropzone@3.6.0/dist/vue2Dropzone.min.js"></script>
+
 
 <div class="productmanage container-fluid p-5">
     <div class="spacebetween row-cols-2 mb-3">
@@ -167,8 +168,13 @@
                 data.append("UnitPrice", this.createProductData.productPrice)
                 data.append("ProductDescription", this.createProductData.productDescription)
                 var img = this.$refs.myVueDropzone.getQueuedFiles();
-                img.forEach(x => data.append("Images",x))
-                
+                img.forEach(x => data.append("Images",x));
+                this.$refs.myVueDropzone.removeAllFiles();
+                this.createProductData.productName="";
+                this.createProductData.productPrice="";
+                this.createProductData.productCost="";
+                this.createProductData.productDescription="";
+                this.createProductData.images=[];
 
                 fetch("/api/Products/CreateProduct", {
                     method: 'POST',

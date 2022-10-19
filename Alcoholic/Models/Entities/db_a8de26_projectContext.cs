@@ -137,6 +137,7 @@ namespace Alcoholic.Models.Entities
                     .HasForeignKey(d => d.MemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Order_Members");
+                entity.HasOne(x => x.Feedback).WithOne(x => x.Order).HasForeignKey<Feedback>(x => x.OrderId);
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
@@ -253,10 +254,10 @@ namespace Alcoholic.Models.Entities
                     .IsRequired()
                     .HasColumnType("nvarchar(max)");
 
-                entity.HasOne(f => f.Order)
-                    .WithOne(o => o.Feedback)
-                    .HasForeignKey<Order>(f => f.OrderId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                //entity.HasOne(f => f.Order)
+                //    .WithOne(o => o.Feedback)
+                //    .HasForeignKey<Order>(f => f.OrderId)
+                //    .OnDelete(DeleteBehavior.Cascade);
             });
 
                 OnModelCreatingPartial(modelBuilder);

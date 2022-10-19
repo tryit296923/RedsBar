@@ -1,4 +1,4 @@
-﻿@model Alcoholic.Models.ViewModels.OrderListViewModel
+﻿@model Alcoholic.Models.DTO.OrderTotalViewModel
 @using Newtonsoft.Json;
 @using System.Web;
 
@@ -341,7 +341,7 @@
                             <div class="subOrderText subOrderTime">{{order.orderTime}}</div>
                         </div>
                         <li class="row list-group-item d-flex justify-content-between align-items-start pe-0" 
-                        v-for="(item,index) in detail(order.orderId)"@* v-bind:key="item.orderId"*@>
+                        v-for="(item,index) in detail(order.orderId)"@*v-bind:key="item.orderId"*@>
                             <div class="col-3 px-0">
                                 <img :src="item.imgPath" class="w-100 rounded">
                             </div>
