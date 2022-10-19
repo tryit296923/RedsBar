@@ -46,7 +46,7 @@ namespace Alcoholic.Controllers.API
                 Cost = model.Cost,
                 UnitPrice = model.UnitPrice,
                 ProductName = model.ProductName,
-                SaleAt = 0,
+                ProductDescription = "",
                 Images = tempFilePath.Select(x=> new ProductImage() { Path = x}).ToList()
             };
             _db.Products.Add(prod);

@@ -1,9 +1,9 @@
 ﻿using System.Security.Permissions;
 using System.Security.Policy;
 
-namespace Alcoholic.Models.ViewModels
+namespace Alcoholic.Models.DTO
 {
-    public class MmeberViewModel
+    public class MemberModel
     {
         public string Account { get; set; }
         public string Password { get; set; }
