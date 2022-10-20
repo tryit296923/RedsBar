@@ -210,7 +210,7 @@
         <div class="row">
             <div class="col-12 col-xl-6">
                 <label for="datepicker" class="col-sm-12 col-form-label">用餐日期</label>
-                <date-picker v-model="ReserveDate" valueType="format"
+                <date-picker v-model="ReserveDate" valueType="format" YYYY/MM/DD
                              name="ReserveDate" id="datepicker" class="datepicker p-0" 
                              placeholder="請選擇用餐日期" :disabled-date="disablerange"></date-picker>
             </div>
@@ -238,7 +238,7 @@
                 <hr class="d-xl-none">
                 <div class="map-item">
                     <p>Address</p>
-                    <img src="~/images/icons/icon01.png" alt="" class="icon">
+                    <img src="../images/icons/icon01.png" alt="" class="icon">
                     <a href="https://goo.gl/maps/VARMRkiZqDQLhgWbA">100 台北市中正區濟南路一段321號</a>
                 </div>
                 <hr>
@@ -265,7 +265,7 @@
         </div>
     </div>
     <form action="Check" method="post">
-        <input name="ReserveDate" v-bind:value="ReserveDate" hidden />
+        <input name="ReserveDate" v-bind:value="SendDate" hidden />
         <input name="Number" v-bind:value="Number" hidden />
         <button type="submit" ref="bookingcheck" hidden></button>
     </form>
@@ -313,6 +313,7 @@
             bookingInfos: [],
             MyDate: new Date,
             ReserveDate: null,
+            SendDate: null,
             Number: '',
             people: [
                 { value: 1, txt: '1位成人' },
@@ -329,6 +330,11 @@
                 { id: 5, name: '星期五 18:00-02:00' },
                 { id: 6, name: '星期六 18:00-02:00' }
             ],
+        },
+        watch:{
+            ReserveDate:function(){
+                this.SendDate = this.ReserveDate.toJSON();
+            }
         },
         methods: {
             disablerange: function (date) {
@@ -431,7 +437,7 @@
             {
                 position: mapProp.center,
 
-                icon: "~/images/icons/icon01.png",
+                icon: "../images/icons/icon01.png",
                 animation: google.maps.Animation.BOUNCE
             });
         marker.setMap(map);
