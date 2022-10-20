@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bootstrap/bootstrap.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.css">
+    <title>特色調酒</title>
+    <style>
+        body {
+            position: relative;
+            background-color: #333;
+        }
+        /*navbar*/
+        a {
+            color: aliceblue;
+            text-decoration: none;
+        }
+
+        .search {
+            height: 38px;
+            margin: 10px;
+            position: relative;
+        }
+
+        .search img {
+            height: 20px;
+            width: 20px;
+            position: absolute;
+            top: 9px;
+            right: 9px;
+        }
+
+        .logo {
+            width: 50px;
+            margin-right: 20px;
+        }
+
+        .navbar {
+            background-color: #721B29;
+        }
+
+        .navbar-brand {
+            color: white;
+        }
+
+        .nav-link {
+            color: white;
+        }
+
+        .searcharea2 {
+            display: none;
+        }
+
+        /*Breadcrumb*/
+        .path {
+            background-color: #D8CDB9;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 0;
+            height: 30px;
+        }
+        .breadcrumb a {
+            color: #444;
+        }
+
+        /*footer*/
+        footer {
+            background-color: #D8CDB9;
+            margin-top: 40px;
+            color: #666;
+            font-size: 14px;
+        }
+        footer a {
+            color: #666;
+        }
+
+        .footleft,
+        .footright {
+            margin: auto;
+            padding: 20px 10px 10px 10px;
+            width: 50%;
+        }
+
+        @media screen and (max-width: 992px) {
+            .searcharea {
+                display: none !important;
+            }
+
+            .searcharea2 {
+                display: block;
+            }
+        }
+        /* 產品 */
+        .signatureCT{
+            padding: 0 50px 0 50px;
+        }
+        .signatureCT p{
+            font-size: small;
+            height: 40px;
+        }
+        .price {
+            color: #333;
+            text-decoration: line-through;
+        }
+        .discount {
+            color: red;
+            font-weight: bold;
+        }
+        .sale {
+            border: 1px solid red;
+            font-size: small;
+            float: right;
+            color: red;
+        }
+        /*model*/
+        .modal-image {
+            max-height: 280px;
+        }
+
+        .modal-spec {
+            overflow-y: auto;
+            max-height: 20vh;
+        }
+
+        .modal-bodyimg {
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg ">
+        <div class="container-fluid">
+            <img src="Images/icons/logo-w.png" alt="" class="logo">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <form class="searcharea2 search" role="search">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                        <a href=""><img src="Images/icons/search.png" alt=""></a>
+                    </form>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">推薦</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">經典酒款</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">特色調酒</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">線上訂位</a>
+                    </li>
+                </ul>
+                <form class="d-flex searcharea search" role="search">
+                    <input class=" form-control" type="search" placeholder="Search" aria-label="Search">
+                    <a href=""><img src="Images/icons/search.png" alt=""></a>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <!--Breadcrumb-->
+    <div class="path">
+        <div class="container">
+            <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Divination For You</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!--特色-->
+    <div id="vueproductModal">
+        <div class="container signatureCT" id="signatureCT">
+            <div class="row g-4 mt-2">
+                <template v-for="item in product">
+                    <div class="col-xl-3 col-md-4 col-6 p-3">
+                        <div class="card productcard w-100 h-100">
+                            <img :src="item.imagesrc" class="m-2" :id="item.id"
+                                data-bs-toggle="modal" data-bs-target="#productModal" @click="selected">
+                            <div class="card-body">
+                                <div :id="item.id" data-bs-toggle="modal"
+                                    data-bs-target="#productModal" @click="selected">
+                                    <p class="card-title">{{item.head}}</p>
+                                    <span class="price">${{item.price}}</span>
+                                    <span
+                                        class="discount">${{Math.round(item.price*item.discount)}}</span>
+                                    <span class="sale px-2">SALE</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+        <!-- 產品懸浮視窗Modal -->
+        <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{head}}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body py-0">
+                        <div class="modal-bodyimg ">
+                            <img class="modal-image" :src="imagesrc">
+                        </div>
+                        <div class="card-body modal-spec">
+                            <ul>
+                                <li v-for="feature in featurelist">{{feature}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!--footer-->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="footleft col-5">
+                    <p><a href="">僅為製作範本之參考</a></p>
+                    <p><a href="">顧客意見表</a></p>
+                    <p><a href="">僅為製作範本之參考</a></p>
+                </div>
+                <div class="footright col-5">
+                    <p>訂單詢問: 0900-XXX-XXX</p>
+                    <p>客服專線: 0911-XXX-XXX</p>
+                    <p>Mail: xxx.xxx@gmail.com</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <!--JS-->
+    <script src="bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#vueproductModal',
+            data: {
+                tableid: 13,
+                value: 0,
+                vueid: "",
+                imagesrc: "",
+                head: "",
+                discount: "",
+                featurelist: "",
+                optionsection1: [
+                    { base: 'Vodka' }, { base: 'Rum' }, { base: 'Tequila' }, { base: 'Whiskey' }, { base: 'Gin' }, { base: 'Brandy' }
+                ],
+                optionsection2: [
+                    { smell: '花草香' }, { smell: '果實香' }, { smell: '木質調' }, { smell: '煙燻' }, { smell: '茶香' }
+                ],
+                optionsection3: [
+                    { taste: '水果酸' }, { taste: '螞蟻甜' }, { taste: '大地風土' }
+                ],
+                optionsection4: [
+                    { body: '無感' }, { body: '中等' }, { body: '厚重' }
+                ],
+                // 產品資料
+                product: [
+                    // 特色
+                    {
+                        id: "0", imagesrc: './Images/Cocktails/example.jpg', head: "國盛-紅茶梅酒", price: "350", discount: "0.8",
+                        allfeature: [
+                            "產區:日本愛知縣",
+                            "香味:梅酒甘酸味與紅茶甘香",
+                            "口感:甜美中帶點回甘",
+                            "特色:百分之百日本國產梅子加上大吉嶺紅茶萃取"]
+                    },
+                    {
+                        id: "1", imagesrc: './Images/Cocktails/example1.jpg', head: "OMAR-豐收系列NO.2", price: "400", discount: "0.7",
+                        allfeature: [
+                            "產區:台灣",
+                            "香味:飽滿的煙燻烏梅、線香、辛香料的香氣，結合著熱帶水果與清新水果軟糖的香甜",
+                            "口感:濃厚飽實的酒體，有著青梅酸甜的口感，透露著絲絲波本桶的香草、奶油糖的風味",
+                            "特色:餘韻綿長甘草、橘皮及橡木繚繞不絕"]
+                    },
+                    {
+                        id: "2", imagesrc: './Images/Cocktails/example2.jpg', head: "OMAR-煙燻焦香", price: "500", discount: "0.8",
+                        allfeature: [
+                            "產區:台灣",
+                            "香味:輕盈的花香、柑橘及些許花蜜甜香，帶出如同置身南投山林間的清新草地和杉木氛圍，繼而醞釀出傳統磚窯烘烤龍眼乾的煙薰氣息",
+                            "口感:如花蜜般的圓潤清甜，伴隨著柴燒甘蔗的溫暖風味",
+                            "特色:餘韻悠長回甘，窯烤番薯甜韻搭配些許菸草、奶油、果香慢慢浮現"]
+                    },
+                    {
+                        id: "3", imagesrc: './Images/Cocktails/example3.jpg', head: "OMAR-豐收系列NO.3限量套組", price: "350", discount: "0.8",
+                        allfeature: [
+                            "產區:台灣",
+                            "香味:前香-黃色水果、橙皮 中香-黃箭口香糖(香蕉及芒果)、果香、臻果巧克力",
+                            "口感:口感豐厚甜潤，雪莉甜香為主香氣，中後段帶出烏龍茶香及橙皮",
+                            "特色:尾韻中偏長，回香是木頭、果香、堅果及巧克力"]
+                    },
+                    {
+                        id: "4", imagesrc: './Images/Cocktails/example4.jpg', head: "禾富-卡本內蘇維翁希哈紅酒2021", price: "250", discount: "0.95",
+                        allfeature: [
+                            "產區:澳洲-南澳 ",
+                            "香味:深色水果如黑莓、成熟李子及卡本內品種特有的黑醋栗果香，還帶有些許辛香氣息",
+                            "口感:入口可感受希哈品種濃郁果香帶來的甜美口感，和飽滿紮實的橡木氣息及單寧形成完美的均衡",
+                            "特色:聯名限量版，建議搭配HBO「龍之家族」影集一起飲用"]
+                    },
+                    {
+                        id: "5", imagesrc: './Images/Cocktails/example5.jpg', head: "約瑟夫杜亨酒莊-一級園白酒2018", price: "400", discount: "0.7",
+                        allfeature: [
+                            "產區:法國-勃根地",
+                            "香味:香氣優雅，醒酒後便活潑了起來，聞有山楂與杏桃香氣，並慢慢轉化為菸草氣息",
+                            "口感:陳年後，香氣愈益沉穩，有如水果乾與辛香料等。圓潤的口感令人回味無窮",
+                            "特色:榨出來的果汁澄清完後便放入來自法國的已風乾三年橡木桶中發酵與培養12個月"]
+                    },
+                    {
+                        id: "6", imagesrc: './Images/Cocktails/example6.jpg', head: "維迪加爾酒莊-三作家精選白酒", price: "150", discount: "0.8",
+                        allfeature: [
+                            "產區:葡萄牙-綠酒區",
+                            "香味:清新淡雅的檸檬黃與青檸綠基調，混合了水果與鮮花的香氣沁人心脾",
+                            "口感:清爽優雅，果味十足，帶有回甘的餘韻細緻綿長",
+                            "特色:葡萄牙文的Vinho=Wine, Verde=Green, 在葡萄牙文中即為“綠酒”，因此又稱綠酒"]
+                    },
+                    {
+                        id: "7", imagesrc: './Images/Cocktails/example7.jpg', head: "喜格莊園-波爾多混釀紅酒2017", price: "230", discount: "0.6",
+                        allfeature: [
+                            "產區:法國-波爾多",
+                            "香味:黑醋栗、紫羅蘭、煙草及草本植物的華麗香氣",
+                            "口感:入口充滿美妙純正果味有細膩單寧相伴，加上剛好足夠的新鮮度所構成。中後段得到很好的平衡，略顯精緻的辛香調且餘韻悠長",
+                            "特色:喜格莊園位於波爾多左岸的 Margaux 瑪歌產區，目前由Chanel香奈兒集團掌管。由前五大一級莊拉圖堡的總經理John Kolasa負責管理釀酒事宜"]
+                    },
+                ]
+            },
+            methods: {
+                selected: function (e) {
+                    this.value = 0;
+                    this.formdata = 0;
+                    this.vueid = e.currentTarget.id;
+                    var item = this.product[this.vueid];
+                    this.imagesrc = item.imagesrc;
+                    this.head = item.head;
+                    this.discount = item.discount;
+                    this.featurelist = item.allfeature;
+                },
+
+            },
+        })   
+    </script>
+
+
+</body>
+
+</html>
