@@ -1,0 +1,12 @@
+~/images/Cocktails/irish-coffee.jpg
+~/images/Cocktails/screwdriver.jpg
+~/images/Cocktails/old-fashioned-cocktail.jpg
+~/images/Cocktails/bloodymary.jpeg
+~/images/Cocktails/gin-fizz.jpg
+~/images/Cocktails/cosmopolitan-cocktail.jpg
+~/images/Cocktails/Martini.jpeg
+~/images/Cocktails/LIT.jpg
+~/images/Cocktails/vodka-mojito-cocktail.jpg
+~/images/Cocktails/negroni-cocktail.jpg
+~/images/Cocktails/vodkalime.jpg
+~/images/Cocktails/margarita.jpeg
