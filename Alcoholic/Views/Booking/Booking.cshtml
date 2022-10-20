@@ -210,7 +210,7 @@
         <div class="row">
             <div class="col-12 col-xl-6">
                 <label for="datepicker" class="col-sm-12 col-form-label">用餐日期</label>
-                <date-picker v-model="ReserveDate" valueType="format" YYYY/MM/DD
+                <date-picker v-model="ReserveDate" valueType="format"
                              name="ReserveDate" id="datepicker" class="datepicker p-0" 
                              placeholder="請選擇用餐日期" :disabled-date="disablerange"></date-picker>
             </div>
@@ -333,7 +333,7 @@
         },
         watch:{
             ReserveDate:function(){
-                this.SendDate = this.ReserveDate.toJSON();
+                this.SendDate = this.ReserveDate.toLocaleDateString().replace('/', '-').replace('/', '-');
             }
         },
         methods: {
