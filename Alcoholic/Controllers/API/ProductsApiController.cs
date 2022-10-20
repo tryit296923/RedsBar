@@ -4,6 +4,8 @@ using Alcoholic.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Alcoholic.Controllers.API
 {
@@ -54,9 +56,21 @@ namespace Alcoholic.Controllers.API
         }
 
         [HttpGet]
-        public IEnumerable<Product> GetAllProducts()
+        public IEnumerable<MenuModel> GetAllProducts()
         {
-            return  _db.Products.ToList();
+            var menu = from pro in _db.Products
+                    join path in _db.ProductImage
+                    on pro.ProductId equals path.ProductId
+                    select new MenuModel
+                    {
+                        Id = pro.ProductId,
+                        Name = pro.ProductName,
+                        Desciption = pro.ProductDescription,
+                        Price = pro.UnitPrice,
+                        Path = path.Path
+                    };
+
+            return menu;
         }
 
         [HttpPost]

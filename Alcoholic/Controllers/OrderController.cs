@@ -2,7 +2,6 @@
 using Alcoholic.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace Alcoholic.Controllers
@@ -25,9 +24,9 @@ namespace Alcoholic.Controllers
 
             if (memberIdCookie != null)
             {
-                string memberName = (from x in projectContext.Members
+                string? memberName = (from x in projectContext.Members
                                      where x.MemberID == memberIdCookie
-                                     select x).FirstOrDefault().MemberName;
+                                     select x.MemberName).FirstOrDefault();
                 //string memberName = "Matt";
                 ViewBag.memberName = memberName;
             }
