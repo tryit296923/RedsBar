@@ -72,6 +72,7 @@
         align-items: center;
         justify-content: center;
         margin-top: 20px;
+        font-size:large;
     }
 
     .btnonlinepay {
@@ -107,6 +108,20 @@
 
     .modal-footer{
         justify-content:center;
+    }
+
+    .btnpaymentinstrument{
+        display:flex;
+        justify-content:center;
+    }
+    
+    .paybycreditcard{
+        font-size:x-large;
+    }
+    
+    .icon{
+        display:flex;
+        align-items:center;
     }
 </style>
 
@@ -158,10 +173,19 @@
                             <h1 class="modal-title fs-5" id="staticBackdropLabel">請選擇線上支付工具</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary">信用卡支付</button>
-                            <button type="button" class="btn btn-secondary">Google Pay</button>
-                            <button type="button" class="btn btn-secondary">Line Pay</button>
+                        <div class="modal-footer row">
+                            <div class="col-12">
+                                <a href="" class="btn btnpaymentinstrument paybycreditcard">
+                                <i class="fa-solid fa-credit-card icon"></i>
+                                    &nbsp信用卡支付
+                            </a>
+                            </div>
+                            <div class="col-12">
+                            <a href="" class="btn btnpaymentinstrument"><img src="~/images/icons/googlepay.jpg" class="w-50"/></a>
+                            </div>
+                                <div class="col-12">
+                                <a href="" class="btn btnpaymentinstrument"><img src="/images/icons/LINE-Pay(h)_W119_n.png" class="" /></a>
+                            </div>
                         </div>
                     </div>
                 </div>
