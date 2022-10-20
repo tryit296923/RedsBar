@@ -1,79 +1,67 @@
-<script>
-    const vm = new Vue({
-        el: "#form",
-        data: {
-            deskType: 0,
-            deskNum: 0,
-            one: true,
-            two: true,
-            thr: true,
-            ftr: true,
-            number: "0",
-            btn: false,
-            disable: "opacity:0.5"
-        },
-        methods: {
-            checkNumber: function () {
-                let desk = this.deskType;
-                this.startOrder;
-                switch (desk) {
-                    case "1": this.one = false; this.two = true; this.thr = true; this.ftr = true;
-                        break;
-                    case "2": this.one = false; this.two = false; this.thr = true; this.ftr = true;
-                        break;
-                    case "3": this.one = true; this.two = true; this.thr = false; this.ftr = false;
-                        break;
-                    case "4": this.one = true; this.two = true; this.thr = false; this.ftr = false;
-                        break;
-                    default: this.one = true; this.two = true; this.thr = true; this.ftr = true;
-                }
-            },
-            checkRequire: function () {
-                if (this.number == "0") {
-                    this.btn = true;
-                    this.disable = "opacity:0.5";
-                } else {
-                    this.btn = false;
-                    this.disable = "opacity:1";
-                }
-            },
-            StartOrder: function () {
-                var desk = this.deskType + this.deskNum;
-                let fetchbody = {
-                    DeskType: this.deskType,
-                    Desk: desk,
-                    Number: this.number,
-                };
-                let jsonStr = JSON.stringify(fetchbody);
-                fetch("https://localhost:7273/api/member/StartOrder", {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: jsonStr
-                }).then(data => {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '您好 歡迎光臨Reds\'Bar!',
-                    }); window.location.assign("https://localhost:7273/member/LoginRegister")
-                }).catch(err => console.log(err))
-            },
-            StartOrderGuest: function() {
-                var desk = this.deskType + this.deskNum;
-                let fetchbody = {
-                    DeskType: this.deskType,
-                    Desk: desk,
-                    Number: this.number,
-                };
-                let jsonStr = JSON.stringify(fetchbody);
-                fetch("https://localhost:7273/api/member/StartOrder", {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: jsonStr
-                }).then(data => {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '您好 歡迎光臨Reds\'Bar!',
-                    });window.location.assign("https://localhost:7273/member/LoginRegister")
-                }).catch(err => console.log(err))
-            }
-        }})
-</script>
+@{
+    ViewData["Title"] = "會員開通成功";
+    Layout = "_LayoutMobile";
+}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        width: 500px;
+        height: 700px;
+    }
+
+    .Success {
+        position: relative;
+    }
+
+        .Success img {
+            width: 500px;
+            height: 700px;
+            vertical-align: bottom;
+        }
+
+    .logo {
+        width: 500px;
+        position: absolute;
+        top: 30px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .text {
+        position: absolute;
+        top: 340px;
+        width: 500px;
+        display: flex;
+        justify-content: center;
+        color: #FFF;
+    }
+
+    .btn {
+        position: absolute;
+        bottom: 153px;
+        left: 120px;
+        background-color: #222;
+        padding: 10px 12px;
+        border-radius: 0.375rem;
+        cursor: pointer;
+    }
+
+    a {
+        text-decoration: none;
+        color: #FFF;
+    }
+</style>
+<div class="Success">
+    <img src="/RedsBar/Pages/Images/BackGround/FotoJet.jpg" alt="">
+    <div class="logo">
+        <img src="/RedsBar/Pages/Images/icons/logo-y.png" alt="">
+    </div>
+    <div class="text">
+        <h3>會員認證完成!</h3>
+        <p>Reds'Bar歡迎您</p>
+    </div>
+</div>

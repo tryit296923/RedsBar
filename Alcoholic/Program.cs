@@ -11,7 +11,6 @@ builder.Services.AddControllersWithViews().AddJsonOptions(opt => opt.JsonSeriali
 builder.Services.AddTransient<MailService>();
 builder.Services.AddTransient<HashService>();
 builder.Services.AddRazorTemplating();
-builder.Services.AddSession();
 
 builder.Services.AddDbContext<db_a8de26_projectContext>(option =>
 {
@@ -33,6 +32,16 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     // 為登入自動導至此網址
     option.LoginPath = new PathString("/member/LoginRegister");
     option.AccessDeniedPath = new PathString("/api/Login/NoAccess");
+});
+
+builder.Services.AddDistributedMemoryCache();
+
+// set up the in-memory session provider with a default in-memory implementation of IDistributedCache
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(10800);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
 var app = builder.Build();
