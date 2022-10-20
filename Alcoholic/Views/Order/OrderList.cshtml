@@ -423,7 +423,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">{{head}}</h5>
+                        <h3 class="modal-title">{{productName}}</h3>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body py-0">
@@ -431,21 +431,19 @@
                             <img class="modal-image" :src="imagesrc">
                         </div>
                         <div class="card-body modal-spec">
-                            <ul>
-                                <li v-for="feature in featurelist">{{feature}}</li>
-                            </ul>
+                            <h5>{{description}}</h5>                            
                         </div>
                     </div>
                     <div class="container  my-1">
                         <div class="row justify-content-center quantitygroup">
-                            <button type="button" @@click="minus" class="col-1 p-0 btn btn-sm">
+                            <button type="button" @@click="minus" class="col-2 p-0 btn btn-sm">
                                 <i class="fa fa-minus"></i>
                             </button>
-                            <div class="col-4 p-0">
-                                <input type="number" :name="head"
+                            <div class="col-5 p-0">
+                                <input type="number" :name="productName"
                                     class="form-control form-control-sm qty_input text-center" value="0" readonly>
                             </div>
-                            <button type="button" @@click="plus" class="col-1 p-0 btn btn-sm">
+                            <button type="button" @@click="plus" class="col-2 p-0 btn btn-sm">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
@@ -455,7 +453,7 @@
                             <div class="container">
                                 <div class="row justify-content-center">
                                     <div class="col-12 ">
-                                        <button type="submit" class="btn btncartbackgroundcolor">加到購物車
+                                        <button type="submit" class="btn btncartbackgroundcolor"> 加到購物車
                                             <i class="fa-solid fa-cart-shopping ps-1"></i>
                                         </button>
                                     </div>
@@ -610,9 +608,9 @@
             tableid: 13,
             vueid: "",
             imagesrc: "",
-            head: "",
+            productName: "",
             discount: "",
-            featurelist: "",
+            description: "",
             optionsform: []
             ,
             optionsection1: [
@@ -635,11 +633,11 @@
                 this.value = 0;
                 this.formdata = 0;
                 this.vueid = e.currentTarget.id;
-                var item = this.product[this.vueid];
+                var item = this.product[this.vueid-1];
                 this.imagesrc = item.path;
-                this.head = item.head;
+                this.productName = item.name;
                 //this.discount = item.discount;
-                this.featurelist = item.allfeature;
+                this.description = item.description;
             },
             plus: function (e) {
                 if (e.currentTarget.parentElement.children[1].children[0].value < 10) {

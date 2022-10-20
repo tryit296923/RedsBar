@@ -65,7 +65,7 @@ namespace Alcoholic.Controllers.API
                     {
                         Id = pro.ProductId,
                         Name = pro.ProductName,
-                        Desciption = pro.ProductDescription,
+                        Description = pro.ProductDescription,
                         Price = pro.UnitPrice,
                         Path = path.Path
                     };
