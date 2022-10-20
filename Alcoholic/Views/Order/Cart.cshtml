@@ -397,7 +397,7 @@
                     let x = {
                         ItemList: this.itemList
                     }
-                    fetch("/Order/Confirm", {
+                fetch("/api/Order/Confirm", {
                         body: JSON.stringify(x),
                         headers: { 'content-type': 'application/json' },
                         method: 'POST'
