@@ -11,6 +11,7 @@ builder.Services.AddControllersWithViews().AddJsonOptions(opt => opt.JsonSeriali
 builder.Services.AddTransient<MailService>();
 builder.Services.AddTransient<HashService>();
 builder.Services.AddRazorTemplating();
+builder.Services.AddSession();
 
 builder.Services.AddDbContext<db_a8de26_projectContext>(option =>
 {
@@ -48,6 +49,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 
 // UseRouting«á UseAuthorization«e
 app.UseCors("Policy");
