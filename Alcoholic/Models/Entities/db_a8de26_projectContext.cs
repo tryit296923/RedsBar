@@ -31,6 +31,8 @@ namespace Alcoholic.Models.Entities
         public virtual DbSet<Discount> Discount { get; set; }
         public virtual DbSet<Feedback> Feedback { get; set; }
         public virtual DbSet<ProductsMaterials> ProductsMaterials { get; set; }
+        public virtual DbSet<ProductImage> ProductImage { get; set; }
+        public virtual DbSet<Category> Category { get; set; }
 
         protected override void OnModelCreating([FromBody] ModelBuilder modelBuilder)
         {
@@ -249,7 +251,26 @@ namespace Alcoholic.Models.Entities
                 //    .OnDelete(DeleteBehavior.Cascade);
             });
 
-                OnModelCreatingPartial(modelBuilder);
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.HasKey(e => e.CategoryId);
+
+                entity.Property(e => e.CategoryId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.CategoryName).HasColumnType("nvarchar(max)");
+
+            });
+
+            modelBuilder.Entity<ProductImage>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Path).HasColumnType("nvarchar(max)");
+            });
+
+            OnModelCreatingPartial(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

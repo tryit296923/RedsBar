@@ -36,7 +36,7 @@ namespace Alcoholic.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.DeskInfo", b =>
@@ -69,7 +69,7 @@ namespace Alcoholic.Migrations
                     b.HasKey("DeskId")
                         .HasName("PK_DeskInfo_1");
 
-                    b.ToTable("DeskInfo");
+                    b.ToTable("DeskInfo", (string)null);
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Discount", b =>
@@ -90,7 +90,7 @@ namespace Alcoholic.Migrations
                     b.HasKey("DiscountId")
                         .HasName("PK_Discount_1");
 
-                    b.ToTable("Discount");
+                    b.ToTable("Discount", (string)null);
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Employee", b =>
@@ -167,7 +167,7 @@ namespace Alcoholic.Migrations
 
                     b.HasKey("OrderId");
 
-                    b.ToTable("Feedback");
+                    b.ToTable("Feedback", (string)null);
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Material", b =>
@@ -203,7 +203,7 @@ namespace Alcoholic.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Materials");
+                    b.ToTable("Materials", (string)null);
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Member", b =>
@@ -265,7 +265,7 @@ namespace Alcoholic.Migrations
                     b.HasKey("MemberID")
                         .HasName("PK_Member_1");
 
-                    b.ToTable("Members");
+                    b.ToTable("Members", (string)null);
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.MonthlyRecord", b =>
@@ -336,7 +336,7 @@ namespace Alcoholic.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.OrderDetail", b =>
@@ -366,7 +366,7 @@ namespace Alcoholic.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Product", b =>
@@ -394,7 +394,7 @@ namespace Alcoholic.Migrations
                     b.HasKey("ProductId")
                         .HasName("PK_Product_1");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.ProductImage", b =>
@@ -416,7 +416,7 @@ namespace Alcoholic.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImage");
+                    b.ToTable("ProductImage", (string)null);
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.ProductsMaterials", b =>
@@ -442,7 +442,7 @@ namespace Alcoholic.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductsMaterials");
+                    b.ToTable("ProductsMaterials", (string)null);
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Reserves", b =>
@@ -477,7 +477,7 @@ namespace Alcoholic.Migrations
                     b.HasKey("ReserveId")
                         .HasName("PK_Reserves_1");
 
-                    b.ToTable("Reserves");
+                    b.ToTable("Reserves", (string)null);
                 });
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Feedback", b =>

@@ -49,16 +49,14 @@
         border-radius: 0 0 0.375rem 0;
     }
 
-    .minus-btn,
-    .plus-btn {
+    .quantitygroup .btn{
         background-color: white;
         color: #D8CDB9;
         border: 0;
         border-radius: 0;
     }
 
-        .minus-btn:hover,
-        .plus-btn:hover {
+    .quantitygroup .btn:hover {
             background-color: #C28C2E;
             color: white;
         }
@@ -73,10 +71,15 @@
         border: #D8CDB9 solid 1px;
     }
 
-    .btnaddtocart {
+    .btnaddtocart > .btn {
         background-color: #721B29;
         color: white;
         border: 0;
+    }
+        .btnaddtocart > .btn:hover {
+            background-color: #D8CDB9;
+            color: #333;
+            border: 0;
     }
 
     /* 算命 */
@@ -91,13 +94,13 @@
     }
 
     /*model*/
-    .btncartbackgroundcolor {
+    .modal-footer .btn {
         width: 100%;
+        color:#FFF;
     }
 
-    .btncartbackgroundcolor:hover {
-            background-color: #B8AD89;
-            border-bottom: 1px solid #721B29;
+        .modal-footer .btn:hover {
+            color: #D8CDB9;
     }
 
     .modal-image {
@@ -145,148 +148,29 @@
         color: white;
     }
     /*購物車*/
-    .shopCartToggle > button{
-        border: 0;
-        position: fixed;
-        top:75px;
-        right: 10px;
-        z-index:1;
-        color: #D8CDB9;
-        background-color: transparent;
-        font-size:2rem;
-    }
-    .offcanvas-header{
-        background-color: #721B29;
-    }
-
-@*購物車css*@
-    .offcanvas{
-        background-color: rgba(0,0,0,0.7);
-    }
-    fieldset {
-        font-family: sans-serif;
-        border: 3px solid #D8CDB9;
-        background: white;
-        border-radius: 0.375rem;
-        padding: 15px;
-    }
-
-    .shopCart {
-        background: #C28C2E;
-        color: white;
-        font-size: 20px;
-        border-radius: 0.375rem;
-        box-shadow: 0 0 0 3px #D8CDB9;
-        width: 40%;
-        height: 50px;
+    .shopCart{
+        position:sticky;
+        bottom:0;
+        width:100%;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        justify-content:center;
+        align-content: center;
+        background-color: #721B29;
+        color: #FFF;
+        height: 3rem;
     }
-
-    .cartList {
-        border-radius: 0.375rem;
-    }
-
-    .list-group-item,
-    .cartTotal {
-        color: #222220;
-    }
-
-    .productName {
-        font-size: 1.5rem;
-    }
-
-    .originalPrice {
-        text-decoration: line-through;
-    }
-
-    .discountPrice {
-        color: darkred;
-    }
-
-    .btnDelete {
-        border: none;
-        background-color: transparent;
-        font-size: 1.4rem;
-        line-height: 1rem;
-        border-radius: 0.25em;
-    }
-
-        .btnDelete:active {
-            background-color: #721B29;
-            color: white;
-        }
-
-    .btnCount {
-        border: none;
-        background-color: transparent;
-        border-radius: 0.25em;
-    }
-
-        .btnCount:active {
+    .shopCart:hover{
             background-color: #D8CDB9;
-        }
-
-    .align-items-start {
-        display: flex !important;
-        align-items: center !important;
+            color: #333;
     }
-
-    .cartTotal {
+    .shopCart i{
         display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 20px;
-        font-weight: bold;
+        align-content:center;
+        line-height: 3rem;
     }
-
-    .orderCheck {
-        width: 100%;
-        background-color: #222220;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.3rem;
-    }
-
-    .bottombtntext {
-        border: none;
-        border-radius: 0.375rem;
-        font-weight: bold;
-    }
-
-    .btnBacktoMenu,
-    .btnModalCancel {
-        background-color: #D8CDB9;
-        color: #222220;
-    }
-
-        .btnBacktoMenu:active,
-        .btnModalCancel:active {
-            background-color: #C28C2E;
-            color: white;
-        }
-
-    .btnCartConfirm,
-    .btnModalConfirm {
-        background-color: #721B29;
-        color: white;
-    }
-
-        .btnCartConfirm:active,
-        .btnModalConfirm:active {
-            background-color: #C28C2E;
-        }
-
-    .btnInModal {
-        border: none;
-        border-radius: 0.375rem;
-        width: 90px;
-        display: flex;
-        justify-content: center;
-        height: 30px;
-        align-items: center;
+    .shopCart h2{
+        margin: auto 0;
+        padding: 0 8px;
     }
 </style>
 
@@ -377,14 +261,14 @@
                         <template v-for="item in product">
                             <div class="col-6 col-md-4 p-1">
                                 <div class="card productcard w-100 h-100">
-                                    <img :src="item.imgPath" class="m-2" :id="item.productId" data-bs-toggle="modal"
+                                    <img :src="item.path" class="m-2" :id="item.id" data-bs-toggle="modal"
                                         data-bs-target="#productModal" @@click="selected">
-                                    <div class="card-body">
-                                        <div :id="item.productId" data-bs-toggle="modal" data-bs-target="#productModal"
+                                    <div class="card-body btnaddtocart">
+                                        <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal"
                                             @@click="selected">
-                                            <p class="card-title">{{item.productName}}</p>
-                                            <span class="price">${{item.unitPrice}}</span>
-                                            <span class="discount">${{Math.round(item.unitPrice*0.8@*item.discount*@)}}</span>
+                                            <p class="card-title">{{item.name}}</p>
+                                            <span class="price">${{item.price}}</span>
+                                            <span class="discount">${{Math.round(item.price*0.8@*item.discount*@)}}</span>
                                             <span class="sale px-2">SALE</span>
                                         </div>
                                         <div class="row justify-content-center my-2 mx-0 quantitygroup">
@@ -393,16 +277,16 @@
                                                 <i class="fa fa-minus"></i>
                                             </button>
                                             <div class="col-8 p-0">
-                                                <input type="number" :name="item.productName" :id="item.productId"
+                                                <input type="number" :name="item.name" :id="item.id"
                                                     class="form-control form-control-sm qty_input text-center"
-                                                    value="0" :unitPrice="item.unitPrice" :discount="item.discount"  readonly>
+                                                    value="0" :price="item.price" :discount="item.discount"  readonly>
                                             </div>
                                             <button type="button" @@click="plus"
                                                 class="col-2 p-0 btn btn-dark btn-sm plus-btn">
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </div>
-                                        <button type="button" class="col-12 btn btnaddtocart" onclick="addcookie(event)">加到購物車</button>
+                                        <button type="button" class="col-12 btn" onclick="addcookie(event)">加到購物車</button>
                                     </div>
                                 </div>
                             </div>
@@ -418,14 +302,14 @@
                         <template v-for="item in product">
                             <div class="col-6 col-md-4 p-1">
                                 <div class="card productcard w-100 h-100">
-                                    <img :src="item.imgPath" class="m-2" :id="item.productId" data-bs-toggle="modal"
+                                    <img :src="item.path" class="m-2" :id="item.id" data-bs-toggle="modal"
                                         data-bs-target="#productModal" @@click="selected">
-                                    <div class="card-body">
-                                        <div :id="item.productId" data-bs-toggle="modal" data-bs-target="#productModal"
+                                    <div class="card-body btnaddtocart">
+                                        <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal"
                                             @@click="selected">
-                                            <p class="card-title">{{item.productName}}</p>
-                                            <span class="price">${{item.unitPrice}}</span>
-                                            <span class="discount">${{Math.round(item.unitPrice*0.8@*item.discount*@)}}</span>
+                                            <p class="card-title">{{item.name}}</p>
+                                            <span class="price">${{item.price}}</span>
+                                            <span class="discount">${{Math.round(item.price*0.8@*item.discount*@)}}</span>
                                             <span class="sale px-2">SALE</span>
                                         </div>
                                         <div class="row justify-content-center my-2 mx-0 quantitygroup">
@@ -434,7 +318,7 @@
                                                 <i class="fa fa-minus"></i>
                                             </button>
                                             <div class="col-8 p-0">
-                                                <input type="number" :name="item.productName"
+                                                <input type="number" :name="item.name"
                                                     class="form-control form-control-sm qty_input text-center"
                                                     value="0" readonly>
                                             </div>
@@ -443,7 +327,7 @@
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </div>
-                                        <button type="button" class="col-12 btn btnaddtocart">加到購物車</button>
+                                        <button type="button" class="col-12 btn">加到購物車</button>
                                     </div>
                                 </div>
                             </div>
@@ -497,13 +381,13 @@
                             <template v-for="item in product">
                             <div class="col-6 col-md-4 p-1">
                                 <div class="card productcard w-100 h-100">
-                                    <img :src="item.imgPath" class="m-2" :id="item.productId" data-bs-toggle="modal"
+                                    <img :src="item.path" class="m-2" :id="item.id" data-bs-toggle="modal"
                                     data-bs-target="#productModal" @@click="selected">
-                                    <div class="card-body">
-                                        <div :id="item.productId" data-bs-toggle="modal" data-bs-target="#productModal" @@click="selected">
-                                            <p class="card-title">{{item.productName}}</p>
-                                            <span class="price">${{item.unitPrice}}</span>
-                                            <span class="discount">${{Math.round(item.unitPrice*0.8@*item.discount*@)}}</span>
+                                    <div class="card-body btnaddtocart">
+                                        <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal" @@click="selected">
+                                            <p class="card-title">{{item.name}}</p>
+                                            <span class="price">${{item.price}}</span>
+                                            <span class="discount">${{Math.round(item.price*0.8@*item.discount*@)}}</span>
                                             <span class="sale px-2">SALE</span>
                                         </div>
                                         <div class="row justify-content-center my-2 mx-0 quantitygroup">                                                
@@ -512,7 +396,7 @@
                                                 <i class="fa fa-minus"></i>
                                             </button>
                                             <div class="col-8 p-0">
-                                                <input type="number" :name="item.productName"
+                                                <input type="number" :name="item.name"
                                                     class="form-control form-control-sm qty_input text-center"
                                                     value="0" readonly>
                                             </div>
@@ -521,7 +405,7 @@
                                                 <i  class="fa fa-plus"></i>
                                             </button>
                                         </div>
-                                        <button type="button" class="col-12 btn btnaddtocart">加到購物車</button>
+                                        <button type="button" class="col-12 btn">加到購物車</button>
                                     </div>
                                 </div>
                             </div>
@@ -539,7 +423,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">{{head}}</h5>
+                        <h3 class="modal-title">{{productName}}</h3>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body py-0">
@@ -547,21 +431,19 @@
                             <img class="modal-image" :src="imagesrc">
                         </div>
                         <div class="card-body modal-spec">
-                            <ul>
-                                <li v-for="feature in featurelist">{{feature}}</li>
-                            </ul>
+                            <h5>{{description}}</h5>                            
                         </div>
                     </div>
                     <div class="container  my-1">
                         <div class="row justify-content-center quantitygroup">
-                            <button type="button" @@click="minus" class="col-1 p-0 btn btn-dark btn-sm minus-btn ">
+                            <button type="button" @@click="minus" class="col-2 p-0 btn btn-sm">
                                 <i class="fa fa-minus"></i>
                             </button>
-                            <div class="col-4 p-0">
-                                <input type="number" :name="head"
+                            <div class="col-5 p-0">
+                                <input type="number" :name="productName"
                                     class="form-control form-control-sm qty_input text-center" value="0" readonly>
                             </div>
-                            <button type="button" @@click="plus" class="col-1 p-0 btn btn-dark btn-sm plus-btn ">
+                            <button type="button" @@click="plus" class="col-2 p-0 btn btn-sm">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
@@ -571,7 +453,7 @@
                             <div class="container">
                                 <div class="row justify-content-center">
                                     <div class="col-12 ">
-                                        <button type="submit" class="btn btncartbackgroundcolor">加到購物車
+                                        <button type="submit" class="btn btncartbackgroundcolor"> 加到購物車
                                             <i class="fa-solid fa-cart-shopping ps-1"></i>
                                         </button>
                                     </div>
@@ -708,109 +590,12 @@
 </div>
 
 @*購物車*@
-<div class="shopCartToggle">
-    <button class="" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-        <i class="fa-sharp fa-solid fa-cart-shopping"></i>
-    </button>
-    <div class="offcanvas offcanvas-end w-100" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">ShopCart</h5>
-        </div>
-        <div class="scrollregion">
-            <fieldset class="mx-3 my-4">
-                <div class="shopCart m-3">
-                    <i class="fa-sharp fa-solid fa-cart-shopping me-2"></i>
-                    <b>購物車</b>
-                </div>
-                <!-- 購物車清單 -->
-                <div id="cartList" class="container-fluid">
-                    <div class="cartList" v-for="(item,index) in itemList" v-bind:key="item.id">
-                        <ol class="list-group">
-                            <li class="row list-group-item d-flex justify-content-between align-items-start">
-                                <div class="col-3 px-0">
-                                    <img src="https://picsum.photos/id/684/600/600" class="w-100 rounded">
-                                </div>
-                                <div class="col-5 px-0">
-                                    <div class="ms-2 me-auto">
-                                        <div class="fw-bold productName">{{item.name}}</div>
-                                        <div>描述</div>
-                                        <div v-if="item.discount != 1">
-                                            <span>$ </span>
-                                            <span class="originalPrice">{{item.unitPrice * item.count}} </span>
-                                            <span class="discountPrice" name="finalPrice">{{discountPrice(item)}}</span>
-                                        </div>
-                                        <div v-else>
-                                            <span>$ </span>
-                                            <span name="finalPrice">{{item.unitPrice * item.count}} </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row col-4 px-0">
-                                    <div class="col-6 text-center px-0">
-                                        <button class="btnCount" v-on:click="increase(item)">▲</button>
-                                        <div>{{item.count}}</div>
-                                        <button class="btnCount" v-on:click="decrease(item)">▼</button>
-                                    </div>
-                                    <div class="col-6 text-center d-flex align-items-center justify-content-center">
-                                        <div>
-                                            <button class="btnDelete" v-on:click="deleteItem(index)">
-                                                <i class="fa-sharp fa-solid fa-xmark"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ol>
-                    </div>
-                    <form action="Success" method="post" class="d-none">
-                        <input name="orderTime" v-model="orderTime" />
-                        <button type="submit" ref="orderingSend"></button>
-                    </form>
-                </div>
-                <hr>
-                <div class="cartTotal">此筆訂單總額: {{cartTotal()}} 元</div>
-            </fieldset>
-
-        </div>
-
-
-        <!-- 底部按鈕 -->
-        <div class="container orderCheck my-3">
-            <div class="row">
-                <div class="col col-xl-6 text-center">
-                    <button type="button" class="bottombtntext btnBacktoMenu py-2" data-bs-dismiss="offcanvas" aria-label="Close"">
-                        繼續點餐
-                    </button>
-                </div>
-                <div class="col col-xl-6 text-center">
-                    <button type="button" class="bottombtntext btnCartConfirm py-2" data-bs-toggle="modal"
-                            data-bs-target="#delieveBackdrop">
-                        送出訂單
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!-- Modal -->
-        <div class="modal fade" id="delieveBackdrop" data-bs-backdrop="delieve" data-bs-keyboard="false" tabindex="-1"
-                aria-labelledby="delieveBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="delieveBackdropLabel">訂單送出提示</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        確認訂單無誤並送出?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btnInModal btnModalCancel" data-bs-dismiss="modal">取消</button>
-                        <button class="btnInModal btnModalConfirm" v-on:click="orderingSend()">確認送出</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+<a href="https://localhost:7273/Order/Cart">
+    <div class="shopCart">
+        <i class="fa-sharp fa-solid fa-cart-shopping"> </i>
+        <h2> 查看購物車</h2>
     </div>
-</div>
+</a>
 
 
 <!-- Cookie -->
@@ -822,10 +607,10 @@
         data: {
             tableid: 13,
             vueid: "",
-            imgPath: "",
-            head: "",
+            imagesrc: "",
+            productName: "",
             discount: "",
-            featurelist: "",
+            description: "",
             optionsform: []
             ,
             optionsection1: [
@@ -848,11 +633,11 @@
                 this.value = 0;
                 this.formdata = 0;
                 this.vueid = e.currentTarget.id;
-                var item = this.product[this.vueid];
-                this.imagesrc = item.imgPath;
-                this.head = item.head;
+                var item = this.product[this.vueid-1];
+                this.imagesrc = item.path;
+                this.productName = item.name;
                 //this.discount = item.discount;
-                this.featurelist = item.allfeature;
+                this.description = item.description;
             },
             plus: function (e) {
                 if (e.currentTarget.parentElement.children[1].children[0].value < 10) {
@@ -878,9 +663,9 @@
         },
         created: function () {
             let self = this;
-            fetch("https://localhost:7273/Product/GetAllProducts")
-                .then(function (response) { return response.json() })
-                .then(function (result) { self.product = result })
+            fetch("https://localhost:7273/api/Products/GetAllProducts")
+                .then((response) => response.json())
+                .then((result) => self.product = result)
         }
     })   
 </script>
@@ -893,10 +678,10 @@
         var selProd=e.target.parentElement.children[1].children[1].children[0];
         if(selProd.value>0){        
         var item={
-             productId:selProd.id,
-             productName:selProd.name,
+             id:selProd.id,
+             name:selProd.name,
              discount:selProd.discount,
-             imgPath:selProd.imgPath
+             path:selProd.path
             };    
         for(i=0;i<cartArray.length;i++){
         //初始化
