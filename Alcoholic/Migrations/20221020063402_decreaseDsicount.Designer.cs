@@ -4,6 +4,7 @@ using Alcoholic.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alcoholic.Migrations
 {
     [DbContext(typeof(db_a8de26_projectContext))]
-    partial class db_a8de26_projectContextModelSnapshot : ModelSnapshot
+    [Migration("20221020063402_decreaseDsicount")]
+    partial class decreaseDsicount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,8 +89,13 @@ namespace Alcoholic.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
                     b.HasKey("DiscountId")
                         .HasName("PK_Discount_1");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Discount");
                 });
@@ -480,6 +487,13 @@ namespace Alcoholic.Migrations
                     b.ToTable("Reserves");
                 });
 
+            modelBuilder.Entity("Alcoholic.Models.Entities.Discount", b =>
+                {
+                    b.HasOne("Alcoholic.Models.Entities.Product", null)
+                        .WithMany("Discount")
+                        .HasForeignKey("ProductId");
+                });
+
             modelBuilder.Entity("Alcoholic.Models.Entities.Feedback", b =>
                 {
                     b.HasOne("Alcoholic.Models.Entities.Order", "Order")
@@ -587,6 +601,8 @@ namespace Alcoholic.Migrations
 
             modelBuilder.Entity("Alcoholic.Models.Entities.Product", b =>
                 {
+                    b.Navigation("Discount");
+
                     b.Navigation("Images");
 
                     b.Navigation("OrderDetails");

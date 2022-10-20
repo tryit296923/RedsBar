@@ -9,7 +9,7 @@ namespace Alcoholic.Models.DTO
     }
     public class OrderRequestModel
     {
-        public string OrderId { get; set; }
+        //public string OrderId { get; set; }
         public Guid MemberId { get; set; }
         public int ProductId { get; set; }
         public int Number { get; set; }
@@ -17,7 +17,7 @@ namespace Alcoholic.Models.DTO
         public int UnitPrice { get; set; }
         public double DiscountAmount { get; set; }
         public DateTime OrderTime { get; set; }
-        public string Status { get; set; }
+        public string Status { get; set; } = "N";
     }
     public class OrderTotalViewModel
     {

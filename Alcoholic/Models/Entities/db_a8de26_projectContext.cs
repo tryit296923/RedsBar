@@ -168,7 +168,6 @@ namespace Alcoholic.Models.Entities
 
                 entity.Property(e => e.ProductName).HasColumnType("nvarchar(max)");
                 entity.HasMany(x => x.OrderDetails).WithOne(x => x.Product).HasForeignKey(x => x.ProductId);
-                entity.HasMany(x => x.Discount).WithOne(x => x.Product).HasForeignKey(x => x.ProductId);
                 entity.HasMany(x => x.ProductsMaterials).WithOne(x => x.Product).HasForeignKey(x => x.ProductId);
                 entity.HasMany(x => x.Images).WithOne(x => x.Product).HasForeignKey(x => x.ProductId);
             });
@@ -214,24 +213,14 @@ namespace Alcoholic.Models.Entities
 
             modelBuilder.Entity<Discount>(entity =>
             {
-                entity.HasKey(e => new { e.DiscountId, e.ProductId })
-                    .HasName("PK_Discount_1");
+                entity.HasKey(e => e.DiscountId).HasName("PK_Discount_1");
 
                 entity.Property(e => e.DiscountId).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.ProductId).HasColumnName("ProductId");
 
                 entity.Property(e => e.DiscountName).HasColumnType("nvarchar(max)");
 
                 entity.Property(e => e.DiscountAmount).HasColumnType("decimal");
 
-                entity.Property(e => e.Qualify).HasColumnType("nvarchar(max)");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.Discount)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Discount_Products");
             });
 
             modelBuilder.Entity<Feedback>( entity =>
