@@ -27,7 +27,6 @@ namespace Alcoholic.Controllers
                 string? memberName = (from x in projectContext.Members
                                      where x.MemberID == memberIdCookie
                                      select x.MemberName).FirstOrDefault();
-                //string memberName = "Matt";
                 ViewBag.memberName = memberName;
             }
             else
