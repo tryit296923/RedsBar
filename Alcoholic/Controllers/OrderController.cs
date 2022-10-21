@@ -2,7 +2,7 @@
 using Alcoholic.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
-
+using System.Text.Json;
 
 namespace Alcoholic.Controllers
 {
@@ -23,6 +23,9 @@ namespace Alcoholic.Controllers
         [HttpPost]
         public string Cart([FromBody] List<CartItem> cartItem)
         {
+            var cartString = JsonSerializer.Serialize(cartItem);
+            HttpContext.Session.SetString("CartItem", cartString);
+            Console.WriteLine(HttpContext.Session.GetString("CartItem"));
             //Guid memberIdCookie = Guid.Parse(Request.Cookies["MemberID"]);
 
             //if (memberIdCookie != null)
@@ -42,6 +45,7 @@ namespace Alcoholic.Controllers
 
             }
             return "KHGJLKKVKJ";
+
         }
 
         [HttpPost]
