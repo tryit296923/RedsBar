@@ -163,6 +163,24 @@ namespace Alcoholic.Controllers.API
             return Ok();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Remail()
+        {
+            string? mailId = HttpContext.Session.GetString("EmailID");
+            if (mailId == null || string.IsNullOrEmpty(mailId))
+            {
+                return new EmptyResult();
+            }
+            Guid EmailID = Guid.Parse(mailId);
+            Member? member = (from m in db.Members
+                              where m.EmailID == EmailID
+                              select m).FirstOrDefault();
+            var msg = await RazorTemplateEngine.RenderAsync<Member>("Views/Member/Authorize.cshtml", member);
+            mail.SendMail(member.Email, msg, "RedsBar 會員認證信件");
+            return new EmptyResult();
+        }
+
+
         private bool MemberExists(string Account)
         {
             return db.Members.Any(member => member.MemberAccount == Account);
