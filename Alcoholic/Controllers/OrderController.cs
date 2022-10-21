@@ -64,7 +64,7 @@ namespace Alcoholic.Controllers
         }
         public IActionResult Cart()
         {
-            //測試用
+            //測試用session
             List<CartItem> cartItems = new List<CartItem>()
             {
                 new CartItem { Id = 1,Qty = 2 },
