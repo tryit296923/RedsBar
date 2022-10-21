@@ -24,12 +24,12 @@ namespace Alcoholic.Controllers
         public void AddToCart([FromBody] List<CartItem> cartItem)
         {
             var sesStr = HttpContext.Session.GetString("CartItem");
-            var abc = Newtonsoft.Json.JsonSerializer.Serialize(sesStr);
+            var abc = System.Text.Json.JsonSerializer.Serialize(sesStr);
 
             //判斷是否有session
             if (string.IsNullOrEmpty(sesStr))
             {
-                var cartString = Newtonsoft.Json.JsonSerializer.Serialize(cartItem);
+                var cartString = System.Text.Json.JsonSerializer.Serialize(cartItem);
                 HttpContext.Session.SetString("CartItem", cartString);
                 Console.WriteLine(sesStr);
                 Console.WriteLine("abc");
@@ -38,7 +38,7 @@ namespace Alcoholic.Controllers
 
             else
             {
-                var abc = JsonSerializer.Serialize(sesStr);
+                //var abc = System.Text.Json.JsonSerializer.Serialize(sesStr);
 
             }
             //判斷商品是否已在session中              
