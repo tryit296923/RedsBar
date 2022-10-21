@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/RedsBar/Pages/vue/vue.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-file-agent@latest/dist/vue-file-agent.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue-file-agent@latest/dist/vue-file-agent.umd.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <script type="text/x-template" id="vue-file-agent-demo">
+        <div id="profile-pic-demo" class="bg-light pt-3">
+          <VueFileAgent
+            class="profile-pic-upload-block"
+            ref="profilePicRef"
+            :multiple="false"
+            :deletable="false"
+            :meta="false"
+            :compact="true"
+            :accept="'image/*'"
+            :helpText="'Drag an image file here'"
+            :errorText="{
+              type: 'Please select an image',
+            }"
+            v-model="profilePic"
+            @select="onSelect($event)"
+          >
+            <template v-slot:before-outer>
+            </template >
+            <template v-slot:after-inner>
+              <span title="after-inner" class="btn btn-link btn-sm btn-block">Select image file</span>
+            </template >
+            <template v-slot:after-outer>
+              <div title="after-outer">
+                <p>Please select an image and click the upload button</p>
+                <div class="drop-help-text">
+                  <p class="text-success">Drop the file!</p>
+                </div>
+                <button type="button" class="btn btn-primary" :class="{'disabled': uploaded || !profilePic}" @click="upload()">Upload</button>
+                <button type="button" class="btn" :class="[uploaded ? 'btn-danger' : 'btn-secondary']" v-if="profilePic" @click="removePic()">Remove</button>
+                <div class="clearfix"></div>
+              </div>
+            </template >
+          </VueFileAgent>
+        </div>
+      </script>
+      
+      <!-- ----------------------------- -->
+      
+      <div class="container py-3">
+        <div id="app">
+          
+          <h5><a target="_blank" href="https://safrazik.github.io/vue-file-agent">Vue File Agent</a> Playground</h5>
+          
+      <hr>
+          
+      <ul class="nav nav-pills mb-2">
+        <li class="nav-item">
+          <a target="_blank" class="nav-link" href="https://codepen.io/safrazik/pen/BaBVNEE">1. Preloading Files Demo</a>
+        </li>
+        <li class="nav-item">
+      <a target="_blank" class="nav-link active" href="https://codepen.io/safrazik/pen/BaBpYme">2. Profile Picture Demo</a>
+        </li>
+        <li class="nav-item">
+          <a target="_blank" class="nav-link" href="https://codepen.io/safrazik/pen/OJLgvya">3. Gmail Inspired Demo</a>
+        </li>
+      </ul>
+          
+      <hr>
+          
+          <vue-file-agent-demo></vue-file-agent-demo>
+         
+        </div>
+      </div>
+<script>
+        var component = {
+  data: function(){
+    return {
+      name: 'Gapal',
+      profilePic: null,
+      uploaded: false,
+      uploadUrl: 'https://www.mocky.io/v2/5d4fb20b3000005c111099e3',
+      uploadHeaders: {},
+    }
+  },
+  methods: {
+    removePic: function(){
+      var profilePic = this.profilePic;
+      this.$refs.profilePicRef.deleteUpload(this.uploadUrl, this.uploadHeaders, [profilePic]);
+      this.profilePic = null;
+      this.uploaded = false;
+    },
+    upload: function(){
+      var self = this;
+      this.$refs.profilePicRef.upload(this.uploadUrl, this.uploadHeaders, [this.profilePic]).then(function(){
+        self.uploaded = true;
+        setTimeout(function(){
+          // self.profilePic.progress(0);          
+        }, 500);
+      });
+    },
+    onSelect: function(fileRecords){
+      console.log('onSelect', fileRecords);
+      this.uploaded = false;
+    }
+  }
+}
+
+component.template = '#vue-file-agent-demo';
+
+Vue.component('vue-file-agent-demo', component);
+
+new Vue({
+  el: '#app'
+});
+
+
+
+
+
+
+
+const logvm = new Vue({
+    el:"#Login",
+    data:{
+        loginaccount: "",
+        loginpassword: "",
+    },
+    methods:{
+        login: function () {
+            let loginbody = {
+                "MemberAccount": this.loginaccount,
+                "MemberPassword": this.loginpassword,
+            };
+            let loginJsonString = JSON.stringify(loginbody);
+            fetch("https://localhost:7273/Member/Login", {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: loginJsonString        // to JsonString
+                })
+                .then((e) => console.log(e))
+                .then((result)=>{
+                    if (result) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '成功!',
+                        })
+                    }else{
+                        wal.fire({
+                            icon: 'error',
+                            title: '帳號密碼錯誤!登入大失敗!',
+                        })
+                    }})
+                .catch(error => console.log(error))
+        }
+    }
+})
+
+
+      </script>
+</body>
+</html>

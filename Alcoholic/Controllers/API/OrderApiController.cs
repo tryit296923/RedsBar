@@ -3,6 +3,7 @@ using Alcoholic.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace Alcoholic.Controllers.API
 {
@@ -63,5 +64,20 @@ namespace Alcoholic.Controllers.API
             }
 
         }
+
+        // 離席
+        [HttpPut]
+        public IActionResult Dismiss(int Desk)
+        {
+            DeskInfo? deskInfo = (from desk in _db.DeskInfo
+                                 where desk.Desk == Desk
+                                 select desk).FirstOrDefault();
+            deskInfo.Occupied = 0;
+            deskInfo.EndTime = DateTime.Now.ToString("yyyyMMddHHmm");
+            _db.Entry(deskInfo).State = EntityState.Modified;
+            _db.SaveChanges();
+            return Ok();
+        }
+
     }
 }

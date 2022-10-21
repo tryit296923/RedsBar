@@ -327,7 +327,7 @@
                 let JsonString = JSON.stringify(fbody);
                 console.log(JsonString);    // JSON
                 console.log(fbody);         // Obj
-                fetch("https://localhost:7273/Member/Register", {
+                fetch("https://localhost:7273/api/Member/Register", {
                     method: 'POST',
                     headers: { "Content-Type": "application/json" },
                     body: JsonString        // to JsonString
@@ -374,7 +374,7 @@
                     Password: this.loginpassword,
                 };
                 let loginJsonString = JSON.stringify(loginbody);
-                fetch("https://localhost:7273/Member/Login", {
+                fetch("https://localhost:7273/api/Member/Login", {
                     method: 'POST',
                     headers: { "Content-Type": "application/json" },
                     body: loginJsonString        // to JsonString
