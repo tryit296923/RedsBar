@@ -1,8 +1,12 @@
-﻿<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.css">
+﻿@{
+    ViewData["Title"] = "線上訂位";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.css">
 <style>
     body {
         color: aliceblue;
         background-color: #222220;
+        margin-bottom: 100px;
     }
 
     .img-box {
@@ -15,11 +19,6 @@
             height: 80%;
             width: 80%;
         }
-
-    a {
-        color: aliceblue;
-        text-decoration: none;
-    }
 
     /*navbar*/
 
@@ -116,8 +115,8 @@
         background-color: #222220;
         height: 100px;
         width: 100%;
-        position: sticky;
-        bottom: 0;
+        position: fixed;
+        bottom: 0px;
     }
 
         .booking-check div {
@@ -157,24 +156,6 @@
         .booking-uncheck-btn:hover {
             color: white;
         }
-
-    /*footer*/
-    footer {
-        background-color: #D8CDB9;
-        margin-top: 40px;
-        color: #666;
-        font-size: 14px;
-    }
-
-        footer a {
-            color: #666;
-        }
-
-    .footright {
-        margin: auto;
-        padding: 20px 10px 10px 10px;
-        width: 50%;
-    }
 
     @@media screen and (max-width: 992px) {
         .searcharea {
@@ -269,13 +250,6 @@
         <input name="Number" v-bind:value="Number" hidden />
         <button type="submit" ref="bookingcheck" hidden></button>
     </form>
-    <footer>
-        <div class="container footright">
-            <p><a href="https://goo.gl/maps/VARMRkiZqDQLhgWbA">100 台北市中正區濟南路一段321號</a></p>
-            <p><a href="tel:0233221368">02 3322 1368</a></p>
-            <p>© 2022 Alcoholic</p>
-        </div>
-    </footer>
     <div class="booking-check">
         <div class="container">
             <p class="booking-check-text">

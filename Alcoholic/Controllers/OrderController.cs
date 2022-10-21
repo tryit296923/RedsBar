@@ -18,24 +18,30 @@ namespace Alcoholic.Controllers
         {
             return RedirectToAction("Cart", "Order");
         }
-        public IActionResult Cart()
+
+
+        [HttpPost]
+        public string Cart([FromBody] List<CartItem> cartItem)
         {
-            Guid memberIdCookie = Guid.Parse(Request.Cookies["MemberID"]);
+            //Guid memberIdCookie = Guid.Parse(Request.Cookies["MemberID"]);
 
-            if (memberIdCookie != null)
+            //if (memberIdCookie != null)
+            //{
+            //    string? memberName = (from x in projectContext.Members
+            //                         where x.MemberID == memberIdCookie
+            //                         select x.MemberName).FirstOrDefault();
+            //    ViewBag.memberName = memberName;
+            //}
+            //else
+            //{
+            //    return NotFound();
+            //}
+            if (cartItem == null)
             {
-                string? memberName = (from x in projectContext.Members
-                                     where x.MemberID == memberIdCookie
-                                     select x.MemberName).FirstOrDefault();
-                //string memberName = "Matt";
-                ViewBag.memberName = memberName;
-            }
-            else
-            {
-                return NotFound();
-            }
+                return "fail";
 
-            return View();
+            }
+            return "KHGJLKKVKJ";
         }
 
         [HttpPost]
@@ -113,6 +119,6 @@ namespace Alcoholic.Controllers
             ViewBag.orderTime = now;
             return View();
         }
-
     }
+    
 }
