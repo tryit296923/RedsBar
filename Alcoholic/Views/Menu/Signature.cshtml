@@ -1,0 +1,167 @@
+﻿@{
+    ViewData["Title"] = "招牌調酒";
+}
+<style>
+    body {
+        position: relative;
+        background-color: #333;
+    }
+
+    /*Breadcrumb*/
+    .path {
+        background-color: #D8CDB9;
+        height: 30px;
+        line-height: 30px;
+    }
+
+    .breadcrumb {
+        margin-bottom: 0;
+        height: 30px;
+    }
+    .breadcrumb a {
+        color: #444;
+    }
+
+    @@media screen and (max-width: 992px) {
+        .searcharea {
+            display: none !important;
+        }
+
+        .searcharea2 {
+            display: block;
+        }
+    }
+    /* 產品 */
+    .classicCT{
+        padding: 0 50px 0 50px;
+    }
+    .classicCT p{
+        font-size: small;
+        height: 40px;
+    }
+    .price {
+        color: #333;
+        text-decoration: line-through;
+    }
+    .discount {
+        color: red;
+        font-weight: bold;
+    }
+    .sale {
+        border: 1px solid red;
+        font-size: small;
+        float: right;
+        color: red;
+    }
+    /*model*/
+    h3{
+        color: #444;
+        text-align: center;
+        margin:50px;
+    }
+    .modal-title{
+        font-weight: bold;
+        color: #842029;
+    }
+    .modal-image {
+        max-height: 280px;
+        margin:50px 0 50px 0;
+    }
+
+    .modal-spec {
+        overflow-y: auto;
+        max-height: 20vh;
+    }
+
+    .modal-bodyimg {
+        text-align: center;
+    }
+</style>
+
+
+
+<!--Breadcrumb-->
+<div class="path">
+    <div class="container">
+        <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Signature</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div id="vueproductModal">
+    <div class="container classicCT" id="classicCT">
+        <div class="row g-4 mt-2">
+            <template v-for="item in product">
+                <div class="col-xl-3 col-md-4 col-6 p-3">
+                    <div class="card productcard w-100 h-100">
+                        <img :src="item.path" class="m-2" :id="item.id" data-bs-toggle="modal"
+                            data-bs-target="#productModal" @@click="selected">
+                        <div class="card-body">
+                            <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal"
+                                @@click="selected">
+                                <p class="card-title">{{item.name}}</p>
+                                <span class="price">${{item.price}}</span>
+                                <span
+                                    class="discount">${{Math.round(item.price*discount)}}</span>
+                                <span class="sale px-2">SALE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+    <!-- 產品懸浮視窗Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{head}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-0">
+                    <div class="modal-bodyimg ">
+                        <img class="modal-image" :src="imagesrc">
+                    </div>
+                    <div class="card-body modal-spec">
+                       <h3>{{description}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#vueproductModal',
+        data: {
+            vueid: "",
+            imagesrc: "",
+            head: "",
+            discount: 0.8,
+            description: "",
+            product: []
+        },
+        methods: {
+            selected: function (e) {
+                this.vueid = e.currentTarget.id;
+                var item = this.product[this.vueid-1];
+                this.imagesrc = item.path;
+                this.head = item.name;
+                this.description = item.description;
+            },
+        },
+        beforeCreate: function () {
+        let self = this;
+        fetch('https://localhost:7273/api/products/GetAllProducts')
+            .then(function (response) { return response.json() })
+            .then(function (result) { self.product = result })
+        },
+    })   
+</script>

@@ -12,6 +12,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="shortcut icon" type="image/ico" href="@Url.Content("~/images/icons/logoicon-r.png")">
     <style>
+        body{
+            margin:0px;
+        }
+        a{
+            text-decoration: none;
+        }
         /* NAV */
         .logo {
             width: 50px;
@@ -59,6 +65,7 @@
         }
         /* Footer */
         footer{
+            width: 100%;
             background-color: #D8CDB9; 
             margin-top: 40px;
             color: #666;
@@ -91,13 +98,10 @@
                             <a href=""><img src="~/images/icons/search.png" alt=""></a>
                         </form>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">推薦</a>
+                            <a class="nav-link" asp-controller="Menu" asp-action="Recommendation">推薦酒款</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">經典酒款</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">算命調酒</a>
+                            <a class="nav-link" asp-controller="Menu" asp-action="Signature">招牌調酒</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Booking" asp-action="Booking">線上訂位</a>
@@ -118,6 +122,13 @@
         @RenderBody()
     </main>
     @await RenderSectionAsync("Scripts", required: false)
+    <footer>
+        <div class="container footright">
+            <p><a href="https://goo.gl/maps/VARMRkiZqDQLhgWbA">100 台北市中正區濟南路一段321號</a></p>
+            <p><a href="tel:0233221368">02 3322 1368</a></p>
+            <p>© 2022 Alcoholic</p>
+        </div>
+    </footer>
 </body>
 
 </html>
