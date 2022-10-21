@@ -2,6 +2,7 @@
 using Alcoholic.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Newtonsoft.Json.Linq;
 using System.Text.Json;
 
 namespace Alcoholic.Controllers
@@ -21,11 +22,51 @@ namespace Alcoholic.Controllers
 
 
         [HttpPost]
-        public string Cart([FromBody] List<CartItem> cartItem)
+        public void Cart([FromBody] List<CartItem> cartItem)
         {
-            var cartString = JsonSerializer.Serialize(cartItem);
-            HttpContext.Session.SetString("CartItem", cartString);
-            Console.WriteLine(HttpContext.Session.GetString("CartItem"));
+            var sesStr = HttpContext.Session.GetString("CartItem");
+            var abc = JsonSerializer.Serialize(sesStr);
+
+
+
+            //判斷是否有session
+            if (string.IsNullOrEmpty(sesStr))
+            {
+                var cartString = JsonSerializer.Serialize(cartItem);
+                HttpContext.Session.SetString("CartItem", cartString);
+                Console.WriteLine(sesStr);
+                Console.WriteLine("abc");
+                Console.WriteLine(abc);
+            }
+
+            else
+            {
+                var abc = JsonSerializer.Serialize(sesStr);
+
+            }
+            //判斷商品是否已在session中              
+
+
+            //for (int i = 0; i < abc.Length; i++)
+            //{
+            //    if(abc[i].Id
+            //}
+
+            //int index = abc.FindIndex(c => c.Id.Equals(.));
+            //if (index != -1)
+            //{
+            //    cart[index].Amount += item.Amount;
+            //    cart[index].SubTotal += item.SubTotal;
+            //}
+            //else
+            //{
+            //    cart.Add(item);
+            //}
+
+            //}
+        }
+
+
             //Guid memberIdCookie = Guid.Parse(Request.Cookies["MemberID"]);
 
             //if (memberIdCookie != null)
@@ -39,16 +80,16 @@ namespace Alcoholic.Controllers
             //{
             //    return NotFound();
             //}
-            if (cartItem == null)
-            {
-                return "fail";
+            //if (cartItem == null)
+            //{
+            //    return "fail";
 
-            }
-            return "KHGJLKKVKJ";
+            //}
+            //return "KHGJLKKVKJ";
 
-        }
+            //}
 
-        [HttpPost]
+            [HttpPost]
         public IActionResult Success(string orderId)
         {
 
