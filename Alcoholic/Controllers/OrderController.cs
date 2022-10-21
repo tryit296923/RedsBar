@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace Alcoholic.Controllers
 {
@@ -19,20 +20,16 @@ namespace Alcoholic.Controllers
         {
             return RedirectToAction("Cart", "Order");
         }
-
-
         [HttpPost]
-        public void Cart([FromBody] List<CartItem> cartItem)
+        public void AddToCart([FromBody] List<CartItem> cartItem)
         {
             var sesStr = HttpContext.Session.GetString("CartItem");
-            var abc = JsonSerializer.Serialize(sesStr);
-
-
+            var abc = System.Text.Json.JsonSerializer.Serialize(sesStr);
 
             //判斷是否有session
             if (string.IsNullOrEmpty(sesStr))
             {
-                var cartString = JsonSerializer.Serialize(cartItem);
+                var cartString = System.Text.Json.JsonSerializer.Serialize(cartItem);
                 HttpContext.Session.SetString("CartItem", cartString);
                 Console.WriteLine(sesStr);
                 Console.WriteLine("abc");
@@ -41,7 +38,7 @@ namespace Alcoholic.Controllers
 
             else
             {
-                var abc = JsonSerializer.Serialize(sesStr);
+                //var abc = System.Text.Json.JsonSerializer.Serialize(sesStr);
 
             }
             //判斷商品是否已在session中              
@@ -65,41 +62,53 @@ namespace Alcoholic.Controllers
 
             //}
         }
+        public IActionResult Cart()
+        {
+            //測試用
+            List<CartItem> cartItems = new List<CartItem>()
+            {
+                new CartItem { Id = 1,Qty = 2 },
+                new CartItem { Id = 2,Qty = 3 }
+            };
 
+            foreach (var cartItem in cartItems)
+            {
+                var product = projectContext.Products.Find(cartItem.Id);
+                cartItem.ProductName = product.ProductName;
+                cartItem.UnitPrice = product.UnitPrice;
+                //...
+            }
 
-            //Guid memberIdCookie = Guid.Parse(Request.Cookies["MemberID"]);
+            HttpContext.Session.SetString("testsession", JsonConvert.SerializeObject("cartItems"));
+            var stest = JsonConvert.DeserializeObject<List<CartItem>>(HttpContext.Session.GetString("testsession"));
 
-            //if (memberIdCookie != null)
-            //{
-            //    string? memberName = (from x in projectContext.Members
-            //                         where x.MemberID == memberIdCookie
-            //                         select x.MemberName).FirstOrDefault();
-            //    ViewBag.memberName = memberName;
-            //}
-            //else
+            return View();
+            //if(cartItem == null)
             //{
             //    return NotFound();
             //}
-            //if (cartItem == null)
+            //else
             //{
-            //    return "fail";
-
-            //}
-            //return "KHGJLKKVKJ";
-
+            //    return View();
             //}
 
-            [HttpPost]
+            //string sMemberID = HttpContext.Session.GetString("MemberID");
+            ////Guid memberIdCookie = Guid.Parse(Request.Cookies["MemberID"]);
+            ///
+        }
+
+        [HttpPost]
         public IActionResult Success(string orderId)
         {
-
-            string deskCookieSuccess = Request.Cookies["Desk"];
-            string numberCookieSuccess = Request.Cookies["Number"];
+            string sDeskSuccess = HttpContext.Session.GetString("Desk");
+            string sNumberSuccess = HttpContext.Session.GetString("Number");
+            //string deskCookieSuccess = Request.Cookies["Desk"];
+            //string numberCookieSuccess = Request.Cookies["Number"];
 
             var order = (from x in projectContext.Orders where x.OrderId == orderId select x).FirstOrDefault();
 
-            ViewBag.deskCookieSuccess = deskCookieSuccess;
-            ViewBag.numberCookieSuccess = numberCookieSuccess;
+            ViewBag.deskSessionSuccess = sDeskSuccess;
+            ViewBag.numberSessionSuccess = sNumberSuccess;
 
             return View(order);
         }
@@ -107,19 +116,21 @@ namespace Alcoholic.Controllers
         public IActionResult Total()
         {
             OrderTotalViewModel orderList = new OrderTotalViewModel();
-            string memberIdCookie = Request.Cookies["MemberID"];
-            string deskCookieTotal = Request.Cookies["Desk"];
+            string sMemberIDTotal = HttpContext.Session.GetString("MemberID");
+            string sDeskTotal = HttpContext.Session.GetString("Desk");
+            //string memberIdCookie = Request.Cookies["MemberID"];
+            //string deskCookieTotal = Request.Cookies["Desk"];
 
 
-            if (memberIdCookie != null)
+            if (sMemberIDTotal != null)
             {
                 string memberName = (from x in projectContext.Members
-                                     where x.MemberID == Guid.Parse(memberIdCookie)
+                                     where x.MemberID == Guid.Parse(sMemberIDTotal)
                                      select x).FirstOrDefault().MemberName;
                 ViewBag.memberName = memberName;
 
                 orderList.Orders = (from x in projectContext.Orders
-                                    where x.Status == "N" && x.DeskNum == deskCookieTotal
+                                    where x.Status == "N" && x.DeskNum == sDeskTotal
                                     select new OrderListViewModel
                                     {
                                         OrderId = x.OrderId,
@@ -164,6 +175,6 @@ namespace Alcoholic.Controllers
             ViewBag.orderTime = now;
             return View();
         }
+
     }
-    
 }
