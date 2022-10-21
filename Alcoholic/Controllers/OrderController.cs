@@ -2,6 +2,8 @@
 using Alcoholic.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Newtonsoft.Json.Linq;
+using System.Text.Json;
 using Newtonsoft.Json;
 
 namespace Alcoholic.Controllers
@@ -18,9 +20,51 @@ namespace Alcoholic.Controllers
         {
             return RedirectToAction("Cart", "Order");
         }
+        [HttpPost]
+        public void AddToCart([FromBody] List<CartItem> cartItem)
+        {
+            var sesStr = HttpContext.Session.GetString("CartItem");
+            var abc = Newtonsoft.Json.JsonSerializer.Serialize(sesStr);
+
+            //判斷是否有session
+            if (string.IsNullOrEmpty(sesStr))
+            {
+                var cartString = Newtonsoft.Json.JsonSerializer.Serialize(cartItem);
+                HttpContext.Session.SetString("CartItem", cartString);
+                Console.WriteLine(sesStr);
+                Console.WriteLine("abc");
+                Console.WriteLine(abc);
+            }
+
+            else
+            {
+                var abc = JsonSerializer.Serialize(sesStr);
+
+            }
+            //判斷商品是否已在session中              
+
+
+            //for (int i = 0; i < abc.Length; i++)
+            //{
+            //    if(abc[i].Id
+            //}
+
+            //int index = abc.FindIndex(c => c.Id.Equals(.));
+            //if (index != -1)
+            //{
+            //    cart[index].Amount += item.Amount;
+            //    cart[index].SubTotal += item.SubTotal;
+            //}
+            //else
+            //{
+            //    cart.Add(item);
+            //}
+
+            //}
+        }
         public IActionResult Cart()
         {
-            
+            //測試用
             List<CartItem> cartItems = new List<CartItem>()
             {
                 new CartItem { Id = 1,Qty = 2 },
@@ -50,18 +94,7 @@ namespace Alcoholic.Controllers
 
             //string sMemberID = HttpContext.Session.GetString("MemberID");
             ////Guid memberIdCookie = Guid.Parse(Request.Cookies["MemberID"]);
-
-            //if (sMemberID != null)
-            //{
-            //    string? memberName = (from x in projectContext.Members
-            //                         where x.MemberID == Guid.Parse(sMemberID)
-            //                          select x.MemberName).FirstOrDefault();
-            //    ViewBag.memberName = memberName;
-            //}
-            //else
-            //{
-            //    return NotFound();
-            //}
+            ///
         }
 
         [HttpPost]

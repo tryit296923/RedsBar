@@ -325,38 +325,53 @@
                     return;
                 }
                 let JsonString = JSON.stringify(fbody);
-                console.log(JsonString);    // JSON
-                console.log(fbody);         // Obj
-                fetch("https://localhost:7273/api/Member/Register", {
-                    method: 'POST',
-                    headers: { "Content-Type": "application/json" },
-                    body: JsonString        // to JsonString
-                })
-                .then((e)=> e.json())
-                .then((result) => {
-                    if(result){
-                        Swal.fire({
-                            icon: 'success',
-                            color: '#FFF',
-                            iconColor: '#D8CDB9',
-                            confirmButtonColor: '#721B29',
-                            background: '#333',
-                            title: '註冊成功!',
-                            text: '請至信箱收取認證信件，請稍待1~3分鐘',
-                            footer: '<a href="https://localhost:7273/Member/Authorize">未收到信件? 點擊此處以重發</a>'
-                        })
-                    }else{
-                        Swal.fire({
-                            icon: 'error',
-                            color: '#FFF',
-                            iconColor: '#D8CDB9',
-                            confirmButtonColor: '#721B29',
-                            background: '#333',
-                            title: '註冊失敗!',
-                            text: '帳號有人使用過囉!',
-                        })
+                setTimeout(()=>{
+                    fetch("https://localhost:7273/api/Member/Register", {
+                        method: 'POST',
+                        headers: { "Content-Type": "application/json" },
+                        body: JsonString        // to JsonString
+                    })
+                    .then((e)=> e.json())
+                    .then((result) => {
+                        if(result){
+                            Swal.fire({
+                                icon: 'success',
+                                color: '#FFF',
+                                iconColor: '#D8CDB9',
+                                confirmButtonColor: '#721B29',
+                                background: '#333',
+                                title: '註冊成功!',
+                                text: '請至信箱收取認證信件，請稍待1~3分鐘',
+                                footer: '<a href="https://localhost:7273/api/Member/Remail">未收到信件? 點擊此處以重發</a>'
+                            })
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                color: '#FFF',
+                                iconColor: '#D8CDB9',
+                                confirmButtonColor: '#721B29',
+                                background: '#333',
+                                title: '註冊失敗!',
+                                text: '帳號有人使用過囉!',
+                            })
+                        }
+                    }).catch(error => console.error(error))
+                },50);
+                Swal.fire({
+                    title: '註冊中 請稍後',
+                    html: '請勿關閉視窗',
+                    timer: 5000,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft()
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
                     }
-                }).catch(error => console.error(error))
+                })
             },
 
         }

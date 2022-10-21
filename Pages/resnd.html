@@ -64,10 +64,6 @@
             transition: ease;
             transition-duration: 0.3s;
         }
-        .checkbox{
-            position: relative;
-            right: -25%;
-        }
         .btn{
             width: 80%;
             display: flex;
@@ -91,64 +87,49 @@
 </head>
 <body>
     <div class="login">
-        <img src="/Pages/Images/icons/logo-r.png" alt="">
-        <h2>請登入</h2>       
+        <img src="/Pages/Images/icons/logo-r.png" alt="">     
         <hr>
         <form action="">
             <div class="info">
                 <label>帳號：</label>
-                <input type="text" autocomplete="on">
+                <input id="account" type="text">
                 <br>
                 <label>密碼：</label>
-                <input type="password">
+                <input id="password" type="text">
                 <br>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" value="remember-me" checked>
-                        記住帳號
-                    </label>                     
-                </div>
+                <label>姓名：</label>
+                <input id="name" type="text">
+                <br>
+                <label>職位：</label>
+                <select name="" id="role">
+                    <option value="moderater">管理員</option>
+                    <option value="leader">組長</option>
+                    <option value="staff">員工</option>
+                </select>
+                <br>
             </div>
         </form>
         <div class="btn">
-            <button>登入</button>
+            <button>新增</button>
         </div>
     </div>
 </body>
 <script>
-    let account = $("input").first()
-    let ck = $("input[type='checkbox']")
-    let value = `; ${document.cookie}`;
-    let ac = value.split("; account=").pop().split(";").shift();
-    let btn = $(".btn")
-    $(document).ready(()=>{
-        account.val(ac);
-    })
-    account.change(()=>{
-        if(ck.prop("checked")){
-            document.cookie = `account=${account.val()}`
-        }
-    })
-    ck.change(()=>{
-        if(ck.prop("checked")){
-            document.cookie = `account=${account.val()}`
-        }else{
-            document.cookie = "account= "
-        }
-    })
-    btn.click(()=>{
+    $('.btn').click(
         $.ajax({
-            url:"https://localhost:7273/Back/Login",
+            url:"https://localhost:7273/Back/Register",
             method:"POST",
             dataType:"json",
             data:{
-                EmpName:"",
-                EmpAccount:account.val(),
-                EmpPassword:$("input[type='password']").val()
+                EmpName:$("#name").val(),
+                EmpAccount:$("#account").val(),
+                EmpPassword:$("#password").val(),
+                Role:$("#role").val()
             },
             success:function(res){console.log(res)},
             error:function(err){console.log(err)},
-        });        
-    });
+        })
+    )
+
 </script>
 </html>
