@@ -4,25 +4,18 @@ namespace Alcoholic.Models.DTO
 {
     public class OrderViewModel
     {
-        public List<OrderRequestModel> ItemList { get; set; }
-        
-    }
-    public class OrderRequestModel
-    {
-        //public string OrderId { get; set; }
-        public Guid MemberId { get; set; }
-        public int ProductId { get; set; }
+        //渲染cart
+        public string MemberName { get; set; }
+        public List<CartItem> ItemList { get; set; }
         public int Number { get; set; }
-        public int Quantity { get; set; }
-        public int UnitPrice { get; set; }
-        public double DiscountAmount { get; set; }
-        public DateTime OrderTime { get; set; }
-        public string Status { get; set; } = "N";
+        public int Desk { get; set; }
     }
     public class OrderTotalViewModel
     {
+        //存入資料庫Order
         public List<OrderListViewModel> Orders { get; set; }
-        public List<DetailViewModel> Details { get; set; }
+        //存入資料庫OrderDetail
+        public List<CartItem> Details { get; set; }
     }
     public class OrderListViewModel
     {
@@ -32,15 +25,5 @@ namespace Alcoholic.Models.DTO
         public DateTime OrderTime { get; set; }
         public string DeskNum { get; set; }
         public string Status { get; set; } = "N";
-    }
-    public class DetailViewModel
-    {
-        public string OrderId { get; set; }
-        public int ProductId { get; set; }
-        public string ProductName { get; set; }
-        public string Path { get; set; }
-        public int Quantity { get; set; }
-        public int UnitPrice { get; set; }
-        public double Discount { get; set; }
     }
 }

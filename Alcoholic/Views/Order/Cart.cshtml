@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Alcoholic.Models.DTO.OrderViewModel
+@{
     ViewData["Title"] = "購物車";
     Layout = "_LayoutMobile";
 }
@@ -82,7 +83,7 @@
     }
 
     .productName {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
     }
 
     .originalPrice {
@@ -237,7 +238,7 @@
                 <div class="title w-100">
                     <div class="himessage">
                         <p>Hi, </p>
-                        <p class="user">@ViewBag.memberName</p>
+                        <p class="user">@Model.MemberName</p>
                     </div>
                 </div>
             </div>
@@ -260,23 +261,22 @@
                             </div>
                             <div class="col-5 px-0">
                                 <div class="ms-2 me-auto">
-                                    <div class="fw-bold productName">{{item.ProductName}}</div>
-                                    <div>描述</div>
-                                    <div v-if="item.DiscountAmount != 1">
+                                    <div class="fw-bold productName">{{item.productName}}</div>
+                                    <div v-if="item.discountAmount != 1">
                                         <span>$ </span>
-                                        <span class="originalPrice">{{item.UnitPrice * item.Quantity}} </span>
+                                        <span class="originalPrice">{{item.unitPrice * item.qty}} </span>
                                         <span class="discountPrice" name="finalPrice">{{discountPrice(item)}}</span>
                                     </div>
                                     <div v-else>
                                         <span>$ </span>
-                                        <span name="finalPrice">{{item.UnitPrice * item.Quantity}} </span>
+                                        <span name="finalPrice">{{item.unitPrice * item.qty}} </span>
                                     </div>
                                 </div>
                             </div>
                             <div class="row col-4 px-0">
                                 <div class="col-6 text-center px-0">
                                     <button class="btnCount" v-on:click="increase(item)">▲</button>
-                                    <div>{{item.Quantity}}</div>
+                                    <div>{{item.qty}}</div>
                                     <button class="btnCount" v-on:click="decrease(item)">▼</button>
                                 </div>
                                 <div class="col-6 text-center d-flex align-items-center justify-content-center">
@@ -351,13 +351,13 @@
             methods: {
                 decrease: function (item) {
                     //console.log(item);
-                    if (item.Quantity > 1) {
-                        item.Quantity--;
+                    if (item.qty > 1) {
+                        item.qty--;
                     }
                 },
                 increase: function (item) {
                     //console.log(item);
-                    item.Quantity++;
+                    item.qty++;
                 },
                 deleteItem: function (index) {
                     //console.log(index);
@@ -365,12 +365,12 @@
                     this.itemList.splice(index, 1);
                 },
                 discountPrice: function (item) {
-                    return Math.round(item.UnitPrice * item.Quantity * item.DiscountAmount);
+                    return Math.round(item.unitPrice * item.qty * item.discountAmount);
                 },
                 cartTotal: function () {
                     var totalprice = 0;
                     for (let i = 0; i < this.itemList.length; i++) {
-                        totalprice += this.itemList[i].UnitPrice * this.itemList[i].Quantity * this.itemList[i].DiscountAmount;
+                        totalprice += this.itemList[i].unitPrice * this.itemList[i].qty * this.itemList[i].discountAmount;
                     }
                     return Math.round(totalprice);
                 },
@@ -378,20 +378,21 @@
                     this.confirmSend();
                 },
                 seperate: function (obj, ary) {
+                    //切分cookie
                     var key = obj.split('=')[0].trim();
                     var val = obj.split('=')[1];
 
                     ary[key] = val; //ary的key屬性值是val
                 },
                 getProductSession() {
-                    var ary = {};
-                    var result = document.cookie.split(";").map(x => this.seperate(x, ary));
+                    //var cartList = '@ViewBag.stest'
+                    //console.log(cartList);
+                    //var ary = {};
+                    //var result = cartList.split(";").map(x => this.seperate(x, ary));
                     //console.log(ary);
                     //console.log(ary['products']);
                     //console.log(JSON.parse(ary['products']));
-                    var a = sessionStorage.getItem('testmemberCart');
-                    this.itemList = JSON.parse(a);
-                    //this.itemList = JSON.parse(ary['cartItem']);
+                    this.itemList = JSON.parse('@Html.Raw(Json.Serialize(Model.ItemList))');
                     console.log(this.itemList);
                     return this.itemList;
                 },

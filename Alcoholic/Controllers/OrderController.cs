@@ -1,5 +1,6 @@
 ﻿using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Newtonsoft.Json;
@@ -73,6 +74,22 @@ namespace Alcoholic.Controllers
         }
         public IActionResult Cart()
         {
+            
+            string sMemberID = HttpContext.Session.GetString("MemberID");
+            string memberName = "";
+            if (sMemberID != null)
+            {
+                memberName = (from n in projectContext.Members
+                                     where n.MemberID == Guid.Parse(sMemberID)
+                                     select n.MemberName).FirstOrDefault();
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            //HttpContext.Session.GetString("CartItem");
+
             //測試用
             List<CartItem> cartItems = new List<CartItem>()
             {
@@ -85,25 +102,26 @@ namespace Alcoholic.Controllers
                 var product = projectContext.Products.Find(cartItem.Id);
                 cartItem.ProductName = product.ProductName;
                 cartItem.UnitPrice = product.UnitPrice;
-                //...
+                cartItem.DiscountAmount = 0.8;  //測試
+                //cartItem.Path = product.Images;
             }
 
-            HttpContext.Session.SetString("testsession", JsonConvert.SerializeObject("cartItems"));
-            var stest = JsonConvert.DeserializeObject<List<CartItem>>(HttpContext.Session.GetString("testsession"));
+            //HttpContext.Session.SetString("123", "456");
+            //var s = HttpContext.Session.GetString("123");
+            HttpContext.Session.SetString("testsession", JsonConvert.SerializeObject(cartItems));
 
-            return View();
-            //if(cartItem == null)
-            //{
-            //    return NotFound();
-            //}
-            //else
-            //{
-            //    return View();
-            //}
 
-            //string sMemberID = HttpContext.Session.GetString("MemberID");
-            ////Guid memberIdCookie = Guid.Parse(Request.Cookies["MemberID"]);
-            ///
+            string stest = "";
+            //若??前面為空，則用""取代
+            stest = HttpContext.Session.GetString("testsession")??"";
+            //var temp = JsonConvert.DeserializeObject<List<CartItem>>(stest);
+            var ovm = new OrderViewModel
+            {
+                MemberName = memberName,
+                ItemList = cartItems,
+            };
+
+            return View(ovm);
         }
 
         [HttpPost]
@@ -111,9 +129,7 @@ namespace Alcoholic.Controllers
         {
             string sDeskSuccess = HttpContext.Session.GetString("Desk");
             string sNumberSuccess = HttpContext.Session.GetString("Number");
-            //string deskCookieSuccess = Request.Cookies["Desk"];
-            //string numberCookieSuccess = Request.Cookies["Number"];
-
+           
             var order = (from x in projectContext.Orders where x.OrderId == orderId select x).FirstOrDefault();
 
             ViewBag.deskSessionSuccess = sDeskSuccess;
@@ -155,15 +171,15 @@ namespace Alcoholic.Controllers
                 //var product = _db.Products.FirstOrDefault();
                 orderList.Details = (from od in projectContext.OrderDetails
                                      where temp.Contains(od.OrderId)
-                                     select new DetailViewModel
+                                     select new CartItem
                                      {
                                          OrderId = od.OrderId,
                                          ProductName = od.Product.ProductName,
                                          //Path = od.Product.Images,
-                                         Quantity = od.Quantity,
+                                         Qty = od.Quantity,
                                          UnitPrice = od.UnitPrice,
-                                         Discount = od.Discount,
-                                         ProductId = od.ProductId,
+                                         DiscountAmount = od.Discount,
+                                         Id = od.ProductId,
                                      }).ToList();
 
                 return View(orderList);

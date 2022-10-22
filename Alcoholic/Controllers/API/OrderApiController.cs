@@ -46,11 +46,11 @@ namespace Alcoholic.Controllers.API
                     var orderDetail = new OrderDetail
                     {
                         OrderId = orderId,
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity,
-                        UnitPrice = item.UnitPrice,
-                        Discount = item.DiscountAmount,
-                        Total = Convert.ToInt32(item.Quantity * item.UnitPrice * item.DiscountAmount),
+                        ProductId = item.Id,
+                        Quantity = item.Qty,
+                        UnitPrice = item.UnitPrice ?? 0,
+                        Discount = item.DiscountAmount ?? 0,
+                        Total = Convert.ToInt32(item.Qty * item.UnitPrice * item.DiscountAmount),
                     };
                     _db.Add(orderDetail);
                 }
@@ -70,8 +70,8 @@ namespace Alcoholic.Controllers.API
         public IActionResult Dismiss(int Desk)
         {
             DeskInfo? deskInfo = (from desk in _db.DeskInfo
-                                 where desk.Desk == Desk
-                                 select desk).FirstOrDefault();
+                                  where desk.Desk == Desk
+                                  select desk).FirstOrDefault();
             deskInfo.Occupied = 0;
             deskInfo.EndTime = DateTime.Now.ToString("yyyyMMddHHmm");
             _db.Entry(deskInfo).State = EntityState.Modified;
