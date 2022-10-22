@@ -5,7 +5,6 @@ using Microsoft.CodeAnalysis;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
-using Newtonsoft.Json;
 
 namespace Alcoholic.Controllers
 {
@@ -25,39 +24,52 @@ namespace Alcoholic.Controllers
         public void AddToCart([FromBody] List<CartItem> cartItem)
         {
             var sesStr = HttpContext.Session.GetString("CartItem");
-            var abc = System.Text.Json.JsonSerializer.Serialize(sesStr);
+            var addItem = new List<CartItem>();
 
             //判斷是否有session
             if (string.IsNullOrEmpty(sesStr))
             {
-                var cartString = System.Text.Json.JsonSerializer.Serialize(cartItem);
+                var cartString = JsonConvert.SerializeObject(cartItem);
                 HttpContext.Session.SetString("CartItem", cartString);
+                addItem = cartItem;
             }
             else
             {
-                //var abc = System.Text.Json.JsonSerializer.Serialize(sesStr);
-
+                var sesItem = JsonConvert.DeserializeObject<List<CartItem>>(sesStr);
+                //判斷商品是否已在session中
+                for (int i = 0; i < cartItem.Count; i++)
+                {                    
+                    for (int S = 0; S < sesItem.Count; S++)
+                    {
+                        //重複產品
+                        if (sesItem[S].Id == cartItem[i].Id) {
+                            sesItem[S].Qty += cartItem[i].Qty;
+                            Console.WriteLine($"產品ID{sesItem[i].Id}產品數量{sesItem[i].Qty}");
+                        break;
+                        }
+                        //找完集合沒有重復產品
+                        else if(sesItem[S].Id != cartItem[i].Id & S==sesItem.Count-1)
+                        {
+                            Console.WriteLine("新商品");
+                            addItem.Add(cartItem[i]);
+                            Console.WriteLine($"產品ID{sesItem[i].Id}產品數量{sesItem[i].Qty}");
+                            break;
+                        }
+                        else
+                        {
+                          Console.WriteLine("找");
+                          
+                        }
+                        }
+                }
             }
-            //判斷商品是否已在session中              
-
-
-            //for (int i = 0; i < abc.Length; i++)
-            //{
-            //    if(abc[i].Id
-            //}
-
-            //int index = abc.FindIndex(c => c.Id.Equals(.));
-            //if (index != -1)
-            //{
-            //    cart[index].Amount += item.Amount;
-            //    cart[index].SubTotal += item.SubTotal;
-            //}
-            //else
-            //{
-            //    cart.Add(item);
-            //}
-
-            //}
+            foreach (var item in addItem)
+            {
+                //additem為購物車物件
+                Console.WriteLine($"ID{item.Id}數量{item.Qty}");
+            }
+            
+            
         }
         public IActionResult Cart()
         {
