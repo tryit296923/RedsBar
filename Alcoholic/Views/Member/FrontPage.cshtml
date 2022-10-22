@@ -229,11 +229,11 @@
                             clearInterval(timerInterval)
                         }
                     });
-                    fetch("https://localhost:7273/api/member/StartOrder", {
+                    fetch("/api/member/StartOrder", {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         body: jsonStr
-                    }).then(data => window.location.assign("https://localhost:7273/member/LoginRegister")
+                    }).then(data => window.location.assign("/member/LoginRegister")
                     ).catch(err => console.log(err))
                 },
                 StartOrderGuest: function() {
@@ -261,11 +261,11 @@
                             clearInterval(timerInterval)
                         }
                     });
-                    fetch("https://localhost:7273/api/member/StartOrder", {
+                    fetch("/api/member/StartOrder", {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         body: jsonStr
-                    }).then(data => window.location.assign("https://localhost:7273/member/LoginRegister")
+                    }).then(data => window.location.assign("/member/LoginRegister")
                     ).catch(err => console.log(err))
                 }
             }})

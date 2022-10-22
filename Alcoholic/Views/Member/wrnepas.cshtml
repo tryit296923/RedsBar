@@ -1,5 +1,6 @@
-﻿@{
-    Layout = null;
+﻿@model Alcoholic.Models.Entities.Member
+@{
+    ViewData["Title"] = "重設密碼";
 }
 
 <style>
@@ -78,11 +79,12 @@
         <img src="~/images/icons/logo-y.png" />
     </div>
     <div class="text">
-        <h3>請輸入您的信箱</h3>
+        <h3>請重新設置您的密碼</h3>
     </div>
     <div class="form">
-        <form  action="/member/Chapw">
-            <input type="text" name="email"/><button type="submit">送出</button>
+        <form method="PUT" action="/api/member/chapw">
+            <input type="password" name="password" /><input type="password" name="password" /><br />
+            <button type="submit">送出</button>
         </form>
     </div>
 </div>

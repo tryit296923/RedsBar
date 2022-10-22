@@ -225,13 +225,13 @@
                     <div class="password">
                         <input v-model="loginpassword" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
                     </div>
-                    <a href="">忘記密碼?</a>
+                    <a href="/member/repass">忘記密碼?</a>
                     <div class="login">
                         <button v-on:click.prevent="login">登 入</button>
                     </div>
                 </form>
-                <div class="OAuth">
-                    <a href=""><img src="~/images/icons/google.png" alt=""></a>
+                <div id="OAuth" class="OAuth">
+                    <a @*v-on:click.prevent="Google"*@ href="/member/googlelogin" ><img src="~/images/icons/google.png" alt=""></a>
                     <a href=""><img src="~/images/icons/IG.png" alt=""></a>
                     <a href=""><img src="~/images/icons/FB.png" alt=""></a>
                 </div>
@@ -326,7 +326,7 @@
                 }
                 let JsonString = JSON.stringify(fbody);
                 setTimeout(()=>{
-                    fetch("https://localhost:7273/api/Member/Register", {
+                    fetch("/api/Member/Register", {
                         method: 'POST',
                         headers: { "Content-Type": "application/json" },
                         body: JsonString        // to JsonString
@@ -342,7 +342,7 @@
                                 background: '#333',
                                 title: '註冊成功!',
                                 text: '請至信箱收取認證信件，請稍待1~3分鐘',
-                                footer: '<a href="https://localhost:7273/api/Member/Remail">未收到信件? 點擊此處以重發</a>'
+                                footer: '<a href="/api/Member/Remail">未收到信件? 點擊此處以重發</a>'
                             })
                         }else{
                             Swal.fire({
@@ -374,6 +374,7 @@
                 })
             },
 
+
         }
     })
     const logvm = new Vue({
@@ -389,7 +390,7 @@
                     Password: this.loginpassword,
                 };
                 let loginJsonString = JSON.stringify(loginbody);
-                fetch("https://localhost:7273/api/Member/Login", {
+                fetch("/api/Member/Login", {
                     method: 'POST',
                     headers: { "Content-Type": "application/json" },
                     body: loginJsonString        // to JsonString
@@ -418,8 +419,17 @@
                         }
                     })
                     .catch(error => console.log(error))
-            }
+            },
+
         }
     })
+    //const Auth = new Vue({
+    //    el:"#OAuth",
+    //    methods:{
+    //        Google: function () {
+    //            window.location.assign("/member/googlelogin")
+    //        }
+    //    }
+    //})
 </script>
 </html>

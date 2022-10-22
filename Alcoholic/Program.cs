@@ -2,6 +2,7 @@ using Alcoholic.Models.Entities;
 using Alcoholic.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,11 +28,21 @@ builder.Services.AddCors(options =>
 });
 
 // 使用預設的 cookie 認證( CookieAuthenticationDefaults )
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(option =>
 {
     // 為登入自動導至此網址
     option.LoginPath = new PathString("/member/LoginRegister");
     option.AccessDeniedPath = new PathString("/api/Login/NoAccess");
+}).AddGoogle(opt =>
+{
+    opt.ClientId = builder.Configuration.GetSection("Auth:Google:ClientId").Value;
+    opt.ClientSecret = builder.Configuration.GetSection("Auth:Google:ClientSecret").Value;
+    opt.Events.OnCreatingTicket = context =>
+    {
+        context.Identity.AddClaim(new System.Security.Claims.Claim(ClaimTypes.Role, "Guest"));
+        return Task.CompletedTask;
+    };
 });
 
 builder.Services.AddDistributedMemoryCache();
@@ -59,18 +70,18 @@ app.UseStaticFiles();
 
 app.UseRouting();
 app.UseSession();
-
+app.UseAuthentication();
+app.UseAuthorization();
 // UseRouting後 UseAuthorization前
 app.UseCors("Policy");
 
 // 注意順序不可調換
-app.UseCookiePolicy();
-app.UseAuthentication();
-app.UseAuthorization();
+//app.UseCookiePolicy();
+
 
 app.MapAreaControllerRoute(
       name: "areas",
-      areaName : "BackCenter",
+      areaName: "BackCenter",
       pattern: "BackCenter/{controller=Home}/{action=Index}/{id?}");
 app.MapControllerRoute(
     name: "default",

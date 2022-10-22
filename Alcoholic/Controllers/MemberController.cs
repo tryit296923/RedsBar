@@ -1,7 +1,12 @@
 using Alcoholic.Models.Entities;
+using Alcoholic.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Razor.Templating.Core;
 using System.Security.Policy;
 
 namespace Alcoholic.Controllers
@@ -9,9 +14,11 @@ namespace Alcoholic.Controllers
     public class MemberController : Controller
     {
         private readonly db_a8de26_projectContext db;
-        public MemberController(db_a8de26_projectContext db)
+        private readonly MailService mail;
+        public MemberController(db_a8de26_projectContext db, MailService mail)
         {
             this.db = db;
+            this.mail = mail;
         }
 
         public IActionResult AuthorizeP()
@@ -25,6 +32,40 @@ namespace Alcoholic.Controllers
         public IActionResult LoginRegister()
         {
             return View();
+        }
+
+        public IActionResult RePass()
+        {
+            return View();
+        }
+        public IActionResult wrnepas()
+        {
+            return View();
+        }
+        public async Task<IActionResult> Chapw(IFormCollection post)
+        {
+            var email = post.ToString();
+            HttpContext.Session.SetString("Email", email);
+
+            var msg = await RazorTemplateEngine.RenderAsync("Views/Member/wrnepas.cshtml");
+            mail.SendMail(email, msg, "RedsBar 密碼重設信件");
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        public IActionResult GoogleLogin()
+        {
+            var properties = new AuthenticationProperties()
+            {
+                RedirectUri = Url.Action("goGoogle")
+            };
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
+
+        public async Task<IActionResult> goGoogle()
+        {
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme); // 拿到個人驗證資料
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
@@ -44,13 +85,6 @@ namespace Alcoholic.Controllers
             return View("AuthSuccess");
         }
 
-        [HttpGet]
-        public IActionResult RePass(/*string email*/)
-        {
-            
-
-            return View();
-        }
 
         [HttpPut]
         public async Task<IActionResult> ModifyData(string id, Member memberData)
