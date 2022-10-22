@@ -598,7 +598,7 @@
 </div>
 
 @*購物車*@
-<form id="cartform" action="https://localhost:7273/Order/Cart">
+<form id="cartform" action="https://localhost:7273/Order/AddToCart">
         <a id="checkCart" href="">
             <div class="shopCart">
                 <i class="fa-sharp fa-solid fa-cart-shopping"> </i>
@@ -718,10 +718,9 @@
                 else {
                     console.log("繼續找");
                 }
+                
             }
-        };
-        //重製選擇的數量
-        const Toast = Swal.mixin({
+            const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
@@ -739,6 +738,9 @@
         })
         selProd.value=0;
     }
+        };
+        //重製選擇的數量
+        
     //sessionStorage.setItem("Sample", cartStr);
 
     let checkCart = document.getElementById("checkCart");
@@ -753,7 +755,7 @@
 
     function addCartSession() {
         console.log(cartStr);
-        fetch("https://localhost:7273/Order/Cart", {
+        fetch("https://localhost:7273/Order/AddToCart", {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
             body: cartStr,
