@@ -1,6 +1,3 @@
-﻿@{
-    Layout = null;
-}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,8 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="~/css/bootstrap.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10"></script>
+    <link rel="stylesheet" href="bootstrap/bootstrap.css">
     <link href="https://use.fontawesome.com/releases/v6.2.0/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.css">
     <title>後台中心</title>
     <style>
         h2 {
@@ -48,22 +47,25 @@
             width: 100px;
         }
 
-        table {
+        #home table{
             width: 80%;
         }
 
-        thead {
+        #home thead,#data thead,#products thead,
+        #discount thead,.bookinginfo thead {
             background-color: rgb(215, 215, 215);
             color: #444;
             height: 30px;
             line-height: 30px;
         }
 
-        td {
+        #home td,#data td,#products td,
+        #discount td,.bookinginfo td {
             line-height: 100px;
         }
 
-        tbody tr:hover {
+        #home tbody tr:hover,#data tbody tr:hover,#products tbody tr:hover,
+        #discount tbody tr:hover,.bookinginfo tbody tr:hover{
             background-color: rgb(241, 241, 241);
         }
 
@@ -89,7 +91,7 @@
             justify-content: space-around;
         }
 
-        @@media screen and (max-width:852px) {
+        @media screen and (max-width:852px) {
             .navbar i {
                 display: block;
             }
@@ -265,15 +267,22 @@
             color: #fff;
             font-weight: bold;
         }
+        /*訂位數據*/
+        .bookingtoday{
+            text-align: center;
+            width: 50%;
+            border: 1px solid rgb(215, 215, 215);
+            border-radius: 0.375rem;
+        }
     </style>
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div id="d1" class="container-fluid">
         <div class="row">
             <div class="col-2 navigation">
                 <div class="logo my-3">
-                    <img class="logoimg" src="~/images/icons/logo-w.png" alt="">
+                    <img class="logoimg" src="Images/icons/logo-w.png" alt="">
                     <hr>
                 </div>
                 <ul class="nav navbar" id="myTab" role="tablist">
@@ -296,6 +305,11 @@
                         <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#discount"
                             type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">
                             <i class="fa-solid fa-tags"></i> 優惠管理</button>
+                    </li>
+                    <li class="" role="presentation">
+                        <button class="nav-link" id="booking-tab" data-bs-toggle="tab" data-bs-target="#booking"
+                            type="button" role="tab" aria-controls="booking-tab-pane" aria-selected="false">
+                            <i class="fa-solid fa-table"></i> 訂位管理</button>
                     </li>
                 </ul>
             </div>
@@ -740,6 +754,44 @@
                                 </div>                    
                             </div>
                         </div>
+                        <div class="tab-pane fade" id="booking" role="tabpanel" aria-labelledby="booking-tab" tabindex="0">            
+                            <div class="bookingmanage container-fluid p-5">
+                                <h3>訂位管理</h3>
+                                <hr>
+                                <div class="data py-4">
+                                    <div class="dataarea row-cols-2">
+                                        <div class="bookingtoday p-4"><h2 class="m-0">{{today.toLocaleDateString()}}</h2></div>
+                                    </div>
+                                </div>
+                                <div class="data py-4">
+                                    <div class="spacebetween row-cols-2 mb-3">
+                                        <h3>本日訂位數據</h3>
+                                        <date-picker v-model="ReserveDate" valueType="format" class="datepicker p-0" id="datepicker"
+                                        placeholder="請選擇用餐日期"></date-picker>
+                                    </div>
+                                    <div class="bookinginfo">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">姓名</th>
+                                                    <th scope="col">電話</th>
+                                                    <th scope="col">人數</th>
+                                                    <th scope="col">下訂日期</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Amy</td>
+                                                    <td>0978123456</td>
+                                                    <td>3</td>
+                                                    <td>2022/10/30</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>  
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -751,6 +803,17 @@
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://kit.fontawesome.com/04a61d6a18.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.js"></script>
+    <script>
+        var app = new Vue({
+            el:'#d1',
+            data:{
+                today:new Date,
+                reserve:[],
+                ReserveDate:null,
+            }
+        });
+    </script>
     <script>
         const ctx = document.getElementById('myChart').getContext('2d');
         const myChart = new Chart(ctx, {

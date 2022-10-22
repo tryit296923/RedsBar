@@ -159,7 +159,7 @@
         },
         beforeCreate: function () {
         let self = this;
-        fetch('https://localhost:7273/api/products/GetAllProducts')
+        fetch('/api/products/GetAllProducts')
             .then(function (response) { return response.json() })
             .then(function (result) { self.product = result })
         },

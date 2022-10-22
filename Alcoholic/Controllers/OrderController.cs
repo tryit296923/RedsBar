@@ -2,6 +2,7 @@
 using Alcoholic.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
 using Newtonsoft.Json;
@@ -31,11 +32,7 @@ namespace Alcoholic.Controllers
             {
                 var cartString = System.Text.Json.JsonSerializer.Serialize(cartItem);
                 HttpContext.Session.SetString("CartItem", cartString);
-                Console.WriteLine(sesStr);
-                Console.WriteLine("abc");
-                Console.WriteLine(abc);
             }
-
             else
             {
                 //var abc = System.Text.Json.JsonSerializer.Serialize(sesStr);
