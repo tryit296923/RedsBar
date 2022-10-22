@@ -26,11 +26,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             return View();
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<Member>> GetAllMember()
-        {
-            return db.Members.ToList();
-        }
+
 
         [HttpGet]
         public IActionResult GetMember(Member memberData)

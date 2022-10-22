@@ -9,7 +9,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Razor.Templating.Core;
-using Microsoft.AspNetCore.Http;
+using System.Diagnostics.Metrics;
 
 namespace Alcoholic.Controllers.API
 {
@@ -181,6 +181,12 @@ namespace Alcoholic.Controllers.API
         }
 
 
+
+
+        public ActionResult<IEnumerable<Member>> GetAllMember()
+        {
+            return db.Members.ToList();
+        }
         private bool MemberExists(string Account)
         {
             return db.Members.Any(member => member.MemberAccount == Account);
