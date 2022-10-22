@@ -5,5 +5,6 @@
         public int DiscountId { get; set; } 
         public string DiscountName { get; set; }
         public float DiscountAmount { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

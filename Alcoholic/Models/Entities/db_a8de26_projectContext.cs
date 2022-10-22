@@ -169,9 +169,13 @@ namespace Alcoholic.Models.Entities
                 entity.HasKey(e => e.ProductId).HasName("PK_Product_1");
 
                 entity.Property(e => e.ProductName).HasColumnType("nvarchar(max)");
+
+                entity.Property(e => e.DiscountId).HasDefaultValue(1);
+
                 entity.HasMany(x => x.OrderDetails).WithOne(x => x.Product).HasForeignKey(x => x.ProductId);
                 entity.HasMany(x => x.ProductsMaterials).WithOne(x => x.Product).HasForeignKey(x => x.ProductId);
                 entity.HasMany(x => x.Images).WithOne(x => x.Product).HasForeignKey(x => x.ProductId);
+                entity.HasOne(x => x.Discount).WithMany(d => d.Products).HasForeignKey(x => x.DiscountId);
             });
 
             modelBuilder.Entity<ProductsMaterials>(entity =>
@@ -222,6 +226,7 @@ namespace Alcoholic.Models.Entities
                 entity.Property(e => e.DiscountName).HasColumnType("nvarchar(max)");
 
                 entity.Property(e => e.DiscountAmount).HasColumnType("decimal");
+
 
             });
 
