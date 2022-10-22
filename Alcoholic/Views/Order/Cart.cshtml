@@ -344,7 +344,7 @@
             data() {
                 return {
                     orderTime: '',
-                    itemList: this.getProductCookie(),
+                    itemList: this.getProductSession(),
                     orderId: ''
                 }
             },
@@ -383,13 +383,15 @@
 
                     ary[key] = val; //ary的key屬性值是val
                 },
-                getProductCookie() {
+                getProductSession() {
                     var ary = {};
                     var result = document.cookie.split(";").map(x => this.seperate(x, ary));
                     //console.log(ary);
                     //console.log(ary['products']);
                     //console.log(JSON.parse(ary['products']));
-                    this.itemList = JSON.parse(ary['cartItem']);
+                    var a = sessionStorage.getItem('testmemberCart');
+                    this.itemList = JSON.parse(a);
+                    //this.itemList = JSON.parse(ary['cartItem']);
                     console.log(this.itemList);
                     return this.itemList;
                 },
