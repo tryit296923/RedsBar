@@ -680,6 +680,7 @@
     })
 
     var cartArray = [];
+    
     var cartStr = "";
     function sessionStr(e) {
         var selProd = e.target.parentElement.children[1].children[1].children[0];
@@ -748,6 +749,7 @@
     
     
     checkCart.addEventListener("click",(e)=>{
+        cartArray = [];
         e.preventDefault();
         addCartSession();
         console.log(cartStr);
