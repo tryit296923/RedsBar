@@ -598,7 +598,7 @@
 </div>
 
 @*購物車*@
-<form id="cartform" action="https://localhost:7273/Order/Cart">
+<form id="cartform" action="https://localhost:7273/Order/AddToCart">
         <a id="checkCart" href="">
             <div class="shopCart">
                 <i class="fa-sharp fa-solid fa-cart-shopping"> </i>
@@ -755,7 +755,7 @@
 
     function addCartSession() {
         console.log(cartStr);
-        fetch("https://localhost:7273/Order/Cart", {
+        fetch("https://localhost:7273/Order/AddToCart", {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
             body: cartStr,

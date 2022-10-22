@@ -2,6 +2,7 @@
 using Alcoholic.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
 
@@ -22,50 +23,43 @@ namespace Alcoholic.Controllers
 
 
         [HttpPost]
-        public void Cart([FromBody] List<CartItem> cartItem)
+        public void AddToCart([FromBody] List<CartItem> cartItem)
         {
             var sesStr = HttpContext.Session.GetString("CartItem");
-            var abc = JsonSerializer.Serialize(sesStr);
-
-
 
             //判斷是否有session
             if (string.IsNullOrEmpty(sesStr))
             {
-                var cartString = JsonSerializer.Serialize(cartItem);
+                var cartString = JsonConvert.SerializeObject(cartItem);
                 HttpContext.Session.SetString("CartItem", cartString);
-                Console.WriteLine(sesStr);
-                Console.WriteLine("abc");
-                Console.WriteLine(abc);
             }
-
             else
             {
-                var abc = JsonSerializer.Serialize(sesStr);
+                //判斷商品是否已在session中
+                var sesItem = JsonConvert.DeserializeObject<List<CartItem>>(sesStr);
+                for (int i = 0; i < cartItem.Count; i++)
+                {
+                    //var index = cartItem.FindIndex(c => c.Id.Equals(sesItem[i].Id));
+                    //if (index != -1)
+                    //{
+                    //    sesItem[i].Qty += cartItem.Qty;
+                    //    Console.WriteLine(index);
+                    //}
+                    if (sesItem.FindIndex(c => c.Id.Equals(cartItem[i].Id)) != -1)
+                    {
+                        sesItem.Where(c => c.Id == cartItem[i].Id).FirstOrDefault().Qty += cartItem[i].Qty;
+                        Console.WriteLine(sesItem[0].Qty);
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("asdbasdbasdb");
+                    }
+
+                }
 
             }
-            //判斷商品是否已在session中              
-
-
-            //for (int i = 0; i < abc.Length; i++)
-            //{
-            //    if(abc[i].Id
-            //}
-
-            //int index = abc.FindIndex(c => c.Id.Equals(.));
-            //if (index != -1)
-            //{
-            //    cart[index].Amount += item.Amount;
-            //    cart[index].SubTotal += item.SubTotal;
-            //}
-            //else
-            //{
-            //    cart.Add(item);
-            //}
-
-            //}
         }
-
 
             //Guid memberIdCookie = Guid.Parse(Request.Cookies["MemberID"]);
 
