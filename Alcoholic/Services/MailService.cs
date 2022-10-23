@@ -31,7 +31,6 @@ namespace Alcoholic.Services
             {
                 return false;
             }
-
         }
     }
 }

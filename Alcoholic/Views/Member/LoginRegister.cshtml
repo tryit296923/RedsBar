@@ -1,4 +1,4 @@
-﻿我線矮ˋ@{
+﻿@{
     Layout = null;
 }
 <!DOCTYPE html>
@@ -118,25 +118,21 @@
             width: 390px;
         }
         .Register{
-            height: 416px;
+            height: 450px;
             position: absolute;
             left: 20%;
-            margin-top: 72%;
+            margin-top: 68%;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-        }
-        .register{
-            width: 100%;
-            display: flex;
-            justify-content: center;
+            justify-content: space-around;
         }
         .register button{
             position: absolute;
-            bottom: 10%;
-            width: 50%;
+            bottom: -40px;
             border-radius: 00.375rem;
             border: 0px;
+            width:200px;
+            left: 18px;
             background-color: #721B29;
             color: #fff;
         }
@@ -145,14 +141,39 @@
             background-color: #D8CDB9;
         }
 
-        .incorrectText {
+        .none {
+            display: none;
+            position: absolute;
+            color:#D8CDB9;
+            font-weight:bolder;
+        }
+        .reveal {
             position: absolute;
             color: #D8CDB9;
-            top: 24%;
-            left: 80%;
-            font-weight: bold;
-            width: 200px;
+            font-weight: bolder;
         }
+
+        .acc{
+            top: 30%;
+            right: 10%;
+        }
+        .pw{
+            right: 10%;
+            top:45%;
+        }
+        .mal{
+            right: 10%;
+            top:53%;
+        }
+        .ph{
+            right: 10%;
+            top:68%;
+        }
+        .old{
+            right: 10%;
+            top: 76%;
+        }
+
 
         @@media screen and (min-width: 768px) {
             body{
@@ -184,9 +205,13 @@
                 top: 8%;
             }
             .Register{
-                height: 464px;
+                height: 496px;
                 left: 32%;
-                margin-top: 48%;
+                margin-top: 46%;
+            }
+            .register button {
+                bottom: 10%;
+                left: 37%;
             }
             .account{
                 top: 39%;
@@ -200,6 +225,31 @@
             .OAuth a img{
                 margin: 8px;
                 height: 100px;
+            }
+
+            .acc {
+                right: 10%;
+                top: 31.5%;
+            }
+
+            .pw {
+                right: 10%;
+                top: 45%;
+            }
+
+            .mal {
+                right: 10%;
+                top: 51.8%;
+            }
+
+            .ph {
+                right: 10%;
+                top: 65%;
+            }
+
+            .old {
+                right: 10%;
+                top: 71.8%;
             }
         }
     </style>
@@ -225,7 +275,7 @@
                     <div class="password">
                         <input v-model="loginpassword" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
                     </div>
-                    <a href="/member/repass">忘記密碼?</a>
+                    <a href="/member/Forget">忘記密碼?</a>
                     <div class="login">
                         <button v-on:click.prevent="login">登 入</button>
                     </div>
@@ -240,30 +290,32 @@
                 <div id="Register">
                     <form class="Register" method="post" enctype="">
                         <div class="text">
-                            <input v-model="Account" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
+                            <input v-model="Account" :class="validAccount" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
                         </div>
                         <div class="encryp">
-                            <input v-model="Password" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
+                            <input v-model="Password" :class="validPassword" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
                         </div>
                         <div class="repassword">
-                            <input v-model="rePassword" v-bind:class="incorrect" type="password" required maxlength="20" minlength="8" placeholder="請再次輸入密碼">
+                            <input v-model="rePassword" :class="validrePassword" type="password" required maxlength="20" minlength="8" placeholder="請再次輸入密碼">
                         </div>
                         <div class="Email">
-                            <input v-model.lazy="Email" v-bind:class="validEmail" type="email" required>
+                            <input v-model.lazy="Email" :class="validEmail" type="email" required>
                         </div>
                         <div class="name">
-                            <input v-model="Name" required maxlength="20">
+                            <input v-model="Name" :class="validName" required maxlength="20">
                         </div>
                         <div class="phone">
-                            <input v-model="Phone" required maxlength="10" minlength="10" placeholder="請輸入連絡電話(09-開頭)">
+                            <input v-model="Phone" :class="validPhone" required maxlength="10" minlength="10" placeholder="請輸入連絡電話(09-開頭)">
                         </div>
                         <div class="birth">
-                            <input v-model="Birth" type="date" value="2000-12-10" required>
-                        </div>
-                        <div class="incorrectText" v-bind:style="incorrectText">
-                            <p>兩次密碼不相符!</p>
+                            <input v-model="Birth" :class="validBirth" type="date" value="2000-12-10" required>
                         </div>
                     </form>
+                    <p :class="acs">帳號不可與密碼相同!</p>
+                    <p :class="pws">兩次密碼不相符!</p>
+                    <p :class="mas">Email格式不符!</p>
+                    <p :class="phs">連絡電話請以"09"開頭且為10碼!</p>
+                    <p :class="ols">你不該進來這裡!</p>
                     <div class="register">
                         <button v-on:click.prevent="register" class="registerbtn">註 冊</button>
                     </div>
@@ -271,8 +323,6 @@
             </div>
         </div>
     </div>
-
-
 </body>
 <script>
     const vm = new Vue({
@@ -285,22 +335,91 @@
             Phone:"",
             Email:"",
             rePassword:"",
-            incorrect:"",
-            incorrectText:{'opacity': 0},
             validEmail:"",
+            validAccount:"",
+            validPassword:"",
+            validrePassword:"",
+            validName:"",
+            validPhone:"",
+            validBirth:"",
+            acs: "none acc",
+            pws: "none pw",
+            phs: "none ph",
+            ols: "none old",
+            mas: "none mal"
         },
         watch:{
             rePassword:function(){
-                this.incorrect = this.Password != this.rePassword? "valid":"";
-                this.incorrectText = this.Password != this.rePassword? {}:{'opacity': 0};
+                if (this.Password == this.rePassword){
+                    this.validrePassword = this.validPassword = "";
+                    this.pws = "none pw"
+                }else{
+                    this.validrePassword = this.validPassword = "valid";
+                    this.pws = "reveal pw";
+                }
             },
             Password:function(){
-                this.incorrect = this.Password != this.rePassword? "valid":"";
-                this.incorrectText = this.Password != this.rePassword? {}:{'opacity': 0};
+                if (this.Password == this.rePassword){
+                    this.validrePassword = this.validPassword = "";
+                    this.pws = "none pw"
+                }else{
+                    this.validrePassword = this.validPassword = "valid";
+                    this.pws = "reveal pw";
+                }
+                if(this.Account == this.Password){
+                    this.validAccount = "valid";
+                    this.acs = "reveal acc";
+                }else{
+                    this.validAccount = "";
+                    this.acs = "none acc";
+                }
             },
             Email:function(){
-                this.validEmail = this.Email.includes("@@")? "":"valid"
-            }
+                if (this.Email.includes("@@")) {
+                    this.validEmail = "";
+                    this.mas = "none mal"
+                }else{
+                    this.validEmail = "valid";
+                    this.mas = "reveal mal"
+                }
+            },
+            Account:function(){
+                if (this.Account == this.Password) {
+                    this.validAccount = "valid";
+                    this.acs = "reveal acc";
+                } else {
+                    this.validAccount = "";
+                    this.acs = "none acc";
+                }
+            },
+            Name: function () {
+                this.validName = this.Name == "" ? "valid":"";
+            },
+            Phone: function () {
+                if (this.Phone.startsWith("09") && this.Phone.length == 10) {
+                    this.validPhone = "";
+                    this.phs ="none ph";
+                }else{
+                    this.validPhone = "valid";
+                    this.phs = "reveal ph";
+                }
+            },
+            Birth: function () {
+                var birth = this.Birth;
+                var by = birth.slice(0, 4);//1999*12 = 23988
+                var bm = birth.slice(5, 7);//08
+                var now = new Date();
+                var dateStr = now.toLocaleString();
+                var ny = dateStr.slice(0, 4); // 2022*12 = 24264
+                var nm = dateStr.slice(5, 7); // 10
+                if (((ny * 12 + nm * 1) - (by * 12 + bm * 1)) / 12 >= 18) {
+                    this.validBirth = "";
+                    this.ols = "none old";
+                }else{
+                    this.validBirth = "valid";
+                    this.ols = "reveal old";
+                }
+            },
         },
         methods:{
             register: function () {
@@ -343,7 +462,8 @@
                                 title: '註冊成功!',
                                 text: '請至信箱收取認證信件，請稍待1~3分鐘',
                                 footer: '<a href="/api/Member/Remail">未收到信件? 點擊此處以重發</a>'
-                            })
+                            });
+
                         }else{
                             Swal.fire({
                                 icon: 'error',
@@ -359,22 +479,20 @@
                 },50);
                 Swal.fire({
                     title: '註冊中 請稍後',
+                    color: '#FFF',
+                    iconColor: '#D8CDB9',
+                    confirmButtonColor: '#721B29',
+                    background: '#333',
                     html: '請勿關閉視窗',
-                    timer: 5000,
+                    timer: 12000,
                     didOpen: () => {
                         Swal.showLoading()
-                        const b = Swal.getHtmlContainer().querySelector('b')
-                        timerInterval = setInterval(() => {
-                            b.textContent = Swal.getTimerLeft()
-                        }, 100)
                     },
                     willClose: () => {
                         clearInterval(timerInterval)
                     }
                 })
             },
-
-
         }
     })
     const logvm = new Vue({
@@ -390,11 +508,12 @@
                     Password: this.loginpassword,
                 };
                 let loginJsonString = JSON.stringify(loginbody);
-                fetch("/api/Member/Login", {
-                    method: 'POST',
-                    headers: { "Content-Type": "application/json" },
-                    body: loginJsonString        // to JsonString
-                })
+                setTimeout(()=>{
+                    fetch("/api/Member/Login", {
+                        method: 'POST',
+                        headers: { "Content-Type": "application/json" },
+                        body: loginJsonString        // to JsonString
+                    })
                     .then((e) => e.json())
                     .then((result) => {
                         console.log(result);
@@ -406,30 +525,37 @@
                                 background: '#333',
                                 icon: 'success',
                                 title: '登入成功!',
-                            })
+                            });
+                            setTimeout(() => window.location.assign("/member/FrontPage"), 1000)
                         } else {
                             Swal.fire({
                                 color: '#FFF',
                                 iconColor: '#D8CDB9',
                                 confirmButtonColor: '#721B29',
+                                background: '#333',
                                 icon: 'error',
                                 title: '帳號密碼錯誤!登入大失敗!',
-                                background: '#333',
                             })
                         }
-                    })
-                    .catch(error => console.log(error))
+                        }).catch(error => console.log(error))
+                },50);
+                Swal.fire({
+                    title: '登入中 請稍後',
+                    color: '#FFF',
+                    iconColor: '#D8CDB9',
+                    confirmButtonColor: '#721B29',
+                    background: '#333',
+                    html: '請勿關閉視窗',
+                    timer: 12000,
+                    didOpen: () => {
+                        Swal.showLoading()
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                })
             },
-
         }
     })
-    //const Auth = new Vue({
-    //    el:"#OAuth",
-    //    methods:{
-    //        Google: function () {
-    //            window.location.assign("/member/googlelogin")
-    //        }
-    //    }
-    //})
 </script>
 </html>

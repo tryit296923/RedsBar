@@ -1,4 +1,4 @@
-﻿@model Alcoholic.Models.DTO.MailModel;
+﻿@model Alcoholic.Models.DTO.MailModel
 @{
     Layout = null;
 }
@@ -8,18 +8,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>驗證信</title>
+    <title>密碼重置信件</title>
 </head>
 <body>
     <div>
-        <h4>Reds'Bar 帳號驗證信件</h4>
+        <h4>Reds'Bar 密碼重置信件</h4>
     </div>
     <br />
     <br />
     <br />
     <div>
-        <p>您好，請點及下方連結以開通您的帳號。</p>
-        <p><a href="@Model.Port/member/authorize">驗證帳號</a></p>
+        <p>您好，請點及下方連結以重新設定您的密碼。</p>
+        <p><a href="@Model.Port">點擊此處以更新</a></p>
     </div>
 </body>
-</html>

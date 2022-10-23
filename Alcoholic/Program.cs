@@ -1,3 +1,4 @@
+using Alcoholic.Models;
 using Alcoholic.Models.Entities;
 using Alcoholic.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -25,6 +26,11 @@ builder.Services.AddCors(options =>
         name: "Policy",
         policy => policy.WithOrigins("http://127.0.0.1:5501", "http://127.0.0.1:5500").WithHeaders("*").WithMethods("*")
     );
+});
+
+builder.Services.AddControllers(config =>
+{
+    config.Filters.Add(new ValidationModel());
 });
 
 // 使用預設的 cookie 認證( CookieAuthenticationDefaults )

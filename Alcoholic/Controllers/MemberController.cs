@@ -1,3 +1,4 @@
+using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
 using Alcoholic.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -15,10 +16,12 @@ namespace Alcoholic.Controllers
     {
         private readonly db_a8de26_projectContext db;
         private readonly MailService mail;
-        public MemberController(db_a8de26_projectContext db, MailService mail)
+        private readonly HashService hash;
+        public MemberController(db_a8de26_projectContext db, MailService mail, HashService hash)
         {
             this.db = db;
             this.mail = mail;
+            this.hash = hash;
         }
 
         public IActionResult AuthorizeP()
@@ -34,22 +37,20 @@ namespace Alcoholic.Controllers
             return View();
         }
 
-        public IActionResult RePass()
+        // Forget.cshtml => /api/Member/Sendpw => NewPwMail.cshtml => /member/ResetPw => ResetPw.cshtml => api/member/SetNewPw => member/NewPwSuccess 
+        public IActionResult Forget()
         {
             return View();
         }
-        public IActionResult wrnepas()
+        public IActionResult ResetPw()
+        {
+            MailModel mailModel = new();
+            mailModel.Port = $"{Request.Scheme}://{Request.Host}";
+            return View(mailModel);
+        }
+        public IActionResult NewPwSuccess()
         {
             return View();
-        }
-        public async Task<IActionResult> Chapw(IFormCollection post)
-        {
-            var email = post.ToString();
-            HttpContext.Session.SetString("Email", email);
-
-            var msg = await RazorTemplateEngine.RenderAsync("Views/Member/wrnepas.cshtml");
-            mail.SendMail(email, msg, "RedsBar 密碼重設信件");
-            return Ok();
         }
 
         [AllowAnonymous]
@@ -84,7 +85,6 @@ namespace Alcoholic.Controllers
             db.SaveChanges();
             return View("AuthSuccess");
         }
-
 
         [HttpPut]
         public async Task<IActionResult> ModifyData(string id, Member memberData)

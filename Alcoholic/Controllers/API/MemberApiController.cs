@@ -9,7 +9,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Razor.Templating.Core;
-using System.Diagnostics.Metrics;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Alcoholic.Controllers.API
 {
@@ -45,14 +45,25 @@ namespace Alcoholic.Controllers.API
             HttpContext.Session.SetString("Number", deskInfo.Number);
             HttpContext.Session.SetString("Desk", deskInfo.Desk.ToString());
 
-            return Ok();
+            return Ok(true);
         }
 
         // 註冊
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] MemberModel memberData)
         {
+            //TODO
+            //ModelState.IsValid
+            //if (!ModelState.IsValid)
+            //{
+            //    var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
+            //    return BadRequest(errors);
+            //}
             if (MemberExists(memberData.Account))
+            {
+                return Ok(false);
+            }
+            if (EmailExists(memberData.Email))
             {
                 return Ok(false);
             }
@@ -69,12 +80,12 @@ namespace Alcoholic.Controllers.API
                 user.Salt = salt;
                 user.Qualified = "n";
                 user.MemberPassword = hash.GetHash(string.Concat(memberData.Password, salt).ToString());
-                var msg = RazorTemplateEngine.RenderAsync<Member>("Views/Member/Authorize.cshtml", user);
+                MailModel mailModel = new() { Port = $"{Request.Scheme}://{Request.Host}"};
+                var msg = RazorTemplateEngine.RenderAsync<MailModel>("Views/Member/Authorize.cshtml", mailModel);
                 db.Add(user);
                 db.SaveChanges();
                 var result = await msg;
                 mail.SendMail(memberData.Email, result, "RedsBar 會員認證信件");
-
                 HttpContext.Session.SetString("EmailID", user.EmailID.ToString());
                 return Ok(true);
             }
@@ -136,32 +147,6 @@ namespace Alcoholic.Controllers.API
             return RedirectToAction("Cart", "Order");
         }
 
-        [Authorize(Roles = "member")]
-        [HttpDelete]
-        public string Logout()
-        {
-            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return "Logout";
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> Reset(string MemberAccount)
-        {
-            if (string.IsNullOrEmpty(MemberAccount))
-            {
-                return NotFound();
-            }
-            Member? member = (from mem in db.Members
-                              where MemberAccount == mem.MemberAccount
-                              select mem).FirstOrDefault();
-            if (member == null)
-            {
-                return NotFound();
-            }
-            var msg = await RazorTemplateEngine.RenderAsync<Member>("Views/Member/Authorize.cshtml", member);
-            mail.SendMail(member.Email, msg, "密碼重設信件");
-            return Ok();
-        }
 
         [HttpGet]
         public async Task<IActionResult> Remail()
@@ -180,9 +165,40 @@ namespace Alcoholic.Controllers.API
             return new EmptyResult();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Sendpw([FromBody] dynamic post)
+        {
+            string email = post.ToString();
+            Member? member = db.Members.Select(x => x).Where(x => x.Email == email).FirstOrDefault();
+            if (member == null)
+            {
+                return Ok(false);
+            }
+            HttpContext.Session.SetString("Email", email);
+            MailModel mailModel = new();
+            mailModel.Port = $"{Request.Scheme}://{Request.Host}/member/ResetPw";
+            var msg = await RazorTemplateEngine.RenderAsync<MailModel>("Views/Member/NewPwMail.cshtml", mailModel);
+            mail.SendMail(email, msg, "RedsBar 密碼重設信件");
+            return Ok(true);
+        }
 
+        public IActionResult SetNewPw([FromBody] string pw)
+        {
+            string? email = HttpContext.Session.GetString("Email");
+            Member? member = db.Members.Select(x => x).Where(x => x.Email == email).FirstOrDefault();
+            member.MemberPassword = hash.GetHash(string.Concat(pw, member.Salt).ToString());
+            db.Entry(member).State = EntityState.Modified;
+            db.SaveChanges();
+            return Ok(true);
+        }
 
-
+        [Authorize(Roles = "member")]
+        [HttpDelete]
+        public IActionResult Logout()
+        {
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return Ok(true);
+        }
         public ActionResult<IEnumerable<Member>> GetAllMember()
         {
             return db.Members.ToList();
@@ -190,6 +206,10 @@ namespace Alcoholic.Controllers.API
         private bool MemberExists(string Account)
         {
             return db.Members.Any(member => member.MemberAccount == Account);
+        }
+        private bool EmailExists(string Email)
+        {
+            return db.Members.Any(member => member.Email == Email);
         }
 
     }

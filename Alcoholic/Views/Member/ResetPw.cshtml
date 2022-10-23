@@ -1,0 +1,143 @@
+﻿@model Alcoholic.Models.DTO.MailModel
+@{
+    ViewData["Title"] = "重設密碼";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.2/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.2/dist/sweetalert2.min.js"></script>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        width: 100%;
+        background-color: #333;
+    }
+
+    .Success {
+        height: 85vh;
+        position: relative;
+    }
+
+        .Success > img {
+            width: 100%;
+            height: 100%;
+            vertical-align: bottom;
+            position: absolute;
+            z-index: -1;
+        }
+
+    .Successlogo {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+        .Successlogo > img {
+            margin: 18vh auto 0 auto;
+        }
+
+    .text {
+        color: #FFF;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    h3 {
+        font-size: 2rem;
+        margin: 0 auto;
+    }
+    .form{
+        margin:8px;
+        display:flex;
+        justify-content:center;
+        width:100%;
+    }
+    .form form{
+        display: flex;
+        justify-content: center;
+        flex-direction:column;
+    }
+    .form form input{
+        width: 100%;
+        border: 0;
+        border-radius: 0.375rem;
+    }
+    .form button{
+        margin: 8px;
+        padding: 4px 16px;
+        border: 0;
+        background-color: #721B29;
+        color: #D8CDB9;
+        text-align:center;
+        border-radius: 0.375rem;
+    }
+    .form label{
+        text-align:left;
+        color:azure;
+    }
+
+    .form button:hover {
+        color: #721B29;
+        background-color: #D8CDB9;
+    }
+
+    .npwBtn{
+        display: flex;
+        justify-content: center;
+    }
+</style>
+<div class="Success">
+    <img src="~/images/BackGround/FotoJet.jpg" />
+    <div class="Successlogo">
+        <img src="~/images/icons/logo-y.png" />
+    </div>
+    <div class="text">
+        <h3>請重新設置您的密碼</h3>
+    </div>
+    <div class="form">
+        <form>
+            <div><label>新密碼：</label><input id="newpw" type="password" name="password" /></div>
+            <div><label>再次輸入：</label><input type="password" name="password" /></div>
+            <div class="npwBtn"><button>送出</button></div>
+        </form>
+    </div>
+</div>
+<script>
+        var btn = document.querySelector(".npwBtn button");
+    btn.addEventListener("click",(e)=>{
+        e.preventDefault();
+        var pw = document.getElementById("newpw").value;
+        var json = JSON.stringify(pw);
+        var url = "@Model.Port/api/member/SetNewPw";
+        var relocate = "@Model.Port/member/NewPwSuccess";
+        fetch(url, {
+            method:"POST",
+            headers:{ "Content-Type": "application/json" },
+            body: json
+        }).then((e)=>e.json).then((result)=>{if (result) {
+            Swal.fire({
+                color: '#FFF',
+                iconColor: '#D8CDB9',
+                confirmButtonColor: '#721B29',
+                background: '#333',
+                icon: 'success',
+                title: '密碼已更新 請重新登入!',
+            });
+            setTimeout(()=> window.location.assign(relocate),1000)
+        }else{
+            Swal.fire({
+                color: '#FFF',
+                iconColor: '#D8CDB9',
+                confirmButtonColor: '#721B29',
+                background: '#333',
+                icon: 'error',
+                title: '密碼更新失敗!',
+            })
+        }})
+    })
+</script>
+

@@ -1,8 +1,7 @@
-﻿@model Alcoholic.Models.Entities.Member
-@{
-    ViewData["Title"] = "重設密碼";
+﻿@{
+    ViewData["Title"] = "會員開通成功";
+    Layout = "_LayOut";
 }
-
 <style>
     * {
         margin: 0;
@@ -31,7 +30,6 @@
         display: flex;
         justify-content: center;
         width: 100%;
-        height: 60vh;
     }
 
         .Successlogo > img {
@@ -39,38 +37,25 @@
         }
 
     .text {
+        bottom: 0;
         color: #FFF;
+        position: absolute;
         width: 100%;
         display: flex;
         justify-content: center;
         flex-direction: column;
     }
 
+        .text h3, p {
+            margin: 0 auto 100px auto;
+        }
+
     h3 {
         font-size: 2rem;
-        margin: 0 auto;
-    }
-    .form form{
-        display: flex;
-        justify-content: center;
-        margin: 18px;
-    }
-    .form form input{
-        width: 50%;
-        padding: 8px;
-        border: 0;
-    }
-    .form button{
-        padding: 0 8px;
-        border: 0;
-        background-color: #721B29;
-        color: #D8CDB9;
     }
 
-    .form button:hover {
-        border: 0;
-        color: #721B29;
-        background-color: #D8CDB9;
+    p {
+        font-size: 1.2rem;
     }
 </style>
 <div class="Success">
@@ -79,13 +64,7 @@
         <img src="~/images/icons/logo-y.png" />
     </div>
     <div class="text">
-        <h3>請重新設置您的密碼</h3>
-    </div>
-    <div class="form">
-        <form method="PUT" action="/api/member/chapw">
-            <input type="password" name="password" /><input type="password" name="password" /><br />
-            <button type="submit">送出</button>
-        </form>
+        <h3>密碼更新完成!</h3>
+        <p>Reds'Bar歡迎您</p>
     </div>
 </div>
-
