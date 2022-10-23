@@ -20,22 +20,22 @@ namespace Alcoholic.Controllers.API
         [HttpPost]
         public IActionResult Confirm([FromBody] OrderViewModel orderdata)
         {
-            Guid memberIdCookie = Guid.Parse(Request.Cookies["MemberID"]);
-            string numberCookie = Request.Cookies["Number"];
-            string deskCookie = Request.Cookies["Desk"];
+            string sMemberID = HttpContext.Session.GetString("MemberID");
+            string sDesk = HttpContext.Session.GetString("Desk");
+            string sNumber = HttpContext.Session.GetString("Number");
 
             var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
-            var orderId = DateTime.Now.ToString("yyyyMMddHHmm") + deskCookie;
+            var orderId = DateTime.Now.ToString("yyyyMMddHHmm") + sDesk;
 
             try
             {
                 //分別存入Order, OrderDetail
                 var order = new Order
                 {
-                    MemberId = memberIdCookie,
+                    MemberId = Guid.Parse(sMemberID),
                     OrderId = orderId,
-                    Number = int.Parse(numberCookie),
-                    DeskNum = deskCookie,
+                    Number = int.Parse(sNumber),
+                    DeskNum = sDesk,
                     OrderTime = Convert.ToDateTime(now),
                     Feedback = null
                 };
@@ -46,11 +46,11 @@ namespace Alcoholic.Controllers.API
                     var orderDetail = new OrderDetail
                     {
                         OrderId = orderId,
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity,
-                        UnitPrice = item.UnitPrice,
-                        Discount = item.DiscountAmount,
-                        Total = Convert.ToInt32(item.Quantity * item.UnitPrice * item.DiscountAmount),
+                        ProductId = item.Id,
+                        Quantity = item.Qty,
+                        UnitPrice = item.UnitPrice ?? 0,
+                        Discount = item.DiscountAmount ?? 0,
+                        Total = Convert.ToInt32(item.Qty * item.UnitPrice * item.DiscountAmount),
                     };
                     _db.Add(orderDetail);
                 }
@@ -70,8 +70,8 @@ namespace Alcoholic.Controllers.API
         public IActionResult Dismiss(int Desk)
         {
             DeskInfo? deskInfo = (from desk in _db.DeskInfo
-                                 where desk.Desk == Desk
-                                 select desk).FirstOrDefault();
+                                  where desk.Desk == Desk
+                                  select desk).FirstOrDefault();
             deskInfo.Occupied = 0;
             deskInfo.EndTime = DateTime.Now.ToString("yyyyMMddHHmm");
             _db.Entry(deskInfo).State = EntityState.Modified;

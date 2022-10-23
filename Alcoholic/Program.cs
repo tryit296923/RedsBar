@@ -17,6 +17,7 @@ builder.Services.AddRazorTemplating();
 builder.Services.AddDbContext<db_a8de26_projectContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("remote"));
+    option.UseLazyLoadingProxies();
 });
 
 // CORS Middleware會處理跨原始來源的要求。(WithOrigins => 套用至指定來源)
