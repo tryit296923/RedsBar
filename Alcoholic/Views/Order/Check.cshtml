@@ -46,10 +46,6 @@
         font-size: larger;
     }
 
-    ul {
-        padding-left: 20px;
-    }
-
     .orderDetail{
         display:flex;
         justify-content:space-between;
@@ -129,26 +125,30 @@
     <div class="row">
         <!-- 標題 -->
         <div class="container-fluid colorbox py-2 col-10 col-xl-8 text-center">
-            <div class="thankmessage">本日消費明細</div>
+            <div class="thankmessage">消費明細</div>
         </div>
         <br>
         <div class="detailbox container-fluid col-10 col-xl-8 px-0">
             <!-- 訂單簡單資訊 -->
-            <div class="checkdetail p-3">
+            <div class="checkdetail p-3" id="orderCheck">
                 <div class="px-3">
                 <p class="checkinfotext ordertime">日期 : @ViewBag.orderTime</p>
-                <p class="checkinfotext tablenum">桌號 : </p>
-                <p class="checkinfotext custnum">用餐人數 :  人</p>
+                    <p class="checkinfotext tablenum">桌號 : @ViewBag.Desk</p>
+                    <p class="checkinfotext custnum">用餐人數 : @ViewBag.Number 人</p>
                 </div>
                 <hr>
-                <ul>
+                <ul class="px-3">
                     <li class="orderDetail">
-                        <span>商品名稱</span>
-                        <span class="pe-3">2</span>
+                        <span>商品名</span>
+                        <span>數量</span>
+                    </li>
+                    <li class="orderDetail" v-for="items in cartTotal">
+                        <span>{{items.item.productName}}</span>
+                        <span class="pe-3">{{items.cnt}}</span>
                     </li>
                 </ul>
                 <hr>
-                <p class="colorbox total mt-0">今日消費總計 : XXX 元</p>
+                <p class="colorbox total mt-0">今日消費總計 : @ViewBag.totalPrice 元</p>
             </div>
 
             <!-- 底部選單按鈕 -->
@@ -180,7 +180,7 @@
                                     &nbsp信用卡支付
                             </a>
                             </div>
-                            <div class="col-12">
+                            <div class="col-12 w-50">
                             <a href="" class="btn btnpaymentinstrument"><img src="~/images/icons/googlepay.jpg" class="w-50"/></a>
                             </div>
                                 <div class="col-12">
@@ -193,3 +193,16 @@
         </div>
     </div>
 </div>
+<script>
+    var app = new Vue({
+        el: "#orderCheck",
+        data(){
+            return{
+                cartTotal : @Html.Raw(Json.Serialize(Model))
+            }
+        },
+        method:{
+
+        }
+    })
+</script>

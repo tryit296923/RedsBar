@@ -1,4 +1,4 @@
-﻿@model Alcoholic.Models.Entities.Order
+﻿@model Alcoholic.Models.DTO.OrderViewModel
 @{
     ViewData["Title"] = "訂單送出成功!";
     Layout = "_LayoutMobile";
@@ -110,11 +110,12 @@
             <div class="orderdetail text-center py-2">
                 <p class="orderinfotext orderinfotitle">訂單成立資訊 :</p>
                 <hr>
-                <p class="orderinfotext tablenum">桌號 : @ViewBag.deskSessionSuccess</p>
-                <p class="orderinfotext custnum">用餐人數 : @ViewBag.numberSessionSuccess 人</p>
+                <p class="orderinfotext tablenum">桌號 : @Model.Desk</p>
+                <p class="orderinfotext custnum">用餐人數 : @Model.Number 人</p>
                 <hr>
                 <p class="orderinfotext orderid">訂單單號 : @Model.OrderId</p>
-                <p class="orderinfotext ordertime">訂單成立時間 : @Model.OrderTime</p>
+                <p class="orderinfotext ordertime">訂單成立時間 : </p>
+                <p class="orderinfotext">@Model.OrderTime</p>
             </div>
 
             <!-- 餐點準備提示 -->
