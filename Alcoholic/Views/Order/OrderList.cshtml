@@ -26,7 +26,6 @@
     }
     /* 產品 */
     .signatureCT p,
-    .classicCT p,
     .recommendedCT p,
     .customizedCT p {
         font-size: small;
@@ -58,10 +57,10 @@
         border-radius: 0;
     }
 
-        .quantitygroup .btn:hover {
-            background-color: #C28C2E;
-            color: white;
-        }
+    .quantitygroup .btn:hover {
+         background-color: #C28C2E;
+         color: white;
+    }
 
 
     .qty_input {
@@ -84,22 +83,14 @@
             color: #333;
             border: 0;
         }
-
-    /* 算命 */
-    .fate {
-        position: fixed;
-        right: 0px;
-        top: 20vh;
-        width: 10vw;
-        max-width: 100px;
-        z-index: 2;
-        display: inline;
-    }
-
     /*model*/
     .modal-footer .btn {
         width: 100%;
         color: #FFF;
+    }
+
+    .modal-content{
+        background-color: #d8cdb9;
     }
 
         .modal-footer .btn:hover {
@@ -124,13 +115,13 @@
     }
 
     /* 客製化 */
-    .modal-content {
-        background-color: #D8CDB9;
+    .custommodal {
+        background-color: #333;
     }
 
     .modalinput {
         border: 0;
-        background-color: transparent;
+        background-color: #d8cdb9;
         font-size: 1rem;
         transition: ease;
         transition-duration: 0.3s;
@@ -223,28 +214,28 @@
     <div class="collection container">
         <ul class="nav nav-justified p-2 nav-pills" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="signatureCT-tab" data-bs-toggle="tab"
+                <button class="nav-link active px-0" id="signatureCT-tab" data-bs-toggle="tab"
                         data-bs-target="#signatureCT" type="button" role="tab" aria-controls="signatureCT"
                         aria-selected="true">
-                    特色調酒
+                    招牌調酒
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="classicCT-tab" data-bs-toggle="tab" data-bs-target="#classicCT"
-                        type="button" role="tab" aria-controls="classicCT" aria-selected="false">
-                    經典調酒
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="recommendedCT-tab" data-bs-toggle="tab" data-bs-target="#recommendedCT"
+                <button class="nav-link px-0" id="recommendedCT-tab" data-bs-toggle="tab" data-bs-target="#recommendedCT"
                         type="button" role="tab" aria-controls="recommendedCT" aria-selected="false">
                     推薦調酒
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="tabbtn nav-link" id="customizedCT-tab" type="button" role="tab" @@click="resetoptions"
+                <button class="tabbtn nav-link px-0" id="customizedCT-tab" type="button" role="tab" @@click="resetoptions"
                         data-bs-toggle="modal" href="#optionModalToggle">
-                    客製化<i class="fa-solid fa-clipboard-question"></i>
+                    客製化
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link px-0" id="fateCT-tab" data-bs-toggle="tab" data-bs-target="#fateCT"
+                        type="button" role="tab" aria-controls="fateCT" aria-selected="false">
+                    算命調酒<i class="fa-solid fa-clipboard-question"></i>
                 </button>
             </li>
         </ul>
@@ -253,18 +244,14 @@
 
 <div id="vueproductModal">
     <!-- banner -->
-    <!-- 算命 -->
-    <div class="divfate">
-        <img class="fate" src="~/images/Cocktails/fate.png">
-    </div>
     <!-- 菜單 -->
     <div class="menu">
         <div class="tab-content">
-            <!-- 特色調酒 -->
+            <!-- 招牌調酒 -->
             <div class="tab-pane fade show  active" id="signatureCT" role="tabpanel" aria-labelledby="signatureCT-tab"
                  tabindex="0">
                 <div class="container signatureCT">
-                    <div class="row g-4 mt-2">
+                    <div class="row g-4 ">
                         <template v-for="item in product">
                             <div class="col-6 col-md-4 p-1">
                                 <div class="card productcard w-100 h-100">
@@ -301,52 +288,11 @@
                     </div>
                 </div>
             </div>
-            <!-- 經典調酒 -->
-            <div class="tab-pane fade" id="classicCT" role="tabpanel" aria-labelledby="classicCT-tab" tabindex="0">
-                <div class="container classicCT">
-
-                    <div class="row g-4 mt-2">
-                        <template v-for="item in product">
-                            <div class="col-6 col-md-4 p-1">
-                                <div class="card productcard w-100 h-100">
-                                    <img :src="item.path" class="m-2" :id="item.id" data-bs-toggle="modal"
-                                         data-bs-target="#productModal" @@click="selected">
-                                    <div class="card-body btnaddtocart">
-                                        <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal"
-                                             @@click="selected">
-                                            <p class="card-title">{{item.name}}</p>
-                                            <span class="price">${{item.price}}</span>
-                                            <span class="discount">${{Math.round(item.price*0.8@*item.discount*@)}}</span>
-                                            <span class="sale px-2">SALE</span>
-                                        </div>
-                                        <div class="row justify-content-center my-2 mx-0 quantitygroup">
-                                            <button type="button" @@click="minus"
-                                                    class="col-2 p-0 btn btn-dark btn-sm minus-btn">
-                                                <i class="fa fa-minus"></i>
-                                            </button>
-                                            <div class="col-8 p-0">
-                                                <input type="number" :name="item.name"
-                                                       class="form-control form-control-sm qty_input text-center"
-                                                       value="0" readonly>
-                                            </div>
-                                            <button type="button" @@click="plus"
-                                                    class="col-2 p-0 btn btn-dark btn-sm plus-btn">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div>
-                                        <button type="button" class="col-12 btn">加到購物車</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-            </div>
             <!-- 推薦 -->
             <div class="tab-pane fade" id="recommendedCT" role="tabpanel" aria-labelledby="recommendedCT-tab"
                  tabindex="0">
                 <div class="container recommendedCT">
-                    <div class="row g-4 mt-2">
+                    <div class="row g-4 ">
                         <div id="carouselrecommendCaptions" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-indicators">
                                 <button type="button" data-bs-target="#carouselrecommendCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -429,16 +375,16 @@
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">{{productName}}</h3>
+                    <div class="modal-header ">
+                        <h3 class="modal-title fw-bold px-5">{{productName}}</h3>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body py-0">
                         <div class="modal-bodyimg ">
                             <img class="modal-image" :src="imagesrc">
                         </div>
-                        <div class="card-body modal-spec">
-                            <h5>{{description}}</h5>
+                        <div class="card-body modal-spec text-center">
+                            <h5 class="my-3 fw-bold">{{description}}</h5>
                         </div>
                     </div>
                     <div class="container  my-1">
@@ -478,19 +424,19 @@
         <!-- 第一題 -->
         <div class="modal fade" id="optionModalToggle" aria-hidden="true" aria-labelledby="optionModalToggleLabel"
              tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="container-fluid modal-headbackgroundcolor w-100 h-100">
-                        <div class="modal-header gx-0">
+            <div class="modal-dialog modal-dialog-centered justify-content-center">
+                <div class="modal-content custommodal w-75">
+                    <div class="container modal-headbackgroundcolor ">
+                        <div class="modal-header ">
                             <h5 class="modal-title" id="optionModalToggleLabel">請選擇一種基酒</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            <button type="button" class="btn-close btn-close-white m-0" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                         </div>
                     </div>
                     <div class="modal-body p-0">
                         <div class="modal-bodycolor">
-                            <div class="optionbutton m-2" v-for="option in optionsection1">
-                                <input class="w-100 modalinput" type="button" :name="option" :value="option.base"
+                            <div class="optionbutton m-2 text-center text-center" v-for="option in optionsection1">
+                                <input class="modalinput border border-light rounded w-75" type="button" name="base" :value="option.base"
                                        @@click="optionselected" data-bs-target="#optionModalToggle2"
                                        data-bs-toggle="modal" data-bs-dismiss="modal">
                             </div>
@@ -502,19 +448,19 @@
         <!-- 第二題 -->
         <div class="modal fade" id="optionModalToggle2" aria-hidden="true" aria-labelledby="optionModalToggleLabel2"
              tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+            <div class="modal-dialog modal-dialog-centered justify-content-center">
+                <div class="modal-content custommodal w-75">
                     <div class="container-fluid modal-headbackgroundcolor w-100 h-100">
                         <div class="modal-header gx-0">
-                            <h5 class="modal-title" id="optionModalToggleLabel2">請選擇調酒的香味</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            <h5 class="modal-title" id="optionModalToggleLabel2">調酒的香味?</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                         </div>
                     </div>
                     <div class="modal-body p-0">
                         <div class="container modal-bodycolor">
-                            <div class="optionbutton m-2" v-for="option in optionsection2">
-                                <input class="w-100 modalinput" type="button" name="香氣" :value="option.smell"
+                            <div class="optionbutton m-2 text-center " v-for="option in optionsection2">
+                                <input class="modalinput border border-light rounded w-75" type="button" name="香氣" :value="option.smell"
                                        @@click="optionselected" data-bs-target="#optionModalToggle3"
                                        data-bs-toggle="modal" data-bs-dismiss="modal">
                             </div>
@@ -526,19 +472,19 @@
         <!-- 第三題 -->
         <div class="modal fade" id="optionModalToggle3" aria-hidden="true" aria-labelledby="optionModalToggleLabel3"
              tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+            <div class="modal-dialog modal-dialog-centered justify-content-center">
+                <div class="modal-content custommodal w-75">
                     <div class="container-fluid modal-headbackgroundcolor w-100 h-100">
                         <div class="modal-header gx-0">
-                            <h5 class="modal-title" id="optionModalToggleLabel3">請選擇調酒主要呈現的味道</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            <h5 class="modal-title" id="optionModalToggleLabel3">主要呈現的味道?</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                         </div>
                     </div>
                     <div class="modal-body p-0">
                         <div class="container modal-bodycolor">
-                            <div class="optionbutton m-2" v-for="option in optionsection3">
-                                <input class="w-100 modalinput" type="button" name="口感" :value="option.taste"
+                            <div class="optionbutton m-2 text-center" v-for="option in optionsection3">
+                                <input class="modalinput border border-light rounded w-75" type="button" name="口感" :value="option.taste"
                                        @@click="optionselected" data-bs-target="#optionModalToggle4"
                                        data-bs-toggle="modal" data-bs-dismiss="modal">
                             </div>
@@ -550,19 +496,19 @@
         <!-- 第四題 -->
         <div class="modal fade" id="optionModalToggle4" aria-hidden="true" aria-labelledby="optionModalToggleLabel4"
              tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+            <div class="modal-dialog modal-dialog-centered justify-content-center">
+                <div class="modal-content custommodal w-75">
                     <div class="container-fluid modal-headbackgroundcolor w-100 h-100">
                         <div class="modal-header gx-0">
-                            <h5 class="modal-title" id="optionModalToggleLabel4">請選擇調酒的酒感</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            <h5 class="modal-title" id="optionModalToggleLabel4">調酒的酒感?</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                         </div>
                     </div>
                     <div class="modal-body p-0">
                         <div class="container modal-bodycolor">
-                            <div class="optionbutton m-2" v-for="option in optionsection4 ">
-                                <input class="w-100 modalinput" type="button" name="酒感" :value="option.body"
+                            <div class="optionbutton m-2 text-center" v-for="option in optionsection4 ">
+                                <input class="modalinput border border-light rounded w-75" type="button" name="酒感" :value="option.body"
                                        @@click="optionselected" data-bs-target="#optionModalToggle5"
                                        data-bs-toggle="modal" data-bs-dismiss="modal">
                             </div>
@@ -574,19 +520,19 @@
         <!-- 提交 -->
         <div class="modal fade" id="optionModalToggle5" aria-hidden="true" aria-labelledby="optionModalToggleLabel5"
              tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+            <div class="modal-dialog modal-dialog-centered justify-content-center">
+                <div class="modal-content  w-75">
                     <div class="container-fluid modal-headbackgroundcolor w-100 h-100">
                         <div class="modal-header gx-0">
                             <h5 class="modal-title" id="optionModalToggleLabel5">完成!</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                         </div>
                     </div>
                     <div class="modal-body p-0">
-                        <div class="container modal-bodycolor">
+                        <div class="container modal-bodycolor  text-center">
                             <button type="submit" name="選項" :value="optionsform"
-                                    class="btn btncartbackgroundcolor">
+                                    class="btn btncartbackgroundcolor ">
                                 加到購物車<i class="fa-solid fa-cart-shopping ps-1"></i>
                             </button>
                         </div>
@@ -598,15 +544,15 @@
 </div>
 
 @*購物車*@
-<form id="cartform" action="https://localhost:7273/Order/AddToCart">
+<div class="shopCart">
+    <form id="cartform" action="/Order/AddToCart">
         <a id="checkCart" href="">
-            <div class="shopCart">
-                <i class="fa-sharp fa-solid fa-cart-shopping"> </i>
-                <h2> 查看購物車</h2>
+            <div>
+                <i class="fa-sharp fa-solid fa-cart-shopping"> <h2> 查看購物車</h2></i>
             </div>
         </a>
-</form>
-
+    </form>
+</div>
 
 <!-- SWAL -->
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -673,14 +619,14 @@
         },
         created: function () {
             let self = this;
-            fetch("https://localhost:7273/api/Products/GetAllProducts")
+            fetch("/api/Products/GetAllProducts")
                 .then((response) => response.json())
                 .then((result) => self.product = result)
         }
     })
 
     var cartArray = [];
-    
+
     var cartStr = "";
     function sessionStr(e) {
         var selProd = e.target.parentElement.children[1].children[1].children[0];
@@ -711,7 +657,7 @@
                     console.log("不重複");
                     item.qty = selProd.value;
                     cartArray.push(item);
-                    cartStr=JSON.stringify(cartArray);
+                    cartStr = JSON.stringify(cartArray);
                     console.log(cartStr);
                     break;
                 }
@@ -719,36 +665,36 @@
                 else {
                     console.log("繼續找");
                 }
-                
+
             }
             const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        })
-        Toast.fire({
-            icon: 'success',
-            title: '添加成功',
-            text:JSON.stringify(selProd.name)
-        })
-        selProd.value=0;
-    }
-        };
-        //重製選擇的數量
-        
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+            Toast.fire({
+                icon: 'success',
+                title: '添加成功',
+                text: JSON.stringify(selProd.name)
+            })
+            selProd.value = 0;
+        }
+    };
+    //重製選擇的數量
+
     //sessionStorage.setItem("Sample", cartStr);
 
     let checkCart = document.getElementById("checkCart");
     let cartform = document.getElementById("cartform");
-    
-    
-    checkCart.addEventListener("click",(e)=>{
+
+
+    checkCart.addEventListener("click", (e) => {
         cartArray = [];
         e.preventDefault();
         addCartSession();
@@ -757,14 +703,14 @@
 
     function addCartSession() {
         console.log(cartStr);
-        fetch("https://localhost:7273/Order/AddToCart", {
+        fetch("/Order/AddToCart", {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
             body: cartStr,
         })
-        .then((e) => console.log(e))
-        .then((result) => {
-            console.log(result)
-        }).catch(error => console.log(error))
+            .then((e) => console.log(e))
+            .then((result) => {
+                console.log(result)
+            }).catch(error => console.log(error))
     }
 </script>
