@@ -22,11 +22,10 @@ namespace Alcoholic.Controllers
             return RedirectToAction("Cart", "Order");
         }
         [HttpPost]
-        public void AddToCart([FromBody] List<CartItem> cartItem)
+        public IActionResult AddToCart([FromBody] List<CartItem> cartItem)
         {
             if (cartItem == null)
             {
-                RedirectToAction("Cart");
             }
             else
             {
@@ -76,11 +75,13 @@ namespace Alcoholic.Controllers
                     HttpContext.Session.SetString("CartItem", cartString);
                     Console.WriteLine(sesStr);
                 }
-                RedirectToAction("Cart");
             }
+            return RedirectToAction("Cart","Order");
+
         }
         public IActionResult Cart()
         {
+            //session取值是否可用
             var sesStr = HttpContext.Session.GetString("CartItem");
             Console.WriteLine(sesStr);
             string sMemberID = HttpContext.Session.GetString("MemberID");

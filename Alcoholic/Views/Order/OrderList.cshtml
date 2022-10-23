@@ -546,7 +546,12 @@
 @*購物車*@
 <div id="checkCart" class="shopCart">
     <form id="cartform" action="/Order/AddToCart">
-                <i class="fa-sharp fa-solid fa-cart-shopping"> <h2> 查看購物車</h2></i>
+        <div>
+            <a >
+            <i class="fa-sharp fa-solid fa-cart-shopping"> <h2> 查看購物車</h2></i>
+        </a>
+        </div>
+        
     </form>
 </div>
 
@@ -682,9 +687,6 @@
             selProd.value = 0;
         }
     };
-    //重製選擇的數量
-
-    //sessionStorage.setItem("Sample", cartStr);
 
     let checkCart = document.getElementById("checkCart");
     let cartform = document.getElementById("cartform");
@@ -692,8 +694,9 @@
 
     checkCart.addEventListener("click", (e) => {
         cartArray = [];
-        cartStr = "";
+        e.preventDefault();
         addCartSession();
+        cartStr = "";
     });
 
     function addCartSession() {
