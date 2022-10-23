@@ -156,7 +156,7 @@
         height: 3rem;
     }
 
-        .shopCart:hover {
+        .shopCart div:hover {
             background-color: #D8CDB9;
             color: #333;
         }
@@ -544,13 +544,9 @@
 </div>
 
 @*購物車*@
-<div class="shopCart">
+<div id="checkCart" class="shopCart">
     <form id="cartform" action="/Order/AddToCart">
-        <a id="checkCart" href="">
-            <div>
                 <i class="fa-sharp fa-solid fa-cart-shopping"> <h2> 查看購物車</h2></i>
-            </div>
-        </a>
     </form>
 </div>
 
@@ -696,9 +692,8 @@
 
     checkCart.addEventListener("click", (e) => {
         cartArray = [];
-        e.preventDefault();
+        cartStr = "";
         addCartSession();
-        console.log(cartStr);
     });
 
     function addCartSession() {

@@ -24,57 +24,65 @@ namespace Alcoholic.Controllers
         [HttpPost]
         public void AddToCart([FromBody] List<CartItem> cartItem)
         {
-            var sesStr = HttpContext.Session.GetString("CartItem");
-            var addItem = new List<CartItem>();
-
-            //判斷是否有session
-            if (string.IsNullOrEmpty(sesStr))
+            if (cartItem == null)
             {
-                var cartString = JsonConvert.SerializeObject(cartItem);
-                HttpContext.Session.SetString("CartItem", cartString);
-                addItem = cartItem;
+                RedirectToAction("Cart");
             }
             else
             {
-                var sesItem = JsonConvert.DeserializeObject<List<CartItem>>(sesStr);
-                //判斷商品是否已在session中
-                for (int i = 0; i < cartItem.Count; i++)
-                {                    
-                    for (int S = 0; S < sesItem.Count; S++)
-                    {
-                        //重複產品
-                        if (sesItem[S].Id == cartItem[i].Id) {
-                            sesItem[S].Qty += cartItem[i].Qty;
-                            Console.WriteLine($"產品ID{sesItem[i].Id}產品數量{sesItem[i].Qty}");
-                        break;
-                        }
-                        //找完集合沒有重復產品
-                        else if(sesItem[S].Id != cartItem[i].Id & S==sesItem.Count-1)
-                        {
-                            Console.WriteLine("新商品");
-                            addItem.Add(cartItem[i]);
-                            Console.WriteLine($"產品ID{sesItem[i].Id}產品數量{sesItem[i].Qty}");
-                            break;
-                        }
-                        else
-                        {
-                          Console.WriteLine("找");
-                          
-                        }
-                        }
+                var sesStr = HttpContext.Session.GetString("CartItem");
+                var addItem = new List<CartItem>();
+
+                //判斷是否有session
+                if (string.IsNullOrEmpty(sesStr))
+                {
+                    var cartString = JsonConvert.SerializeObject(cartItem);
+                    HttpContext.Session.SetString("CartItem", cartString);
                 }
+                else
+                {
+                    var sesItem = JsonConvert.DeserializeObject<List<CartItem>>(sesStr);
+                    //判斷商品是否已在session中
+                    for (int i = 0; i < cartItem.Count; i++)
+                    {
+                        for (int S = 0; S < sesItem.Count; S++)
+                        {
+                            //重複產品
+                            if (sesItem[S].Id == cartItem[i].Id)
+                            {
+                                sesItem[S].Qty += cartItem[i].Qty;
+                                addItem.Add(sesItem[S]);
+                                Console.WriteLine($"產品ID{sesItem[i].Id}產品數量{sesItem[i].Qty}");
+                                break;
+                            }
+                            //找完集合沒有重復產品
+                            else if (sesItem[S].Id != cartItem[i].Id & S == sesItem.Count - 1)
+                            {
+                                Console.WriteLine("新商品");
+                                sesItem.Add(cartItem[i]);
+                                Console.WriteLine(addItem);
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("找");
+
+                            }
+                        }
+                    }
+                    //cartString為購物車字串，additem為物件
+                    Console.WriteLine(sesItem);
+                    var cartString = JsonConvert.SerializeObject(sesItem);
+                    HttpContext.Session.SetString("CartItem", cartString);
+                    Console.WriteLine(sesStr);
+                }
+                RedirectToAction("Cart");
             }
-            foreach (var item in addItem)
-            {
-                //additem為購物車物件
-                Console.WriteLine($"ID{item.Id}數量{item.Qty}");
-            }
-            
-            
         }
         public IActionResult Cart()
         {
-            
+            var sesStr = HttpContext.Session.GetString("CartItem");
+            Console.WriteLine(sesStr);
             string sMemberID = HttpContext.Session.GetString("MemberID");
             string memberName = "";
             if (sMemberID != null)
