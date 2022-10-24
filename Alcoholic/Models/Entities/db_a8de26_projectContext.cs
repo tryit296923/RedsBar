@@ -144,7 +144,7 @@ namespace Alcoholic.Models.Entities
 
             modelBuilder.Entity<OrderDetail>(entity =>
             {
-                entity.HasKey(e => new { e.OrderId, e.Sequence });
+                entity.HasKey(e => new { e.OrderId, e.Sequence, e.ProductId });
 
                 entity.Property(e => e.Discount).HasColumnType("decimal");
 
