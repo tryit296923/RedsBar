@@ -138,8 +138,8 @@ namespace Alcoholic.Controllers
         {
             var order = (from x in projectContext.Orders where x.OrderId == orderId select x).Select(x => new OrderViewModel
             {
-                Desk = int.Parse(x.DeskNum),
-                Number = x.Number.ToString(),
+                Desk = x.DeskNum,
+                Number = x.Number,
                 OrderId = x.OrderId,
                 OrderTime = x.OrderTime,
             }).FirstOrDefault();
@@ -153,8 +153,8 @@ namespace Alcoholic.Controllers
 
             var orderDetail = (from y in projectContext.Orders where y.Status == "N" && y.DeskNum == sDeskTotal select y).Select(y => new OrderViewModel
             {
-                Desk = int.Parse(y.DeskNum),
-                Number = y.Number.ToString(),
+                Desk = y.DeskNum,
+                Number = y.Number,
                 OrderId = y.OrderId,
                 OrderTime = y.OrderTime,
                 MemberName = y.Member.MemberName,

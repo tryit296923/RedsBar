@@ -22,17 +22,16 @@ namespace Alcoholic.Controllers.API
         {
             string sMemberID = HttpContext.Session.GetString("MemberID");
             string sDesk = HttpContext.Session.GetString("Desk");
-            string sNumber = HttpContext.Session.GetString("Number");           
-
+            string sNumber = HttpContext.Session.GetString("Number");
+            var orderId = DateTime.Now.ToString("yyyyMMddHHmm") + sDesk;
+            var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
             var x = (from o in _db.Orders 
                      where o.MemberId == Guid.Parse(sMemberID) && o.Status == "N" 
                      select o.OrderId).FirstOrDefault();
             try
             {
                 if(x == null)
-                {
-                    var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
-                    var orderId = DateTime.Now.ToString("yyyyMMddHHmm") + sDesk;
+                {                                       
                     //分別存入Order, OrderDetail
                     var order = new Order
                     {
@@ -62,7 +61,11 @@ namespace Alcoholic.Controllers.API
                 }
                 else
                 {
-                    var seq = (from s in _db.OrderDetails where s.OrderId == x select s.Sequence).LastOrDefault() + 1;
+                    var newTime = (from t in _db.Orders where t.OrderId == x select t).FirstOrDefault();
+                    newTime.OrderTime = DateTime.Parse(now);
+                    _db.Update(newTime);
+
+                    var seq = (from s in _db.OrderDetails where s.OrderId == x orderby s.Sequence select s.Sequence).LastOrDefault() + 1;
                     foreach (var item in orderdata.ItemList)
                     {
                         var orderDetail = new OrderDetail
