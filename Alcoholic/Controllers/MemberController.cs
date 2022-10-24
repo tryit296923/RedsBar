@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Razor.Templating.Core;
-using System.Security.Policy;
 
 namespace Alcoholic.Controllers
 {
@@ -22,6 +20,10 @@ namespace Alcoholic.Controllers
             this.db = db;
             this.mail = mail;
             this.hash = hash;
+        }
+        public IActionResult Member()
+        {
+            return View();
         }
 
         public IActionResult AuthorizeP()
