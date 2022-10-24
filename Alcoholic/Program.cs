@@ -29,10 +29,10 @@ builder.Services.AddCors(options =>
     );
 });
 
-builder.Services.AddControllers(config =>
-{
-    config.Filters.Add(new ValidationModel());
-});
+//builder.Services.AddControllers(config =>
+//{
+//    config.Filters.Add(new ValidationModel());
+//});
 
 // 使用預設的 cookie 認證( CookieAuthenticationDefaults )
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

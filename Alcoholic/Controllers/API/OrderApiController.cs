@@ -67,7 +67,7 @@ namespace Alcoholic.Controllers.API
 
         // 離席
         [HttpPut]
-        public IActionResult Dismiss(int Desk)
+        public IActionResult Dismiss(string Desk)
         {
             DeskInfo? deskInfo = (from desk in _db.DeskInfo
                                   where desk.Desk == Desk

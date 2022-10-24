@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Alcoholic</title>
+    <script src="bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="vue/vue.min.js"></script>
+    <link rel="stylesheet" href="bootstrap/bootstrap.css" />
+    <link href="css/theme.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="shortcut icon" type="image/ico" href="images/icons/logoicon-r.png">
+    <style>
+        body{
+            margin:0px;
+        }
+        a{
+            text-decoration: none;
+        }
+        /* NAV */
+        .logo {
+            width: 50px;
+            margin-right: 20px;
+        }
+
+        .navbar {
+            background-color: #721B29;
+        }
+
+        .navbar-brand {
+            color: white;
+        }
+
+        .nav-link {
+            color: white;
+        }
+
+        .search {
+            height: 38px;
+            margin: 10px;
+            position: relative;
+        }
+
+            .search img {
+                height: 20px;
+                width: 20px;
+                position: absolute;
+                top: 9px;
+                right: 9px;
+            }
+
+        .searcharea2 {
+            display: none;
+        }
+
+        @media screen and (max-width: 992px) {
+            .searcharea {
+                display: none !important;
+            }
+
+            .searcharea2 {
+                display: block;
+            }
+        }
+        /* Footer */
+        footer{
+            width: 100%;
+            background-color: #D8CDB9; 
+            margin-top: 40px;
+            color: #666;
+            font-size: 14px;
+        }
+        footer a{
+            color: #666;
+        }
+        .footright{
+            margin: auto;
+            padding: 20px 10px 10px 10px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar monly navbar-expand-md ">
+            <div class="container-fluid">
+                <a asp-controller="Home" asp-action="Index"><img src="images/icons/logo-w.png" alt="" class="logo"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                        <form class="searcharea2 search" role="search">
+                            <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                            <a href=""><img src="Images/icons/search.png" alt=""></a>
+                        </form>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Menu" asp-action="Recommendation">推薦酒款</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Menu" asp-action="Signature">招牌調酒</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Booking" asp-action="Booking">線上訂位</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Member" asp-action="LoginRegister">會員</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex searcharea search" role="search">
+                        <input class=" form-control" type="search" placeholder="Search" aria-label="Search">
+                        <a href=""><img src="Images/icons/search.png" alt=""></a>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main role="main">
+        <!-- @RenderBody() -->
+    <link href="https://use.fontawesome.com/releases/v6.2.0/css/all.css" rel="stylesheet">
+    <style>
+        /*breadcrumb*/
+        .breadcrumb {
+            margin-bottom: 0;
+            height: 30px;
+        }
+
+            .breadcrumb a {
+                color: #444;
+            }
+
+        .path {
+            background-color: #D8CDB9;
+            height: 30px;
+            line-height: 30px;
+        }
+        body{
+            background-color: #222220;
+            color: azure;
+            min-width: 390px;
+        }
+        .path > div > a{
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bolder;
+        }
+        /* banner */
+        .membanner{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;   
+            position: relative;         
+        }
+        .membanner > img{
+            width: 100%;
+            filter: blur(4px);
+        }
+        .board{
+            position: absolute;
+            margin: auto;
+            background-color: rgba(100,100, 100, .6);
+            padding: 10px;
+            color: aliceblue;
+        }
+        .badge{
+            text-align: center;
+            padding: 10px;
+            display: none;
+        }
+        .reveal{
+            display: block;
+            text-align: center;
+            padding: 10px;
+        }
+        .discount{
+            display: flex;
+            justify-content: space-between;
+        }
+        .lvlinfo {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        } 
+        h3{
+            font-size: 1.2rem;
+            color: #D8CDB9;
+        }
+        i{
+            font-size: 1.2rem;
+            padding: 0 6px;
+        }
+        /* data */
+        .data,.orders{
+            background-color: rgba(100,100, 100, .6);
+        }
+        .datahead ,.orderhead{
+            padding-top: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .progress{
+            width: 90%;
+        }
+        .status > div{
+            width: 90%;
+            display: flex;
+            justify-content: space-between;
+        }
+        /* order */
+        .products{
+            display: flex;
+            overflow-x: auto;
+        }
+    </style>
+    <div class="path container">
+        <div class="row">
+            <nav class="col-10" style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Member</li>
+                </ol>
+            </nav>
+            <a class="col-2" href="">登入</a>
+        </div>
+    </div>
+    <div id="member">
+        <div class="membanner">
+            <img src="Images/BackGround/banner3A.jpg" alt="">
+            <div class="container board">
+                <div class="row">
+                    <div class="col-5 lvl">
+                        <div :class="normal"><img class="p-3" src="Images/icons/drinks_icon.png" alt=""><hr><h3>會員等級：無</h3></div>
+                        <div :class="bronze"><img class="p-3" src="Images/icons/drinks_b.png" alt=""><hr><h3>會員等級：銅</h3></div>
+                        <div :class="silver"><img class="p-3" src="Images/icons/drinks_s.png" alt=""><hr><h3>會員等級：銀</h3></div>
+                        <div :class="gold"><img class="p-3" src="Images/icons/drinks_g.png" alt=""><hr><h3>會員等級：金</h3></div>
+                    </div>
+                    <div class="col-7 lvlinfo">
+                        <div class="discount">
+                            <div>
+                                <h3>等級優惠</h3>
+                                <p>折扣率</p>                                
+                            </div>
+                            <div>
+                                <h1>{{discount}}</h1>
+                            </div>
+                        </div>
+                        <div class="status">
+                            <h3>目前消費{{total}}</h3>
+                            <div>
+                                <span>{{min}}</span>
+                                <span>{{max}}</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="data w-100 my-3 py-3 container-fluid">
+            <div class="datahead">
+                <h3><i class="fa-solid fa-user"></i>會員資料</h3>
+                <a href=""><i class="fa-solid fa-user-pen"></i></a>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-4 text-end">
+                    <p>帳號：</p>
+                    <p>姓名：</p>
+                    <p>生日：</p>
+                    <p>信箱：</p>
+                    <p>連絡電話：</p>            
+                </div>
+                <div class="col-8">
+                    <p>{{account}}</p>
+                    <p>{{name}}</p>
+                    <p>{{birth}}</p>
+                    <p>{{mail}}</p>
+                    <p>{{phone}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="orders w-100 my-3 py-3 container-fluid">
+            <div class="orderhead">
+                <h3><i class="fa-solid fa-clipboard"></i>餐點紀錄</h3>
+                <a href="">查看更多...</a>
+            </div>
+            <hr>
+            <div class="products">
+                <template v-for="product in products">
+                    <div class="w-25 me-3" >
+                        <img src="" alt="">
+                        <hr>
+                        <p></p>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+    <script>
+        const memV = new Vue({
+            el:"#member",
+            data:{
+                normal:"reveal",
+                bronze:"badge",
+                silver:"badge",
+                gold:"badge",
+                discount:"",
+                total:"",
+                min:"",
+                max:"",
+                account:"",
+                name:"",
+                birth:"",
+                mail:"",
+                phone:"",
+                products:[]
+            },
+            methods:{
+
+            },
+            beforeCreate:function(){
+                let self = this;
+                fetch("").then((e)=>e.json()).then((r)=>this.products = r);
+            }
+        })
+    </script>
+
+
+    </main>
+    <!-- @await RenderSectionAsync("Scripts", required: false) -->
+    <footer>
+        <div class="container footright">
+            <p><a href="https://goo.gl/maps/VARMRkiZqDQLhgWbA">100 台北市中正區濟南路一段321號</a></p>
+            <p><a href="tel:0233221368">02 3322 1368</a></p>
+            <p>© 2022 Alcoholic</p>
+        </div>
+    </footer>
+</body>
+
+</html>
