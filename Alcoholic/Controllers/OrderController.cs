@@ -3,6 +3,7 @@ using Alcoholic.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Newtonsoft.Json;
+using NuGet.Packaging.Signing;
 
 namespace Alcoholic.Controllers
 {
@@ -228,6 +229,22 @@ namespace Alcoholic.Controllers
         }
         public IActionResult FrontDeskCheckout()
         {
+            return View();
+        }
+        public IActionResult OnlinePayment()
+        {
+            //var info = new TradeInfo
+            //{
+            //    MerchantID = "",
+            //    RespondType = "",
+            //    TimeStamp = DateTime.Now.Ticks,
+            //    Version = "2.0",
+            //    LangType = "",
+            //    MerchantOrderNo = "",
+            //    Amt = ,
+            //    ItemDesc = "",
+            //    TradeLimit = ,
+            //};
             return View();
         }
     }
