@@ -79,5 +79,30 @@ namespace Alcoholic.Controllers.API
             return Ok();
         }
 
+        // 接收前端傳的金流串接所需資料(未付款)
+        [HttpPost]
+        public IActionResult OnlinePayment(string orderIdTotal, int totalPrice)
+        {
+            TradeInfo info = new TradeInfo()
+            {
+                MerchantID = "MS144603124",
+                RespondType = "",
+                TimeStamp = DateTime.Now.Ticks,
+                Version = "2.0",
+                MerchantOrderNo = "",
+                Amt = 2000,
+                ItemDesc = "",
+                ReturnURL = "",
+            };
+            List<KeyValuePair<string, string>> tradeData = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>(),
+
+            };
+            
+
+            return Ok();
+        }
+
     }
 }

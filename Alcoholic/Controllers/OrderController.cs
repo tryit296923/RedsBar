@@ -98,13 +98,22 @@ namespace Alcoholic.Controllers
             //HttpContext.Session.GetString("CartItem");
 
             //測試用
-            List<CartItem> cartItems = new List<CartItem>()
-            {
-                new CartItem { Id = 1,Qty = 2 },
-                new CartItem { Id = 2,Qty = 3 }
-            };
+            //List<CartItem> cartItems = new List<CartItem>()
+            //{
+            //    new CartItem { Id = 1,Qty = 2 },
+            //    new CartItem { Id = 2,Qty = 3 }
+            //};
 
             //var x = projectContext.Discount.FirstOrDefault();
+
+            var cartStr = JsonConvert.DeserializeObject(sesStr);
+            List<CartItem> cartItems = new List<CartItem>()
+            {
+                
+            };
+            
+
+
 
             foreach (var cartItem in cartItems)
             {
@@ -229,22 +238,6 @@ namespace Alcoholic.Controllers
         }
         public IActionResult FrontDeskCheckout()
         {
-            return View();
-        }
-        public IActionResult OnlinePayment()
-        {
-            //var info = new TradeInfo
-            //{
-            //    MerchantID = "",
-            //    RespondType = "",
-            //    TimeStamp = DateTime.Now.Ticks,
-            //    Version = "2.0",
-            //    LangType = "",
-            //    MerchantOrderNo = "",
-            //    Amt = ,
-            //    ItemDesc = "",
-            //    TradeLimit = ,
-            //};
             return View();
         }
     }
