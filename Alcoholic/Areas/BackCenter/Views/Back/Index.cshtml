@@ -1,4 +1,72 @@
 ﻿@{
+    ViewData["Title"] = "後台中心";
+    Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid p-5">
+    <h3>後臺首頁</h3>
+    <hr>
+    <div class="data py-4">
+        <h3>本月累計數據</h3>
+        <div class="dataarea row-cols-4">
+            <div class="datadetail p-4"><h2>100</h2><h5>當月營業額</h5></div>
+            <div class="datadetail p-4"><h2>10</h2><h5>當月來客量</h5></div>
+            <div class="datadetail p-4"><h2>1</h2><h5>新增會員數</h5></div>
+            <div class="datadetail p-4"><h2>5/5</h2><h5>當前評價</h5></div>
+        </div>
+    </div>
+    <div class="data py-4">
+        <div class="spacebetween row-cols-2 mb-3">
+            <h3>營運總覽</h3>
+            <select class="form-select" name="mark" id="mark">
+                <option value="days">近七日</option>
+                <option value="month">近一個月</option>
+                <option value="season">近一季</option>
+                <option value="year">近一年</option>
+            </select>
+        </div>
+        <div class="dataarea row-cols-4">
+            <div class="datadetail p-4"><h2>100</h2><h5>營業額</h5></div>
+            <div class="datadetail p-4"><h2>10</h2><h5>來客量</h5></div>
+            <div class="datadetail p-4"><h2>1</h2><h5>會員數</h5></div>
+            <div class="datadetail p-4"><h2>5/5</h2><h5>評價</h5></div>
+        </div>
+    </div>
+    <div class="data py-4">
+        <h3>熱賣商品</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>排序</th>
+                    <th>商品照片</th>
+                    <th>商品名稱</th>
+                    <th>銷售件數</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><img src="~/Images/Cocktails/bloodymary.jpeg" alt=""></td>
+                    <td>bloodymary</td>
+                    <td>15</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><img src="~/Images/Cocktails/highball.jpg" alt=""></td>
+                    <td>highball</td>
+                    <td>10</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><img src="~/Images/Cocktails/junglebird.jpg" alt=""></td>
+                    <td>junglebird</td>
+                    <td>5</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@*@{
     Layout = null;
 }
 <!DOCTYPE html>
@@ -790,4 +858,4 @@
     </script>
 </body>
 
-</html>
+</html>*@

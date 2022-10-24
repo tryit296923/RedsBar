@@ -16,7 +16,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
         }
 
 
-        public IActionResult BackIndex()
+        public IActionResult Index()
         {
             return View();
         }
