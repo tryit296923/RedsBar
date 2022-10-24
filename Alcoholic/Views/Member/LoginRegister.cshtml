@@ -464,7 +464,6 @@
                                 text: '請至信箱收取認證信件，請稍待1~3分鐘',
                                 footer: '<a href="/api/Member/Remail">未收到信件? 點擊此處以重發</a>'
                             });
-
                         }else{
                             Swal.fire({
                                 icon: 'error',
@@ -517,17 +516,24 @@
                     })
                     .then((e) => e.json())
                     .then((result) => {
-                        console.log(result);
                         if (result) {
                             Swal.fire({
-                                color:'#FFF',
+                                title: '登入成功',
+                                icon: 'success',
+                                background: '#333',
+                                color: '#FFF',
                                 iconColor: '#D8CDB9',
                                 confirmButtonColor: '#721B29',
-                                background: '#333',
-                                icon: 'success',
-                                title: '登入成功!',
-                            });
-                            setTimeout(() => window.location.assign("/member/FrontPage"), 1000)
+                                showCancelButton: true,
+                                cancelButtonColor: '#d8cdb9',
+                                confirmButtonText: '去點餐',
+                                cancelButtonText: '回首頁'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.assign("/Order/Cart");
+                                }
+                                window.location.assign("/member/member");
+                            })
                         } else {
                             Swal.fire({
                                 color: '#FFF',

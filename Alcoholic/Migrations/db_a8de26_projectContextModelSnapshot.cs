@@ -47,8 +47,9 @@ namespace Alcoholic.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DeskId"), 1L, 1);
 
-                    b.Property<int>("Desk")
-                        .HasColumnType("int");
+                    b.Property<string>("Desk")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DeskType")
                         .HasColumnType("int");
@@ -56,9 +57,8 @@ namespace Alcoholic.Migrations
                     b.Property<string>("EndTime")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
 
                     b.Property<int>("Occupied")
                         .HasColumnType("int");
@@ -344,6 +344,9 @@ namespace Alcoholic.Migrations
                     b.Property<string>("OrderId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("Sequence")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
@@ -362,7 +365,7 @@ namespace Alcoholic.Migrations
                     b.Property<int>("UnitPrice")
                         .HasColumnType("int");
 
-                    b.HasKey("OrderId", "ProductId");
+                    b.HasKey("OrderId", "Sequence", "ProductId");
 
                     b.HasIndex("ProductId");
 

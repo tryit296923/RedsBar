@@ -144,7 +144,7 @@ namespace Alcoholic.Models.Entities
 
             modelBuilder.Entity<OrderDetail>(entity =>
             {
-                entity.HasKey(e => new { e.OrderId, e.ProductId });
+                entity.HasKey(e => new { e.OrderId, e.Sequence, e.ProductId });
 
                 entity.Property(e => e.Discount).HasColumnType("decimal");
 
@@ -212,7 +212,7 @@ namespace Alcoholic.Models.Entities
 
                 entity.Property(e => e.StartTime).HasColumnType("nvarchar(max)");
 
-                entity.Property(e => e.Number).HasColumnType("nvarchar(max)");
+                entity.Property(e => e.Desk).HasColumnType("nvarchar(max)");
 
                 entity.Property(e => e.EndTime).HasColumnType("nvarchar(max)");
             });

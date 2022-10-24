@@ -10,6 +10,7 @@ using System.Security.Claims;
 
 namespace Alcoholic.Areas.BackCenter.Controllers
 {
+    [Area("BackCenter")]
     public class MemberController : Controller
     {
         private readonly db_a8de26_projectContext db;

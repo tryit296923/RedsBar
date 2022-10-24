@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Alcoholic</title>
+    <script src="bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="vue/vue.min.js"></script>
+    <link rel="stylesheet" href="bootstrap/bootstrap.css" />
+    <link href="css/theme.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="shortcut icon" type="image/ico" href="images/icons/logoicon-r.png">
+    <style>
+        body{
+            margin:0px;
+        }
+        a{
+            text-decoration: none;
+        }
+        /* NAV */
+        .logo {
+            width: 50px;
+            margin-right: 20px;
+        }
+
+        .navbar {
+            background-color: #721B29;
+        }
+
+        .navbar-brand {
+            color: white;
+        }
+
+        .nav-link {
+            color: white;
+        }
+
+        .search {
+            height: 38px;
+            margin: 10px;
+            position: relative;
+        }
+
+            .search img {
+                height: 20px;
+                width: 20px;
+                position: absolute;
+                top: 9px;
+                right: 9px;
+            }
+
+        .searcharea2 {
+            display: none;
+        }
+
+        @media screen and (max-width: 992px) {
+            .searcharea {
+                display: none !important;
+            }
+
+            .searcharea2 {
+                display: block;
+            }
+        }
+        /* Footer */
+        footer{
+            width: 100%;
+            background-color: #D8CDB9; 
+            margin-top: 40px;
+            color: #666;
+            font-size: 14px;
+        }
+        footer a{
+            color: #666;
+        }
+        .footright{
+            margin: auto;
+            padding: 20px 10px 10px 10px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar monly navbar-expand-md ">
+            <div class="container-fluid">
+                <a asp-controller="Home" asp-action="Index"><img src="images/icons/logo-w.png" alt="" class="logo"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                        <form class="searcharea2 search" role="search">
+                            <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                            <a href=""><img src="Images/icons/search.png" alt=""></a>
+                        </form>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Menu" asp-action="Recommendation">推薦酒款</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Menu" asp-action="Signature">招牌調酒</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Booking" asp-action="Booking">線上訂位</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Member" asp-action="LoginRegister">會員</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex searcharea search" role="search">
+                        <input class=" form-control" type="search" placeholder="Search" aria-label="Search">
+                        <a href=""><img src="Images/icons/search.png" alt=""></a>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main role="main">
+        <!-- @RenderBody() -->
+    <link href="https://use.fontawesome.com/releases/v6.2.0/css/all.css" rel="stylesheet">
+    <style>
+        body{
+            background-color: #222220;
+            color: azure;
+        }
+    </style>
+    <div class="loginpage">
+        
+    </div>
+    </main>
+    <!-- @await RenderSectionAsync("Scripts", required: false) -->
+    <footer>
+        <div class="container footright">
+            <p><a href="https://goo.gl/maps/VARMRkiZqDQLhgWbA">100 台北市中正區濟南路一段321號</a></p>
+            <p><a href="tel:0233221368">02 3322 1368</a></p>
+            <p>© 2022 Alcoholic</p>
+        </div>
+    </footer>
+</body>
+</html>
