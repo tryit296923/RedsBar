@@ -1,0 +1,93 @@
+﻿@model IEnumerable<Alcoholic.Models.Entities.Discount>
+
+@{
+    ViewData["Title"] = "優惠管理";
+    Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
+}
+
+<div class="discountmanage container-fluid p-5">
+    <div class="spacebetween row-cols-2 mb-3">
+        <h3>優惠管理</h3>
+        <button type="button" class="addbtn" data-bs-toggle="modal" data-bs-target="#discountBackdrop">
+            <i class="fa-sharp fa-solid fa-plus"></i> 新增商品優惠
+        </button>
+    </div>
+    <hr>
+    <div class="discountmanage">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" colspan="2">優惠名稱</th>
+                    <th scope="col">折扣率</th>
+                    <th scope="col">適用資格</th>
+                    <th scope="col">適用品項</th>
+                    <th scope="col">期限</th>
+                    <th scope="col">刪除 編輯</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row"><img src="~/Images/Cocktails/bloodymary.jpeg" alt=""></th>
+                    <td>bloodymary</td>
+                    <td>0.8</td>
+                    <td>All</td>
+                    <td>經典</td>
+                    <td>2022/02/30當日</td>
+                    <td>
+                        <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
+                        <button class="btnproducts icon"><i class="fa-solid fa-pen-to-square"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><img src="~/Images/Cocktails/highball.jpg" alt=""></th>
+                    <td>highball</td>
+                    <td>0.8</td>
+                    <td>All</td>
+                    <td>經典</td>
+                    <td>2022/02/30當日</td>
+                    <td>
+                        <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
+                        <button class="btnproducts icon"><i class="fa-solid fa-pen-to-square"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><img src="~/Images/Cocktails/junglebird.jpg" alt=""></th>
+                    <td>junglebird</td>
+                    <td>0.8</td>
+                    <td>All</td>
+                    <td>經典</td>
+                    <td>2022/02/30當日</td>
+                    <td>
+                        <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
+                        <button class="btnproducts icon"><i class="fa-solid fa-pen-to-square"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="discountBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="staticBackdropLabel">新增優惠</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body container productAdding">
+                    <label for="discountPic">圖片：<img src="" alt=""></label><input type="file" id="discountPic" class="w-50">
+                    <label for="discountName">名稱：</label><input type="text" id="discountName" class="w-50">
+                    <label for="discountPrice">折扣率：</label><input type="text" id="discountPrice" class="w-50">
+                    <label for="discountCost">適用資格：</label><input type="text" id="discountCost" class="w-50">
+                    <label for="discountInstock">適用品項：</label><input type="text" id="discountInstock" class="w-50">
+                    <label for="discountShip">期限：</label><input type="text" id="discountShip" class="w-50">
+                </div>
+                <div class="modal-footer">
+                    <div class="row m-0">
+                        <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                        <button class=" col btneditproducts m-1" type="button"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
