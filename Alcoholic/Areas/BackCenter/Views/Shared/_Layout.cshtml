@@ -48,22 +48,25 @@
             width: 100px;
         }
 
-        table {
+        .data table {
             width: 80%;
         }
 
-        thead {
+        .data thead, .datacenter thead, .productmanage thead,
+        .discountmanage thead, .bookinginfo thead {
             background-color: rgb(215, 215, 215);
             color: #444;
             height: 30px;
             line-height: 30px;
         }
 
-        td {
+        .data td, .datacenter td, .productmanage td,
+        .discountmanage td, .bookinginfo td {
             line-height: 100px;
         }
 
-        tbody tr:hover {
+        .data tbody tr:hover, .datacenter tbody tr:hover, .productmanage tbody tr:hover,
+        .discountmanage tbody tr:hover, .bookinginfo tbody tr:hover {
             background-color: rgb(241, 241, 241);
         }
 
@@ -292,6 +295,10 @@
                         <a class="nav-link" href="~/backcenter/discounts">
                             <i class="fa-solid fa-tags"></i> 優惠管理</a>
                     </li>
+                    <li class="" role="presentation">
+                        <a class="nav-link" href="~/backcenter/bookings">
+                            <i class="fa-solid fa-table"></i> 訂位管理</a>
+                    </li>
                 </ul>
             </div>
             <div class="col-10 scrollregion">
@@ -309,7 +316,7 @@
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://kit.fontawesome.com/04a61d6a18.js" crossorigin="anonymous"></script>
-    <script>
+   <script>
         const ctx = document.getElementById('myChart').getContext('2d');
         const myChart = new Chart(ctx, {
             type: 'bar',

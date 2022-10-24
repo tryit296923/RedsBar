@@ -1,0 +1,111 @@
+﻿@{
+    ViewData["Title"] = "訂位管理";
+    Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.css">
+<style>
+    .table {
+        text-align: center;
+    }
+
+    .todaydata {
+        width: 100%;
+        justify-content: space-around;
+    }
+
+    .bookingtoday {
+        border: 1px solid rgb(215, 215, 215);
+        border-radius: 0.375rem;
+    }
+</style>
+<div class="bookingmanage container-fluid p-5" id="d1">
+    <h3>訂位管理</h3>
+    <hr>
+    <div class="py-4">
+        <div class="todaydata">
+            <div class="bookingtoday p-4">
+                <h2 class="m-0">{{today.toLocaleDateString()}}</h2>
+                <h5>本日訂位數據</h5>
+                <br>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">姓名</th>
+                            <th scope="col">電話</th>
+                            <th scope="col">人數</th>
+                            <th scope="col">下訂日期</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in todayReserves">
+                            <td>{{item.name}}</td>
+                            <td>{{item.phone}}</td>
+                            <td>{{item.number}}</td>
+                            <td>{{item.setDate}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="py-4">
+        <div class="spacebetween row-cols-2 mb-3">
+            <h3>所有訂位數據</h3>
+            <date-picker v-model="ReserveDate" value-type="format" class="datepicker p-0" id="datepicker"
+                         placeholder="日期篩選"></date-picker>
+        </div>
+        <div class="bookinginfo">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">預定日期</th>
+                        <th scope="col">姓名</th>
+                        <th scope="col">電話</th>
+                        <th scope="col">人數</th>
+                        <th scope="col">下訂日期</th>
+                        <th>變更</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in reserveInfos">
+                        <td>{{item.date.substring(0,10)}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.phone}}</td>
+                        <td>{{item.number}}</td>
+                        <td>{{item.setDate.substring(0,10)}}</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.js"></script>
+<script>
+    var app = new Vue({
+        el: '#d1',
+        data: {
+            today: new Date,
+            reserveInfos: [],
+            todayReserves: [],
+            ReserveDate: null,
+        },
+        method: {
+            //todayReserf: function(){
+            //    let day = new Date,
+            //    Object.values(this.reserveInfos).forEach(x)=>{
+                    
+            //    }
+            //}
+        },
+        beforeCreate: function () {
+            let self = this;
+            fetch('/api/Booking/GetTodayBookings')
+                .then(function (response) { return response.json() })
+                .then(function (result) { self.todayReserves = result })
+            fetch('/api/Booking/GetAllBookings')
+                .then(function (response) { return response.json() })
+                .then(function (result) { self.reserveInfos = result })
+        }
+    });
+</script>

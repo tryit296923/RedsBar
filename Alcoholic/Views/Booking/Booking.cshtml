@@ -340,7 +340,7 @@
         },
         beforeCreate: function () {
             let self = this;
-            fetch('/api/Booking/GetAllBookings')
+            fetch('/api/Booking/GetFrontBookings')
                 .then(function (response) { return response.json() })
                 .then(function (result) { self.bookingInfos = result })
         }
