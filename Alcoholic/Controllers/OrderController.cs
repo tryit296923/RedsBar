@@ -106,15 +106,8 @@ namespace Alcoholic.Controllers
 
             //var x = projectContext.Discount.FirstOrDefault();
 
-            var cartStr = JsonConvert.DeserializeObject(sesStr);
-            List<CartItem> cartItems = new List<CartItem>()
-            {
-                
-            };
-            
-
-
-
+            var cartItems = JsonConvert.DeserializeObject<List<CartItem>>(sesStr);
+           
             foreach (var cartItem in cartItems)
             {
                 var product = projectContext.Products.Find(cartItem.Id);
@@ -125,12 +118,11 @@ namespace Alcoholic.Controllers
             }
             //HttpContext.Session.SetString("123", "456");
             //var s = HttpContext.Session.GetString("123");
-            HttpContext.Session.SetString("testsession", JsonConvert.SerializeObject(cartItems));
-
+            HttpContext.Session.SetString("CartItem", JsonConvert.SerializeObject(cartItems));
 
             string stest = "";
             //若??前面為空，則用""取代
-            stest = HttpContext.Session.GetString("testsession") ?? "";
+            stest = HttpContext.Session.GetString("CartItem") ?? "";
             //var temp = JsonConvert.DeserializeObject<List<CartItem>>(stest);
             var ovm_Cart = new OrderViewModel
             {
