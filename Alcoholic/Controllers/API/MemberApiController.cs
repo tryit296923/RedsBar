@@ -134,7 +134,7 @@ namespace Alcoholic.Controllers.API
         {
             Member? user = (from member in db.Members
                             where member.MemberAccount == "guestonly123"
-                            && member.MemberPassword == "d87c5439b038afaf5ada19a23322ca2ac4fd37a74df11559e25784c69ae4"
+                            && member.MemberPassword == "9e609cccefab80f5ef7aa9745e565b3045588e80dc8b2ba66c98af1a8439ba"
                             select member).SingleOrDefault();
             var claims = new List<Claim>
             {

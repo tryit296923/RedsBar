@@ -5,11 +5,11 @@ namespace Alcoholic.Models.DTO
 {
     public class DeskModel
     {
-        [Required, MaxLength(1)]
+        [Required]
         public int DeskType { get; set; }
-        [Required,MaxLength(1)]
-        public int Number { get; set; }
-        [Required, MaxLength(2)]
+        [Required]
+        public string Number { get; set; }
+        [Required]
         public int Desk { get; set; }
     }
 }
