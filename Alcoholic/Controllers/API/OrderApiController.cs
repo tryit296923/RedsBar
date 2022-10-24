@@ -67,7 +67,7 @@ namespace Alcoholic.Controllers.API
 
         // 離席
         [HttpPut]
-        public IActionResult Dismiss(int Desk)
+        public IActionResult Dismiss(string Desk)
         {
             DeskInfo? deskInfo = (from desk in _db.DeskInfo
                                   where desk.Desk == Desk
@@ -76,6 +76,31 @@ namespace Alcoholic.Controllers.API
             deskInfo.EndTime = DateTime.Now.ToString("yyyyMMddHHmm");
             _db.Entry(deskInfo).State = EntityState.Modified;
             _db.SaveChanges();
+            return Ok();
+        }
+
+        // 接收前端傳的金流串接所需資料(未付款)
+        [HttpPost]
+        public IActionResult OnlinePayment(string orderIdTotal, int totalPrice)
+        {
+            TradeInfo info = new TradeInfo()
+            {
+                MerchantID = "MS144603124",
+                RespondType = "",
+                TimeStamp = DateTime.Now.Ticks,
+                Version = "2.0",
+                MerchantOrderNo = "",
+                Amt = 2000,
+                ItemDesc = "",
+                ReturnURL = "",
+            };
+            List<KeyValuePair<string, string>> tradeData = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>(),
+
+            };
+            
+
             return Ok();
         }
 

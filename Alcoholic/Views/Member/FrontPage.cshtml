@@ -212,6 +212,14 @@
                         Number: this.number,
                     };
                     let jsonStr = JSON.stringify(fetchbody);
+                    setTimeout(()=>{
+                        fetch("/api/member/StartOrder", {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: jsonStr
+                        }).then(data => window.location.assign("/member/LoginRegister")
+                        ).catch(err => console.log(err))
+                    },50)
                     Swal.fire({
                         title: '您好 歡迎光臨Reds\'Bar!',
                         text: '請稍待片刻 將立即帶您前往登入頁面',
@@ -219,21 +227,12 @@
                         color: '#FFF',
                         iconColor: '#D8CDB9',
                         confirmButtonColor: '#721B29',
-                        timer: 1000,
+                        timer: 5000,
                         timerProgressBar: true,
                         didOpen: () => {
                             Swal.showLoading()
                         },
-                        willClose: () => {
-                            clearInterval(timerInterval)
-                        }
                     });
-                    fetch("/api/member/StartOrder", {
-                        method: "PUT",
-                        headers: { "Content-Type": "application/json" },
-                        body: jsonStr
-                    }).then(data => window.location.assign("/member/LoginRegister")
-                    ).catch(err => console.log(err))
                 },
                 StartOrderGuest: function() {
                     var desk = this.deskType + this.deskNum;
@@ -243,10 +242,18 @@
                         Number: this.number,
                     };
                     let jsonStr = JSON.stringify(fetchbody);
+                    setTimeout(()=>{
+                        fetch("/api/member/StartOrder", {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: jsonStr
+                        }).then(data => window.location.assign("/api/member/GuestLogin")
+                        ).catch(err => console.log(err))
+                    },50)
                     Swal.fire({
                         title: '您好 歡迎光臨Reds\'Bar!',
                         text: '請稍待片刻 將立即帶您前往次頁',
-                        timer: 1000,
+                        timer: 5000,
                         color: '#FFF',
                         iconColor: '#D8CDB9',
                         confirmButtonColor: '#721B29',
@@ -256,15 +263,9 @@
                             Swal.showLoading()
                         },
                     });
-                    fetch("/api/member/StartOrder", {
-                        method: "PUT",
-                        headers: { "Content-Type": "application/json" },
-                        body: jsonStr
-                    }).then(data => window.location.assign("/api/member/GuestLogin")
-                    ).catch(err => console.log(err))
+
                 }
             }})
     </script>
-
 </body>
 </html>

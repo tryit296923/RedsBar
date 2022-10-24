@@ -8,8 +8,8 @@ namespace Alcoholic.Models.DTO
         [Required]
         public int DeskType { get; set; }
         [Required]
-        public string Number { get; set; }
+        public int Number { get; set; }
         [Required]
-        public int Desk { get; set; }
+        public string Desk { get; set; }
     }
 }

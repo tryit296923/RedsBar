@@ -3,6 +3,7 @@ using Alcoholic.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Newtonsoft.Json;
+using NuGet.Packaging.Signing;
 
 namespace Alcoholic.Controllers
 {
@@ -97,13 +98,22 @@ namespace Alcoholic.Controllers
             //HttpContext.Session.GetString("CartItem");
 
             //測試用
-            List<CartItem> cartItems = new List<CartItem>()
-            {
-                new CartItem { Id = 1,Qty = 2 },
-                new CartItem { Id = 2,Qty = 3 }
-            };
+            //List<CartItem> cartItems = new List<CartItem>()
+            //{
+            //    new CartItem { Id = 1,Qty = 2 },
+            //    new CartItem { Id = 2,Qty = 3 }
+            //};
 
             //var x = projectContext.Discount.FirstOrDefault();
+
+            var cartStr = JsonConvert.DeserializeObject(sesStr);
+            List<CartItem> cartItems = new List<CartItem>()
+            {
+                
+            };
+            
+
+
 
             foreach (var cartItem in cartItems)
             {

@@ -42,8 +42,8 @@ namespace Alcoholic.Controllers.API
             db.Entry(deskInfo).State = EntityState.Modified;
             db.SaveChanges();
 
-            HttpContext.Session.SetString("Number", deskInfo.Number);
-            HttpContext.Session.SetString("Desk", deskInfo.Desk.ToString());
+            HttpContext.Session.SetString("Number", deskInfo.Number.ToString());
+            HttpContext.Session.SetString("Desk", deskInfo.Desk);
 
             return Ok(true);
         }
