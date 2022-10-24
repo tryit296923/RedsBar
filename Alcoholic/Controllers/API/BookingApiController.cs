@@ -18,49 +18,30 @@ namespace Alcoholic.Controllers.API
         public object GetFrontBookings()
         {
             DateTime mindate = DateTime.Now;
-            var bookingArr1 = (from x in _db.Reserves
+            var bookingArr = (from x in _db.Reserves
                                where x.ReserveDate > mindate
                                group x by x.ReserveDate into g
                                orderby g.Key
                                select new { Date = g.Key, Total = g.Sum(x => x.Number) });
 
-            return bookingArr1;
-        }
-
-        [HttpGet]
-        public IEnumerable<DataCenterBookingModel> GetAllBookings()
-        {
-            var bookingArr = from x in _db.Reserves
-                             orderby x.ReserveDate
-                             select new DataCenterBookingModel
-                             { 
-                                Date = x.ReserveDate,
-                                Name = x.ReserveName,
-                                Phone = x.Phone,
-                                Number = x.Number,
-                                SetDate = x.ReserveSet
-                             };
-
             return bookingArr;
         }
 
-        [HttpGet]
-        public IEnumerable<DataCenterBookingModel> GetTodayBookings()
+        // 後台/bookings/Add
+        [HttpPost]
+        public void AddBooking([FromForm] BookingModel bookingData)
         {
-            DateTime today = DateTime.Now;
-            var bookingArr = from x in _db.Reserves
-                             where x.ReserveDate == today
-                             orderby x.ReserveSet
-                             select new DataCenterBookingModel
-                             {
-                                 Date = x.ReserveDate,
-                                 Name = x.ReserveName,
-                                 Phone = x.Phone,
-                                 Number = x.Number,
-                                 SetDate = x.ReserveSet
-                             };
-
-            return bookingArr;
+            Reserves reserves = new Reserves()
+            {
+                ReserveDate = bookingData.ReserveDate,
+                ReserveName = bookingData.ReserveName,
+                Phone = bookingData.Phone,
+                Email = bookingData.Email,
+                Number = bookingData.Number,
+                ReserveSet = DateTime.Now,
+            };
+            _db.Add(reserves);
+            _db.SaveChanges();
         }
     }
 }
