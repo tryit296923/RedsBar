@@ -1,0 +1,207 @@
+﻿@{
+    ViewData["Title"] = "數據中心";
+    Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
+}
+
+
+    <div class="datacenter container-fluid p-5">
+        <h3>數據中心</h3>
+        <hr>
+        <ul class="nav  mb-0" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-home"
+                        aria-selected="true">
+                    關鍵指標
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-2" type="button" role="tab" aria-controls="pills-profile"
+                        aria-selected="false">
+                    訂單數據
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-3" type="button" role="tab" aria-controls="pills-contact"
+                        aria-selected="false">
+                    優惠折抵成效
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-4" type="button" role="tab"
+                        aria-controls="pills-disabled" aria-selected="false">
+                    商品數據
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-5" type="button" role="tab"
+                        aria-controls="pills-disabled" aria-selected="false">
+                    來客數量
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-1" role="tabpanel"
+                 aria-labelledby="pills-home-tab" tabindex="0">
+                <div class="info">
+                    <div class="tabtop">
+                        <div class="spacebetween row-cols-2 mb-3">
+                            <h3>關鍵指標</h3>
+                            <select class="form-select" name="mark" id="mark">
+                                <option value="days">近七日</option>
+                                <option value="month">近一個月</option>
+                                <option value="season">近一季</option>
+                                <option value="year">近一年</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="keymark row-cols-5">
+                        <div class="keymarkdetail p-4"><h5>來客數</h5><h2>888</h2><p>0.00%</p></div>
+                        <div class="keymarkdetail p-4"><h5>訂單數</h5><h2>888</h2><p>0.00%</p></div>
+                        <div class="keymarkdetail p-4"><h5>總營業額</h5><h2>888</h2><p>0.00%</p></div>
+                        <div class="keymarkdetail p-4"><h5>訂單平均金額</h5><h2>888</h2><p>0.00%</p></div>
+                        <div class="keymarkdetail p-4"><h5>會員數</h5><h2>888</h2><p>0.00%</p></div>
+                    </div>
+                    <br>
+                    <div class="chart">
+                        <canvas id="myChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-2" role="tabpanel"
+                 aria-labelledby="pills-profile-tab" tabindex="0">
+                <div class="info">
+                    <div class="tabtop">
+                        <div class="spacebetween row-cols-2 mb-3">
+                            <h3>訂單數據</h3>
+                            <select class="form-select" name="mark" id="mark">
+                                <option value="days">近七日</option>
+                                <option value="month">近一個月</option>
+                                <option value="season">近一季</option>
+                                <option value="year">近一年</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="orders">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>訂單數</th>
+                                    <th>訂單總金額</th>
+                                    <th>訂單平均金額</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>春</td>
+                                    <td>3</td>
+                                    <td>1000</td>
+                                    <td>333</td>
+                                </tr>
+                                <tr>
+                                    <td>春</td>
+                                    <td>3</td>
+                                    <td>1000</td>
+                                    <td>333</td>
+                                </tr>
+                                <tr>
+                                    <td>春</td>
+                                    <td>3</td>
+                                    <td>1000</td>
+                                    <td>333</td>
+                                </tr>
+                                <tr>
+                                    <td>春</td>
+                                    <td>3</td>
+                                    <td>1000</td>
+                                    <td>333</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-3" role="tabpanel"
+                 aria-labelledby="pills-contact-tab" tabindex="0">
+                <div class="info">
+                    <div class="tabtop">
+                        <div class="spacebetween row-cols-2 mb-3">
+                            <h3>優惠折抵成效</h3>
+                            <select class="form-select" name="mark" id="mark">
+                                <option value="days">近七日</option>
+                                <option value="month">近一個月</option>
+                                <option value="season">近一季</option>
+                                <option value="year">近一年</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="discount row-cols-3">
+                        <div class="p-4"><h5>含優惠訂單-訂單數</h5><h2>0</h2><p>100%</p></div>
+                        <div class="p-4"><h5>含優惠訂單-訂單總金額</h5><h2>0</h2><p>100%</p></div>
+                        <div class="p-4"><h5>含優惠訂單-訂單平均金額</h5><h2>0</h2><p>100%</p></div>
+                    </div>
+                    <br>
+                    <div class="undiscount row-cols-3">
+                        <div class="p-4"><h5>不含優惠訂單-訂單數</h5><h2>0</h2><p>100%</p></div>
+                        <div class="p-4"><h5>不含優惠訂單-訂單總金額</h5><h2>0</h2><p>100%</p></div>
+                        <div class="p-4"><h5>不含優惠訂單-訂單平均金額</h5><h2>0</h2><p>100%</p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-4" role="tabpanel"
+                 aria-labelledby="pills-disabled-tab" tabindex="0">
+                <div class="info">
+                    <div class="tabtop">
+                        <div class="spacebetween row-cols-2 mb-3">
+                            <h3>商品數據</h3>
+                            <select class="form-select" name="mark" id="mark">
+                                <option value="days">近七日</option>
+                                <option value="month">近一個月</option>
+                                <option value="season">近一季</option>
+                                <option value="year">近一年</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- <br>
+                    <div class="products">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <button class="nav-link active" aria-current="page">銷量</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link">銷售額</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link">庫存</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link">???</button>
+                            </li>
+                        </ul>
+                        <hr class="mt-0">
+                    </div> -->
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-5" role="tabpanel"
+                 aria-labelledby="pills-disabled-tab" tabindex="0">
+                <div class="info">
+                    <div class="tabtop">
+                        <div class="spacebetween row-cols-2 mb-3">
+                            <h3>來客數量</h3>
+                            <select class="form-select" name="mark" id="mark">
+                                <option value="days">近七日</option>
+                                <option value="month">近一個月</option>
+                                <option value="season">近一季</option>
+                                <option value="year">近一年</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
