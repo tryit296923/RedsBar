@@ -13,8 +13,8 @@ namespace Alcoholic.Controllers
 
         public BookingController(MailService mailService,db_a8de26_projectContext projectContext)
         {
-            this.mail = mailService;
-            this._db = projectContext;
+            mail = mailService;
+            _db = projectContext;
         }
         public IActionResult Booking()
         {

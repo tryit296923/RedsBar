@@ -773,6 +773,7 @@
                                         <table class="table">
                                             <thead>
                                                 <tr>
+                                                    <th scope="col">預定日期</th>
                                                     <th scope="col">姓名</th>
                                                     <th scope="col">電話</th>
                                                     <th scope="col">人數</th>
@@ -780,11 +781,12 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>Amy</td>
-                                                    <td>0978123456</td>
-                                                    <td>3</td>
-                                                    <td>2022/10/30</td>
+                                                <tr v-for="item in reserveInfos">
+                                                    <td>{{item.date}}</td>
+                                                    <td>{{item.name}}</td>
+                                                    <td>{{item.phone}}</td>
+                                                    <td>{{item.number}}</td>
+                                                    <td>{{item.setDate}}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -806,11 +808,17 @@
     <script src="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.js"></script>
     <script>
         var app = new Vue({
-            el:'#d1',
-            data:{
-                today:new Date,
-                reserve:[],
-                ReserveDate:null,
+            el: '#d1',
+            data: {
+                today: new Date,
+                reserveInfos: [],
+                ReserveDate: null,
+            },
+            beforeCreate: function () {
+                let self = this;
+                fetch('/api/Booking/GetAllBookings')
+                    .then(function (response) { return response.json() })
+                    .then(function (result) { self.reserveInfos = result })
             }
         });
     </script>
