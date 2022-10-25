@@ -16,5 +16,14 @@ namespace Alcoholic.Services
             }
             return builder.ToString().ToLower();
         }
+        public string GetHashHex(string input)
+        {
+            SHA256 sHA256 = SHA256.Create();
+            byte[] bytes = sHA256.ComputeHash(Encoding.UTF8.GetBytes(input));
+            StringBuilder builder = new StringBuilder();
+
+            return BitConverter.ToString(bytes, 0, bytes.Length)?.Replace("-", "")?.ToLower(); ;
+            
+        }
     }
 }

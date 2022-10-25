@@ -1,9 +1,14 @@
-﻿using Alcoholic.Models.DTO;
+﻿using Alcoholic.Extensions;
+using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
+using Alcoholic.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Web;
 
 namespace Alcoholic.Controllers.API
 {
@@ -12,10 +17,16 @@ namespace Alcoholic.Controllers.API
     public class OrderApiController : ControllerBase
     {
         private readonly db_a8de26_projectContext _db;
+        private readonly IConfiguration config;
+        private readonly AesService aesService;
+        private readonly HashService hashService;
 
-        public OrderApiController(db_a8de26_projectContext projectContext)
+        public OrderApiController(db_a8de26_projectContext projectContext, IConfiguration config, AesService aesService, HashService hashService)
         {
             this._db = projectContext;
+            this.config = config;
+            this.aesService = aesService;
+            this.hashService = hashService;
         }
         [HttpPost]
         public IActionResult Confirm([FromBody] OrderViewModel orderdata)
@@ -40,7 +51,8 @@ namespace Alcoholic.Controllers.API
                         Number = int.Parse(sNumber),
                         DeskNum = sDesk,
                         OrderTime = Convert.ToDateTime(now),
-                        Feedback = null
+                        Feedback = null,
+                        Total = null,
                     };
                     _db.Add(order);
 
@@ -143,12 +155,47 @@ namespace Alcoholic.Controllers.API
                 new KeyValuePair<string, string>("ReturnURL",info.ReturnURL),
             };
             //轉換成key=Value
-            var tradeQueryPara = string.Join("&",tradeData.Select(x=>$"{x.Key}={x.Value}"));
+            var tradeQueryPara = string.Join("&", tradeData.Select(x => $"{x.Key}={x.Value}"));
             //tradeInfo加密(AES)
-            
+
 
             return Ok();
         }
+        public GateWayInfoModel Payment(PaymentModel paymentInfo)
+        {
+            paymentInfo.OrderId = "20221025185411";
+            //int price = (from o in _db.OrderDetails where paymentInfo.OrderId == o.OrderId select o)
+            var details = _db.OrderDetails.Where(x => x.OrderId == paymentInfo.OrderId);
+            var productName = details.Include(x => x.Product).Select(x => x.Product.ProductName);
+            var price = details.Select(x => (x.UnitPrice * x.Discount) * x.Quantity).Sum();
+            TradeInfo tradeInfo = new TradeInfo
+            {
+                MerchantID = config["Payment:MerchantID"],
+                RespondType = "JSON",
+                Version = "2.0",
+                TimeStamp = DateTime.Now.Ticks.ToString(),
+                MerchantOrderNo = paymentInfo.OrderId,
+                Amt = price.ToString(),
+                ItemDesc = String.Join(",", productName),
+                AndroidPay = paymentInfo.PayType.ToLower() == "googlepay" ? "1" : null,
+                Credit = paymentInfo.PayType.ToLower() == "credit" ? "1" : null,
+                LinePay = paymentInfo.PayType.ToLower() == "linepay" ? "1" : null,
+                ReturnURL = "https://www.google.com"
+            };
 
+            var hashKey = config["Payment:HashKey"];
+            var hashIV = config["Payment:HashIV"];
+            var aesString = aesService.AesEncrypt(Encoding.UTF8.GetBytes(tradeInfo.ToQueryString()),hashKey,hashIV);
+            var shaString =hashService.GetHashHex($"HashKey={hashKey}&{aesString}&HashIV={hashIV}").ToUpper();
+
+            return new GateWayInfoModel()
+            {
+                MerchantID = config["Payment:MerchantID"],
+                TradeInfo = aesString,
+                TradeSha = shaString,
+                Version = "2.0"
+            };
+
+        }
     }
 }

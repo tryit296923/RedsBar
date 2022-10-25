@@ -7,7 +7,7 @@ namespace Alcoholic.Services
     public class AesService
     {
         //AES加密
-        public byte[] AesEncrypt (byte[] input, string key, string iv)
+        public string AesEncrypt (byte[] input, string key, string iv)
         {
             var aes = Aes.Create();
             byte[] infoKey = Encoding.UTF8.GetBytes (key);
@@ -21,27 +21,28 @@ namespace Alcoholic.Services
             var encryptor = aes.CreateEncryptor ();
             
             byte[] encryptResult = encryptor.TransformFinalBlock(input, 0, input.Length);
-            return encryptResult;
+            return BitConverter.ToString(encryptResult)?.Replace("-", "")?.ToLower();
+            
         }
 
         //加密轉16進制
-        public string AesEncryptHex(string input, string key, string iv)
-        {
-            string hexResult = string.Empty;
-            if (!string.IsNullOrEmpty(input))
-            {
-                byte[] bInput = Encoding.UTF8.GetBytes (input);
-                var encryptHexValue = AesEncrypt(bInput, key, iv);
-                if (encryptHexValue != null)
-                {
-                    hexResult = BitConverter.ToString(encryptHexValue).Replace("-", string.Empty).ToLower();
-                }
-            }
-            return hexResult;
-        }
+        //public string AesEncryptHex(string input, string key, string iv)
+        //{
+        //    string hexResult = string.Empty;
+        //    if (!string.IsNullOrEmpty(input))
+        //    {
+        //        byte[] bInput = Encoding.UTF8.GetBytes (input);
+        //        var encryptHexValue = AesEncrypt(bInput, key, iv);
+        //        if (encryptHexValue != null)
+        //        {
+        //            hexResult = BitConverter.ToString(encryptHexValue).Replace("-", string.Empty).ToLower();
+        //        }
+        //    }
+        //    return hexResult;
+        //}
 
         //AES解密
-        //public string AesDecrypt(string input, string key, string iv)
+        //public byte[] AesDecrypt(byte[] input, string key, string iv)
         //{
         //    var aes = Aes.Create();
         //    aes.Mode = CipherMode.CBC;
@@ -49,11 +50,10 @@ namespace Alcoholic.Services
         //    aes.Key = Encoding.UTF8.GetBytes(key);
         //    aes.IV = Encoding.UTF8.GetBytes(iv);
 
-        //    var decryptor = aes.CreateDecryptor ();
-        //    byte[] infoInput = Encoding.UTF8.GetBytes(input);
+        //    var decryptor = aes.CreateDecryptor();
 
-        //    byte[] decryptResult = decryptor.TransformFinalBlock(infoInput, 0, infoInput.Length);
-        //    return Encoding.UTF8.GetString(decryptResult);
+        //    byte[] decryptResult = decryptor.TransformFinalBlock(input, 0, input.Length);
+
         //}
     }
 }
