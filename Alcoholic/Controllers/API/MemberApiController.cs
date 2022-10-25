@@ -117,7 +117,7 @@ namespace Alcoholic.Controllers.API
             }
             else
             {
-                MemberLvl(user.MemberAccount);
+                //MemberLvl(user.MemberAccount);
                 // 驗證
                 var claims = new List<Claim>
                 {
