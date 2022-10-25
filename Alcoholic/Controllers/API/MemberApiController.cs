@@ -220,17 +220,16 @@ namespace Alcoholic.Controllers.API
             Guid? memberId = Guid.Parse(ses);
 
             Member? member = db.Members.Select(x => x).Where(x => x.MemberID == memberId).FirstOrDefault();
-            List<int> total = new();
+
             List<Product> Products = new();
             foreach (Order order in member.Orders)
             {
                 foreach (OrderDetail od in order.OrderDetails)
                 {
-                    total.Add(od.Total);
                     Products.Add(od.Product);
                 }
             }
-            int sum = total.Sum();
+
             int disId = member.MemberLevel + 1;
             float dis = (from d in db.Discount where d.DiscountId == disId select d.DiscountAmount).FirstOrDefault();
             var products = Products.GroupBy(x => x.ProductId).OrderByDescending(x => x.Count()).Select(x => x.First()).ToList();
@@ -241,7 +240,7 @@ namespace Alcoholic.Controllers.API
                 birth = member.MemberBirth,
                 mail = member.Email,
                 phone = member.Phone,
-                total = sum,
+                //total = sum,
                 discount = dis,
                 products = products
             };
@@ -331,7 +330,7 @@ namespace Alcoholic.Controllers.API
             {
                 foreach(OrderDetail od in order.OrderDetails)
                 {
-                    total.Add(od.Total);
+                    //total.Add();
                 }
             }
             int sum = total.Sum();

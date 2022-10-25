@@ -151,7 +151,9 @@ namespace Alcoholic.Controllers
         {
             string sDeskTotal = HttpContext.Session.GetString("Desk");
 
-            var orderDetail = (from y in projectContext.Orders where y.Status == "N" && y.DeskNum == sDeskTotal select y).Select(y => new OrderViewModel
+            var orderDetail = (from y in projectContext.Orders 
+                               where y.Status == "N" && y.DeskNum == sDeskTotal 
+                               select y).Select(y => new OrderViewModel
             {
                 Desk = y.DeskNum,
                 Number = y.Number,
@@ -167,7 +169,8 @@ namespace Alcoholic.Controllers
                     OrderId = z.OrderId,
                     UnitPrice = z.UnitPrice,
                     DiscountAmount = z.Product.Discount.DiscountAmount,
-                    Path = z.Product.Images.FirstOrDefault().Path
+                    Path = z.Product.Images.FirstOrDefault().Path,
+                    Sequence = z.Sequence,
                 }).ToList(),
             }).ToList();
 
