@@ -706,8 +706,11 @@
             headers: { "Content-Type": "application/json" },
             body: cartStr,
         })
-            .then((e) => console.log(e))
+            .then((e) =>  e.text())
             .then((result) => {
+                if(result){
+                    window.location.href = "/Order/Cart"
+                }
                 console.log(result)
             }).catch(error => console.log(error))
     }
