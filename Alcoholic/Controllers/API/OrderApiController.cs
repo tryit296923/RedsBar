@@ -53,7 +53,6 @@ namespace Alcoholic.Controllers.API
                             Quantity = item.Qty,
                             UnitPrice = item.UnitPrice ?? 0,
                             Discount = item.DiscountAmount ?? 0,
-                            Total = Convert.ToInt32(item.Qty * item.UnitPrice * item.DiscountAmount),
                             Sequence = 1,
                         };
                         _db.Add(orderDetail);
@@ -75,7 +74,6 @@ namespace Alcoholic.Controllers.API
                             Quantity = item.Qty,
                             UnitPrice = item.UnitPrice ?? 0,
                             Discount = item.DiscountAmount ?? 0,
-                            Total = Convert.ToInt32(item.Qty * item.UnitPrice * item.DiscountAmount),
                             Sequence = seq,
                         };
                         _db.Add(orderDetail);
