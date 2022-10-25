@@ -324,7 +324,7 @@ namespace Alcoholic.Controllers.API
         public void MemberLvl(string account)
         {
             Member? member = (from m in db.Members where m.MemberAccount == account select m).FirstOrDefault();
-            if (member == null)
+            if (member == null || member.Orders.Any())
             {
                 return;
             }
