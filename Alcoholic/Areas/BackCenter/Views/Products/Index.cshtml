@@ -22,9 +22,6 @@
         line-height: 30px;
     }
 
-    .productmanage td{
-        line-height: 100px;
-    }
 
     .productmanage tbody tr:hover{
         background-color: rgb(241, 241, 241);
@@ -54,6 +51,10 @@
 
     .multiselect__tag {
         background-color: #C28C2E
+    }
+
+    .multiselect__tag-icon {
+        color: white
     }
 </style>
 
@@ -169,7 +170,7 @@
         },
         created: function () {
             let self = this;
-            fetch("/api/Products/GetAllProducts")
+            fetch("/api/Products/GetAllBackProducts")
                 .then((response) => response.json())
                 .then((result) => self.product = result)
         }
