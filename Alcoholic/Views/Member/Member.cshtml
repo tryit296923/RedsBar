@@ -131,6 +131,7 @@
 
     .products>div{
         width:150px;
+            position: relative;
     }
 
     .orderhead > .btn {
@@ -292,7 +293,6 @@
         <div class="products">
             <template v-for="(product,index) in model.products">
                 <div class="m-4" >
-                    <img src="" :name="index"/>
                     <img :src="product.images[0].path"  alt="">
                     <hr>
                     <p>{{product.productName}}</p>
@@ -424,6 +424,7 @@
                 self.tel = r.phone;
                 self.percent = Math.round((r.total / (r.max - r.min))*100);
                 self.progressbar = `width: ${self.percent}%`;
+
                 Swal.fire({
                     icon: 'success',
                     color: '#FFF',
@@ -431,6 +432,21 @@
                     confirmButtonColor: '#721B29',
                     background: '#333',
                 });
+                fetch("/api/member/GetOrders")
+                .then((e) => e.json())
+                .then((r) => {
+                    if (!r) {
+                        Swal.fire({
+                            icon: 'info',
+                            color: '#FFF',
+                            iconColor: '#D8CDB9',
+                            confirmButtonColor: '#721B29',
+                            background: '#333',
+                            text: '尚未登入喔!',
+                        });
+                    };
+                    this.orders = r;
+                })
                 });
             },50)
             Swal.fire({
@@ -445,28 +461,6 @@
                     Swal.showLoading()
                 },
             })
-            fetch("/api/member/GetOrders")
-            .then((e) => e.json())
-            .then((r) => {
-                if (!r) {
-                    Swal.fire({
-                        icon: 'info',
-                        color: '#FFF',
-                        iconColor: '#D8CDB9',
-                        confirmButtonColor: '#721B29',
-                        background: '#333',
-                        text: '尚未登入喔!',
-                    });
-                };
-                this.orders = r;
-                    let imgs1 = document.querySelector('[name="0"]');
-                    let imgs2 = document.querySelector('[name="1"]');
-                    let imgs3 = document.querySelector('[name="2"]');
-                    imgs1.src = "";
-                    imgs2.src = "";
-                    imgs3.src = "";
-            })
-
         }
     })
 </script>

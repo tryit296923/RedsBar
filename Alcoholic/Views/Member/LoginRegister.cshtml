@@ -453,7 +453,7 @@
                     })
                     .then((e)=> e.json())
                     .then((result) => {
-                        if(result){
+                            if (result.status != 400) {
                             Swal.fire({
                                 icon: 'success',
                                 color: '#FFF',
