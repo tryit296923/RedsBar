@@ -11,6 +11,15 @@
         .addproducttitle h3 {
             color: white;
         }
+
+    .multiselect__tag{
+       background-color: #C28C2E
+    }
+
+    multiselect__tag-icon{
+        color:white
+    }
+
 </style>
 
 <div class="productmanage container-fluid p-5">
@@ -21,53 +30,30 @@
         </button>
     </div>
     <hr>
-    <div class="products">
+    <div id="prod" class="products">
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col" colspan="2">商品內容</th>
-                    <th scope="col">售價</th>
-                    <th scope="col">成本</th>
-                    <th scope="col">庫存</th>
-                    <th scope="col">叫貨時長</th>
-                    <th scope="col">刪除 編輯</th>
+                    <th class="col-4" scope="col" colspan="2">商品內容</th>
+                    <th class="col-1" scope="col">成本</th>
+                    <th class="col-1" scope="col">售價</th>
+                    <th class="col-4" scope="col">特色</th>
+                    <th class="col-1" scope="col">編輯</th>
+                    <th class="col-1" scope="col">刪除</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th scope="row"><img src="~/Images/Cocktails/bloodymary.jpeg" alt=""></th>
-                    <td>bloodymary</td>
-                    <td>300</td>
-                    <td>100</td>
-                    <td>80</td>
-                    <td>2 month</td>
+                <tr v-for="item in product">
+                    <th scope="row"><img :src="item.path" alt=""></th>
+                    <td>{{item.name}}</td>
+                    <td>{{item.cost}}</td>
+                    <td>{{item.price}}</td>
+                    <td>{{item.description}}</td>
                     <td>
-                        <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
                         <button class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button>
                     </td>
-                </tr>
-                <tr>
-                    <th scope="row"><img src="~/Images/Cocktails/highball.jpg" alt=""></th>
-                    <td>highball</td>
-                    <td>300</td>
-                    <td>100</td>
-                    <td>80</td>
-                    <td>2 month</td>
                     <td>
-                        <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
-                        <button class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><img src="~/Images/Cocktails/junglebird.jpg" alt=""></th>
-                    <td>junglebird</td>
-                    <td>300</td>
-                    <td>100</td>
-                    <td>80</td>
-                    <td>2 month</td>
-                    <td>
-                        <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
-                        <button class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             </tbody>
@@ -141,6 +127,18 @@
 
 
 <script>
+    let prod = new Vue({
+        el: "#prod",
+        data:{
+            product:[],
+        },
+        created: function () {
+            let self = this;
+            fetch("/api/Products/GetAllProducts")
+                .then((response) => response.json())
+                .then((result) => self.product = result)
+        }
+    })
     let app = new Vue({
         el: "#staticBackdrop",
         data: {
