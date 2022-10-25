@@ -9,7 +9,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Razor.Templating.Core;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using static NuGet.Packaging.PackagingConstants;
+using System.Xml.Linq;
 
 namespace Alcoholic.Controllers.API
 {
@@ -30,6 +31,11 @@ namespace Alcoholic.Controllers.API
         [HttpPut]
         public IActionResult StartOrder([FromBody] DeskModel desk)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
+                return Ok(false);
+            }
             DeskInfo? deskInfo = (from d in db.DeskInfo
                                   where d.Desk == desk.Desk
                                   select d).FirstOrDefault();
@@ -52,13 +58,12 @@ namespace Alcoholic.Controllers.API
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] MemberModel memberData)
         {
-            //TODO
             //ModelState.IsValid
-            //if (!ModelState.IsValid)
-            //{
-            //    var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
-            //    return BadRequest(errors);
-            //}
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
+                return Ok(false);
+            }
             if (MemberExists(memberData.Account))
             {
                 return Ok(false);
@@ -95,6 +100,11 @@ namespace Alcoholic.Controllers.API
         [HttpPost]
         public IActionResult Login([FromBody] LoginViewModel memberData)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
+                return Ok(false);
+            }
             Member? user = (from member in db.Members
                             where member.MemberAccount == memberData.Account
                             select member).SingleOrDefault();
@@ -109,6 +119,7 @@ namespace Alcoholic.Controllers.API
             }
             else
             {
+                MemberLvl(user.MemberAccount);
                 // 驗證
                 var claims = new List<Claim>
                 {
@@ -128,7 +139,6 @@ namespace Alcoholic.Controllers.API
             }
         }
 
-
         // 訪客登入 => 點餐(Order'Order)
         public async Task<IActionResult> GuestLogin()
         {
@@ -146,7 +156,6 @@ namespace Alcoholic.Controllers.API
             HttpContext.Session.SetString("MemberID", user.MemberID.ToString());
             return RedirectToAction("Cart", "Order");
         }
-
 
         [HttpGet]
         public async Task<IActionResult> Remail()
@@ -203,6 +212,94 @@ namespace Alcoholic.Controllers.API
         {
             return db.Members.ToList();
         }
+        public IActionResult GetCurrentMember()
+        {
+            string? ses = HttpContext.Session.GetString("MemberID");
+            if (string.IsNullOrEmpty(ses))
+            {
+                return Ok(false);
+            }
+            Guid? memberId = Guid.Parse(ses);
+
+            Member? member = db.Members.Select(x => x).Where(x => x.MemberID == memberId).FirstOrDefault();
+            List<int> total = new();
+            List<Product> Products = new();
+            foreach (Order order in member.Orders)
+            {
+                foreach (OrderDetail od in order.OrderDetails)
+                {
+                    total.Add(od.Total);
+                    Products.Add(od.Product);
+                }
+            }
+            int sum = total.Sum();
+            int disId = member.MemberLevel + 1;
+            float dis = (from d in db.Discount where d.DiscountId == disId select d.DiscountAmount).FirstOrDefault();
+            var products = Products.GroupBy(x => x.ProductId).OrderByDescending(x => x.Count()).Select(x => x.First()).ToList();
+            DataPageModel dataPageModel = new()
+            {
+                account = member.MemberAccount,
+                name = member.MemberName,
+                birth = member.MemberBirth,
+                mail = member.Email,
+                phone = member.Phone,
+                total = sum,
+                discount = dis,
+                products = products
+            };
+
+            switch (member.MemberLevel)
+            {
+                case 0: 
+                    dataPageModel.min = 0;
+                    dataPageModel.max = 5000;
+                    break;
+                case 1:
+                    dataPageModel.min = 5000;
+                    dataPageModel.max = 10000;
+                    break;
+                case 2:
+                    dataPageModel.min = 10000;
+                    dataPageModel.max = 30000;
+                    break;
+                case 3:
+                    dataPageModel.min = 30000;
+                    dataPageModel.max = 70000;
+                    break;
+                case 4:
+                    dataPageModel.min = 70000;
+                    dataPageModel.max = 100000;
+                    break;
+            }
+            return Ok(dataPageModel);
+        }
+
+        [HttpPut]
+        public IActionResult EditMember([FromBody] MemberModel memberModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
+                return BadRequest();
+            }
+            string? ses = HttpContext.Session.GetString("MemberID");
+            if (string.IsNullOrEmpty(ses))
+            {
+                return Ok(false);
+            }
+            Guid? memberId = Guid.Parse(ses);
+
+            Member? member = db.Members.Select(x => x).Where(x => x.MemberID == memberId).FirstOrDefault();
+            member.MemberAccount = memberModel.Account;
+            member.MemberName = memberModel.Name;
+            member.MemberBirth = memberModel.Birth;
+            member.Email = memberModel.Email;
+            member.Phone = memberModel.Phone;
+            db.Entry(member).State = EntityState.Modified;
+            db.SaveChanges();
+            return Ok(true);
+        }
+
         private bool MemberExists(string Account)
         {
             return db.Members.Any(member => member.MemberAccount == Account);
@@ -210,6 +307,35 @@ namespace Alcoholic.Controllers.API
         private bool EmailExists(string Email)
         {
             return db.Members.Any(member => member.Email == Email);
+        }
+        public void MemberLvl(string account)
+        {
+            Member? member = (from m in db.Members where m.MemberAccount == account select m).FirstOrDefault();
+            if (member == null)
+            {
+                return;
+            }
+            List<int> total = new();
+            foreach(Order order in member.Orders)
+            {
+                foreach(OrderDetail od in order.OrderDetails)
+                {
+                    total.Add(od.Total);
+                }
+            }
+            int sum = total.Sum();
+            int level = 0;
+            switch (sum)
+            {
+                case > 70000: level = 4; break;
+                case > 30000: level = 3; break;
+                case > 10000: level = 2; break;
+                case > 5000: level = 1; break;
+                default: level = 0; break;
+            }
+            member.MemberLevel = level;
+            db.Entry(member).State = EntityState.Modified;
+            db.SaveChanges();
         }
 
     }

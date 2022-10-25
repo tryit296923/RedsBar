@@ -530,9 +530,11 @@
                                 cancelButtonText: '回首頁'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    window.location.assign("/Order/Cart");
+                                    window.location.assign("/Order/Orderlist");
                                 }
-                                window.location.assign("/member/member");
+                                else if(result.dismiss === Swal.DismissReason.cancel){
+                                    window.location.assign("/member/member");
+                                }
                             })
                         } else {
                             Swal.fire({
