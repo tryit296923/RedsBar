@@ -129,8 +129,7 @@ namespace Alcoholic.Models.Entities
             {
                 entity.HasKey(e => e.OrderId);
 
-                entity.Property(e => e.MemberId)
-                    .HasColumnName("MemberID");
+                entity.Property(e => e.MemberId).HasColumnName("MemberID");
 
                 entity.Property(e => e.OrderTime).HasColumnType("smalldatetime");
 

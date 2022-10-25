@@ -9,8 +9,6 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Razor.Templating.Core;
-using static NuGet.Packaging.PackagingConstants;
-using System.Xml.Linq;
 
 namespace Alcoholic.Controllers.API
 {
@@ -119,7 +117,7 @@ namespace Alcoholic.Controllers.API
             }
             else
             {
-                MemberLvl(user.MemberAccount);
+                //MemberLvl(user.MemberAccount);
                 // 驗證
                 var claims = new List<Claim>
                 {
@@ -242,10 +240,13 @@ namespace Alcoholic.Controllers.API
                 birth = member.MemberBirth,
                 mail = member.Email,
                 phone = member.Phone,
-                //total = sum,
                 discount = dis,
                 products = products
             };
+            foreach(Order o in member.Orders)
+            {
+                dataPageModel.total = (int)(dataPageModel.total + o.Total);
+            }
 
             switch (member.MemberLevel)
             {
@@ -271,6 +272,19 @@ namespace Alcoholic.Controllers.API
                     break;
             }
             return Ok(dataPageModel);
+        }
+
+        public List<Order> GetOrders()
+        {
+            string? ses = HttpContext.Session.GetString("MemberID");
+            Guid? memberId = Guid.Parse(ses);
+            Member? member = db.Members.Select(x => x).Where(x => x.MemberID == memberId).FirstOrDefault();
+            List<Order> details = new();
+            foreach(Order o in member.Orders)
+            {
+                details.Add(o);
+            }
+            return details;
         }
 
         [HttpPut]
@@ -317,10 +331,7 @@ namespace Alcoholic.Controllers.API
             List<int> total = new();
             foreach(Order order in member.Orders)
             {
-                foreach(OrderDetail od in order.OrderDetails)
-                {
-                    //total.Add();
-                }
+                total.Add((int)order.Total);
             }
             int sum = total.Sum();
             int level = 0;
