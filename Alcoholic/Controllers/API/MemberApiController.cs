@@ -103,6 +103,10 @@ namespace Alcoholic.Controllers.API
                 var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
                 return Ok(false);
             }
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("MemberID")))
+            {
+                return Ok(false);
+            }
             Member? user = (from member in db.Members
                             where member.MemberAccount == memberData.Account
                             select member).SingleOrDefault();
@@ -117,7 +121,7 @@ namespace Alcoholic.Controllers.API
             }
             else
             {
-                //MemberLvl(user.MemberAccount);
+                MemberLvl(user.MemberAccount);
                 // 驗證
                 var claims = new List<Claim>
                 {
@@ -245,7 +249,7 @@ namespace Alcoholic.Controllers.API
             };
             foreach(Order o in member.Orders)
             {
-                dataPageModel.total = (int)(dataPageModel.total + o.Total);
+                dataPageModel.total += o.Total.GetValueOrDefault();
             }
 
             switch (member.MemberLevel)
@@ -324,16 +328,16 @@ namespace Alcoholic.Controllers.API
         public void MemberLvl(string account)
         {
             Member? member = (from m in db.Members where m.MemberAccount == account select m).FirstOrDefault();
-            if (member == null || member.Orders.Any())
+            if (member == null || member.Orders.FirstOrDefault() == null)
             {
                 return;
             }
-            List<int> total = new();
-            foreach(Order order in member.Orders)
+            int sum = 0;
+            foreach (Order order in member.Orders)
             {
-                total.Add((int)order.Total);
+                sum += order.Total.GetValueOrDefault();
             }
-            int sum = total.Sum();
+
             int level = 0;
             switch (sum)
             {

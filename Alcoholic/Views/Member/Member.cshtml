@@ -330,36 +330,6 @@
             percent:"",
             orders: [],
         },
-        watch:{
-            badge:function(){
-                switch(this.model.min){
-                    case 70000: this.badge = "../images/icons/drinks_p.png";
-                        break;
-                    case 30000: this.badge = "../images/icons/drinks_g.png";
-                        break;
-                    case 10000: this.badge = "../images/icons/drinks_s.png";
-                        break;
-                    case 5000: this.badge = "../images/icons/drinks_b.png";
-                        break;
-                    default: this.badge = "../images/icons/drinks_icon.png";
-                        break;
-                }
-            },
-            lvl:function(){
-                switch (this.model.min) {
-                    case 70000:this.lvl = "Platinum";
-                        break;
-                    case 30000:this.lvl = "Gold";
-                        break;
-                    case 10000:this.lvl = "Silver";
-                        break;
-                    case 5000:this.lvl = "Bronze";
-                        break;
-                    default: this.lvl = "Regular";
-                        break;
-                }
-            },
-        },
         methods:{
             update:function(){
                 let body = {
@@ -378,7 +348,7 @@
                     body: jstr
                 })
                 .then((e) => e.json()).then((r)=>{
-                    if (r.status != 400) {
+                        if (result && result.status != 400) {
                         Swal.fire({
                             icon: 'success',
                             color: '#FFF',
@@ -403,38 +373,7 @@
         beforeCreate:function(){
             let self = this;
             setTimeout(()=>{
-                fetch("/api/member/GetCurrentMember")
-                .then((e) => e.json())
-                .then((r) => {
-                if (!r) {
-                    Swal.fire({
-                        icon: 'info',
-                        color: '#FFF',
-                        iconColor: '#D8CDB9',
-                        confirmButtonColor: '#721B29',
-                        background: '#333',
-                        text: '尚未登入喔!',
-                    });
-                }
-                self.model = r;
-                self.acc = r.account;
-                self.name = r.name;
-                self.bd = r.birth.slice(0, 10);
-                self.mail = r.mail;
-                self.tel = r.phone;
-                self.percent = Math.round((r.total / (r.max - r.min))*100);
-                self.progressbar = `width: ${self.percent}%`;
-
-                Swal.fire({
-                    icon: 'success',
-                    color: '#FFF',
-                    iconColor: '#D8CDB9',
-                    confirmButtonColor: '#721B29',
-                    background: '#333',
-                });
-                fetch("/api/member/GetOrders")
-                .then((e) => e.json())
-                .then((r) => {
+                fetch("/api/member/GetCurrentMember").then((e) => e.json()).then((r) => {
                     if (!r) {
                         Swal.fire({
                             icon: 'info',
@@ -442,11 +381,41 @@
                             iconColor: '#D8CDB9',
                             confirmButtonColor: '#721B29',
                             background: '#333',
+                            confirmButtonText: '前去登入',
                             text: '尚未登入喔!',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.assign("/api/member/Login");
+                            }
                         });
-                    };
-                    this.orders = r;
-                })
+                    }
+                    self.model = r;
+                    self.acc = r.account;
+                    self.name = r.name;
+                    self.bd = r.birth.slice(0, 10);
+                    self.mail = r.mail;
+                    self.tel = r.phone;
+                    self.percent = Math.round(r.total / r.max * 100) > 100 ? 100 : Math.round(r.total / r.max * 100);
+                    self.progressbar = `width: ${self.percent}%`;
+                    Swal.fire({
+                        icon: 'success',
+                        color: '#FFF',
+                        iconColor: '#D8CDB9',
+                        confirmButtonColor: '#721B29',
+                        background: '#333',
+                    });
+                    switch (self.model.min) {
+                        case 70000: self.lvl = "Platinum"; self.badge = "../images/icons/drinks_p.png";
+                            break;
+                        case 30000: self.lvl = "Gold"; self.badge = "../images/icons/drinks_g.png";
+                            break;
+                        case 10000: self.lvl = "Silver"; self.badge = "../images/icons/drinks_s.png";
+                            break;
+                        case 5000: self.lvl = "Bronze"; self.badge = "../images/icons/drinks_b.png";
+                            break;
+                        default: self.lvl = "Regular"; self.badge = "../images/icons/drinks_icon.png";
+                            break;
+                    }
                 });
             },50)
             Swal.fire({
@@ -460,6 +429,13 @@
                 didOpen: () => {
                     Swal.showLoading()
                 },
+            })
+        },
+        mounted:function(){
+            let self = this;
+            fetch("/api/member/GetOrders").then((e) => e.json())
+            .then((r) => {
+                self.orders = r;
             })
         }
     })
