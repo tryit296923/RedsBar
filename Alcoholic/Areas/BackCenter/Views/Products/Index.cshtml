@@ -86,7 +86,7 @@
                     <td>{{item.price}}</td>
                     <td>{{item.description}}</td>
                     <td>
-                        <button class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="btnproducts" data-bs-toggle="modal" data-bs-target="#editProd"><i class="fa-solid fa-pen-to-square"></i></button>
                     </td>
                     <td>
                     <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
@@ -98,7 +98,7 @@
 </div>
 
 
-<!-- Modal -->
+<!-- Create Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
      aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -160,6 +160,67 @@
     </div>
 </div>
 
+<!-- Edit Modal -->
+<div class="modal fade" id="editProd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="editProdLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header addproducttitle">
+                <h3 class="modal-title" id="editProd">新增商品</h3>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body container productAdding">
+                <div class="row">
+                    <div class="col-12 my-2">
+                        <label for="productPic">圖片：</label>
+                        <vue-dropzone ref="myVueDropzone" id="basezone" :options="dropzoneOptions"
+                                      v-on:vdropzone-files-added="fileAdd"></vue-dropzone>
+                    </div>
+                    <div class="col-12 my-2">
+                        <label for="productName" class="form-label">商品名稱：</label>
+                        <input type="text" class="form-control w-100" id=" productName" v-model="createProductData.productName" required>
+                    </div>
+                    <div class="col-6 my-2">
+                        <label for="productCost" class="form-label">商品成本：</label>
+                        <input type="number" class="form-control w-100" placeholder="NTD" id="productCost" v-model="createProductData.productCost" min="0" required>
+                    </div>
+                    <div class="col-6 my-2">
+                        <label for="productPrice" class="form-label">商品售價：</label>
+                        <input type="number" class="form-control w-100" placeholder="NTD" id="productPrice" v-model="createProductData.productPrice" min="0" required>
+                    </div>
+                    <div class="col-12 my-2">
+                        <label for="productDescription" class="form-label">商品敘述：</label>
+                        <input type="text" class="form-control w-100" placeholder="請簡述特色" id="productDescription" v-model="createProductData.productDescription" required>
+                    </div>
+                    <div id="multipleselect" class="col-12 ">
+                        <div class="col-12 my-2">
+                            <label class="my-2">基酒：</label>
+                            <multiselect v-model="basevalue" tag-placeholder="Add this as new tag"
+                                         placeholder="請選擇至少一種基酒" label="name" track-by="baseId" :options="baseselected"
+                                         :multiple="true" :taggable="true" @@tag="addTag"></multiselect>
+                        </div>
+                        <div class="col-12 ">
+                            <label class="my-2">折扣：</label>
+                            <multiselect v-model="discountvalue" deselect-label="無法移除" track-by="discountId"
+                                         label="name" placeholder="請選擇折扣" :options="discountselected" :searchable="false"
+                                         :allow-empty="false">
+                                <template slot="singleLabel"
+                                          slot-scope="{ option }"><strong>{{option.name}}</strong> </template>
+                            </multiselect>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row m-0">
+                    <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                    <button class=" col btneditproducts m-1" type="button" v-on:click="send"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script>
@@ -167,6 +228,9 @@
         el: "#prod",
         data:{
             product:[],
+        },
+        methods: {
+
         },
         created: function () {
             let self = this;
