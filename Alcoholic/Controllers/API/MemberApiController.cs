@@ -9,8 +9,6 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Razor.Templating.Core;
-using static NuGet.Packaging.PackagingConstants;
-using System.Xml.Linq;
 
 namespace Alcoholic.Controllers.API
 {
@@ -272,6 +270,19 @@ namespace Alcoholic.Controllers.API
                     break;
             }
             return Ok(dataPageModel);
+        }
+
+        public List<Order> GetOrders()
+        {
+            string? ses = HttpContext.Session.GetString("MemberID");
+            Guid? memberId = Guid.Parse(ses);
+            Member? member = db.Members.Select(x => x).Where(x => x.MemberID == memberId).FirstOrDefault();
+            List<Order> details = new();
+            foreach(Order o in member.Orders)
+            {
+                details.Add(o);
+            }
+            return details;
         }
 
         [HttpPut]

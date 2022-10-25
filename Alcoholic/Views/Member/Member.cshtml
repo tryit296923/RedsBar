@@ -124,6 +124,10 @@
         width:120px;
     }
 
+    .products>div{
+        width:150px;
+    }
+
     .orderhead > .btn {
         background-color: #721B29;
         color: azure;
@@ -243,16 +247,16 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h1 class="modal-title fs-5" id="exampleModalLabel">訂單紀錄</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" v-on:click="getOrders" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <template v-for="(product,index) in model.products">
+                            <template v-for="order in model.orders">
                                 <div>
-                                    <h3>訂單號碼：{{product.orderDetails[0]}}</h3>
+                                    <h3>訂單號碼：{{order.orderId}}</h3>
                                     <p>商品清單：
                                         <li></li>
                                     </p>
-     @*                               <p>消費金額：{{product.orderDetails[0]}}</p>*@
+                                <p>消費金額：{{order.total}}</p>
                                 </div>
                                 <hr/>
                             </template>
@@ -303,7 +307,8 @@
             tel: "",
             progressbar:"",
             percent:"",
-            details:[],
+            orders: [],
+            total:0,
         },
         watch:{
             badge:function(){
@@ -374,12 +379,23 @@
                     }
                 })
             },
-            getDetails:function(){
-                let temp = [];
-                for(var i = 0; i < this.model.products.length; i++){
-                    temp.push(this.model.products[i].orderDetails);
-                }
-                this.details = temp;
+            getOrders:function(){
+                fetch("/api/member/GetOrders")
+                .then((e) => e.json())
+                .then((r) => {
+                    if (!r) {
+                        Swal.fire({
+                            icon: 'info',
+                            color: '#FFF',
+                            iconColor: '#D8CDB9',
+                            confirmButtonColor: '#721B29',
+                            background: '#333',
+                            text: '尚未登入喔!',
+                        });
+                    };
+                    this.orders = r;
+                    this.total = 0;
+                })
             }
         },
         beforeCreate:function(){
@@ -404,7 +420,7 @@
                 self.bd = r.birth.slice(0, 10);
                 self.mail = r.mail;
                 self.tel = r.phone;
-                self.percent = (r.total / (r.max - r.min))*100;
+                self.percent = Math.round((r.total / (r.max - r.min))*100);
                 self.progressbar = `width: ${self.percent}%`;
                 Swal.fire({
                     icon: 'success',
