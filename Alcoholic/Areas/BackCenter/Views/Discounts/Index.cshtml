@@ -4,7 +4,37 @@
     ViewData["Title"] = "優惠管理";
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
+<style>
+    /*表格*/
+    img {
+        width: 100px;
+    }
 
+    .discountmanage thead{
+        background-color: rgb(215, 215, 215);
+        color: #444;
+        height: 30px;
+        line-height: 30px;
+    }
+    .discountmanage td{
+        line-height: 100px;
+    }
+    .discountmanage tbody tr:hover{
+        background-color: rgb(241, 241, 241);
+    }
+
+    .discountmanage button {
+        line-height: 24px;
+    }
+
+    .discountmanage tr {
+        text-align: center;
+    }
+
+    .discountmanage {
+        position: relative;
+    }
+</style>
 <div class="discountmanage container-fluid p-5">
     <div class="spacebetween row-cols-2 mb-3">
         <h3>優惠管理</h3>
@@ -22,7 +52,7 @@
                     <th scope="col">適用資格</th>
                     <th scope="col">適用品項</th>
                     <th scope="col">期限</th>
-                    <th scope="col">刪除 編輯</th>
+                    <th scope="col">變更</th>
                 </tr>
             </thead>
             <tbody>
@@ -74,12 +104,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body container productAdding">
-                    <label for="discountPic">圖片：<img src="" alt=""></label><input type="file" id="discountPic" class="w-50">
-                    <label for="discountName">名稱：</label><input type="text" id="discountName" class="w-50">
-                    <label for="discountPrice">折扣率：</label><input type="text" id="discountPrice" class="w-50">
-                    <label for="discountCost">適用資格：</label><input type="text" id="discountCost" class="w-50">
-                    <label for="discountInstock">適用品項：</label><input type="text" id="discountInstock" class="w-50">
-                    <label for="discountShip">期限：</label><input type="text" id="discountShip" class="w-50">
+                    <label for="discountPic">圖片：<img src="" alt=""></label><input type="file" id="discountPic" class="w-100">
+                    <label for="discountName">名稱：</label><input type="text" id="discountName" class="w-100">
+                    <label for="discountPrice">折扣率：</label><input type="text" id="discountPrice" class="w-100">
+                    <label for="discountCost">適用資格：</label><input type="text" id="discountCost" class="w-100">
+                    <label for="discountInstock">適用品項：</label><input type="text" id="discountInstock" class="w-100">
+                    <label for="discountShip">期限：</label><input type="text" id="discountShip" class="w-100">
                 </div>
                 <div class="modal-footer">
                     <div class="row m-0">

@@ -6,8 +6,8 @@ namespace Alcoholic.Models.DTO
     {
         public string MemberName { get; set; }
         public List<CartItem> ItemList { get; set; }
-        public string Number { get; set; }
-        public int Desk { get; set; }
+        public int Number { get; set; }
+        public string Desk { get; set; }
         public string? OrderId { get; set; }
         public DateTime? OrderTime { get; set; }
         public string? Status { get; set; } = "N";

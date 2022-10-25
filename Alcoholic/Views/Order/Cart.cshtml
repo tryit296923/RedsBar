@@ -400,8 +400,8 @@
                 let x = {
                     MemberName: '',
                     ItemList: this.itemList,
-                    Number: '',
-                    Desk: 0,
+                    Number: 0,
+                    Desk: '',
                 }
                 fetch("/api/Order/Confirm", {
                     body: JSON.stringify(x),

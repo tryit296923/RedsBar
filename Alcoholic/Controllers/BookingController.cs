@@ -30,16 +30,16 @@ namespace Alcoholic.Controllers
         }
         public async Task<IActionResult> Success([FromForm] BookingModel bookingData)
         {
-            Reserves reserves = new Reserves();
+            Reserves reserves = new Reserves() { 
+                    ReserveDate = bookingData.ReserveDate,
+                    ReserveName = bookingData.ReserveName,
+                    Phone = bookingData.Phone,
+                    Email = bookingData.Email,
+                    Number = bookingData.Number,
+                    ReserveSet = DateTime.Now,
+            };
             var task = Razor.Templating.Core.RazorTemplateEngine.RenderAsync<BookingModel>
                 ("Views/EmailTemplate/BookingTemplate.cshtml", bookingData);
-            reserves.ReserveDate = bookingData.ReserveDate;
-            reserves.ReserveName = bookingData.ReserveName;
-            reserves.Phone = bookingData.Phone;
-            reserves.Email = bookingData.Email;
-            reserves.Number = bookingData.Number;
-            reserves.ReserveSet = DateTime.Now;
-            
             _db.Add(reserves);
             _db.SaveChanges();
             var result = await task;
