@@ -41,7 +41,7 @@ namespace Alcoholic.Services
         }
 
         //AES解密
-        //public string AesDecrypt(string input, string key, string iv)
+        //public byte[] AesDecrypt(byte[] input, string key, string iv)
         //{
         //    var aes = Aes.Create();
         //    aes.Mode = CipherMode.CBC;
@@ -49,11 +49,10 @@ namespace Alcoholic.Services
         //    aes.Key = Encoding.UTF8.GetBytes(key);
         //    aes.IV = Encoding.UTF8.GetBytes(iv);
 
-        //    var decryptor = aes.CreateDecryptor ();
-        //    byte[] infoInput = Encoding.UTF8.GetBytes(input);
+        //    var decryptor = aes.CreateDecryptor();
 
-        //    byte[] decryptResult = decryptor.TransformFinalBlock(infoInput, 0, infoInput.Length);
-        //    return Encoding.UTF8.GetString(decryptResult);
+        //    byte[] decryptResult = decryptor.TransformFinalBlock(input, 0, input.Length);
+
         //}
     }
 }

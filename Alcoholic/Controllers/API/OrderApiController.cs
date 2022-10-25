@@ -40,7 +40,8 @@ namespace Alcoholic.Controllers.API
                         Number = int.Parse(sNumber),
                         DeskNum = sDesk,
                         OrderTime = Convert.ToDateTime(now),
-                        Feedback = null
+                        Feedback = null,
+                        Total = null,
                     };
                     _db.Add(order);
 
