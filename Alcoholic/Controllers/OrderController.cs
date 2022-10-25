@@ -20,10 +20,11 @@ namespace Alcoholic.Controllers
             return RedirectToAction("Cart", "Order");
         }
         [HttpPost]
-        public IActionResult AddToCart([FromBody] List<CartItem> cartItem)
+        public bool AddToCart([FromBody] List<CartItem> cartItem)
         {
             if (cartItem == null)
             {
+                return false;
             }
             else
             {
@@ -73,8 +74,9 @@ namespace Alcoholic.Controllers
                     HttpContext.Session.SetString("CartItem", cartString);
                     Console.WriteLine(sesStr);
                 }
+                return true;
+
             }
-            return RedirectToAction("Cart","Order");
 
         }
         public IActionResult Cart()
