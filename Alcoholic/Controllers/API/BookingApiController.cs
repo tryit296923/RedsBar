@@ -29,7 +29,7 @@ namespace Alcoholic.Controllers.API
 
         // 後台/bookings/Add
         [HttpPost]
-        public void AddBooking([FromForm] BookingModel bookingData)
+        public void AddBooking([FromBody] BookingModel bookingData)
         {
             Reserves reserves = new Reserves()
             {

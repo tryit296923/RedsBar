@@ -2,8 +2,7 @@
     ViewData["Title"] = "訂位管理";
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.css">
-<style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.css"><style>
     .table {
         text-align: center;
     }
@@ -124,7 +123,7 @@
                         <td>{{item.setDate.substring(0,10)}}</td>
                         <td>
                             <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
-                            <button class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button class="btnproducts" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="EditClick()"><i class="fa-solid fa-pen-to-square"></i></button>
                         </td>
                     </tr>
                 </tbody>
@@ -141,30 +140,30 @@
                     <h3 class="modal-title" id="staticBackdropLabel">新增訂位</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="booking" class="inputform" action="/api/Booking/AddBooking" method="post">
+                <form id="booking">
                     <div class="modal-body container bookingdAdding">
-                            <label for="datepicker">用餐日期：</label>
-                            <date-picker v-model="ReserveDate" valueType="format" class="datepicker p-0 w-100" id="datepicker"
-                                         placeholder="選擇用餐日期" :disabled-date="modeldisablerange"></date-picker>
-                            <input name="ReserveDate" v-bind:value="SendDate" hidden>
-                            <label for="people">用餐人數：</label>
-                            <select name="Number" id="people" class="form-select w-100" v-model="Number">
-                                <option value="" disabled>選擇用餐人數</option>
-                                <template v-for="peo in people">
-                                    <option :disabled="maxPeople(peo.value)" :value="peo.value">{{peo.txt}}</option>
-                                </template>
-                            </select>
-                            <label for="reserveName">訂位姓名：</label>
-                            <input name="ReserveName" type="text" id="reserveName" class="w-100">
-                            <label for="phone">聯絡電話：</label>
-                            <input name="Phone" type="text" id="phone" class="w-100" maxlength="10" minlength="10" placeholder="09xxxxxxxx">
-                            <label for="email">Email：</label>
-                            <input name="Email" type="email" id="email" class="w-100">
+                        <label for="datepicker">用餐日期：</label>
+                        <date-picker v-model="ReserveDate" valueType="format" class="datepicker p-0 w-100" id="datepicker"
+                                        placeholder="選擇用餐日期" :disabled-date="modeldisablerange"></date-picker>
+                        <input name="ReserveDate" v-bind:value="SendDate" hidden>
+                        <label for="people">用餐人數：</label>
+                        <select name="Number" id="people" class="form-select w-100" v-model="Number">
+                            <option value="" disabled>選擇用餐人數</option>
+                            <template v-for="peo in people">
+                                <option :disabled="maxPeople(peo.value)" :value="peo.value">{{peo.txt}}</option>
+                            </template>
+                        </select>
+                        <label for="reserveName">訂位姓名：</label>
+                        <input v-model="ReserveName" type="text" id="reserveName" class="w-100">
+                        <label for="phone">聯絡電話：</label>
+                        <input v-model="Phone" type="text" id="phone" class="w-100" maxlength="10" minlength="10" placeholder="09xxxxxxxx">
+                        <label for="email">Email：</label>
+                        <input v-model="Email" type="email" id="email" class="w-100">
                     </div>
                     <div class="modal-footer">
                         <div class="row m-0">
-                            <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
-                            <button class=" col btneditproducts m-1" type="submit" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                            <button class="col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                            <button v-on:click="addBooking" class="col btneditproducts m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
                         </div>
                     </div>
                 </form>
@@ -173,6 +172,7 @@
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.2/dist/sweetalert2.min.js"></script>
 <script>
     var app = new Vue({
         el: '#d1',
@@ -192,6 +192,9 @@
             ReserveDate: null,
             SendDate: null,
             Number: '',
+            ReserveName:'',
+            Phone:'',
+            Email:'',
         },
         computed: {
             todayReserves() {
@@ -209,7 +212,8 @@
         },
         watch:{
             ReserveDate:function(){
-                this.SendDate = this.ReserveDate.toLocaleDateString().replace('/', '-').replace('/', '-');
+                if (this.ReserveDate!=null)
+                    this.SendDate = this.ReserveDate.toLocaleDateString().replace('/', '-').replace('/', '-');
             }
         },
         methods: {
@@ -244,6 +248,36 @@
                     }
                     return false;
                 }
+            },
+            addBooking: function(){
+                let info = {
+                    ReserveDate: this.SendDate,
+                    ReserveName: this.ReserveName,
+                    Email: this.Email,
+                    Phone: this.Phone,
+                    Number: this.Number,
+                }
+                fetch('/api/Booking/AddBooking',{
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(info)
+                })//這裡會出現錯誤訊息，而且沒辦法顯示Swal.fire
+                .then(e => { return e.json(); })
+                .then((result)=>{
+                    if(result){
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: '加入訂位成功',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                })
+                .catch(err => console.log('Request Failed', err));
+            },
+            EditClick:function(){
+                
             },
         },
         beforeCreate: function () {
