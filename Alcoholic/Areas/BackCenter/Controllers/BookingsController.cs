@@ -1,4 +1,5 @@
-﻿using Alcoholic.Models.Entities;
+﻿using Alcoholic.Models.DTO;
+using Alcoholic.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,23 @@ namespace Alcoholic.Areas.BackCenter.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpGet]
+        public IEnumerable<DataCenterBookingModel> GetAllBookings()
+        {
+            var bookingArr = from x in _db.Reserves
+                             orderby x.ReserveDate
+                             select new DataCenterBookingModel
+                             {
+                                 Date = x.ReserveDate,
+                                 Name = x.ReserveName,
+                                 Phone = x.Phone,
+                                 Number = x.Number,
+                                 SetDate = x.ReserveSet
+                             };
+
+            return bookingArr;
         }
     }
 }
