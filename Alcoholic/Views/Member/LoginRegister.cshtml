@@ -516,7 +516,7 @@
                     })
                     .then((e) => e.json())
                     .then((result) => {
-                        if (result) {
+                        if (result.status != 400) {
                             Swal.fire({
                                 title: '登入成功',
                                 icon: 'success',

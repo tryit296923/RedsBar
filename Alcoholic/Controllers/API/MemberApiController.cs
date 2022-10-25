@@ -240,10 +240,13 @@ namespace Alcoholic.Controllers.API
                 birth = member.MemberBirth,
                 mail = member.Email,
                 phone = member.Phone,
-                //total = sum,
                 discount = dis,
                 products = products
             };
+            foreach(Order o in member.Orders)
+            {
+                dataPageModel.total = (int)(dataPageModel.total + o.Total);
+            }
 
             switch (member.MemberLevel)
             {
@@ -328,10 +331,7 @@ namespace Alcoholic.Controllers.API
             List<int> total = new();
             foreach(Order order in member.Orders)
             {
-                foreach(OrderDetail od in order.OrderDetails)
-                {
-                    //total.Add();
-                }
+                total.Add((int)order.Total);
             }
             int sum = total.Sum();
             int level = 0;

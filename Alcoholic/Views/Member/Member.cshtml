@@ -113,10 +113,15 @@
         justify-content: space-between;
     }
 
+    .status span{
+        font-size: 0.5rem;
+    }
+
    
     /* order */
     .products{
         display: flex;
+        position:relative;
         overflow-x: auto;
     }
 
@@ -133,6 +138,26 @@
         color: azure;
         --bs-btn-hover-border-color: #D8CDB9;
     }
+
+    .shoplist{
+        display:flex;
+        justify-content:center;
+    }
+
+    .list{
+        text-align: left;
+        width: 75%;
+        list-style: none;
+    }
+    .list i{
+        font-size: 1rem;
+    }
+
+    .shoplist + p, .shoplist + p i{
+        font-size: 1rem;
+        color: #D8CDB9;
+    }
+
 </style>
 <div class="path container-fluid w-100">
     <div class="row">
@@ -153,10 +178,6 @@
                 <div class="col-5 lvl">
                     <h3 class="m-2">會員等級：{{lvl}}</h3><hr>
                     <div class="badge"><img class="p-3" :src="badge" alt=""></div>
-@*                    <div :class="bronze"><img class="p-3" src="~/images/icons/drinks_b.png" alt=""><hr><h3>會員等級：銅</h3></div>
-                    <div :class="silver"><img class="p-3" src="~/images/icons/drinks_s.png" alt=""><hr><h3>會員等級：銀</h3></div>
-                    <div :class="gold"><img class="p-3" src="~/images/icons/drinks_g.png" alt=""><hr><h3>會員等級：金</h3></div>
-                    <div :class="plat"><img class="p-3" src="~/images/icons/drinks_p.png" alt=""><hr><h3>會員等級：白金</h3></div>*@
                 </div>
                 <div class="col-7 lvlinfo">
                     <div class="discount row">
@@ -170,7 +191,7 @@
                         </div>
                     </div>
                     <div class="status">
-                        <h3>目前消費{{model.total}}</h3>
+                        <h3>目前消費<i class="fa-solid fa-dollar-sign"></i> {{model.total}}</h3>
                         <div>
                             <span>{{model.min}}</span>
                             <span>{{model.max}}</span>
@@ -213,8 +234,8 @@
             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content contain">
-                        <div class="modal-header p-2">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel">編輯會員資料</h1>
+                        <div class="modal-header border-0 p-2">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel"><i class="fa-solid fa-circle-user"></i>編輯會員資料</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -225,7 +246,7 @@
                             <div class="w-100 m-2"><label>電話：</label><input class="w-75" type="text" v-model="tel"/></div>
                             <div class="w-100 m-2"><label>密碼：</label><input class="w-75" type="text" v-model="pass" /></div>
                         </div>
-                        <div class="modal-footer p-0">
+                        <div class="modal-footer border-0 p-0">
                             <button type="button" class="btn" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
                             <button type="button" class="btn" v-on:click="update"><i class="fa-solid fa-check"></i></button>
                         </div>
@@ -243,26 +264,25 @@
             </button>
             <!-- Modal -->
             <div class="seemore modal fade" id="seemoreModal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">訂單紀錄</h1>
-                            <button type="button" v-on:click="getOrders" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="modal-header border-0">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel"><i class="fa-solid fa-receipt"></i>訂單紀錄</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <template v-for="order in model.orders">
+                            <template v-for="order in orders">
                                 <div>
                                     <h3>訂單號碼：{{order.orderId}}</h3>
-                                    <p>商品清單：
-                                        <li></li>
-                                    </p>
-                                <p>消費金額：{{order.total}}</p>
+                                    <div class="shoplist">
+                                        <ul class="list my-3">
+                                            <li v-for="detail in order.orderDetails"><i class="fa-solid fa-martini-glass-empty"></i>{{detail.product.productName}}</li>
+                                        </ul>
+                                    </div>
+                                    <p>消費金額：{{order.total}} <i class="fa-solid fa-coins"></i></p>
                                 </div>
                                 <hr/>
                             </template>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
                         </div>
                     </div>
                 </div>
@@ -272,7 +292,8 @@
         <div class="products">
             <template v-for="(product,index) in model.products">
                 <div class="m-4" >
-                    <img :src="product.images[0].path" alt="">
+                    <img src="" :name="index"/>
+                    <img :src="product.images[0].path"  alt="">
                     <hr>
                     <p>{{product.productName}}</p>
                 </div>
@@ -308,7 +329,6 @@
             progressbar:"",
             percent:"",
             orders: [],
-            total:0,
         },
         watch:{
             badge:function(){
@@ -379,24 +399,6 @@
                     }
                 })
             },
-            getOrders:function(){
-                fetch("/api/member/GetOrders")
-                .then((e) => e.json())
-                .then((r) => {
-                    if (!r) {
-                        Swal.fire({
-                            icon: 'info',
-                            color: '#FFF',
-                            iconColor: '#D8CDB9',
-                            confirmButtonColor: '#721B29',
-                            background: '#333',
-                            text: '尚未登入喔!',
-                        });
-                    };
-                    this.orders = r;
-                    this.total = 0;
-                })
-            }
         },
         beforeCreate:function(){
             let self = this;
@@ -443,6 +445,28 @@
                     Swal.showLoading()
                 },
             })
+            fetch("/api/member/GetOrders")
+            .then((e) => e.json())
+            .then((r) => {
+                if (!r) {
+                    Swal.fire({
+                        icon: 'info',
+                        color: '#FFF',
+                        iconColor: '#D8CDB9',
+                        confirmButtonColor: '#721B29',
+                        background: '#333',
+                        text: '尚未登入喔!',
+                    });
+                };
+                this.orders = r;
+                    let imgs1 = document.querySelector('[name="0"]');
+                    let imgs2 = document.querySelector('[name="1"]');
+                    let imgs3 = document.querySelector('[name="2"]');
+                    imgs1.src = "";
+                    imgs2.src = "";
+                    imgs3.src = "";
+            })
+
         }
     })
 </script>
