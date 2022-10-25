@@ -7,7 +7,7 @@ namespace Alcoholic.Services
     public class AesService
     {
         //AES加密
-        public byte[] AesEncrypt (byte[] input, string key, string iv)
+        public string AesEncrypt (byte[] input, string key, string iv)
         {
             var aes = Aes.Create();
             byte[] infoKey = Encoding.UTF8.GetBytes (key);
@@ -21,24 +21,25 @@ namespace Alcoholic.Services
             var encryptor = aes.CreateEncryptor ();
             
             byte[] encryptResult = encryptor.TransformFinalBlock(input, 0, input.Length);
-            return encryptResult;
+            return BitConverter.ToString(encryptResult)?.Replace("-", "")?.ToLower();
+            
         }
 
         //加密轉16進制
-        public string AesEncryptHex(string input, string key, string iv)
-        {
-            string hexResult = string.Empty;
-            if (!string.IsNullOrEmpty(input))
-            {
-                byte[] bInput = Encoding.UTF8.GetBytes (input);
-                var encryptHexValue = AesEncrypt(bInput, key, iv);
-                if (encryptHexValue != null)
-                {
-                    hexResult = BitConverter.ToString(encryptHexValue).Replace("-", string.Empty).ToLower();
-                }
-            }
-            return hexResult;
-        }
+        //public string AesEncryptHex(string input, string key, string iv)
+        //{
+        //    string hexResult = string.Empty;
+        //    if (!string.IsNullOrEmpty(input))
+        //    {
+        //        byte[] bInput = Encoding.UTF8.GetBytes (input);
+        //        var encryptHexValue = AesEncrypt(bInput, key, iv);
+        //        if (encryptHexValue != null)
+        //        {
+        //            hexResult = BitConverter.ToString(encryptHexValue).Replace("-", string.Empty).ToLower();
+        //        }
+        //    }
+        //    return hexResult;
+        //}
 
         //AES解密
         //public byte[] AesDecrypt(byte[] input, string key, string iv)
