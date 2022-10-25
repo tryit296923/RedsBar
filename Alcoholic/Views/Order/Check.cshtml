@@ -52,6 +52,10 @@
         font-size:large;
     }
 
+    .orderDetailTitle{
+        font-weight:bold;
+    }
+
     .total {
         font-size: x-large;
         margin-bottom: 0px;
@@ -138,13 +142,14 @@
                 </div>
                 <hr>
                 <ul class="px-3">
-                    <li class="orderDetail">
-                        <span>商品名</span>
-                        <span>數量</span>
+                    <li class="orderDetail orderDetailTitle row">
+                        <span class="col-7">商品名</span>
+                        <span class="col-3 text-center">數量</span>
+                        <hr>
                     </li>
-                    <li class="orderDetail" v-for="items in cartTotal">
-                        <span>{{items.item.productName}}</span>
-                        <span class="pe-3">{{items.cnt}}</span>
+                    <li class="orderDetail row" v-for="items in cartTotal">
+                        <span class="col-7">{{items.item.productName}}</span>
+                        <span class="pe-3 col-3 text-center">{{items.cnt}}</span>
                     </li>
                 </ul>
                 <hr>

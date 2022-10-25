@@ -82,6 +82,7 @@
     .scrollregion {
         overflow-y: scroll;
         height: 86vh;
+        overflow-x: hidden;
     }
 
     .img-box img {
@@ -155,7 +156,6 @@
     .subOrderText {
         font-weight: bold;
         margin-bottom: 5px;
-        padding-left: 1rem;
     }
 
     .subOrderId {
@@ -337,47 +337,46 @@
             <!-- 購物車清單 -->
             <div class="container-fluid px-0">
                 <div class="cartList px-3">
-                    <ol class="list-group" v-for="order in orderList">
+                    <ol class="list-group">
                         <div class="subOrderTitle">
-                            <div class="subOrderText subOrderId">{{order.orderId}}</div>
-                            <div class="subOrderText subOrderTime">{{dateTime(order.orderTime)}}</div>
+                            <div class="subOrderText subOrderId">訂單編號 : {{orderDetail[0].orderId}}</div>
                         </div>
-                        <li class="row list-group-item d-flex justify-content-between align-items-start pe-0"
-                            v-for="(item,index) in order.itemList" @*v-bind:key="item.orderId"*@>
-                            <div class="col-3 px-0">
-                                <img :src="item.path" class="w-100 rounded">
-                            </div>
-
-                            <div class="col-5">
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold productName">{{item.productName}}</div>
+                        <div class="row list-group-item d-flex justify-content-center"
+                            v-for="(sequence,index) in sequenceList()" @*v-bind:key="item.orderId"*@>
+                            <div class="row list-group-item d-flex align-items-center" v-for="(item,index) in sequence">
+                                <div class="col-3 px-0">
+                                    <img :src="item.path" class="w-100 rounded">
                                 </div>
-                            </div>
-                            <div class="col-1 px-0">
-                                <div class="col text-center px-0">
-                                    <div class="col">{{item.qty}}</div>
-                                </div>
-                            </div>
-                            <div class="col-3">
 
-                                <div class="productPrice">
-                                    <div v-if="item.discountAmount != 1">
-                                        <span>$ </span>
-                                        <span class="originalPrice">{{item.unitPrice * item.qty}} </span>
-                                        <span class="discountPrice" name="finalPrice">{{discountPrice(item)}}</span>
-                                    </div>
-                                    <div v-else>
-                                        <span>$ </span>
-                                        <span name="finalPrice">{{item.unitPrice * item.qty}} </span>
+                                <div class="col-5">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold productName">{{item.productName}}</div>
                                     </div>
                                 </div>
+                                <div class="col-1 px-0">
+                                    <div class="col text-center px-0">
+                                        <div class="col">{{item.qty}}</div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="productPrice">
+                                        <div v-if="item.discountAmount != 1">
+                                            <span>$ </span>
+                                            <span class="originalPrice">{{item.unitPrice * item.qty}} </span>
+                                            <span class="discountPrice" name="finalPrice">{{discountPrice(item)}}</span>
+                                        </div>
+                                        <div v-else>
+                                            <span>$ </span>
+                                            <span name="finalPrice">{{item.unitPrice * item.qty}} </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </li>
-                        <div class="subTotal">小計: {{subTotal(order.itemList)}} 元</div>
-
+                            <div class="subTotal">小計: {{subTotal(sequence)}} 元</div>
+                        </div>
                         <hr />
                     </ol>
-                    <div class="cartTotal">今日消費總計: {{total(orderList)}} 元</div>
+                    <div class="cartTotal">今日消費總計: {{total(orderDetail[0].itemList)}} 元</div>
                 </div>
             </div>
         </fieldset>
@@ -431,15 +430,32 @@
             return {
                 orderTime: '',
                 totalPrice: 0,
-                orderList: @Html.Raw(Json.Serialize(Model)),
-    @*orderDetail: @Html.Raw(Json.Serialize(Model.Details))*@
-                    }
-    },
+                @*orderList: @Html.Raw(Json.Serialize(Model)),*@
+                orderDetail: @Html.Raw(Json.Serialize(Model)),
+            }
+        },
+        //mounted(){
+        //    console.log(this.orderDetail)
+        //    var list = {};
+        //    var x = [...new Set(this.orderDetail[0].itemList.map(x => x.sequence))];
+        //    console.log(x)
+        //    x.forEach(y => console.log(this.orderDetail[0].itemList.filter(z => z.sequence == y)))
+
+        //    console.log(this.orderDetail.filter(x => x.sequence));
+        //},
         methods: {
-        getOrderList: function () {
+        getOrderDetail: function () {
             var list = {};
-            this.orderList = JSON.parse(orderList);
-            return this.orderList;
+            this.orderDetail = JSON.parse(orderDetail);
+            return this.orderDetail;
+        },
+        sequenceList:function(){
+            var sList = [];
+            var x = [...new Set(this.orderDetail[0].itemList.map(x => x.sequence))];
+            console.log(x)
+            x.forEach(y => sList.push(this.orderDetail[0].itemList.filter(z => z.sequence == y)))
+            console.log(sList);
+            return sList;
         },
         //detail: function (orderid) {
         //    console.log(orderid);
@@ -453,29 +469,31 @@
         discountPrice: function (item) {
             return Math.round(item.unitPrice * item.qty * item.discountAmount);
         },
-        subTotal: function (s) {
-            var subTotal = 0;
-            for (let i = 0; i < s.length; i++) {
-                subTotal += s[i].unitPrice * s[i].qty * s[i].discountAmount;
-            }
-            return Math.round(subTotal);
-        },
-        total: function (t) {
+        total: function (s) {
             var total = 0;
-            for (let j = 0; j < t.length; j++) {
-                for (let k = 0; k < t[j].itemList.length; k++) {
-                    total += t[j].itemList[k].unitPrice * t[j].itemList[k].qty * t[j].itemList[k].discountAmount;
-                }
-
+            for (let i = 0; i < s.length; i++) {
+                total += s[i].unitPrice * s[i].qty * s[i].discountAmount;
             }
-            this.totalPrice = Math.round(total)
-            console.log(this.totalPrice);
-            return this.totalPrice;
+            return Math.round(total);
+        },
+        subTotal: function (t) {
+            var subTotal = 0;
+            //for (let j = 0; j < t.length; j++) {
+            //    for (let k = 0; k < t[j].itemList.length; k++) {
+            //        total += t[j].itemList[k].unitPrice * t[j].itemList[k].qty * t[j].itemList[k].discountAmount;
+            //    }
+            //}
+            for(let j = 0;j<t.length;j++){
+                subTotal += t[j].unitPrice * t[j].qty * t[j].discountAmount;
+            }
+            this.subTotalPrice = Math.round(subTotal)
+            console.log(this.subTotalPrice);
+            return this.subTotalPrice;
         },
         dateTime: function (ot) {
             var newOt = ot.substring(0, 16);
             return newOt.replace("T", " ");
-        }
+        },
     },
         })
 </script>
