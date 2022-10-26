@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<!-- saved from url=(0023)https://localhost:7232/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>.LGLeeN-keyboard-shortcuts-view{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex}.LGLeeN-keyboard-shortcuts-view table,.LGLeeN-keyboard-shortcuts-view tbody,.LGLeeN-keyboard-shortcuts-view td,.LGLeeN-keyboard-shortcuts-view tr{background:inherit;border:none;margin:0;padding:0}.LGLeeN-keyboard-shortcuts-view table{display:table}.LGLeeN-keyboard-shortcuts-view tr{display:table-row}.LGLeeN-keyboard-shortcuts-view td{-moz-box-sizing:border-box;box-sizing:border-box;display:table-cell;color:#000;padding:6px;vertical-align:middle;white-space:nowrap}.LGLeeN-keyboard-shortcuts-view td .VdnQmO-keyboard-shortcuts-view--shortcut-key{background-color:#e8eaed;border-radius:2px;border:none;-moz-box-sizing:border-box;box-sizing:border-box;color:inherit;display:inline-block;font-family:Google Sans Text,Roboto,Arial,sans-serif;line-height:16px;margin:0 2px;min-height:20px;min-width:20px;padding:2px 4px;position:relative;text-align:center}
+</style><style>.gm-control-active>img{box-sizing:content-box;display:none;left:50%;pointer-events:none;position:absolute;top:50%;transform:translate(-50%,-50%)}.gm-control-active>img:nth-child(1){display:block}.gm-control-active:focus>img:nth-child(1),.gm-control-active:hover>img:nth-child(1),.gm-control-active:active>img:nth-child(1),.gm-control-active:disabled>img:nth-child(1){display:none}.gm-control-active:focus>img:nth-child(2),.gm-control-active:hover>img:nth-child(2){display:block}.gm-control-active:active>img:nth-child(3){display:block}.gm-control-active:disabled>img:nth-child(4){display:block}
+</style><link type="text/css" rel="stylesheet" href="./Red&#39;s Bar&#39;_files/css"><link type="text/css" rel="stylesheet" href="./Red&#39;s Bar&#39;_files/css(1)"><style>.gm-ui-hover-effect{opacity:.6}.gm-ui-hover-effect:hover{opacity:1}.gm-ui-hover-effect>span{background-color:#000}@media (forced-colors:active),(prefers-contrast:more){.gm-ui-hover-effect>span{background-color:ButtonText}}
+</style><style>.gm-style .gm-style-cc a,.gm-style .gm-style-cc button,.gm-style .gm-style-cc span,.gm-style .gm-style-mtc div{font-size:10px;box-sizing:border-box}.gm-style .gm-style-cc a,.gm-style .gm-style-cc button,.gm-style .gm-style-cc span{outline-offset:3px}
+</style><style>@media print {  .gm-style .gmnoprint, .gmnoprint {    display:none  }}@media screen {  .gm-style .gmnoscreen, .gmnoscreen {    display:none  }}</style><style>.gm-style-moc{background-color:rgba(0,0,0,.45);pointer-events:none;text-align:center;transition:opacity ease-in-out}.gm-style-mot{color:white;font-family:Roboto,Arial,sans-serif;font-size:22px;margin:0;position:relative;top:50%;transform:translateY(-50%);-webkit-transform:translateY(-50%);-ms-transform:translateY(-50%)}
+</style><style>.gm-style img{max-width: none;}.gm-style {font: 400 11px Roboto, Arial, sans-serif; text-decoration: none;}</style>
+    <link href="./Red&#39;s Bar&#39;_files/bootstrap.css" rel="stylesheet">
+    <link href="./Red&#39;s Bar&#39;_files/theme.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/ico" href="https://localhost:7232/images/icons/logoicon-r.png">
+    <script src="./Red&#39;s Bar&#39;_files/vue@2.7.10"></script>
+    <title>Red's Bar'</title>
+    <style>
+        body{
+            color: aliceblue;
+            background-color: #333;
+        }
+        li{
+            list-style: none;
+        }
+        a {
+            color: aliceblue;
+            text-decoration: none;
+        }
+        .pconly{
+            display: none;
+        }
+        .carousel-control-next-icon,.carousel-control-prev-icon{
+            display: none;
+        }
+        /*mobil opening*/
+        .open-hours {
+            text-align: left;
+        }
+
+        .open-hours-bold {
+            font-weight: bold;
+            background-color: #721B29;
+            color: white;
+        }
+        /* NAV */
+        .search{
+            height: 38px;
+            margin: 10px;
+            position: relative;
+        }
+        .search img{
+            height: 20px;
+            width: 20px;
+            position: absolute;
+            top: 9px;
+            right: 9px;
+        }
+        .logo {
+            width: 50px;
+            margin-right: 20px;
+        }
+        .navbar {
+            background-color: #721B29;
+        }
+        .navbar-brand ,.nav-link{
+            color: white;
+        }
+
+        @media screen and (max-width: 992px) {
+            .searcharea {
+                display: none !important;
+            }
+
+            .searcharea2 {
+                display: block;
+            }
+        }
+        /* Footer */
+        footer{
+            background-color: #D8CDB9; 
+            margin-top: 40px;
+            color: #666;
+            font-size: 14px;
+        }
+        footer a{
+            color: #666;
+        }
+        .footright{
+            margin: auto;
+            padding: 20px 10px 10px 10px;
+            text-align: right;
+        }
+        @media screen and (min-width: 768px){
+            .monly{
+                display: none;
+            }
+            .pconly{
+                display: block;
+            }
+            .topictext{
+                position: relative;
+                top: 40%;
+                left: 30%;
+                z-index: 2;
+                width:max-content;
+            }
+            .topictext h2{
+                font-size: 4rem;
+            }
+            .topictext p{
+                font-size: 1.5rem;
+            }
+            .showup{
+                display: none;
+            }
+
+            /* NAV */
+            .pcmenu{
+                position: relative;
+                top: -40px;
+            }
+            .pclist li{
+                padding: 4px;
+                border-bottom: transparent 1px solid;
+                transition:ease;
+                transition-duration: 0.4s;
+            }
+            .pclist li:hover{
+                color: #D8CDB9;
+                border-bottom: #D8CDB9 1px solid;
+                transition:ease;
+                transition-duration: 0.4s;
+            }
+            .popoutimg{
+                width: 30%;
+                height: 30%;
+                padding: 8px;
+                margin-top: 40px;
+                border-radius: 1rem;
+            }
+
+            /* INFO */
+            td{
+                padding: 8px 24px;
+            }
+            #googleMap{
+                width: 90% !important;
+            }
+        }
+    </style>
+<script type="text/javascript" charset="UTF-8" src="./Red&#39;s Bar&#39;_files/common.js.下載"></script><script type="text/javascript" charset="UTF-8" src="./Red&#39;s Bar&#39;_files/util.js.下載"></script><script type="text/javascript" charset="UTF-8" src="./Red&#39;s Bar&#39;_files/map.js.下載"></script><script type="text/javascript" charset="UTF-8" src="./Red&#39;s Bar&#39;_files/marker.js.下載"></script><script type="text/javascript" charset="UTF-8" src="./Red&#39;s Bar&#39;_files/onion.js.下載"></script><style id="inert-style">
+[inert] {
+  pointer-events: none;
+  cursor: default;
+}
+
+[inert], [inert] * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+</style><script type="text/javascript" charset="UTF-8" src="./Red&#39;s Bar&#39;_files/controls.js.下載"></script></head>
+<body>
+    <!-- 全網共用 nav -->
+    <nav class="navbar monly navbar-expand-md ">
+        <div class="container-fluid">
+            <a href="https://localhost:7232/"><img src="./Red&#39;s Bar&#39;_files/logo-w.png" alt="" class="logo"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">            
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <form class="searcharea2 search" role="search">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                        <a href="https://localhost:7232/"><img src="./Red&#39;s Bar&#39;_files/search.png" alt=""></a>
+                    </form>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://localhost:7232/#">推薦</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://localhost:7232/#">經典酒款</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://localhost:7232/#">算命調酒</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://localhost:7232/Booking/Booking">線上訂位</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://localhost:7232/Member/Member">會員</a>
+                    </li>
+                </ul>
+                <form class="d-flex searcharea search" role="search">
+                    <input class=" form-control" type="search" placeholder="Search" aria-label="Search">
+                    <a href="https://localhost:7232/"><img src="./Red&#39;s Bar&#39;_files/search(1).png" alt=""></a>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- PC only的文字區塊 -->
+            <div class="col-md-3">
+                <div class="topictext pconly">
+                    <h2>Red's Bar</h2>
+                    <p>Topic Not Yet Decided</p>                    
+                </div>
+            </div>
+            <!-- SLIDE -->
+            <div class="col-md-9 gx-0">
+                <div id="carouselExampleControls" class="carousel slide pointer-event" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                    <div class="carousel-item">
+                        <img src="./Red&#39;s Bar&#39;_files/banner1.jpeg" class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item active">
+                        <img src="./Red&#39;s Bar&#39;_files/banner2.jpeg" class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="./Red&#39;s Bar&#39;_files/banner3.png" class="d-block w-100" alt="...">
+                    </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                    </button>
+                </div>                
+            </div>
+        </div>              
+    </div>
+    
+    <!-- PC 選單 -->
+    <div class="container pclist pconly">
+        <div class="row">
+            <div class="pcmenu col-md-3">         
+                <ul>
+                    <li><h2>Menu</h2></li>
+                    <hr>
+                    <li class="nav-item">
+                        <a class="nav-link" id="recommand" href="https://localhost:7232/#">Recommendation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="classic" href="https://localhost:7232/#">Classic</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://localhost:7232/#">Divination For You</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://localhost:7232/Booking/Booking">Reservation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://localhost:7232/Member/Member">Member</a>
+                    </li>
+                </ul>            
+            </div>
+            <div class="col-md-9">
+                <div class="showup recommand pconly">
+                    <img class="popoutimg" src="./Red&#39;s Bar&#39;_files/bloodymary.jpeg" alt="">
+                    <img class="popoutimg" src="./Red&#39;s Bar&#39;_files/junglebird.jpg" alt="">
+                    <img class="popoutimg" src="./Red&#39;s Bar&#39;_files/margarita.jpeg" alt="">
+                </div>
+                <div class="showup classic pconly">
+                    <img class="popoutimg" src="./Red&#39;s Bar&#39;_files/highball.jpg" alt="">
+                    <img class="popoutimg" src="./Red&#39;s Bar&#39;_files/Martini.jpeg" alt="">
+                </div>
+            </div>       
+        </div>
+    </div>
+
+    <!--地圖/店家資訊-->
+    <div class="container mt-3">
+        <h4 class="monly">餐廳資訊</h4>
+        <div class="row">
+            <div class="map-text mt-3 col-md-4 order-md-1">
+                <div class="map-item">
+                    <a href="https://goo.gl/maps/Bz9u7pHWT7ePvPsFA">&nbsp;&nbsp;<img src="./Red&#39;s Bar&#39;_files/icon01.png" alt="">&nbsp; 100 台北市中正區濟南路一段321號</a>
+                </div>
+                <hr>
+                <div class="map-item">
+                    <a href="tel:0233221368">&nbsp;<img src="./Red&#39;s Bar&#39;_files/phone.png" alt=""> 02 3322 1368</a>
+                </div>
+                <hr>
+                <!-- pc 營業時間 -->
+                <div class="pclist pconly">
+                    <table>
+                            <tbody><tr><td>Sunday</td><td>18:00-00:00</td></tr>
+                            <tr><td>Monday</td><td>&nbsp;Day&nbsp;&nbsp;&nbsp;&nbsp;Off&nbsp;</td></tr>
+                            <tr><td>Tuesday</td><td>18:00-00:00</td></tr>
+                            <tr><td>Wednesday</td><td>18:00-00:00</td></tr>
+                            <tr><td>Thursday</td><td>18:00-00:00</td></tr>
+                            <tr><td>Friday</td><td>18:00-02:00</td></tr>
+                            <tr><td>Saturday</td><td>18:00-02:00</td> </tr>
+                    </tbody></table>    
+                </div>
+                <!-- 手機 營業時間 -->
+                <div id="d1" class="map-item monly"><p>營業時間</p> <button type="button" data-bs-toggle="dropdown" class="form-select open-hours">星期三 18:00-00:00</button> <ul class="dropdown-menu"><li><button type="button" class="dropdown-item">星期日 18:00-00:00</button></li><li><button type="button" class="dropdown-item">星期一 公休</button></li><li><button type="button" class="dropdown-item">星期二 18:00-00:00</button></li><li><button type="button" class="dropdown-item open-hours-bold">星期三 18:00-00:00</button></li><li><button type="button" class="dropdown-item">星期四 18:00-00:00</button></li><li><button type="button" class="dropdown-item">星期五 18:00-02:00</button></li><li><button type="button" class="dropdown-item">星期六 18:00-02:00</button></li></ul></div>
+            </div>
+            <div class="mt-3 col-md-8 order-md-0">
+                <div id="googleMap" style="width: 100%; height: 400px; position: relative; overflow: hidden;"><div style="height: 100%; width: 100%; position: absolute; top: 0px; left: 0px; background-color: rgb(229, 227, 223);"><div class="gm-style" style="position: absolute; z-index: 0; left: 0px; top: 0px; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px;"><div><button draggable="false" aria-label="鍵盤快速鍵" title="鍵盤快速鍵" type="button" style="background: none transparent; display: block; border: none; margin: 0px; padding: 0px; text-transform: none; appearance: none; position: absolute; cursor: pointer; user-select: none; z-index: 1000002; outline-offset: 3px; right: 0px; bottom: 0px; transform: translateX(100%);"></button></div><div tabindex="0" aria-label="地圖" aria-roledescription="地圖" role="region" style="position: absolute; z-index: 0; left: 0px; top: 0px; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px; cursor: url(&quot;https://maps.gstatic.com/mapfiles/openhand_8_8.cur&quot;), default;" aria-describedby="0DFC113D-B424-4FCA-ACBD-F3590F446167"><div style="z-index: 1; position: absolute; left: 50%; top: 50%; width: 100%; transform: translate(0px, 0px);"><div style="position: absolute; left: 0px; top: 0px; z-index: 100; width: 100%;"><div style="position: absolute; left: 0px; top: 0px; z-index: 0;"><div style="position: absolute; z-index: 982; transform: matrix(1, 0, 0, 1, -248, -57);"><div style="position: absolute; left: 256px; top: 0px; width: 256px; height: 256px;"><div style="width: 256px; height: 256px;"></div></div><div style="position: absolute; left: 0px; top: 0px; width: 256px; height: 256px;"><div style="width: 256px; height: 256px;"></div></div><div style="position: absolute; left: 0px; top: -256px; width: 256px; height: 256px;"><div style="width: 256px; height: 256px;"></div></div><div style="position: absolute; left: 256px; top: -256px; width: 256px; height: 256px;"><div style="width: 256px; height: 256px;"></div></div><div style="position: absolute; left: 512px; top: -256px; width: 256px; height: 256px;"><div style="width: 256px; height: 256px;"></div></div><div style="position: absolute; left: 512px; top: 0px; width: 256px; height: 256px;"><div style="width: 256px; height: 256px;"></div></div><div style="position: absolute; left: 512px; top: 256px; width: 256px; height: 256px;"><div style="width: 256px; height: 256px;"></div></div><div style="position: absolute; left: 256px; top: 256px; width: 256px; height: 256px;"><div style="width: 256px; height: 256px;"></div></div><div style="position: absolute; left: 0px; top: 256px; width: 256px; height: 256px;"><div style="width: 256px; height: 256px;"></div></div><div style="position: absolute; left: -256px; top: 256px; width: 256px; height: 256px;"><div style="width: 256px; height: 256px;"></div></div><div style="position: absolute; left: -256px; top: 0px; width: 256px; height: 256px;"><div style="width: 256px; height: 256px;"></div></div><div style="position: absolute; left: -256px; top: -256px; width: 256px; height: 256px;"><div style="width: 256px; height: 256px;"></div></div></div></div></div><div style="position: absolute; left: 0px; top: 0px; z-index: 101; width: 100%;"></div><div style="position: absolute; left: 0px; top: 0px; z-index: 102; width: 100%;"></div><div style="position: absolute; left: 0px; top: 0px; z-index: 103; width: 100%;"><div style="position: absolute; left: 0px; top: 0px; z-index: -1;"><div style="position: absolute; z-index: 982; transform: matrix(1, 0, 0, 1, -248, -57);"><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 256px; top: 0px;"></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 0px; top: 0px;"></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 0px; top: -256px;"></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 256px; top: -256px;"></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 512px; top: -256px;"></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 512px; top: 0px;"></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 512px; top: 256px;"></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 256px; top: 256px;"></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 0px; top: 256px;"></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: -256px; top: 256px;"></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: -256px; top: 0px;"></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: -256px; top: -256px;"></div></div></div><div style="width: 21px; height: 30px; overflow: hidden; position: absolute; left: -11px; top: -31px; z-index: 0;"><img alt="" src="./Red&#39;s Bar&#39;_files/icon01.png" draggable="false" style="position: absolute; left: 0px; top: 0px; user-select: none; width: 21px; height: 30px; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div></div><div style="position: absolute; left: 0px; top: 0px; z-index: 0;"><div style="position: absolute; z-index: 982; transform: matrix(1, 0, 0, 1, -248, -57);"><div style="position: absolute; left: 256px; top: 0px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;"><img draggable="false" alt="" role="presentation" src="./Red&#39;s Bar&#39;_files/vt" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div style="position: absolute; left: 0px; top: 0px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;"><img draggable="false" alt="" role="presentation" src="./Red&#39;s Bar&#39;_files/vt(1)" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div style="position: absolute; left: 0px; top: -256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;"><img draggable="false" alt="" role="presentation" src="./Red&#39;s Bar&#39;_files/vt(2)" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div style="position: absolute; left: 256px; top: -256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;"><img draggable="false" alt="" role="presentation" src="./Red&#39;s Bar&#39;_files/vt(3)" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div style="position: absolute; left: 512px; top: -256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;"><img draggable="false" alt="" role="presentation" src="./Red&#39;s Bar&#39;_files/vt(4)" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div style="position: absolute; left: 512px; top: 0px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;"><img draggable="false" alt="" role="presentation" src="./Red&#39;s Bar&#39;_files/vt(5)" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div style="position: absolute; left: 512px; top: 256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;"><img draggable="false" alt="" role="presentation" src="./Red&#39;s Bar&#39;_files/vt(6)" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div style="position: absolute; left: 256px; top: 256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;"><img draggable="false" alt="" role="presentation" src="./Red&#39;s Bar&#39;_files/vt(7)" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div style="position: absolute; left: 0px; top: 256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;"><img draggable="false" alt="" role="presentation" src="./Red&#39;s Bar&#39;_files/vt(8)" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div style="position: absolute; left: -256px; top: 256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;"><img draggable="false" alt="" role="presentation" src="./Red&#39;s Bar&#39;_files/vt(9)" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div style="position: absolute; left: -256px; top: 0px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;"><img draggable="false" alt="" role="presentation" src="./Red&#39;s Bar&#39;_files/vt(10)" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div style="position: absolute; left: -256px; top: -256px; width: 256px; height: 256px; transition: opacity 200ms linear 0s;"><img draggable="false" alt="" role="presentation" src="./Red&#39;s Bar&#39;_files/vt(11)" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div></div></div></div><div style="z-index: 3; position: absolute; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px; left: 0px; top: 0px;"><div style="z-index: 4; position: absolute; left: 50%; top: 50%; width: 100%; transform: translate(0px, 0px);"><div style="position: absolute; left: 0px; top: 0px; z-index: 104; width: 100%;"></div><div style="position: absolute; left: 0px; top: 0px; z-index: 105; width: 100%;"></div><div style="position: absolute; left: 0px; top: 0px; z-index: 106; width: 100%;"><span id="A508187D-2DE5-4B95-8367-2CC28C7DB2BA" style="display: none;">若要瀏覽，請按箭頭鍵。</span><div title="" style="width: 37px; height: 46px; overflow: hidden; position: absolute; cursor: pointer; left: -19px; top: -38px; z-index: 0;" tabindex="-1"><img alt="" src="./Red&#39;s Bar&#39;_files/transparent.png" draggable="false" style="width: 37px; height: 46px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div></div><div style="position: absolute; left: 0px; top: 0px; z-index: 107; width: 100%;"></div></div></div><div class="gm-style-moc" style="z-index: 4; position: absolute; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px; left: 0px; top: 0px; opacity: 0;"><p class="gm-style-mot"></p></div><div class="LGLeeN-keyboard-shortcuts-view" id="0DFC113D-B424-4FCA-ACBD-F3590F446167" style="display: none;"><table><tbody><tr><td style="text-align: right;"><kbd class="VdnQmO-keyboard-shortcuts-view--shortcut-key" aria-label="向左鍵">←</kbd></td><td aria-label="向左移動.">向左移動</td></tr><tr><td style="text-align: right;"><kbd class="VdnQmO-keyboard-shortcuts-view--shortcut-key" aria-label="向右鍵">→</kbd></td><td aria-label="向右移動.">向右移動</td></tr><tr><td style="text-align: right;"><kbd class="VdnQmO-keyboard-shortcuts-view--shortcut-key" aria-label="向上鍵">↑</kbd></td><td aria-label="向上移動.">向上移動</td></tr><tr><td style="text-align: right;"><kbd class="VdnQmO-keyboard-shortcuts-view--shortcut-key" aria-label="向下鍵">↓</kbd></td><td aria-label="向下移動.">向下移動</td></tr><tr><td style="text-align: right;"><kbd class="VdnQmO-keyboard-shortcuts-view--shortcut-key">+</kbd></td><td aria-label="放大.">放大</td></tr><tr><td style="text-align: right;"><kbd class="VdnQmO-keyboard-shortcuts-view--shortcut-key">-</kbd></td><td aria-label="縮小.">縮小</td></tr><tr><td style="text-align: right;"><kbd class="VdnQmO-keyboard-shortcuts-view--shortcut-key">Home 鍵</kbd></td><td aria-label="向左移 75%.">向左移 75%</td></tr><tr><td style="text-align: right;"><kbd class="VdnQmO-keyboard-shortcuts-view--shortcut-key">End 鍵</kbd></td><td aria-label="向右移 75%.">向右移 75%</td></tr><tr><td style="text-align: right;"><kbd class="VdnQmO-keyboard-shortcuts-view--shortcut-key">Page Up 鍵</kbd></td><td aria-label="向上移 75%.">向上移 75%</td></tr><tr><td style="text-align: right;"><kbd class="VdnQmO-keyboard-shortcuts-view--shortcut-key">Page Down 鍵</kbd></td><td aria-label="向下移 75%.">向下移 75%</td></tr></tbody></table></div></div><iframe aria-hidden="true" frameborder="0" tabindex="-1" style="z-index: -1; position: absolute; width: 100%; height: 100%; top: 0px; left: 0px; border: none;" src="./Red&#39;s Bar&#39;_files/saved_resource.html"></iframe><div style="pointer-events: none; width: 100%; height: 100%; box-sizing: border-box; position: absolute; z-index: 1000002; opacity: 0; border: 2px solid rgb(26, 115, 232);"></div><div></div><div></div><div></div><div></div><div><button draggable="false" aria-label="切換全螢幕檢視" title="切換全螢幕檢視" type="button" aria-pressed="false" class="gm-control-active gm-fullscreen-control" style="background: none rgb(255, 255, 255); border: 0px; margin: 10px; padding: 0px; text-transform: none; appearance: none; position: absolute; cursor: pointer; user-select: none; border-radius: 2px; height: 40px; width: 40px; box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; overflow: hidden; display: none; top: 0px; right: 0px;"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2018%2018%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M0%200v6h2V2h4V0H0zm16%200h-4v2h4v4h2V0h-2zm0%2016h-4v2h6v-6h-2v4zM2%2012H0v6h6v-2H2v-4z%22/%3E%3C/svg%3E" alt="" style="height: 18px; width: 18px;"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2018%2018%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M0%200v6h2V2h4V0H0zm16%200h-4v2h4v4h2V0h-2zm0%2016h-4v2h6v-6h-2v4zM2%2012H0v6h6v-2H2v-4z%22/%3E%3C/svg%3E" alt="" style="height: 18px; width: 18px;"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2018%2018%22%3E%3Cpath%20fill%3D%22%23111%22%20d%3D%22M0%200v6h2V2h4V0H0zm16%200h-4v2h4v4h2V0h-2zm0%2016h-4v2h6v-6h-2v4zM2%2012H0v6h6v-2H2v-4z%22/%3E%3C/svg%3E" alt="" style="height: 18px; width: 18px;"></button></div><div></div><div></div><div></div><div></div><div><div class="gmnoprint gm-bundled-control gm-bundled-control-on-bottom" draggable="false" data-control-width="40" data-control-height="81" style="margin: 10px; user-select: none; position: absolute; bottom: 95px; right: 40px;"><div class="gmnoprint" data-control-width="40" data-control-height="81" style="position: absolute; left: 0px; top: 0px;"><div draggable="false" style="user-select: none; box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; border-radius: 2px; cursor: pointer; background-color: rgb(255, 255, 255); width: 40px; height: 81px;"><button draggable="false" aria-label="放大" title="放大" type="button" class="gm-control-active" style="background: none; display: block; border: 0px; margin: 0px; padding: 0px; text-transform: none; appearance: none; position: relative; cursor: pointer; user-select: none; overflow: hidden; width: 40px; height: 40px; top: 0px; left: 0px;"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2018%2018%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M18%207h-7V0H7v7H0v4h7v7h4v-7h7z%22/%3E%3C/svg%3E" alt="" style="height: 18px; width: 18px;"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2018%2018%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M18%207h-7V0H7v7H0v4h7v7h4v-7h7z%22/%3E%3C/svg%3E" alt="" style="height: 18px; width: 18px;"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2018%2018%22%3E%3Cpath%20fill%3D%22%23111%22%20d%3D%22M18%207h-7V0H7v7H0v4h7v7h4v-7h7z%22/%3E%3C/svg%3E" alt="" style="height: 18px; width: 18px;"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2018%2018%22%3E%3Cpath%20fill%3D%22%23d1d1d1%22%20d%3D%22M18%207h-7V0H7v7H0v4h7v7h4v-7h7z%22/%3E%3C/svg%3E" alt="" style="height: 18px; width: 18px;"></button><div style="position: relative; overflow: hidden; width: 30px; height: 1px; margin: 0px 5px; background-color: rgb(230, 230, 230); top: 0px;"></div><button draggable="false" aria-label="縮小" title="縮小" type="button" class="gm-control-active" style="background: none; display: block; border: 0px; margin: 0px; padding: 0px; text-transform: none; appearance: none; position: relative; cursor: pointer; user-select: none; overflow: hidden; width: 40px; height: 40px; top: 0px; left: 0px;"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2018%2018%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M0%207h18v4H0V7z%22/%3E%3C/svg%3E" alt="" style="height: 18px; width: 18px;"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2018%2018%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M0%207h18v4H0V7z%22/%3E%3C/svg%3E" alt="" style="height: 18px; width: 18px;"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2018%2018%22%3E%3Cpath%20fill%3D%22%23111%22%20d%3D%22M0%207h18v4H0V7z%22/%3E%3C/svg%3E" alt="" style="height: 18px; width: 18px;"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2018%2018%22%3E%3Cpath%20fill%3D%22%23d1d1d1%22%20d%3D%22M0%207h18v4H0V7z%22/%3E%3C/svg%3E" alt="" style="height: 18px; width: 18px;"></button></div></div></div></div><div><div style="margin: 0px 5px; z-index: 1000000; position: absolute; left: 0px; bottom: 0px;"><a target="_blank" rel="noopener" title="在 Google 地圖上開啟這個區域 (開啟新視窗)" aria-label="在 Google 地圖上開啟這個區域 (開啟新視窗)" href="https://maps.google.com/maps?ll=25.043025,121.525227&amp;z=18&amp;t=m&amp;hl=zh-TW&amp;gl=US&amp;mapclient=apiv3" style="display: inline;"><div style="width: 66px; height: 26px;"><img alt="Google" src="data:image/svg+xml,%3Csvg%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2069%2029%22%3E%3Cg%20opacity%3D%22.3%22%20fill%3D%22%23000%22%20stroke%3D%22%23000%22%20stroke-width%3D%221.5%22%3E%3Cpath%20d%3D%22M17.4706%207.33616L18.0118%206.79504%2017.4599%206.26493C16.0963%204.95519%2014.2582%203.94522%2011.7008%203.94522c-4.613699999999999%200-8.50262%203.7551699999999997-8.50262%208.395779999999998C3.19818%2016.9817%207.0871%2020.7368%2011.7008%2020.7368%2014.1712%2020.7368%2016.0773%2019.918%2017.574%2018.3689%2019.1435%2016.796%2019.5956%2014.6326%2019.5956%2012.957%2019.5956%2012.4338%2019.5516%2011.9316%2019.4661%2011.5041L19.3455%2010.9012H10.9508V14.4954H15.7809C15.6085%2015.092%2015.3488%2015.524%2015.0318%2015.8415%2014.403%2016.4629%2013.4495%2017.1509%2011.7008%2017.1509%209.04835%2017.1509%206.96482%2015.0197%206.96482%2012.341%206.96482%209.66239%209.04835%207.53119%2011.7008%207.53119%2013.137%207.53119%2014.176%208.09189%2014.9578%208.82348L15.4876%209.31922%2016.0006%208.80619%2017.4706%207.33616z%22/%3E%3Cpath%20d%3D%22M24.8656%2020.7286C27.9546%2020.7286%2030.4692%2018.3094%2030.4692%2015.0594%2030.4692%2011.7913%2027.953%209.39009%2024.8656%209.39009%2021.7783%209.39009%2019.2621%2011.7913%2019.2621%2015.0594c0%203.25%202.514499999999998%205.6692%205.6035%205.6692zM24.8656%2012.8282C25.8796%2012.8282%2026.8422%2013.6652%2026.8422%2015.0594%2026.8422%2016.4399%2025.8769%2017.2905%2024.8656%2017.2905%2023.8557%2017.2905%2022.8891%2016.4331%2022.8891%2015.0594%2022.8891%2013.672%2023.853%2012.8282%2024.8656%2012.8282z%22/%3E%3Cpath%20d%3D%22M35.7511%2017.2905v0H35.7469C34.737%2017.2905%2033.7703%2016.4331%2033.7703%2015.0594%2033.7703%2013.672%2034.7343%2012.8282%2035.7469%2012.8282%2036.7608%2012.8282%2037.7234%2013.6652%2037.7234%2015.0594%2037.7234%2016.4439%2036.7554%2017.2961%2035.7511%2017.2905zM35.7387%2020.7286C38.8277%2020.7286%2041.3422%2018.3094%2041.3422%2015.0594%2041.3422%2011.7913%2038.826%209.39009%2035.7387%209.39009%2032.6513%209.39009%2030.1351%2011.7913%2030.1351%2015.0594%2030.1351%2018.3102%2032.6587%2020.7286%2035.7387%2020.7286z%22/%3E%3Cpath%20d%3D%22M51.953%2010.4357V9.68573H48.3999V9.80826C47.8499%209.54648%2047.1977%209.38187%2046.4808%209.38187%2043.5971%209.38187%2041.0168%2011.8998%2041.0168%2015.0758%2041.0168%2017.2027%2042.1808%2019.0237%2043.8201%2019.9895L43.7543%2020.0168%2041.8737%2020.797%2041.1808%2021.0844%2041.4684%2021.7772C42.0912%2023.2776%2043.746%2025.1469%2046.5219%2025.1469%2047.9324%2025.1469%2049.3089%2024.7324%2050.3359%2023.7376%2051.3691%2022.7367%2051.953%2021.2411%2051.953%2019.2723v-8.8366zm-7.2194%209.9844L44.7334%2020.4196C45.2886%2020.6201%2045.878%2020.7286%2046.4808%2020.7286%2047.1616%2020.7286%2047.7866%2020.5819%2048.3218%2020.3395%2048.2342%2020.7286%2048.0801%2021.0105%2047.8966%2021.2077%2047.6154%2021.5099%2047.1764%2021.7088%2046.5219%2021.7088%2045.61%2021.7088%2045.0018%2021.0612%2044.7336%2020.4201zM46.6697%2012.8282C47.6419%2012.8282%2048.5477%2013.6765%2048.5477%2015.084%2048.5477%2016.4636%2047.6521%2017.2987%2046.6697%2017.2987%2045.6269%2017.2987%2044.6767%2016.4249%2044.6767%2015.084%2044.6767%2013.7086%2045.6362%2012.8282%2046.6697%2012.8282zM55.7387%205.22081v-.75H52.0788V20.4412H55.7387V5.22081z%22/%3E%3Cpath%20d%3D%22M63.9128%2016.0614L63.2945%2015.6492%2062.8766%2016.2637C62.4204%2016.9346%2061.8664%2017.3069%2061.0741%2017.3069%2060.6435%2017.3069%2060.3146%2017.2088%2060.0544%2017.0447%2059.9844%2017.0006%2059.9161%2016.9496%2059.8498%2016.8911L65.5497%2014.5286%2066.2322%2014.2456%2065.9596%2013.5589%2065.7406%2013.0075C65.2878%2011.8%2063.8507%209.39832%2060.8278%209.39832%2057.8445%209.39832%2055.5034%2011.7619%2055.5034%2015.0676%2055.5034%2018.2151%2057.8256%2020.7369%2061.0659%2020.7369%2063.6702%2020.7369%2065.177%2019.1378%2065.7942%2018.2213L66.2152%2017.5963%2065.5882%2017.1783%2063.9128%2016.0614zM61.3461%2012.8511L59.4108%2013.6526C59.7903%2013.0783%2060.4215%2012.7954%2060.9017%2012.7954%2061.067%2012.7954%2061.2153%2012.8161%2061.3461%2012.8511z%22/%3E%3C/g%3E%3Cpath%20d%3D%22M11.7008%2019.9868C7.48776%2019.9868%203.94818%2016.554%203.94818%2012.341%203.94818%208.12803%207.48776%204.69522%2011.7008%204.69522%2014.0331%204.69522%2015.692%205.60681%2016.9403%206.80583L15.4703%208.27586C14.5751%207.43819%2013.3597%206.78119%2011.7008%206.78119%208.62108%206.78119%206.21482%209.26135%206.21482%2012.341%206.21482%2015.4207%208.62108%2017.9009%2011.7008%2017.9009%2013.6964%2017.9009%2014.8297%2017.0961%2015.5606%2016.3734%2016.1601%2015.7738%2016.5461%2014.9197%2016.6939%2013.7454h-4.9931V11.6512h7.0298C18.8045%2012.0207%2018.8456%2012.4724%2018.8456%2012.957%2018.8456%2014.5255%2018.4186%2016.4637%2017.0389%2017.8434%2015.692%2019.2395%2013.9838%2019.9868%2011.7008%2019.9868zM29.7192%2015.0594C29.7192%2017.8927%2027.5429%2019.9786%2024.8656%2019.9786%2022.1884%2019.9786%2020.0121%2017.8927%2020.0121%2015.0594%2020.0121%2012.2096%2022.1884%2010.1401%2024.8656%2010.1401%2027.5429%2010.1401%2029.7192%2012.2096%2029.7192%2015.0594zM27.5922%2015.0594C27.5922%2013.2855%2026.3274%2012.0782%2024.8656%2012.0782S22.1391%2013.2937%2022.1391%2015.0594C22.1391%2016.8086%2023.4038%2018.0405%2024.8656%2018.0405S27.5922%2016.8168%2027.5922%2015.0594zM40.5922%2015.0594C40.5922%2017.8927%2038.4159%2019.9786%2035.7387%2019.9786%2033.0696%2019.9786%2030.8851%2017.8927%2030.8851%2015.0594%2030.8851%2012.2096%2033.0614%2010.1401%2035.7387%2010.1401%2038.4159%2010.1401%2040.5922%2012.2096%2040.5922%2015.0594zM38.4734%2015.0594C38.4734%2013.2855%2037.2087%2012.0782%2035.7469%2012.0782%2034.2851%2012.0782%2033.0203%2013.2937%2033.0203%2015.0594%2033.0203%2016.8086%2034.2851%2018.0405%2035.7469%2018.0405%2037.2087%2018.0487%2038.4734%2016.8168%2038.4734%2015.0594zM51.203%2010.4357v8.8366C51.203%2022.9105%2049.0595%2024.3969%2046.5219%2024.3969%2044.132%2024.3969%2042.7031%2022.7955%2042.161%2021.4897L44.0417%2020.7095C44.3784%2021.5143%2045.1997%2022.4588%2046.5219%2022.4588%2048.1479%2022.4588%2049.1499%2021.4487%2049.1499%2019.568V18.8617H49.0759C48.5914%2019.4612%2047.6552%2019.9786%2046.4808%2019.9786%2044.0171%2019.9786%2041.7668%2017.8352%2041.7668%2015.0758%2041.7668%2012.3%2044.0253%2010.1319%2046.4808%2010.1319%2047.6552%2010.1319%2048.5914%2010.6575%2049.0759%2011.2323H49.1499V10.4357H51.203zM49.2977%2015.084C49.2977%2013.3512%2048.1397%2012.0782%2046.6697%2012.0782%2045.175%2012.0782%2043.9267%2013.3429%2043.9267%2015.084%2043.9267%2016.8004%2045.175%2018.0487%2046.6697%2018.0487%2048.1397%2018.0487%2049.2977%2016.8004%2049.2977%2015.084zM54.9887%205.22081V19.6912H52.8288V5.22081H54.9887zM63.4968%2016.6854L65.1722%2017.8023C64.6301%2018.6072%2063.3244%2019.9869%2061.0659%2019.9869%2058.2655%2019.9869%2056.2534%2017.827%2056.2534%2015.0676%2056.2534%2012.1439%2058.2901%2010.1483%2060.8278%2010.1483%2063.3818%2010.1483%2064.6301%2012.1768%2065.0408%2013.2773L65.2625%2013.8357%2058.6843%2016.5623C59.1853%2017.5478%2059.9737%2018.0569%2061.0741%2018.0569%2062.1746%2018.0569%2062.9384%2017.5067%2063.4968%2016.6854zM58.3312%2014.9115L62.7331%2013.0884C62.4867%2012.4724%2061.764%2012.0454%2060.9017%2012.0454%2059.8012%2012.0454%2058.2737%2013.0145%2058.3312%2014.9115z%22%20fill%3D%22%23fff%22/%3E%3C/svg%3E" draggable="false" style="position: absolute; left: 0px; top: 0px; width: 66px; height: 26px; user-select: none; border: 0px; padding: 0px; margin: 0px;"></div></a></div></div><div></div><div><div style="display: inline-flex; position: absolute; right: 0px; bottom: 0px;"><div class="gmnoprint" style="z-index: 1000001;"><div draggable="false" class="gm-style-cc" style="user-select: none; position: relative; height: 14px; line-height: 14px;"><div style="opacity: 0.7; width: 100%; height: 100%; position: absolute;"><div style="width: 1px;"></div><div style="background-color: rgb(245, 245, 245); width: auto; height: 100%; margin-left: 1px;"></div></div><div style="position: relative; padding-right: 6px; padding-left: 6px; box-sizing: border-box; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(0, 0, 0); white-space: nowrap; direction: ltr; text-align: right; vertical-align: middle; display: inline-block;"><button draggable="false" aria-label="鍵盤快速鍵" title="鍵盤快速鍵" type="button" style="background: none; display: inline-block; border: 0px; margin: 0px; padding: 0px; text-transform: none; appearance: none; position: relative; cursor: pointer; user-select: none; color: rgb(0, 0, 0); font-family: inherit; line-height: inherit;">鍵盤快速鍵</button></div></div></div><div class="gmnoprint" style="z-index: 1000001;"><div draggable="false" class="gm-style-cc" style="user-select: none; position: relative; height: 14px; line-height: 14px;"><div style="opacity: 0.7; width: 100%; height: 100%; position: absolute;"><div style="width: 1px;"></div><div style="background-color: rgb(245, 245, 245); width: auto; height: 100%; margin-left: 1px;"></div></div><div style="position: relative; padding-right: 6px; padding-left: 6px; box-sizing: border-box; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(0, 0, 0); white-space: nowrap; direction: ltr; text-align: right; vertical-align: middle; display: inline-block;"><button draggable="false" aria-label="地圖資料" title="地圖資料" type="button" style="background: none; border: 0px; margin: 0px; padding: 0px; text-transform: none; appearance: none; position: relative; cursor: pointer; user-select: none; color: rgb(0, 0, 0); font-family: inherit; line-height: inherit; display: none;">地圖資料</button><span style="">地圖資料 ©2022 Google</span></div></div></div><div class="gmnoscreen"><div style="font-family: Roboto, Arial, sans-serif; font-size: 11px; color: rgb(0, 0, 0); direction: ltr; text-align: right; background-color: rgb(245, 245, 245);">地圖資料 ©2022 Google</div></div><div draggable="false" class="gm-style-cc" style="user-select: none; position: relative; height: 14px; line-height: 14px; display: none;"><div style="opacity: 0.7; width: 100%; height: 100%; position: absolute;"><div style="width: 1px;"></div><div style="background-color: rgb(245, 245, 245); width: auto; height: 100%; margin-left: 1px;"></div></div><div style="position: relative; padding-right: 6px; padding-left: 6px; box-sizing: border-box; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(0, 0, 0); white-space: nowrap; direction: ltr; text-align: right; vertical-align: middle; display: inline-block;"><span>20 公尺&nbsp;</span><div style="position: relative; display: inline-block; height: 8px; bottom: -1px; width: 41px;"><div style="width: 100%; height: 4px; position: absolute; left: 0px; top: 0px;"></div><div style="width: 4px; height: 8px; left: 0px; top: 0px; background-color: rgb(255, 255, 255);"></div><div style="width: 4px; height: 8px; position: absolute; background-color: rgb(255, 255, 255); right: 0px; bottom: 0px;"></div><div style="position: absolute; background-color: rgb(102, 102, 102); height: 2px; left: 1px; bottom: 1px; right: 1px;"></div><div style="position: absolute; width: 2px; height: 6px; left: 1px; top: 1px; background-color: rgb(102, 102, 102);"></div><div style="width: 2px; height: 6px; position: absolute; background-color: rgb(102, 102, 102); bottom: 1px; right: 1px;"></div></div></div></div><div class="gmnoprint gm-style-cc" draggable="false" style="z-index: 1000001; user-select: none; position: relative; height: 14px; line-height: 14px;"><div style="opacity: 0.7; width: 100%; height: 100%; position: absolute;"><div style="width: 1px;"></div><div style="background-color: rgb(245, 245, 245); width: auto; height: 100%; margin-left: 1px;"></div></div><div style="position: relative; padding-right: 6px; padding-left: 6px; box-sizing: border-box; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(0, 0, 0); white-space: nowrap; direction: ltr; text-align: right; vertical-align: middle; display: inline-block;"><a href="https://www.google.com/intl/zh-TW_US/help/terms_maps.html" target="_blank" rel="noopener" style="text-decoration: none; cursor: pointer; color: rgb(0, 0, 0);">使用條款</a></div></div><div draggable="false" class="gm-style-cc" style="user-select: none; position: relative; height: 14px; line-height: 14px; display: none;"><div style="opacity: 0.7; width: 100%; height: 100%; position: absolute;"><div style="width: 1px;"></div><div style="background-color: rgb(245, 245, 245); width: auto; height: 100%; margin-left: 1px;"></div></div><div style="position: relative; padding-right: 6px; padding-left: 6px; box-sizing: border-box; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(0, 0, 0); white-space: nowrap; direction: ltr; text-align: right; vertical-align: middle; display: inline-block;"><a target="_blank" rel="noopener" title="向 Google 回報道路地圖或圖像錯誤" dir="ltr" href="https://www.google.com/maps/@25.0430252,121.5252271,18z/data=!10m1!1e1!12b1?source=apiv3&amp;rapsrc=apiv3" style="font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(0, 0, 0); text-decoration: none; position: relative;">回報地圖錯誤</a></div></div></div></div></div></div></div>
+            </div>
+        </div>
+    </div>
+    <!--footer-->
+    <footer>
+        <div class="container footright">
+            <p><a href="https://goo.gl/maps/VARMRkiZqDQLhgWbA">100 台北市中正區濟南路一段321號</a></p>
+            <p><a href="tel:0233221368">02 3322 1368</a></p>
+            <p>© 2022 Alcoholic</p>
+        </div>
+    </footer>
+    <script src="./Red&#39;s Bar&#39;_files/bootstrap.bundle.min.js.下載"></script>
+    <script>
+        var app = new Vue({
+            el:'#d1',
+            data:{
+                MyDate: new Date,
+                Weekday: [
+                    { id: 0, name: '星期日 18:00-00:00' },
+                    { id: 1, name: '星期一 公休' },
+                    { id: 2, name: '星期二 18:00-00:00' },
+                    { id: 3, name: '星期三 18:00-00:00' },
+                    { id: 4, name: '星期四 18:00-00:00' },
+                    { id: 5, name: '星期五 18:00-02:00' },
+                    { id: 6, name: '星期六 18:00-02:00' }
+                ]
+            },
+            methods: {
+                bold: function (day, getDay) {
+                    if (day.id == getDay) {
+                        return 'open-hours-bold';
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        function myMap() {
+        var mapProp= {
+        center:new google.maps.LatLng(25.043025219011874, 121.52522706375855),
+        zoom:18,disableDefaultUI: true,zoomControl: true,
+            styles:[
+                { 
+                    elementType: 'geometry', stylers: [{color: '#242f3e'}] 
+                },
+                { 
+                    elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}] 
+                },
+                { 
+                    elementType: 'labels.text.fill', stylers: [{color: '#746855'}] 
+                },
+                {
+                    featureType: 'administrative.locality',
+                    elementType: 'labels.text.fill',
+                    stylers: [{color: '#d59563'}]
+                },
+                {
+                    featureType: 'poi',
+                    elementType: 'labels.text.fill',
+                    stylers: [{color: '#d59563'}]
+                },
+                {
+                    featureType: 'poi.park',
+                    elementType: 'geometry',
+                    stylers: [{color: '#263c3f'}]
+                },
+                {
+                    featureType: 'poi.park',
+                    elementType: 'labels.text.fill',
+                    stylers: [{color: '#6b9a76'}]
+                },
+                {
+                    featureType: 'road',
+                    elementType: 'geometry',
+                    stylers: [{color: '#38414e'}]
+                },
+                {
+                    featureType: 'road',
+                    elementType: 'geometry.stroke',
+                    stylers: [{color: '#212a37'}]
+                },
+                {
+                    featureType: 'road',
+                    elementType: 'labels.text.fill',
+                    stylers: [{color: '#9ca5b3'}]
+                },
+                {
+                    featureType: 'transit',
+                    elementType: 'geometry',
+                    stylers: [{color: '#2f3948'}]
+                },
+                {
+                    featureType: 'transit.station',
+                    elementType: 'labels.text.fill',
+                    stylers: [{color: '#d59563'}]
+                }
+            ]
+        };
+        var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+        var marker = new google.maps.Marker(
+            {
+                position: mapProp.center,
+                icon:"Images/icons/icon01.png",
+                animation:google.maps.Animation.BOUNCE,
+                
+            });
+        marker.setMap(map);
+        }
+
+        let recommand = document.getElementById("recommand");
+        let classic = document.getElementById("classic");
+        let recommandclass = document.getElementsByClassName("recommand")[0];
+        let classicclass = document.getElementsByClassName("classic")[0];
+
+        recommand.addEventListener("mouseenter",popOutRe);
+        recommand.addEventListener("mouseenter",display);
+        recommand.addEventListener("mouseout",popOutRe);
+        classic.addEventListener("mouseenter",popOutCl);
+        classic.addEventListener("mouseenter",display);
+        classic.addEventListener("mouseout",popOutCl);
+
+        var ms = 0;
+        var countdown;
+
+        function popOutRe(){
+            recommandclass.classList.toggle("showup");
+            clearInterval(countdown);
+            ms = 0;
+            recommandclass.style.opacity = 0;
+        }
+        function popOutCl(){
+            classicclass.classList.toggle("showup");
+            clearInterval(countdown);
+            ms = 0;
+            classicclass.style.opacity = 0;
+        }
+        function display(){
+            countdown = setInterval(()=>{
+                ms = ms + 0.04
+                recommandclass.style.opacity = ms; 
+                classicclass.style.opacity = ms;
+            },30);
+        }
+
+        
+    </script>    
+    <script src="./Red&#39;s Bar&#39;_files/js"></script>
+
+<!-- Visual Studio Browser Link -->
+<script type="text/javascript" src="./Red&#39;s Bar&#39;_files/browserLink" async="async" id="__browserLink_initializationData" data-requestid="1864b35d6c04416ea0c4b5a0d1ff25f0" data-requestmappingfromserver="false" data-connecturl="http://localhost:52361/2acac9700c934062afba81eac6fa4e22/browserLink"></script>
+<!-- End Browser Link -->
+
+<script src="./Red&#39;s Bar&#39;_files/aspnetcore-browser-refresh.js.下載"></script>
+
+<live-preview-root></live-preview-root></body></html>

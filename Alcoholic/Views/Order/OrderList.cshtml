@@ -638,16 +638,13 @@
             for (i = 0; i < cartArray.length + 1; i++) {
                 //初始化
                 if (i == 0 && cartArray.length < 1) {
-                    console.log("初次");
                     item.qty = selProd.value
                     cartArray.push(item);
                     cartStr = JSON.stringify(cartArray);
-                    console.log(cartStr);
                     break;
                 }
                 //已添加至購物車
                 else if (item.id == cartArray[i].id) {
-                    console.log("重複");
                     item.qty = selProd.value;
                     cartArray[i].qty = (cartArray[i].qty * 1 + item.qty * 1).toString();
                     cartStr = JSON.stringify(cartArray);
@@ -655,17 +652,12 @@
                 }
                 //找完陣列且尚未添加至購物車
                 else if (item.id != cartArray[i].id && i == cartArray.length - 1) {
-                    console.log("不重複");
                     item.qty = selProd.value;
                     cartArray.push(item);
                     cartStr = JSON.stringify(cartArray);
-                    console.log(cartStr);
                     break;
                 }
-                //陣列回圈跑完前持續找
-                else {
-                    console.log("繼續找");
-                }
+                
 
             }
             const Toast = Swal.mixin({
@@ -700,15 +692,16 @@
     });
 
     function addCartSession() {
-        console.log(cartStr);
         fetch("/Order/AddToCart", {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
             body: cartStr,
         })
-            .then((e) => console.log(e))
+            .then((e) =>  e.text())
             .then((result) => {
-                console.log(result)
+                if(result){
+                    window.location.href = "/Order/Cart"
+                }
             }).catch(error => console.log(error))
     }
 </script>

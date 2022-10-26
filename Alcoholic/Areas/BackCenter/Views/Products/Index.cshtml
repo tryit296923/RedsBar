@@ -4,11 +4,11 @@
 }
 
 <style>
-    .addproducttitle {
+    .addproducttitle, .editproducttitle {
         background-color: #842029;
     }
 
-    .addproducttitle h3 {
+        .addproducttitle h3, .editproducttitle h3{
         color: white;
     }
     /*表格*/
@@ -22,9 +22,6 @@
         line-height: 30px;
     }
 
-    .productmanage td{
-        line-height: 100px;
-    }
 
     .productmanage tbody tr:hover{
         background-color: rgb(241, 241, 241);
@@ -55,8 +52,12 @@
     .multiselect__tag {
         background-color: #C28C2E
     }
-</style>
 
+    .multiselect__tag-icon {
+        color: white
+    }
+</style>
+<div id="prod">
 <div class="productmanage container-fluid p-5">
     <div class="spacebetween row-cols-2 mb-3">
         <h3>商品管理</h3>
@@ -65,7 +66,7 @@
         </button>
     </div>
     <hr>
-    <div id="prod" class="products">
+    <div class="products">
         <table class="table">
             <thead>
                 <tr>
@@ -85,7 +86,7 @@
                     <td>{{item.price}}</td>
                     <td>{{item.description}}</td>
                     <td>
-                        <button class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button :id="item.id" class="btnproducts" data-bs-toggle="modal" data-bs-target="#editProd" @@click="[seleEdit($event),loadDiscount()]"><i class="fa-solid fa-pen-to-square"></i></button>
                     </td>
                     <td>
                     <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
@@ -94,10 +95,66 @@
             </tbody>
         </table>
     </div>
+    </div>
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editProd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="editProdLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header editproducttitle">
+                    <h3 class="modal-title" id="editProd">編輯商品</h3>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body container productEditing">
+                    <div class="row">
+                        <div class="col-12 my-2">
+                            <label for="productPic">圖片：</label>
+                            <img class="modal-image" :src="imagesrc" />
+                        </div>
+                        <div class="col-12 my-2">
+                            <label for="productName" class="form-label">商品名稱：</label>
+                            <input type="text" class="form-control w-100" id=" productName" v-model="name" required>
+                        </div>
+                        <div class="col-6 my-2">
+                            <label for="productCost" class="form-label">商品成本：</label>
+                            <input type="number" class="form-control w-100" placeholder="NTD" id="productCost" v-model="cost" min="0" required>
+                        </div>
+                        <div class="col-6 my-2">
+                            <label for="productPrice" class="form-label">商品售價：</label>
+                            <input type="number" class="form-control w-100" placeholder="NTD" id="productPrice" v-model="price" min="0" required>
+                        </div>
+                        <div class="col-12 my-2">
+                            <label for="productDescription" class="form-label">商品敘述：</label>
+                            <input type="text" class="form-control w-100" placeholder="請簡述特色" id="productDescription" v-model="description" required>
+                        </div>
+                        <div id="multipleselect" class="col-12 ">
+                                <div class="col-12 ">
+                                <label class="my-2">折扣：</label>
+                                <multiselect v-model="discount" placeholder="請選擇折扣" label="discountName" track-by="discountId" :options="discountOpt"  :allow-empty="false">
+                                    <template slot="singleLabel" slot-scope="props">  <span>{{ props.option.discountName }}</span></template>
+                                    <template slot="option" slot-scope="props">
+                                        <div><span>{{ props.option.discountName }}</span></div>
+                                    </template>
+                                </multiselect>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row m-0">
+                        <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                        <button class=" col btneditproducts m-1" type="button" v-on:click="send"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 
-<!-- Modal -->
+<!-- Create Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
      aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -162,29 +219,101 @@
 
 
 <script>
+    let allProds=[];
+    
     let prod = new Vue({
         el: "#prod",
         data:{
             product:[],
+            vueid: "",
+            imagesrc: "",
+            name: "",
+            cost:"",
+            price:"",
+            discount:{
+                discountId:"",
+                discountName:""
+            },
+            description: "",
+            discountOpt: [
+                { discountId: '1', discountName: 'default' },
+                { discountId: '2', discountName: 'regular' },
+                { discountId: '3' ,discountName: 'bronze' },
+                { discountId: '4', discountName: 'silver' },
+                { discountId: '5', discountName: 'golden' },
+                { discountId: '6' ,discountName: 'earlybird' }
+            ],
+            testD:[],
         },
-        created: function () {
+        components: {
+            Multiselect: window.VueMultiselect.default
+        },
+        
+        methods: {
+            seleEdit: function (e) {
+                this.vueid = e.currentTarget.id;
+                var item = this.product[this.vueid - 1];
+                var self = this.product;
+                this.imagesrc = item.path;
+                this.name = item.name;
+                this.cost = item.cost;
+                this.price = item.price;
+                this.description = item.description;
+                this.discount.discountId = item.discountId;
+                this.discount.discountName = item.discountName;
+            },
+            loadDiscount:function(){
+                console.log("test")
+                for(i=0;i<this.product.length;i++){
+                    var tempDiscount = { discountId :"",discountName:""};
+                    tempDiscount.discountId = this.product[i].discountId;
+                    tempDiscount.discountName = this.product[i].discountName;
+                    console.log(tempDiscount);
+                }
+            },
+            send: function () {
+                let data = new FormData();
+                data.append("ProductName", this.createProductData.productName)
+                data.append("Cost", this.createProductData.productCost)
+                data.append("UnitPrice", this.createProductData.productPrice)
+                data.append("ProductDescription", this.createProductData.productDescription)
+                var img = this.$refs.myVueDropzone.getQueuedFiles();
+                img.forEach(x => data.append("Images", x));
+                this.$refs.myVueDropzone.removeAllFiles();
+                this.createProductData.productName = "";
+                this.createProductData.productPrice = "";
+                this.createProductData.productCost = "";
+                this.createProductData.productDescription = "";
+                this.createProductData.images = [];
+
+                fetch("/api/Products/CreateProduct", {
+                    method: 'POST',
+                    //headers: { "Content-Type": "multipart/form-data" },
+                    body: data
+                })
+            }
+        },
+        mounted:function(){
             let self = this;
-            fetch("/api/Products/GetAllProducts")
+            fetch("/api/Products/GetAllBackProducts")
                 .then((response) => response.json())
-                .then((result) => self.product = result)
+                .then((result) => {self.product = result;allProds = result;});
+            fetch("/api/Products/GetDiscount")
+            .then(response=>response.json())
+            .then(result=>)
+            
         }
     })
     let app = new Vue({
         el: "#staticBackdrop",
         data: {
+            product:[],
             createProductData: {
                 productName: "",
                 productPrice: "",
                 productCost: "",
                 productDescription: "",
                 images: [],
-                
-
             },
             fileRecords: [
                 {
@@ -232,9 +361,12 @@
                 { name: 'Vodka', baseId: '6' },
             ],
             discountselected: [
-                { name: '原價', discountId: '1' },
-                { name: '8折', discountId: '2' },
-                { name: '7折', discountId: '3' }
+                { discountId: '1', discountName: 'default' },
+                { discountId: '2', discountName: 'regular' },
+                { discountId: '3' ,discountName: 'bronze' },
+                { discountId: '4', discountName: 'silver' },
+                { discountId: '5', discountName: 'golden' },
+                { discountId: '6' ,discountName: 'earlybird' }
             ],
             basevalue: "",
             discountvalue: "",
@@ -276,6 +408,13 @@
                 this.options.push(tag)
                 this.value.push(tag)
             }
+        },
+        mounted: function () {
+            let self = this;
+            fetch("/api/Products/GetAllBackProducts")
+                .then((response) => response.json())
+                .then((result) => { self.product = result});
+
         }
     })
 </script>

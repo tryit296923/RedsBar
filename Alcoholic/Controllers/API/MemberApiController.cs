@@ -9,8 +9,6 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Razor.Templating.Core;
-using static NuGet.Packaging.PackagingConstants;
-using System.Xml.Linq;
 
 namespace Alcoholic.Controllers.API
 {
@@ -103,6 +101,10 @@ namespace Alcoholic.Controllers.API
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
+                return Ok(false);
+            }
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("MemberID")))
+            {
                 return Ok(false);
             }
             Member? user = (from member in db.Members
@@ -222,17 +224,16 @@ namespace Alcoholic.Controllers.API
             Guid? memberId = Guid.Parse(ses);
 
             Member? member = db.Members.Select(x => x).Where(x => x.MemberID == memberId).FirstOrDefault();
-            List<int> total = new();
+
             List<Product> Products = new();
             foreach (Order order in member.Orders)
             {
                 foreach (OrderDetail od in order.OrderDetails)
                 {
-                    total.Add(od.Total);
                     Products.Add(od.Product);
                 }
             }
-            int sum = total.Sum();
+
             int disId = member.MemberLevel + 1;
             float dis = (from d in db.Discount where d.DiscountId == disId select d.DiscountAmount).FirstOrDefault();
             var products = Products.GroupBy(x => x.ProductId).OrderByDescending(x => x.Count()).Select(x => x.First()).ToList();
@@ -243,10 +244,13 @@ namespace Alcoholic.Controllers.API
                 birth = member.MemberBirth,
                 mail = member.Email,
                 phone = member.Phone,
-                total = sum,
                 discount = dis,
                 products = products
             };
+            foreach(Order o in member.Orders)
+            {
+                dataPageModel.total += o.Total.GetValueOrDefault();
+            }
 
             switch (member.MemberLevel)
             {
@@ -272,6 +276,19 @@ namespace Alcoholic.Controllers.API
                     break;
             }
             return Ok(dataPageModel);
+        }
+
+        public List<Order> GetOrders()
+        {
+            string? ses = HttpContext.Session.GetString("MemberID");
+            Guid? memberId = Guid.Parse(ses);
+            Member? member = db.Members.Select(x => x).Where(x => x.MemberID == memberId).FirstOrDefault();
+            List<Order> details = new();
+            foreach(Order o in member.Orders)
+            {
+                details.Add(o);
+            }
+            return details;
         }
 
         [HttpPut]
@@ -311,19 +328,16 @@ namespace Alcoholic.Controllers.API
         public void MemberLvl(string account)
         {
             Member? member = (from m in db.Members where m.MemberAccount == account select m).FirstOrDefault();
-            if (member == null)
+            if (member == null || member.Orders.FirstOrDefault() == null)
             {
                 return;
             }
-            List<int> total = new();
-            foreach(Order order in member.Orders)
+            int sum = 0;
+            foreach (Order order in member.Orders)
             {
-                foreach(OrderDetail od in order.OrderDetails)
-                {
-                    total.Add(od.Total);
-                }
+                sum += order.Total.GetValueOrDefault();
             }
-            int sum = total.Sum();
+
             int level = 0;
             switch (sum)
             {

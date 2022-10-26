@@ -6,44 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>酒精算命</title>
+    <style>
+        body{
+            background-color: #222220;
+            color: azure;
+            min-width: 390px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#page1" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Home</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#page2" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Profile</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#page3" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Contact</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#page4" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Disabled</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#page5" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Disabled</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#page5A" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Disabled</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#page5B" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Disabled</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#page6" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Disabled</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#page7" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Disabled</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#page8" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Disabled</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#final" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Disabled</button>
-            </li>
+            <button data-bs-toggle="tab" data-bs-target="#page1"  id="btnpage1">Home</button>
+            <button data-bs-toggle="tab" data-bs-target="#page2"  id="btnpage2">Profile</button>
+            <button data-bs-toggle="tab" data-bs-target="#page3"  id="btnpage3">Contact</button>
+            <button data-bs-toggle="tab" data-bs-target="#page4"  id="btnpage4" >Disabled</button>
+            <button data-bs-toggle="tab" data-bs-target="#page5"  id="btnpage5" >Disabled</button>
+            <button data-bs-toggle="tab" data-bs-target="#page5A" id="btnpage5A" >Disabled</button>
+            <button data-bs-toggle="tab" data-bs-target="#page5B" id="btnpage5B" >Disabled</button>
+            <button data-bs-toggle="tab" data-bs-target="#page6"  id="btnpage6" >Disabled</button>
+            <button data-bs-toggle="tab" data-bs-target="#page7"  id="btnpage7" >Disabled</button>
+            <button data-bs-toggle="tab" data-bs-target="#page8"  id="btnpage8" >Disabled</button>
+            <button data-bs-toggle="tab" data-bs-target="#final"  id="btnfinal" >Disabled</button>
         </ul>        
     </div>
     <div class="container">

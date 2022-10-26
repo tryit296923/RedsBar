@@ -1,6 +1,5 @@
 using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
-using Alcoholic.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -13,13 +12,9 @@ namespace Alcoholic.Controllers
     public class MemberController : Controller
     {
         private readonly db_a8de26_projectContext db;
-        private readonly MailService mail;
-        private readonly HashService hash;
-        public MemberController(db_a8de26_projectContext db, MailService mail, HashService hash)
+        public MemberController(db_a8de26_projectContext db)
         {
             this.db = db;
-            this.mail = mail;
-            this.hash = hash;
         }
         public IActionResult Member()
         {
@@ -38,7 +33,6 @@ namespace Alcoholic.Controllers
         {
             return View();
         }
-
         // Forget.cshtml => /api/Member/Sendpw => NewPwMail.cshtml => /member/ResetPw => ResetPw.cshtml => api/member/SetNewPw => member/NewPwSuccess 
         public IActionResult Forget()
         {
@@ -87,20 +81,5 @@ namespace Alcoholic.Controllers
             db.SaveChanges();
             return View("AuthSuccess");
         }
-
-        [HttpPut]
-        public async Task<IActionResult> ModifyData(string id, Member memberData)
-        {
-            if (id != memberData.MemberID.ToString())
-            {
-                return BadRequest();
-            }
-            db.Entry(memberData).State = EntityState.Modified;
-            await db.SaveChangesAsync();
-            return NoContent();
-        }
-
-     
     }
-
 }

@@ -35,21 +35,24 @@
     .checkdetail {
         border: 1px solid #D8CDB9;
         border-radius: 0.375rem;
-        
     }
 
-    .checkdetail p {
-        margin-bottom: 0px;
-    }
+        .checkdetail p {
+            margin-bottom: 0px;
+        }
 
     .checkinfotext {
         font-size: larger;
     }
 
-    .orderDetail{
-        display:flex;
-        justify-content:space-between;
-        font-size:large;
+    .orderDetail {
+        display: flex;
+        justify-content: space-between;
+        font-size: large;
+    }
+
+    .orderDetailTitle {
+        font-weight: bold;
     }
 
     .total {
@@ -68,7 +71,7 @@
         align-items: center;
         justify-content: center;
         margin-top: 20px;
-        font-size:large;
+        font-size: large;
     }
 
     .btnonlinepay {
@@ -80,10 +83,10 @@
         font-weight: bold;
     }
 
-    .btnonlinepay:active {
-        background-color: #C28C2E;
-        color: white;
-    }
+        .btnonlinepay:active {
+            background-color: #C28C2E;
+            color: white;
+        }
 
     .btnfrontdesk {
         background-color: #721B29;
@@ -94,35 +97,35 @@
         font-weight: bold;
     }
 
-    .btnfrontdesk:active {
-        background-color: #C28C2E;
+        .btnfrontdesk:active {
+            background-color: #C28C2E;
+        }
+
+    .modal-content {
+        color: black;
     }
 
-    .modal-content{
-        color:black;
+    .modal-footer {
+        justify-content: center;
     }
 
-    .modal-footer{
-        justify-content:center;
+    .btnpaymentinstrument {
+        display: flex;
+        justify-content: center;
     }
 
-    .btnpaymentinstrument{
-        display:flex;
-        justify-content:center;
+    .paybycreditcard {
+        font-size: x-large;
     }
-    
-    .paybycreditcard{
-        font-size:x-large;
-    }
-    
-    .icon{
-        display:flex;
-        align-items:center;
+
+    .icon {
+        display: flex;
+        align-items: center;
     }
 </style>
 
 <div class="container">
-    <div class="row">
+    <div class="row" id="orderCheck">
         <!-- 標題 -->
         <div class="container-fluid colorbox py-2 col-10 col-xl-8 text-center">
             <div class="thankmessage">消費明細</div>
@@ -130,32 +133,32 @@
         <br>
         <div class="detailbox container-fluid col-10 col-xl-8 px-0">
             <!-- 訂單簡單資訊 -->
-            <div class="checkdetail p-3" id="orderCheck">
+            <div class="checkdetail p-3">
                 <div class="px-3">
-                <p class="checkinfotext ordertime">日期 : @ViewBag.orderTime</p>
+                    <p class="checkinfotext ordertime">日期 : @ViewBag.orderTime</p>
                     <p class="checkinfotext tablenum">桌號 : @ViewBag.Desk</p>
                     <p class="checkinfotext custnum">用餐人數 : @ViewBag.Number 人</p>
                 </div>
                 <hr>
                 <ul class="px-3">
-                    <li class="orderDetail">
-                        <span>商品名</span>
-                        <span>數量</span>
+                    <li class="orderDetail orderDetailTitle row">
+                        <span class="col-7">商品名</span>
+                        <span class="col-3 text-center">數量</span>
+                        <hr>
                     </li>
-                    <li class="orderDetail" v-for="items in cartTotal">
-                        <span>{{items.item.productName}}</span>
-                        <span class="pe-3">{{items.cnt}}</span>
+                    <li class="orderDetail row" v-for="items in cartTotal">
+                        <span class="col-7">{{items.item.productName}}</span>
+                        <span class="pe-3 col-3 text-center">{{items.cnt}}</span>
                     </li>
                 </ul>
                 <hr>
                 <p class="colorbox total mt-0">今日消費總計 : @ViewBag.totalPrice 元</p>
             </div>
-
             <!-- 底部選單按鈕 -->
             <div class="paymentway">
                 <div class="container row w-100 px-0">
                     <div class="col col-xl-6 text-center">
-                        <button type="button" class="btnonlinepay w-100 py-2"data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        <button type="button" class="btnonlinepay w-100 py-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                             線上支付
                         </button>
                     </div>
@@ -175,16 +178,16 @@
                         </div>
                         <div class="modal-footer row">
                             <div class="col-12">
-                                <a href="" class="btn btnpaymentinstrument paybycreditcard">
-                                <i class="fa-solid fa-credit-card icon"></i>
+                                <a v-on:click.prevent="pay('credit')" class="btn btnpaymentinstrument paybycreditcard">
+                                    <i class="fa-solid fa-credit-card icon"></i>
                                     &nbsp信用卡支付
-                            </a>
+                                </a>
                             </div>
                             <div class="col-12 w-50">
-                            <a href="" class="btn btnpaymentinstrument"><img src="~/images/icons/googlepay.jpg" class="w-50"/></a>
+                                <a v-on:click.prevent="pay('googlepay')" class="btn btnpaymentinstrument"><img src="~/images/icons/googlepay.jpg" class="w-50" /></a>
                             </div>
-                                <div class="col-12">
-                                <a href="" class="btn btnpaymentinstrument"><img src="/images/icons/LINE-Pay(h)_W119_n.png" class="" /></a>
+                            <div class="col-12">
+                                <a v-on:click.prevent="pay('linepay')" class="btn btnpaymentinstrument"><img src="/images/icons/LINE-Pay(h)_W119_n.png" class="" /></a>
                             </div>
                         </div>
                     </div>
@@ -196,13 +199,37 @@
 <script>
     var app = new Vue({
         el: "#orderCheck",
-        data(){
-            return{
-                cartTotal : @Html.Raw(Json.Serialize(Model))
-            }
+        data() {
+            return {
+                cartTotal: @Html.Raw(Json.Serialize(Model))
+                }
         },
-        method:{
+        methods: {
+            pay: function (paytype) {
+                fetch("/api/order/payment", {
+                    body: JSON.stringify({ OrderId: "", PayType: paytype }),
+                    headers: { 'content-type': 'application/json' },
+                    method: "POST"
+                })
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log(result);
+                        var form = document.createElement("form");
+                        form.method = 'post';
+                        form.action = "https://ccore.newebpay.com/MPG/mpg_gateway";
+                        Object.entries(result).forEach(x => {
+                            var inp = document.createElement("input");
+                            inp.value = x[1];
+                            inp.name = x[0].charAt(0).toUpperCase() + x[0].slice(1);
+                            inp.type = "hidden";
+                            form.append(inp);
+                        });
+                        window.document.body.appendChild(form);
+                        form.submit();
+                    })
+            }
 
         }
+
     })
 </script>

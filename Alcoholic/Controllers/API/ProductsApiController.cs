@@ -3,6 +3,8 @@ using Alcoholic.Models.Entities;
 using Alcoholic.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Xml.Linq;
@@ -71,6 +73,38 @@ namespace Alcoholic.Controllers.API
                     };
 
             return menu;
+        }
+        [HttpGet]
+        public IEnumerable<BackProdModel> GetAllBackProducts()
+        {
+            var prod = from pro in _db.Products
+                       join path in _db.ProductImage
+                       on pro.ProductId equals path.ProductId
+                       select new BackProdModel
+                       {
+                           Id = pro.ProductId,
+                           Name = pro.ProductName,
+                           Description = pro.ProductDescription,
+                           Price = pro.UnitPrice,
+                           Path = path.Path,
+                           Cost = pro.Cost,
+                           DiscountId = pro.Discount.DiscountId,
+                           DiscountName = pro.Discount.DiscountName,
+                       };
+
+            return prod;
+        }
+        [HttpGet]
+        public IEnumerable<Discount> GetDiscount()
+        {
+            var disLv = from lv in _db.Discount
+                       select new Discount
+                       {
+                           DiscountId = lv.DiscountId,
+                           DiscountName = lv.DiscountName,
+                       };
+
+            return disLv;
         }
 
         [HttpPost]

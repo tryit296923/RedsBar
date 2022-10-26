@@ -20,10 +20,11 @@ namespace Alcoholic.Controllers
             return RedirectToAction("Cart", "Order");
         }
         [HttpPost]
-        public IActionResult AddToCart([FromBody] List<CartItem> cartItem)
+        public bool AddToCart([FromBody] List<CartItem> cartItem)
         {
             if (cartItem == null)
             {
+                return false;
             }
             else
             {
@@ -49,32 +50,24 @@ namespace Alcoholic.Controllers
                             {
                                 sesItem[S].Qty += cartItem[i].Qty;
                                 addItem.Add(sesItem[S]);
-                                Console.WriteLine($"產品ID{sesItem[i].Id}產品數量{sesItem[i].Qty}");
                                 break;
                             }
                             //找完集合沒有重復產品
-                            else if (sesItem[S].Id != cartItem[i].Id & S == sesItem.Count - 1)
+                            else if (sesItem[S].Id != cartItem[i].Id && S == sesItem.Count - 1)
                             {
-                                Console.WriteLine("新商品");
                                 sesItem.Add(cartItem[i]);
-                                Console.WriteLine(addItem);
                                 break;
                             }
-                            else
-                            {
-                                Console.WriteLine("找");
-
-                            }
+                            
                         }
                     }
                     //cartString為購物車字串，additem為物件
-                    Console.WriteLine(sesItem);
                     var cartString = JsonConvert.SerializeObject(sesItem);
                     HttpContext.Session.SetString("CartItem", cartString);
-                    Console.WriteLine(sesStr);
                 }
+                return true;
+
             }
-            return RedirectToAction("Cart","Order");
 
         }
         public IActionResult Cart()
@@ -151,7 +144,9 @@ namespace Alcoholic.Controllers
         {
             string sDeskTotal = HttpContext.Session.GetString("Desk");
 
-            var orderDetail = (from y in projectContext.Orders where y.Status == "N" && y.DeskNum == sDeskTotal select y).Select(y => new OrderViewModel
+            var orderDetail = (from y in projectContext.Orders 
+                               where y.Status == "N" && y.DeskNum == sDeskTotal 
+                               select y).Select(y => new OrderViewModel
             {
                 Desk = y.DeskNum,
                 Number = y.Number,
@@ -167,7 +162,8 @@ namespace Alcoholic.Controllers
                     OrderId = z.OrderId,
                     UnitPrice = z.UnitPrice,
                     DiscountAmount = z.Product.Discount.DiscountAmount,
-                    Path = z.Product.Images.FirstOrDefault().Path
+                    Path = z.Product.Images.FirstOrDefault().Path,
+                    Sequence = z.Sequence,
                 }).ToList(),
             }).ToList();
 

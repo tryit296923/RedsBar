@@ -332,6 +332,9 @@ namespace Alcoholic.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Total")
+                        .HasColumnType("int");
+
                     b.HasKey("OrderId");
 
                     b.HasIndex("MemberId");
@@ -358,9 +361,6 @@ namespace Alcoholic.Migrations
 
                     b.Property<string>("Rate")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Total")
-                        .HasColumnType("int");
 
                     b.Property<int>("UnitPrice")
                         .HasColumnType("int");
