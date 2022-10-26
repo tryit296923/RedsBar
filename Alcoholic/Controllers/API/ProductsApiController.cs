@@ -95,10 +95,10 @@ namespace Alcoholic.Controllers.API
             return prod;
         }
         [HttpGet]
-        public IEnumerable<Discount> GetDiscount()
+        public IEnumerable<DiscountModel> GetDiscount()
         {
             var disLv = from lv in _db.Discount
-                       select new Discount
+                       select new DiscountModel
                        {
                            DiscountId = lv.DiscountId,
                            DiscountName = lv.DiscountName,

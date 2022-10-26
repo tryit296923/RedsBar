@@ -31,7 +31,7 @@
                     <td>{{item.price}}</td>
                     <td>{{item.description}}</td>
                     <td>
-                            <button :id="item.id" class="btnproducts" data-bs-toggle="modal" data-bs-target="#editProd" @@click="[seleEdit($event),loadDiscount()]"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button :id="item.id" class="btnproducts" data-bs-toggle="modal" data-bs-target="#editProd" @@click="[seleEdit($event)]"><i class="fa-solid fa-pen-to-square"></i></button>
                     </td>
                     <td>
                     <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
@@ -76,7 +76,7 @@
                         <div id="multipleselect" class="col-12 ">
                                 <div class="col-12 ">
                                 <label class="my-2">折扣：</label>
-                                <multiselect v-model="discount" placeholder="請選擇折扣" label="discountName" track-by="discountId" :options="discountOpt"  :allow-empty="false">
+                                <multiselect v-model="discount" placeholder="請選擇折扣" label="discountName" track-by="discountId" :options="discountOpt" :allow-empty="false">
                                     <template slot="singleLabel" slot-scope="props">  <span>{{ props.option.discountName }}</span></template>
                                     <template slot="option" slot-scope="props">
                                         <div><span>{{ props.option.discountName }}</span></div>
@@ -180,6 +180,7 @@
                 discountName:""
             },
             description: "",
+            allDiscount:[],
             discountOpt: [
                 { discountId: '1', discountName: 'default' },
                 { discountId: '2', discountName: 'regular' },
@@ -188,7 +189,6 @@
                 { discountId: '5', discountName: 'golden' },
                 { discountId: '6' ,discountName: 'earlybird' }
             ],
-            testD:[],
         },
         components: {
             Multiselect: window.VueMultiselect.default
@@ -207,15 +207,15 @@
                 this.discount.discountId = item.discountId;
                 this.discount.discountName = item.discountName;
             },
-            loadDiscount:function(){
-                console.log("test")
-                for(i=0;i<this.product.length;i++){
-                    var tempDiscount = { discountId :"",discountName:""};
-                    tempDiscount.discountId = this.product[i].discountId;
-                    tempDiscount.discountName = this.product[i].discountName;
-                    console.log(tempDiscount);
-                }
-            },
+            //loadDiscount:function(){
+            //    console.log("test")
+            //    for(i=0;i<this.product.length;i++){
+            //        var tempDiscount = { discountId :"",discountName:""};
+            //        tempDiscount.discountId = this.product[i].discountId;
+            //        tempDiscount.discountName = this.product[i].discountName;
+            //        console.log(tempDiscount);
+            //    }
+            //},
             send: function () {
                 let data = new FormData();
                 data.append("ProductName", this.createProductData.productName)
@@ -245,9 +245,8 @@
                 .then((result) => {self.product = result;allProds = result;});
             fetch("/api/Products/GetDiscount")
             .then(response=>response.json())
-            .then(result=>)
-            
-        }
+                .then(result => this.allDiscount =result.concat())
+                }
     })
     let app = new Vue({
         el: "#staticBackdrop",
