@@ -294,9 +294,9 @@
         </div>
         <hr>
         <div class="products">
-            <template v-for="(product,index) in model.products">
+            <template v-for="product in model.orders">
                 <div class="m-4" >
-                    <img :src="product.images[0].path"  alt="">
+                    <img :src="product.path"  alt="">
                     <hr>
                     <p>{{product.productName}}</p>
                 </div>
