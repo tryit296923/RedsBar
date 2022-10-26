@@ -165,7 +165,7 @@ namespace Alcoholic.Controllers
                     Path = z.Product.Images.FirstOrDefault().Path,
                     Sequence = z.Sequence,
                 }).ToList(),
-            }).ToList();
+            }).FirstOrDefault();
 
             return View(orderDetail);
 
@@ -206,7 +206,7 @@ namespace Alcoholic.Controllers
         {
             return View();
         }
-        public IActionResult Check(int totalPrice)
+        public IActionResult Check(int total, string orderId)
         {
             var now = DateTime.Now.ToString("yyyy/MM/dd");
             string sDeskCheck = HttpContext.Session.GetString("Desk");
@@ -216,7 +216,9 @@ namespace Alcoholic.Controllers
             ViewBag.orderTime = now;
             ViewBag.Number = sNumberCheck;
             ViewBag.Desk = sDeskCheck;
-            ViewBag.totalPrice = totalPrice;
+            ViewBag.total = total;
+            ViewBag.orderId = orderId;
+
 
             var cartTotal = (from o in projectContext.OrderDetails
                              where o.Order.MemberId == Guid.Parse(sMemberID) && o.Order.Status == "N"

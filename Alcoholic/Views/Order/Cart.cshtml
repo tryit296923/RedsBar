@@ -407,10 +407,9 @@
                     body: JSON.stringify(x),
                     headers: { 'content-type': 'application/json' },
                     method: 'POST'
-                })
+                    })
                     .then(result => result.json())
                     .then(result => {
-
                         if (result.status == 1) {
                             console.log(result);
                             //console.log(this.orderId);
