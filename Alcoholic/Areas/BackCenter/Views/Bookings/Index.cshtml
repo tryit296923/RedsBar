@@ -2,65 +2,12 @@
     ViewData["Title"] = "訂位管理";
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.2/dist/sweetalert2.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.css">
-<style>
-    .table {
-        text-align: center;
-    }
-    .bookinginfo button {
-        line-height: 24px;
-    }
-    /*當日訂位*/
-    .bookingtoday {
-        border: 1px solid rgb(215, 215, 215);
-        border-radius: 0.375rem;
-    }
-    .todaydata {
-        width: 100%;
-        justify-content: space-around;
-    }
-    .todaydata thead {
-        background-color: #D8CDB9;
-        height: 30px;
-        line-height: 30px;
-    }
-
-    .bookinginfo thead{
-        background-color: rgb(215, 215, 215);
-    }
-    .bookinginfo td {
-        line-height: 100px;
-    }
-    .todaydata tbody tr:hover {
-        background-color: rgb(241, 241, 241);
-    }
-    /*篩選訂位*/
-    .datepick{
-        width: auto;
-    }
-    .btn-search{
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        color: #555;
-        padding: 6px 10px;
-        font-size: 14px;
-        line-height: 1.4;
-    }
-    /*Modal*/
-    label{
-        padding:12px 0 6px 3px;
-    }
-    .bookingdAdding input, .bookingdAdding select {
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        height:38px;
-        padding:6px 12px 6px 12px;
-    }
-</style>
 <div class="bookingmanage container-fluid p-5" id="d1">
     <div class="spacebetween row-cols-2 mb-3">
         <h3>訂位管理</h3>
-        <button type="button" class="addbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <button type="button" class="addbtn" data-bs-toggle="modal" data-bs-target="#addbooking">
             <i class="fa-sharp fa-solid fa-plus"></i> 新增訂位
         </button>
     </div>
@@ -124,47 +71,92 @@
                         <td>{{item.setDate.substring(0,10)}}</td>
                         <td>
                             <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
-                            <button class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button class="btnproducts" data-bs-toggle="modal" data-bs-target="#editbooking" :id="item.id" v-on:click="editbtn">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+    <!-- Add Modal -->
+    <div class="modal fade bookingdModal" id="addbooking" data-bs-backdrop="static"
          data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
          aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title" id="staticBackdropLabel">新增訂位</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="booking" class="inputform" action="/api/Booking/AddBooking" method="post">
-                    <div class="modal-body container bookingdAdding">
-                            <label for="datepicker">用餐日期：</label>
-                            <date-picker v-model="ReserveDate" valueType="format" class="datepicker p-0 w-100" id="datepicker"
-                                         placeholder="選擇用餐日期" :disabled-date="modeldisablerange"></date-picker>
-                            <input name="ReserveDate" v-bind:value="SendDate" hidden>
-                            <label for="people">用餐人數：</label>
-                            <select name="Number" id="people" class="form-select w-100" v-model="Number">
-                                <option value="" disabled>選擇用餐人數</option>
-                                <template v-for="peo in people">
-                                    <option :disabled="maxPeople(peo.value)" :value="peo.value">{{peo.txt}}</option>
-                                </template>
-                            </select>
-                            <label for="reserveName">訂位姓名：</label>
-                            <input name="ReserveName" type="text" id="reserveName" class="w-100">
-                            <label for="phone">聯絡電話：</label>
-                            <input name="Phone" type="text" id="phone" class="w-100" maxlength="10" minlength="10" placeholder="09xxxxxxxx">
-                            <label for="email">Email：</label>
-                            <input name="Email" type="email" id="email" class="w-100">
+                <form id="booking">
+                    <div class="modal-body container">
+                        <label for="datepicker">用餐日期：</label>
+                        <date-picker v-model="ReserveDate" valueType="format" 
+                                     placeholder="選擇用餐日期" :disabled-date="modeldisablerange"
+                                     class="datepicker p-0 w-100" id="datepicker"></date-picker>
+                        <input name="ReserveDate" v-bind:value="SendDate" hidden>
+                        <label for="people">用餐人數：</label>
+                        <select name="Number" id="people" class="form-select w-100" v-model="Number">
+                            <option value="" disabled>選擇用餐人數</option>
+                            <template v-for="peo in people">
+                                <option :disabled="maxPeople(peo.value)" :value="peo.value">{{peo.txt}}</option>
+                            </template>
+                        </select>
+                        <label for="reserveName">訂位姓名：</label>
+                        <input v-model="ReserveName" type="text" id="reserveName" class="w-100">
+                        <label for="phone">聯絡電話：</label>
+                        <input v-model="Phone" type="text" id="phone" class="w-100" maxlength="10" minlength="10" placeholder="09xxxxxxxx">
+                        <label for="email">Email：</label>
+                        <input v-model="Email" type="email" id="email" class="w-100">
                     </div>
                     <div class="modal-footer">
                         <div class="row m-0">
-                            <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
-                            <button class=" col btneditproducts m-1" type="submit" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                            <button class="col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                            <button v-on:click="addBookingInfo" class="col btneditproducts m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--Edit Modal-->
+    <div class="modal fade bookingdModal" id="editbooking" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="staticBackdropLabel">編輯訂位</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="booking">
+                    <div class="modal-body container">
+                        <label for="datepicker">用餐日期：</label>
+                        <date-picker v-model="editReserveDate" valueType="format" 
+                                     :default-value="new Date()" 
+                                     :disabled-date="modeldisablerange"
+                                     class="datepicker p-0 w-100" id="datepicker"></date-picker>
+                        <input name="ReserveDate" v-bind:value="SendDate" hidden>
+                        <label for="people">用餐人數：</label>
+                        <select name="Number" id="people" class="form-select w-100" v-model="editNumber">
+                            <option value="" disabled>選擇用餐人數</option>
+                            <template v-for="peo in people">
+                                <option :disabled="maxPeople(peo.value)" :value="peo.value">{{peo.txt}}</option>
+                            </template>
+                        </select>
+                        <label for="reserveName">訂位姓名：</label>
+                        <input v-model="editReserveName" type="text" id="reserveName" class="w-100" disabled>
+                        <label for="phone">聯絡電話：</label>
+                        <input v-model="editPhone" type="text" id="phone" class="w-100" maxlength="10" minlength="10" placeholder="09xxxxxxxx" disabled>
+                        <label for="email">Email：</label>
+                        <input v-model="editEmail" type="email" id="email" class="w-100" disabled>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row m-0">
+                            <button class="col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                            <button v-on:click="editBookingInfo" class="col btneditproducts m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
                         </div>
                     </div>
                 </form>
@@ -173,6 +165,7 @@
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.2/dist/sweetalert2.min.js"></script>
 <script>
     var app = new Vue({
         el: '#d1',
@@ -181,7 +174,7 @@
             reserveInfos: [],
             SelectDate: null,
             SearchDate:[],
-            /* Modal */
+            /* Add */
             bookingInfos: [],
             people: [
                 { value: 1, txt: '1位成人' },
@@ -192,6 +185,17 @@
             ReserveDate: null,
             SendDate: null,
             Number: '',
+            ReserveName:'',
+            Phone:'',
+            Email:'',
+            /* Edit */
+            vueid:'',
+            editReserveDate:null,
+            editSendDate:null,
+            editNumber: '',
+            editReserveName: '',
+            editPhone:'',
+            editEmail:'',
         },
         computed: {
             todayReserves() {
@@ -199,17 +203,21 @@
                 let day = new Date;
                 day.setHours(8);
                 day = day.toJSON().substring(0, 10);
-                Object.values(this.reserveInfos).forEach(function (x) {
-                    if (x.date.substring(0, 10) == day){
+                this.reserveInfos.forEach(function (x) {
+                    if (x.date.substring(0, 10) == day)
                         todayReserf.push(x)
-                    }
                 })
                 return todayReserf;
             },
         },
         watch:{
             ReserveDate:function(){
-                this.SendDate = this.ReserveDate.toLocaleDateString().replace('/', '-').replace('/', '-');
+                if (this.ReserveDate!=null)
+                    this.SendDate = this.ReserveDate.toLocaleDateString().replace('/', '-').replace('/', '-');
+            },
+            editReserveDate: function(){
+                if (this.editReserveDate!=null)
+                    this.editSendDate = this.editReserveDate.toLocaleDateString().replace('/', '-').replace('/', '-');
             }
         },
         methods: {
@@ -219,9 +227,9 @@
             },
             SearchClick: function(){
                 let search=[];
-                day = this.SelectDate;
-                Object.values(this.reserveInfos).forEach(function (x) {
-                    if (x.date.substring(0, 10) == day) {
+                let day = this.SelectDate;
+                this.reserveInfos.forEach(function (x) {
+                    if ( x.date.substring(0, 10) == day ) {
                         search.push(x)
                     }
                 })
@@ -245,15 +253,73 @@
                     return false;
                 }
             },
+            addBookingInfo: function(){
+                let info = {
+                    ReserveDate: this.SendDate,
+                    ReserveName: this.ReserveName,
+                    Email: this.Email,
+                    Phone: this.Phone,
+                    Number: this.Number,
+                }
+                fetch('/api/Booking/AddBooking',{
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(info)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: '新增訂位成功',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                })
+                .catch(err => console.log('Request Failed', err));
+            },
+            editbtn:function(e){
+                this.modalTitle = '編輯';
+                this.vueid = e.currentTarget.id;
+                let id = e.currentTarget.id;
+                let i ;
+                this.reserveInfos.forEach(function(x,index){
+                    if (x.id == id)
+                        i = index;
+                })
+                let item = this.reserveInfos[i];
+                this.editReserveName = item.name;
+                this.editPhone = item.phone;
+                this.editEmail = item.email;
+                this.editNumber = item.number;
+                this.editReserveDate = new Date(item.date.substring(0,10));
+            },
+            editBookingInfo:function(){
+                let info = {
+                    Id: this.vueid,
+                    ReserveDate: this.editSendDate,
+                    ReserveName: this.editNumber,
+                }
+                fetch('/api/Booking/EditBooking',{
+                    method:'POST',
+                    hearders:{'Content-Type':'application/json'},
+                    body:JSON.stringify(info)
+                })
+                .then(response=>response.json())
+
+            
+            },
         },
         beforeCreate: function () {
             let self = this;
-            fetch('/backcenter/bookings/GetAllBookings')
-                .then(function (response) { return response.json() })
-                .then(function (result) { self.reserveInfos = result })
+            fetch('/api/Booking/GetAllBookings')
+                .then( response => response.json())
+                .then( result => self.reserveInfos = result )
             fetch('/api/Booking/GetFrontBookings')
-                .then(function (response) { return response.json() })
-                .then(function (result) { self.bookingInfos = result })
+                .then( response => response.json())
+                .then( result => self.bookingInfos = result )
         }
     });
 </script>

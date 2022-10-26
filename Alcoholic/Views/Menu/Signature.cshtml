@@ -151,7 +151,7 @@
         methods: {
             selected: function (e) {
                 this.vueid = e.currentTarget.id;
-                var item = this.product[this.vueid-1];
+                let item = this.product[this.vueid - 1];
                 this.imagesrc = item.path;
                 this.head = item.name;
                 this.description = item.description;
