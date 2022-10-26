@@ -1,7 +1,6 @@
 ﻿using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
 using Alcoholic.Services;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Alcoholic.Areas.BackCenter.Controllers

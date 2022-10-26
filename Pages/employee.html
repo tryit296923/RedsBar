@@ -1,154 +1,194 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://use.fontawesome.com/releases/v6.2.0/css/all.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <style>
-        *{
-            padding: 0;
-            margin: 0;
+@{
+    ViewData["Title"] = "員工管理";
+    Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .table {
+        text-align: center;
+    }
+
+    .bookinginfo button {
+        line-height: 24px;
+    }
+    /*當日訂位*/
+    .bookingtoday {
+        border: 1px solid rgb(215, 215, 215);
+        border-radius: 0.375rem;
+    }
+
+    .allstaff {
+        width: 100%;
+        justify-content: space-around;
+    }
+
+        .allstaff thead {
+            background-color: #D8CDB9;
+            height: 30px;
+            line-height: 30px;
         }
-        body{
-            background-image: url('/Pages/Images/BackGround/emplogin2.jpg');            
-            min-height: 100vh;
-            background-repeat: no-repeat;
-            background-size: cover;
-            display: flex;
-            justify-content: center;
-            color: aliceblue;
-            font-size: 1rem;
-            font-weight: bolder;
-        }
-        hr{
-            width: 80%;
-        }
-        .login{
-            width: 80%;
-            max-width: 768px;
-            padding: 30px;
-            margin: 100px;
-            background-color: rgba(200,200,200,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            border-radius: 00.375rem;
-        }
-        .login > img{
-            width: 80%;
-            max-width: 400px;
-        }
-        form{
-            width: 100%;
-            padding: 30px;
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-        }
-        .info{
-            width: 80%;
-            text-align: center;
-        }
-        .info > input{
-            width: 70%;
-            margin: 10px;
-            padding: 2px;
-            transition: ease;
-            transition-duration: 0.3s;
-        }
-        .info > input:focus{
-            padding: 4px;
-            transition: ease;
-            transition-duration: 0.3s;
-        }
-        .checkbox{
-            position: relative;
-            right: -25%;
-        }
-        .btn{
-            width: 80%;
-            display: flex;
-            justify-content: center;
-        }
-        button{
-            width: 80%;
-            max-width: 300px;
-            font-size: 1.5rem;
-            border-radius: 00.375rem;
-            border: 0;
-            color: #842029;
-            font-weight: bolder;
-        }
-        button:hover{
-            color: #FFF;
-            background-color: #444;
-        }
-    </style>
-    <title>員工登入頁面</title>
-</head>
-<body>
-    <div class="login">
-        <img src="/Pages/Images/icons/logo-r.png" alt="">
-        <h2>請登入</h2>       
-        <hr>
-        <form action="">
-            <div class="info">
-                <label>帳號：</label>
-                <input type="text" autocomplete="on">
+
+    .bookinginfo thead {
+        background-color: rgb(215, 215, 215);
+    }
+
+    .bookinginfo td {
+        line-height: 100px;
+    }
+
+    .allstaff tbody tr:hover {
+        background-color: rgb(241, 241, 241);
+    }
+    /*篩選訂位*/
+    .staffpick {
+        width: auto;
+    }
+
+    .btn-search {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        color: #555;
+        padding: 6px 10px;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+    /*Modal*/
+    label {
+        padding: 12px 0 6px 3px;
+    }
+
+    .bookingdAdding input, .bookingdAdding select {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        height: 38px;
+        padding: 6px 12px 6px 12px;
+    }
+</style>
+<div class="bookingmanage container-fluid p-5" id="staff">
+    <div class="spacebetween row-cols-2 mb-3">
+        <h3>員工管理</h3>
+        <button type="button" class="addbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <i class="fa-sharp fa-solid fa-plus"></i> 新增員工
+        </button>
+    </div>
+    <hr>
+    <div class="py-4">
+        <div class="allstaff">
+            <div class="bookingtoday p-4">
+                <h5>員工列表</h5>
                 <br>
-                <label>密碼：</label>
-                <input type="password">
-                <br>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" value="remember-me" checked>
-                        記住帳號
-                    </label>                     
-                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">職位</th>
+                            <th scope="col">帳號</th>
+                            <th scope="col">姓名</th>
+                            <th scope="col">代號</th>
+                            <th scope="col">聯絡方式</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in staffs">
+                            <td>{{item.role}}</td>
+                            <td>{{item.empAccount}}</td>
+                            <td>{{item.empName}}</td>
+                            <td>{{item.nickName}}</td>
+                            <td>{{item.contact}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </form>
-        <div class="btn">
-            <button>登入</button>
         </div>
     </div>
-</body>
+    <div class="py-4">
+        <div class="spacebetween row-cols-2 mb-3">
+            <h3>查詢員工</h3>
+            <div class="staffpick">
+                <date-picker v-model="SelectDate" value-type="format" class="staffpicker p-0" id="staffpicker"
+                             placeholder="日期篩選" name="date" :disabled-date="disablerange"></date-picker>
+                <button class="btn-search" v-on:click="SearchClick()">搜尋</button>
+            </div>
+        </div>
+        <div class="bookinginfo">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">預定日期</th>
+                        <th scope="col">姓名</th>
+                        <th scope="col">電話</th>
+                        <th scope="col">人數</th>
+                        <th scope="col">下訂日期</th>
+                        <th>變更</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in SearchDate">
+                        <td>{{item.date.substring(0,10)}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.phone}}</td>
+                        <td>{{item.number}}</td>
+                        <td>{{item.setDate.substring(0,10)}}</td>
+                        <td>
+                            <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
+                            <button class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="staticBackdropLabel">新增訂位</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="booking" class="inputform" action="/api/Booking/AddBooking" method="post">
+                    <div class="modal-body container bookingdAdding">
+                        <label for="staffpicker">用餐日期：</label>
+                        <input name="ReserveDate" v-bind:value="SendDate" hidden>
+                        <label for="people">用餐人數：</label>
+                        <select name="Number" id="people" class="form-select w-100" v-model="Number">
+                            <option value="" disabled>選擇用餐人數</option>
+                            <template v-for="peo in people">
+                                <option :disabled="maxPeople(peo.value)" :value="peo.value">{{peo.txt}}</option>
+                            </template>
+                        </select>
+                        <label for="reserveName">訂位姓名：</label>
+                        <input name="ReserveName" type="text" id="reserveName" class="w-100">
+                        <label for="phone">聯絡電話：</label>
+                        <input name="Phone" type="text" id="phone" class="w-100" maxlength="10" minlength="10" placeholder="09xxxxxxxx">
+                        <label for="email">Email：</label>
+                        <input name="Email" type="email" id="email" class="w-100">
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row m-0">
+                            <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                            <button class=" col btneditproducts m-1" type="submit" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
-    let account = $("input").first()
-    let ck = $("input[type='checkbox']")
-    let value = `; ${document.cookie}`;
-    let ac = value.split("; account=").pop().split(";").shift();
-    let btn = $(".btn")
-    $(document).ready(()=>{
-        account.val(ac);
-    })
-    account.change(()=>{
-        if(ck.prop("checked")){
-            document.cookie = `account=${account.val()}`
-        }
-    })
-    ck.change(()=>{
-        if(ck.prop("checked")){
-            document.cookie = `account=${account.val()}`
-        }else{
-            document.cookie = "account= "
-        }
-    })
-    btn.click(()=>{
-        $.ajax({
-            url:"https://localhost:7273/Back/Login",
-            method:"POST",
-            dataType:"json",
-            data:{
-                EmpName:"",
-                EmpAccount:account.val(),
-                EmpPassword:$("input[type='password']").val()
-            },
-            success:function(res){console.log(res)},
-            error:function(err){console.log(err)},
-        });        
-    });
+const staff = new Vue({
+    el:"#staff",
+    data:{
+        staffs:[],
+    },
+    methods:{
+
+    },
+    beforeCreate:function(){
+        let self = this;
+        fetch("/backcenter/staff/GetAllMember")
+        .then(e => e.json())
+        .then(r => self.staffs = r);
+    }
+}) 
 </script>
-</html>
