@@ -22,14 +22,25 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             this.hash = hash;
         }
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+        public IActionResult Staff()
+        {
+            return View();
+        }
+        public IActionResult LoginPage()
+        {
+            return View();
+        }
         public ActionResult ResendAuthPage()
         {
             return View();
         }
+        
 
 
-
-        [HttpGet]
         public IActionResult GetMember(Member memberData)
         {
             Member? member = db.Members.Find(memberData);
@@ -40,7 +51,6 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             return Ok(member);
         }
 
-        [HttpGet]
         public IActionResult AuthByStaff(string EmailID)
         {
             if (string.IsNullOrEmpty(EmailID))
@@ -61,11 +71,6 @@ namespace Alcoholic.Areas.BackCenter.Controllers
         }
 
 
-        [HttpPost]
-        public IActionResult LoginPage()
-        {
-            return View();
-        }
 
         [HttpPost]
         public IActionResult Login([FromBody] Employee emp)
