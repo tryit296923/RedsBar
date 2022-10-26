@@ -28,5 +28,27 @@ namespace Alcoholic.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [HttpPost]
+        public ReturnModel ToCenter([FromBody] string code)
+        {
+            string LF2NET = "redshandsome";
+            ReturnModel model = new();
+            string url = "/backcenter/back";
+            if(code == LF2NET)
+            {
+                model.Url = url;
+                model.Status = "200";
+                model.Result = true;
+                return model;
+            }
+            else
+            {
+                model.Url = "";
+                model.Status = "400";
+                model.Result = false;
+                return model;
+            }
+        }
     }
 }
