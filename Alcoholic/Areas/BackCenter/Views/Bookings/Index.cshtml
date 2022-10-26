@@ -2,6 +2,7 @@
     ViewData["Title"] = "訂位管理";
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.2/dist/sweetalert2.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.css"><style>
     .table {
         text-align: center;
@@ -46,10 +47,17 @@
         line-height: 1.4;
     }
     /*Modal*/
+    .bookingdModal .modal-header {
+        background-color: #842029;
+    }
+
+    .bookingdModal h3 {
+            color: white;
+        }
     label{
         padding:12px 0 6px 3px;
     }
-    .bookingdAdding input, .bookingdAdding select {
+    .bookingdModal input, .bookingdModal select {
         border: 1px solid #ccc;
         border-radius: 4px;
         height:38px;
@@ -59,7 +67,7 @@
 <div class="bookingmanage container-fluid p-5" id="d1">
     <div class="spacebetween row-cols-2 mb-3">
         <h3>訂位管理</h3>
-        <button type="button" class="addbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <button type="button" class="addbtn" data-bs-toggle="modal" data-bs-target="#addbooking">
             <i class="fa-sharp fa-solid fa-plus"></i> 新增訂位
         </button>
     </div>
@@ -123,28 +131,31 @@
                         <td>{{item.setDate.substring(0,10)}}</td>
                         <td>
                             <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
-                            <button class="btnproducts" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="EditClick()"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button class="btnproducts" data-bs-toggle="modal" data-bs-target="#editbooking" :id="item.id" v-on:click="editbtn">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+    <!-- Add Modal -->
+    <div class="modal fade bookingdModal" id="addbooking" data-bs-backdrop="static"
          data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
          aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title" id="staticBackdropLabel">新增訂位</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="booking">
-                    <div class="modal-body container bookingdAdding">
+                    <div class="modal-body container">
                         <label for="datepicker">用餐日期：</label>
-                        <date-picker v-model="ReserveDate" valueType="format" class="datepicker p-0 w-100" id="datepicker"
-                                        placeholder="選擇用餐日期" :disabled-date="modeldisablerange"></date-picker>
+                        <date-picker v-model="ReserveDate" valueType="format" 
+                                     placeholder="選擇用餐日期" :disabled-date="modeldisablerange"
+                                     class="datepicker p-0 w-100" id="datepicker"></date-picker>
                         <input name="ReserveDate" v-bind:value="SendDate" hidden>
                         <label for="people">用餐人數：</label>
                         <select name="Number" id="people" class="form-select w-100" v-model="Number">
@@ -163,7 +174,49 @@
                     <div class="modal-footer">
                         <div class="row m-0">
                             <button class="col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
-                            <button v-on:click="addBooking" class="col btneditproducts m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                            <button v-on:click="addBookingInfo" class="col btneditproducts m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--Edit Modal-->
+    <div class="modal fade bookingdModal" id="editbooking" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="staticBackdropLabel">編輯訂位</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="booking">
+                    <div class="modal-body container">
+                        <label for="datepicker">用餐日期：</label>
+                        <date-picker v-model="editReserveDate" valueType="format" 
+                                     :default-value="new Date()" 
+                                     :disabled-date="modeldisablerange"
+                                     class="datepicker p-0 w-100" id="datepicker"></date-picker>
+                        <input name="ReserveDate" v-bind:value="SendDate" hidden>
+                        <label for="people">用餐人數：</label>
+                        <select name="Number" id="people" class="form-select w-100" v-model="editNumber">
+                            <option value="" disabled>選擇用餐人數</option>
+                            <template v-for="peo in people">
+                                <option :disabled="maxPeople(peo.value)" :value="peo.value">{{peo.txt}}</option>
+                            </template>
+                        </select>
+                        <label for="reserveName">訂位姓名：</label>
+                        <input v-model="editReserveName" type="text" id="reserveName" class="w-100">
+                        <label for="phone">聯絡電話：</label>
+                        <input v-model="editPhone" type="text" id="phone" class="w-100" maxlength="10" minlength="10" placeholder="09xxxxxxxx">
+                        <label for="email">Email：</label>
+                        <input v-model="editEmail" type="email" id="email" class="w-100">
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row m-0">
+                            <button class="col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                            <button v-on:click="editBookingInfo" class="col btneditproducts m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
                         </div>
                     </div>
                 </form>
@@ -181,7 +234,7 @@
             reserveInfos: [],
             SelectDate: null,
             SearchDate:[],
-            /* Modal */
+            /* Add */
             bookingInfos: [],
             people: [
                 { value: 1, txt: '1位成人' },
@@ -195,6 +248,13 @@
             ReserveName:'',
             Phone:'',
             Email:'',
+            /* Edit */
+            vueid:'',
+            editReserveDate:null,
+            editNumber: '',
+            editReserveName: '',
+            editPhone:'',
+            editEmail:'',
         },
         computed: {
             todayReserves() {
@@ -202,10 +262,9 @@
                 let day = new Date;
                 day.setHours(8);
                 day = day.toJSON().substring(0, 10);
-                Object.values(this.reserveInfos).forEach(function (x) {
-                    if (x.date.substring(0, 10) == day){
+                this.reserveInfos.forEach(function (x) {
+                    if (x.date.substring(0, 10) == day)
                         todayReserf.push(x)
-                    }
                 })
                 return todayReserf;
             },
@@ -223,9 +282,9 @@
             },
             SearchClick: function(){
                 let search=[];
-                day = this.SelectDate;
-                Object.values(this.reserveInfos).forEach(function (x) {
-                    if (x.date.substring(0, 10) == day) {
+                let day = this.SelectDate;
+                this.reserveInfos.forEach(function (x) {
+                    if ( x.date.substring(0, 10) == day ) {
                         search.push(x)
                     }
                 })
@@ -249,7 +308,7 @@
                     return false;
                 }
             },
-            addBooking: function(){
+            addBookingInfo: function(){
                 let info = {
                     ReserveDate: this.SendDate,
                     ReserveName: this.ReserveName,
@@ -261,14 +320,14 @@
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(info)
-                })//這裡會出現錯誤訊息，而且沒辦法顯示Swal.fire
-                .then(e => { return e.json(); })
-                .then((result)=>{
-                    if(result){
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result) {
                         Swal.fire({
-                            position: 'top-end',
+                            position: 'center',
                             icon: 'success',
-                            title: '加入訂位成功',
+                            title: '新增訂位成功',
                             showConfirmButton: false,
                             timer: 1500
                         })
@@ -276,18 +335,35 @@
                 })
                 .catch(err => console.log('Request Failed', err));
             },
-            EditClick:function(){
+            editbtn:function(e){
+                this.modalTitle = '編輯';
+                this.vueid = e.currentTarget.id;
+                let id = e.currentTarget.id;
+                let i ;
+                this.reserveInfos.forEach(function(x,index){
+                    if (x.id == id)
+                        i = index;
+                })
+                let item = this.reserveInfos[i];
+                this.editReserveName = item.name;
+                this.editPhone = item.phone;
+                this.editEmail = item.email;
+                this.editNumber = item.number;
+                this.editReserveDate = new Date(item.date.substring(0,10));
+            },
+            editBookingInfo:function(){
                 
+            
             },
         },
         beforeCreate: function () {
             let self = this;
-            fetch('/backcenter/bookings/GetAllBookings')
-                .then(function (response) { return response.json() })
-                .then(function (result) { self.reserveInfos = result })
+            fetch('/api/Booking/GetAllBookings')
+                .then( response => response.json())
+                .then( result => self.reserveInfos = result )
             fetch('/api/Booking/GetFrontBookings')
-                .then(function (response) { return response.json() })
-                .then(function (result) { self.bookingInfos = result })
+                .then( response => response.json())
+                .then( result => self.bookingInfos = result )
         }
     });
 </script>

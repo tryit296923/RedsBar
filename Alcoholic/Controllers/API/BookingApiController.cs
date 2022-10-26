@@ -14,6 +14,7 @@ namespace Alcoholic.Controllers.API
             _db = projectContext;
         }
 
+        //統計每日訂位人數
         [HttpGet]
         public object GetFrontBookings()
         {
@@ -27,9 +28,29 @@ namespace Alcoholic.Controllers.API
             return bookingArr;
         }
 
-        // 後台/bookings/Add
+        //送所有訂位資訊給後台
+        [HttpGet]
+        public IEnumerable<DataCenterBookingModel> GetAllBookings()
+        {
+            var bookingArr = from x in _db.Reserves
+                             orderby x.ReserveDate
+                             select new DataCenterBookingModel
+                             {
+                                 Id = x.ReserveId,
+                                 Date = x.ReserveDate,
+                                 Name = x.ReserveName,
+                                 Phone = x.Phone,
+                                 Email = x.Email,
+                                 Number = x.Number,
+                                 SetDate = x.ReserveSet
+                             };
+
+            return bookingArr;
+        }
+
+        // 從後台新增訂位
         [HttpPost]
-        public void AddBooking([FromBody] BookingModel bookingData)
+        public IActionResult AddBooking([FromBody] BookingModel bookingData)
         {
             Reserves reserves = new Reserves()
             {
@@ -42,6 +63,7 @@ namespace Alcoholic.Controllers.API
             };
             _db.Add(reserves);
             _db.SaveChanges();
+            return Ok(true);
         }
     }
 }
