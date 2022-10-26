@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Security.Claims;
 using Alcoholic.Services;
+using Alcoholic.Models.DTO;
 
 namespace Alcoholic.Areas.BackCenter.Controllers
 {
@@ -23,9 +24,21 @@ namespace Alcoholic.Areas.BackCenter.Controllers
         {
             return View();
         }
-        public List<Employee> GetAllMember()
+        public List<StaffModel> GetAllMember()
         {
-            return db.Employees.ToList();
+            List<StaffModel> staffs = new();
+            foreach(Employee emp in db.Employees)
+            {
+                staffs.Add(new StaffModel()
+                {
+                    EmpName = emp.EmpName,
+                    EmpAccount = emp.EmpAccount,
+                    NickName = emp.NickName,
+                    Contact = emp.Contact,
+                    Role = emp.Role,
+                });
+            }
+            return staffs;
         }
 
         [HttpPost]

@@ -1,128 +1,170 @@
 ﻿@{
-    ViewData["Title"] = "LoginPage";
+    ViewData["Title"] = "員工管理";
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
-<link href="https://use.fontawesome.com/releases/v6.2.0/css/all.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
-    * {
-        padding: 0;
-        margin: 0;
-    }
-
-    body {
-        background-image: url('~/images/BackGround/emplogin2.jpg');
-        min-height: 100vh;
-        background-repeat: no-repeat;
-        background-size: cover;
-        display: flex;
-        justify-content: center;
-        color: aliceblue;
-        font-size: 1rem;
-        font-weight: bolder;
-    }
-
-    .login {
-        width: 80%;
-        max-width: 768px;
-        padding: 30px;
-        margin: 100px;
-        background-color: rgba(200,200,200,0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        border-radius: 00.375rem;
-    }
-
-    form {
-        width: 100%;
-        padding: 30px;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-    }
-
-    .info {
-        width: 80%;
+    .table {
         text-align: center;
     }
 
-        .info > input {
-            width: 70%;
-            margin: 10px;
-            padding: 2px;
-            transition: ease;
-            transition-duration: 0.3s;
-        }
-
-            .info > input:focus {
-                padding: 4px;
-                transition: ease;
-                transition-duration: 0.3s;
-            }
-
-    .btn {
-        width: 80%;
-        display: flex;
-        justify-content: center;
+    .bookinginfo button {
+        line-height: 24px;
+    }
+    /*當日訂位*/
+    .bookingtoday {
+        border: 1px solid rgb(215, 215, 215);
+        border-radius: 0.375rem;
     }
 
-    button {
-        width: 80%;
-        max-width: 300px;
-        font-size: 1.5rem;
-        border-radius: 00.375rem;
-        border: 0;
-        color: #842029;
-        font-weight: bolder;
+    .allstaff {
+        width: 100%;
+        justify-content: space-around;
     }
 
-        button:hover {
-            color: #FFF;
-            background-color: #444;
+        .allstaff thead {
+            background-color: #D8CDB9;
+            height: 30px;
+            line-height: 30px;
         }
+
+    .bookinginfo thead {
+        background-color: rgb(215, 215, 215);
+    }
+
+    .bookinginfo td {
+        line-height: 100px;
+    }
+
+    .allstaff tbody tr:hover {
+        background-color: rgb(241, 241, 241);
+    }
+    /*篩選訂位*/
+    .staffpick {
+        width: auto;
+    }
+
+    .btn-search {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        color: #555;
+        padding: 6px 10px;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+    /*Modal*/
+    label {
+        padding: 12px 0 6px 3px;
+    }
+
+    .bookingdAdding input, .bookingdAdding select {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        height: 38px;
+        padding: 6px 12px 6px 12px;
+    }
 </style>
-<div class="login">
-    <form action="">
-        <div class="info">
-            <label>帳號：</label>
-            <input id="account" type="text">
-            <br>
-            <label>密碼：</label>
-            <input id="password" type="text">
-            <br>
-            <label>姓名：</label>
-            <input id="name" type="text">
-            <br>
-            <label>職位：</label>
-            <select name="" id="role">
-                <option value="moderater">管理員</option>
-                <option value="leader">組長</option>
-                <option value="staff">員工</option>
-            </select>
-            <br>
+<div class="bookingmanage container-fluid p-5" id="staff">
+    <div class="spacebetween row-cols-2 mb-3">
+        <h3>員工管理</h3>
+        <button type="button" class="addbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <i class="fa-sharp fa-solid fa-plus"></i> 新增員工
+        </button>
+    </div>
+    <hr>
+    <div class="py-4">
+        <div class="allstaff">
+            <div class="bookingtoday p-4">
+                <h5>員工列表</h5>
+                <br>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">職位</th>
+                            <th scope="col">帳號</th>
+                            <th scope="col">姓名</th>
+                            <th scope="col">代號</th>
+                            <th scope="col">聯絡方式</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in staffs">
+                            <td>{{item.role}}</td>
+                            <td>{{item.empAccount}}</td>
+                            <td>{{item.empName}}</td>
+                            <td>{{item.nickName}}</td>
+                            <td>{{item.contact}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </form>
-    <div class="btn">
-        <button>新增</button>
+    </div>
+    <div class="py-4">
+        <div class="spacebetween row-cols-2 mb-3">
+            <h3>查詢員工</h3>
+            <div class="staffpick">
+                <date-picker v-model="SelectDate" value-type="format" class="staffpicker p-0" id="staffpicker"
+                             placeholder="日期篩選" name="date" :disabled-date="disablerange"></date-picker>
+                <button class="btn-search" v-on:click="SearchClick()">搜尋</button>
+            </div>
+        </div>
+        <div class="bookinginfo">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">預定日期</th>
+                        <th scope="col">姓名</th>
+                        <th scope="col">電話</th>
+                        <th scope="col">人數</th>
+                        <th scope="col">下訂日期</th>
+                        <th>變更</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="staff in selectStaff">
+                        <td>{{staff.role}}</td>
+                        <td>{{staff.empAccount}}</td>
+                        <td>{{staff.empName}}</td>
+                        <td>{{staff.nickName}}</td>
+                        <td>{{staff.contact}}</td>
+                        <td>
+                            <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
+                            <button class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="staticBackdropLabel">新增訂位</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script>
-    $('.btn').click(
-        $.ajax({
-            url: "/BackCenter/Back/Register",
-            method: "POST",
-            dataType: "json",
-            data: {
-                EmpName: $("#name").val(),
-                EmpAccount: $("#account").val(),
-                EmpPassword: $("#password").val(),
-                Role: $("#role").val()
-            },
-            success: function (res) { console.log(res) },
-            error: function (err) { console.log(err) },
-        })
-    )
-</script>
+    const staff = new Vue({
+        el: "#staff",
+        data: {
+            staffs: [],
+            selectStaff:[],
+        },
+        methods: {
 
+        },
+        beforeCreate: function () {
+            let self = this;
+            fetch("/backcenter/staff/GetAllMember")
+                .then(e => e.json())
+                .then(r => self.staffs = r);
+        }
+    })
+</script>

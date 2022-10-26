@@ -51,6 +51,12 @@ namespace Alcoholic.Models.Entities
                 entity.Property(e => e.EmpName).HasColumnType("nvarchar(max)");
 
                 entity.Property(e => e.EmpPassword).HasColumnType("nvarchar(max)");
+                
+                entity.Property(e => e.NickName).HasColumnType("nvarchar(max)");
+
+                entity.Property(e => e.Contact).HasColumnType("nvarchar(max)");
+
+                entity.Property(e => e.Salary).HasDefaultValue(30000);
 
                 entity.Property(e => e.Salt).HasColumnType("nvarchar(max)");
 

@@ -1,12 +1,8 @@
 ﻿using Alcoholic.Models.Entities;
 using Alcoholic.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using System.Security.Claims;
 
 namespace Alcoholic.Areas.BackCenter.Controllers
 {
