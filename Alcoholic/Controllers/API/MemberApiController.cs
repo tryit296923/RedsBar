@@ -9,6 +9,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Razor.Templating.Core;
+using static NuGet.Packaging.PackagingConstants;
+using System.IO;
 
 namespace Alcoholic.Controllers.API
 {
@@ -223,20 +225,11 @@ namespace Alcoholic.Controllers.API
             }
             Guid? memberId = Guid.Parse(ses);
 
-            Member? member = db.Members.Select(x => x).Where(x => x.MemberID == memberId).FirstOrDefault();
-
-            List<Product> Products = new();
-            foreach (Order order in member.Orders)
-            {
-                foreach (OrderDetail od in order.OrderDetails)
-                {
-                    Products.Add(od.Product);
-                }
-            }
-
+            var member = db.Members.Select(x => x).Where(x => x.MemberID == memberId).FirstOrDefault();
             int disId = member.MemberLevel + 1;
-            float dis = (from d in db.Discount where d.DiscountId == disId select d.DiscountAmount).FirstOrDefault();
-            var products = Products.GroupBy(x => x.ProductId).OrderByDescending(x => x.Count()).Select(x => x.First()).ToList();
+            var dis = (from d in db.Discount where d.DiscountId == disId select d.DiscountAmount).FirstOrDefault();
+
+            
             DataPageModel dataPageModel = new()
             {
                 account = member.MemberAccount,
@@ -245,13 +238,23 @@ namespace Alcoholic.Controllers.API
                 mail = member.Email,
                 phone = member.Phone,
                 discount = dis,
-                products = products
             };
+
+            List<OrderDetailModel> orders = new();
             foreach(Order o in member.Orders)
             {
                 dataPageModel.total += o.Total.GetValueOrDefault();
+                foreach (OrderDetail od in o.OrderDetails)
+                {
+                    orders.Add(new OrderDetailModel()
+                    {
+                        OrderId = od.OrderId,
+                        ProductName = od.Product.ProductName,
+                        path = od.Product.Images.First().Path
+                    });
+                }
             }
-
+            dataPageModel.Orders = orders;
             switch (member.MemberLevel)
             {
                 case 0: 
@@ -312,6 +315,7 @@ namespace Alcoholic.Controllers.API
             member.MemberBirth = memberModel.Birth;
             member.Email = memberModel.Email;
             member.Phone = memberModel.Phone;
+            member.MemberPassword = hash.GetHash(string.Concat(memberModel.Password, member.Salt).ToString());
             db.Entry(member).State = EntityState.Modified;
             db.SaveChanges();
             return Ok(true);

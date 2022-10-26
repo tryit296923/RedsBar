@@ -38,8 +38,12 @@ namespace Alcoholic.Models.DTO
         public int min { get; set; }
         public int max { get; set; }
         public float discount { get; set; }
-        public List<Product> products { get; set; }
-        //public List<string> path { get; set; }
-
+        public List<OrderDetailModel> Orders { get; set; }
+    }
+    public class OrderDetailModel
+    {
+        public string OrderId { get; set; }
+        public string ProductName { get; set; }
+        public string path { get; set; }
     }
 }
