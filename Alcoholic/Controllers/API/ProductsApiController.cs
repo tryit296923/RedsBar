@@ -94,6 +94,18 @@ namespace Alcoholic.Controllers.API
 
             return prod;
         }
+        [HttpGet]
+        public IEnumerable<Discount> GetDiscount()
+        {
+            var disLv = from lv in _db.Discount
+                       select new Discount
+                       {
+                           DiscountId = lv.DiscountId,
+                           DiscountName = lv.DiscountName,
+                       };
+
+            return disLv;
+        }
 
         [HttpPost]
         public string AddToCart([FromBody] SendProductsModel model)
