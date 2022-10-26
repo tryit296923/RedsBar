@@ -191,7 +191,7 @@
         <div class="row">
             <div class="col-12 col-xl-6">
                 <label for="datepicker" class="col-sm-12 col-form-label">用餐日期</label>
-                <date-picker v-model="ReserveDate" valueType="format"
+                <date-picker v-model="ReserveDate" value-type="format"
                              name="ReserveDate" id="datepicker" class="datepicker p-0" 
                              placeholder="請選擇用餐日期" :disabled-date="disablerange"></date-picker>
             </div>
@@ -246,7 +246,7 @@
         </div>
     </div>
     <form action="Check" method="post">
-        <input name="ReserveDate" v-bind:value="SendDate" hidden />
+        <input name="ReserveDate" v-bind:value="ReserveDate" hidden />
         <input name="Number" v-bind:value="Number" hidden />
         <button type="submit" ref="bookingcheck" hidden></button>
     </form>
@@ -255,7 +255,7 @@
             <p class="booking-check-text">
                 選擇預定
                 <template v-if="ReserveDate!=null">
-                    <button class="booking-check-date">{{ReserveDate.toLocaleDateString()}}</button>
+                    <button class="booking-check-date">{{ReserveDate}}</button>
                 </template>
                 <template v-else>
                     <button class="booking-check-date">請選擇預定日期</button>
@@ -287,7 +287,6 @@
             bookingInfos: [],
             MyDate: new Date,
             ReserveDate: null,
-            SendDate: null,
             Number: '',
             people: [
                 { value: 1, txt: '1位成人' },
@@ -305,11 +304,6 @@
                 { id: 6, name: '星期六 18:00-02:00' }
             ],
         },
-        watch:{
-            ReserveDate:function(){
-                this.SendDate = this.ReserveDate.toLocaleDateString().replace('/', '-').replace('/', '-');
-            }
-        },
         methods: {
             disablerange: function (date) {
                 var today = new Date();
@@ -321,7 +315,7 @@
             },
             maxPeople: function (people) {
                 if (this.ReserveDate) {
-                    let pickTime = this.ReserveDate.getTime();
+                    let pickTime = new Date(this.ReserveDate).getTime();
                     let currectBookingInfo = this.bookingInfos.find(x => new Date(x.date).getTime() == pickTime);
                     if (currectBookingInfo != null) {
                         return 16 - currectBookingInfo.total < people;
@@ -341,8 +335,8 @@
         beforeCreate: function () {
             let self = this;
             fetch('/api/Booking/GetFrontBookings')
-                .then(function (response) { return response.json() })
-                .then(function (result) { self.bookingInfos = result })
+                .then(response => response.json())
+                .then(result =>self.bookingInfos = result )
         }
     });
     function myMap() {

@@ -94,6 +94,219 @@
             color: #D8CDB9;
             font-weight: bold;
         }
+        /* 資料中心 */
+        .scrollregion {
+            overflow-y: scroll;
+            height: 100vh;
+        }
+
+        .dataarea {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .datadetail {
+            width: 24%;
+            border: 1px solid rgb(215, 215, 215);
+            border-radius: 0.375rem;
+        }
+
+        .datadetail:hover,
+        .keymarkdetail:hover {
+            border-bottom: 2px solid #842029;
+        }
+
+        /*下拉選單*/
+        #mark {
+            width: 20%;
+        }
+        /*表格*/
+        img {
+            width: 100px;
+        }
+        .table {
+            text-align: center;
+        }
+        .data table {
+            margin-left: 5px;
+        }
+        .data table {
+            width: 80%;
+        }
+
+        .data thead, 
+        .datacenter thead, 
+        .discountmanage thead, 
+        .productmanage thead,
+        .bookinginfo thead {
+            background-color: rgb(215, 215, 215);
+            color: #444;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .data td, 
+        .datacenter td, 
+        .discountmanage td,
+        .bookinginfo td {
+            line-height: 100px;
+        }
+
+        .data tbody tr:hover, 
+        .datacenter tbody tr:hover,
+        .discountmanage tbody tr:hover, 
+        .productmanage tbody tr:hover ,
+        .todaydata tbody tr:hover {
+            background-color: rgb(241, 241, 241);
+        }
+
+        .discountmanage tr,
+        .products tr {
+            text-align: center;
+        }
+
+        .discountmanage button,
+        .products button {
+            line-height: 24px;
+        }
+        /* 數據中心 關鍵指標 */
+        .datacenter ul button,
+        .datacenter ul a {
+            color: #000;
+        }
+
+        .datacenter ul .nav-link:hover {
+            color: #842029;
+            border-bottom: #842029 1px solid;
+            transition: ease;
+            transition-duration: 0.4s;
+        }
+
+        .datacenter ul .nav-link:focus {
+            color: #842029;
+            font-weight: bold;
+        }
+
+        .datacenter h2 {
+            margin: 5px 0 5px 0;
+        }
+
+        .datacenter p {
+            margin: 0;
+        }
+
+        .keymark {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .keymarkdetail {
+            width: 19%;
+            border: 1px solid rgb(215, 215, 215);
+            border-radius: 0.375rem;
+        }
+
+        .info {
+            padding: 50px;
+            border: 1px solid rgb(215, 215, 215);
+        }
+
+        .discount,
+        .undiscount {
+            border: 1px solid rgb(215, 215, 215);
+            border-radius: 0.375rem;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            text-align: left;
+        }
+        /* 商品管理 */
+        .addproduct {
+            display: flex;
+        }
+
+        .productAdding {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .productmanage {
+            position: relative;
+        }
+
+
+        .multiselect__tag {
+            background-color: #C28C2E
+        }
+
+        .multiselect__tag-icon {
+            color: white
+        }
+        /*優惠管理*/
+        .discountmanage {
+            position: relative;
+        }
+        /*booking*/
+        .bookinginfo button {
+            line-height: 24px;
+        }
+        /*當日訂位*/
+        .bookingtoday {
+            border: 1px solid rgb(215, 215, 215);
+            border-radius: 0.375rem;
+        }
+
+        .todaydata {
+            width: 100%;
+            justify-content: space-around;
+        }
+
+            .todaydata thead {
+                background-color: #D8CDB9;
+                height: 30px;
+                line-height: 30px;
+            }
+
+
+        /*篩選訂位*/
+        .datepick {
+            width: auto;
+        }
+
+        .btn-search {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: #555;
+            padding: 6px 10px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        /*Modal*/
+        .addproducttitle,
+        .editproducttitle,
+        .bookingdModal .modal-header {
+            background-color: #842029;
+        }
+
+        .addproducttitle h3,
+        .editproducttitle h3,
+        .bookingdModal h3 {
+            color: white;
+        }
+
+        label {
+            padding: 12px 0 6px 3px;
+        }
+
+        .bookingdModal input, .bookingdModal select {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            height: 38px;
+            padding: 6px 12px 6px 12px;
+        }
         /*btn*/
         .addbtn {
             width: 150px;
@@ -127,6 +340,17 @@
             background-color: #666;
             color: #fff;
             font-weight: bold;
+        }
+
+        .btndisable {
+            cursor: not-allowed;
+            pointer-events: none;
+            width: 45px;
+            border-radius: 0.375rem;
+            border: 1px solid rgb(215, 215, 215);
+            height: 30px;
+            background-color: rgb(215, 215, 215);
+            color: #fff;
         }
     </style>
 </head>

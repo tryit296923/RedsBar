@@ -1,4 +1,4 @@
-﻿@model List<Alcoholic.Models.DTO.OrderViewModel>
+﻿@model Alcoholic.Models.DTO.OrderViewModel
 @using Newtonsoft.Json;
 @using System.Web;
 
@@ -318,7 +318,7 @@
                 <div class="title w-100">
                     <div class="himessage">
                         <p>Hi, </p>
-                        <p class="user">@Model.Select(n => n.MemberName).FirstOrDefault()</p>
+                        <p class="user">@Model.MemberName</p>
                     </div>
 
                 </div>
@@ -339,7 +339,7 @@
                 <div class="cartList px-3">
                     <ol class="list-group">
                         <div class="subOrderTitle">
-                            <div class="subOrderText subOrderId">訂單編號 : {{orderDetail[0].orderId}}</div>
+                            <div class="subOrderText subOrderId">訂單編號 : {{orderDetail.orderId}}</div>
                         </div>
                         <div class="row list-group-item d-flex justify-content-center"
                             v-for="(sequence,index) in sequenceList()" @*v-bind:key="item.orderId"*@>
@@ -376,12 +376,13 @@
                         </div>
                         <hr />
                     </ol>
-                    <div class="cartTotal">今日消費總計: {{total(orderDetail[0].itemList)}} 元</div>
+                    <div class="cartTotal">今日消費總計: {{total(orderDetail.itemList)}} 元</div>
                 </div>
             </div>
         </fieldset>
         <form action="Check" method="post" class="d-none">
-            <input name="totalPrice" v-model="totalPrice" />
+            <input name="total" v-model="totalPrice" />
+            <input name="orderId" value=@Model.OrderId />
             <button type="submit" ref="checkConfirm"></button>
         </form>
     </div>
@@ -451,9 +452,9 @@
         },
         sequenceList:function(){
             var sList = [];
-            var x = [...new Set(this.orderDetail[0].itemList.map(x => x.sequence))];
+            var x = [...new Set(this.orderDetail.itemList.map(x => x.sequence))];
             console.log(x)
-            x.forEach(y => sList.push(this.orderDetail[0].itemList.filter(z => z.sequence == y)))
+            x.forEach(y => sList.push(this.orderDetail.itemList.filter(z => z.sequence == y)))
             console.log(sList);
             return sList;
         },
@@ -474,6 +475,7 @@
             for (let i = 0; i < s.length; i++) {
                 total += s[i].unitPrice * s[i].qty * s[i].discountAmount;
             }
+            this.totalPrice = Math.round(total);
             return Math.round(total);
         },
         subTotal: function (t) {

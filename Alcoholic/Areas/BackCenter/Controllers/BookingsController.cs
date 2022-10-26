@@ -1,5 +1,6 @@
 ﻿using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
+using Alcoholic.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,24 +16,18 @@ namespace Alcoholic.Areas.BackCenter.Controllers
         }
         public IActionResult Index()
         {
-            return View();
-        }
+            DateTime day = DateTime.Now;
+            var todayBooking = (from x in _db.Reserves
+                                where x.ReserveDate == day
+                                select new TodayBookingModel
+                                {
+                                    ReserveName = x.ReserveName,
+                                    Number = x.Number,
+                                    Phone = x.Phone,
+                                    SetDate = x.ReserveSet
+                                }).ToList();
 
-        [HttpGet]
-        public IEnumerable<DataCenterBookingModel> GetAllBookings()
-        {
-            var bookingArr = from x in _db.Reserves
-                             orderby x.ReserveDate
-                             select new DataCenterBookingModel
-                             {
-                                 Date = x.ReserveDate,
-                                 Name = x.ReserveName,
-                                 Phone = x.Phone,
-                                 Number = x.Number,
-                                 SetDate = x.ReserveSet
-                             };
-
-            return bookingArr;
+            return View(todayBooking);
         }
     }
 }

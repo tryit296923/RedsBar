@@ -2,61 +2,6 @@
     ViewData["Title"] = "商品管理";
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
-
-<style>
-    .addproducttitle, .editproducttitle {
-        background-color: #842029;
-    }
-
-        .addproducttitle h3, .editproducttitle h3{
-        color: white;
-    }
-    /*表格*/
-    img {
-        width: 100px;
-    }
-    .productmanage thead{
-        background-color: rgb(215, 215, 215);
-        color: #444;
-        height: 30px;
-        line-height: 30px;
-    }
-
-
-    .productmanage tbody tr:hover{
-        background-color: rgb(241, 241, 241);
-    }
-
-    .products button{
-        line-height: 24px;
-    }
-
-    .products tr{
-        text-align: center;
-    }
-    /* 商品管理 */
-    .addproduct {
-        display: flex;
-    }
-
-    .productAdding {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .productmanage {
-        position: relative;
-    }
-
-
-    .multiselect__tag {
-        background-color: #C28C2E
-    }
-
-    .multiselect__tag-icon {
-        color: white
-    }
-</style>
 <div id="prod">
 <div class="productmanage container-fluid p-5">
     <div class="spacebetween row-cols-2 mb-3">
@@ -86,7 +31,7 @@
                     <td>{{item.price}}</td>
                     <td>{{item.description}}</td>
                     <td>
-                    <button :id="item.id" class="btnproducts" data-bs-toggle="modal" data-bs-target="#editProd" @@click="[seleEdit($event)]"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button :id="item.id" class="btnproducts" data-bs-toggle="modal" data-bs-target="#editProd" @@click="[seleEdit($event)]"><i class="fa-solid fa-pen-to-square"></i></button>
                     </td>
                     <td>
                     <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
@@ -131,7 +76,7 @@
                         <div id="multipleselect" class="col-12 ">
                                 <div class="col-12 ">
                                 <label class="my-2">折扣：</label>
-                                <multiselect v-model="discount" placeholder="請選擇折扣" label="discountName" track-by="discountId" :options="discountOpt"  :allow-empty="false">
+                                <multiselect v-model="discount" placeholder="請選擇折扣" label="discountName" track-by="discountId" :options="discountOpt" :allow-empty="false">
                                     <template slot="singleLabel" slot-scope="props">  <span>{{ props.option.discountName }}</span></template>
                                     <template slot="option" slot-scope="props">
                                         <div><span>{{ props.option.discountName }}</span></div>
@@ -219,6 +164,8 @@
 
 
 <script>
+    let allProds=[];
+    
     let prod = new Vue({
         el: "#prod",
         data:{
@@ -247,7 +194,7 @@
             seleEdit: function (e) {
                 this.vueid = e.currentTarget.id;
                 var item = this.product[this.vueid - 1];
-                this.test = this.product[this.vueid - 1];
+                var self = this.product;
                 this.imagesrc = item.path;
                 this.name = item.name;
                 this.cost = item.cost;
@@ -258,6 +205,15 @@
                     discountName: this.product[this.vueid - 1].discountName
                 }
             },
+            //loadDiscount:function(){
+            //    console.log("test")
+            //    for(i=0;i<this.product.length;i++){
+            //        var tempDiscount = { discountId :"",discountName:""};
+            //        tempDiscount.discountId = this.product[i].discountId;
+            //        tempDiscount.discountName = this.product[i].discountName;
+            //        console.log(tempDiscount);
+            //    }
+            //},
             send: function () {
                 let data = new FormData();
                 data.append("ProductName", this.createProductData.productName)
@@ -280,7 +236,7 @@
                 })
             }
         },
-        created: function () {
+        mounted:function(){
             let self = this;
             fetch("/api/Products/GetAllBackProducts")
                 .then((response) => response.json())
@@ -294,14 +250,13 @@
     let app = new Vue({
         el: "#staticBackdrop",
         data: {
+            product:[],
             createProductData: {
                 productName: "",
                 productPrice: "",
                 productCost: "",
                 productDescription: "",
                 images: [],
-                
-
             },
             fileRecords: [
                 {
@@ -349,9 +304,12 @@
                 { name: 'Vodka', baseId: '6' },
             ],
             discountselected: [
-                { name: '原價', discountId: '1' },
-                { name: '8折', discountId: '2' },
-                { name: '7折', discountId: '3' }
+                { discountId: '1', discountName: 'default' },
+                { discountId: '2', discountName: 'regular' },
+                { discountId: '3' ,discountName: 'bronze' },
+                { discountId: '4', discountName: 'silver' },
+                { discountId: '5', discountName: 'golden' },
+                { discountId: '6' ,discountName: 'earlybird' }
             ],
             basevalue: "",
             discountvalue: "",
@@ -393,6 +351,13 @@
                 this.options.push(tag)
                 this.value.push(tag)
             }
+        },
+        mounted: function () {
+            let self = this;
+            fetch("/api/Products/GetAllBackProducts")
+                .then((response) => response.json())
+                .then((result) => { self.product = result});
+
         }
     })
 </script>

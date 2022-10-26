@@ -118,54 +118,10 @@ namespace Alcoholic.Controllers.API
             _db.SaveChanges();
             return Ok();
         }
-
-        // 接收前端傳的金流串接所需資料(未付款)
-        [HttpPost]
-        public IActionResult OnlinePayment(string orderIdTotal, int totalPrice)
-        {
-            //加密金鑰
-            IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsetting.json").Build();
-            string hashKey = config.GetSection("HashKey").Value;
-            string hashIV = config.GetSection("HashIV").Value;
-
-            TradeInfo info = new TradeInfo();
-
-            //金流串接資料
-            info.MerchantID = config.GetSection("MerchantID").Value;
-            info.Version = "2.0";
-            string tradeSha = "";
-            string tradeInfo = "";
-
-            //tradeInfo所需資料
-            info.RespondType = "JSON";
-            info.TimeStamp = DateTime.Now.Ticks.ToString();
-            info.MerchantOrderNo = "";
-            info.ItemDesc = "";
-            info.Amt = "";
-            info.ReturnURL = "http://127.0.0.1:5501/Pages/ordering_checksuccessed.html";
-
-            //model轉成List<KeyValuePair<string,string>>
-            List<KeyValuePair<string, string>> tradeData = new List<KeyValuePair<string, string>>()
-            {
-                new KeyValuePair<string, string>("MerchantID",info.MerchantID),
-                new KeyValuePair<string, string>("RespondType",info.RespondType),
-                new KeyValuePair<string, string>("TimeStamp",info.TimeStamp),
-                new KeyValuePair<string, string>("Version",info.Version),
-                new KeyValuePair<string, string>("MerchantOrderNo",info.MerchantOrderNo),
-                new KeyValuePair<string, string>("Amt",info.Amt),
-                new KeyValuePair<string, string>("ItemDesc",info.ItemDesc),
-                new KeyValuePair<string, string>("ReturnURL",info.ReturnURL),
-            };
-            //轉換成key=Value
-            var tradeQueryPara = string.Join("&", tradeData.Select(x => $"{x.Key}={x.Value}"));
-            //tradeInfo加密(AES)
-
-
-            return Ok();
-        }
+        
         public GateWayInfoModel Payment(PaymentModel paymentInfo)
         {
-            paymentInfo.OrderId = "20221025185411";
+            //paymentInfo.OrderId = "20221026193511";
             //int price = (from o in _db.OrderDetails where paymentInfo.OrderId == o.OrderId select o)
             var details = _db.OrderDetails.Where(x => x.OrderId == paymentInfo.OrderId);
             var productName = details.Include(x => x.Product).Select(x => x.Product.ProductName);
@@ -197,7 +153,6 @@ namespace Alcoholic.Controllers.API
                 TradeSha = shaString,
                 Version = "2.0"
             };
-
         }
     }
 }

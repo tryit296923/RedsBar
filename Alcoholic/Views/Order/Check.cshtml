@@ -138,6 +138,7 @@
                     <p class="checkinfotext ordertime">日期 : @ViewBag.orderTime</p>
                     <p class="checkinfotext tablenum">桌號 : @ViewBag.Desk</p>
                     <p class="checkinfotext custnum">用餐人數 : @ViewBag.Number 人</p>
+                    <p class="checkinfotext custnum">訂單編號 : @ViewBag.orderId</p>
                 </div>
                 <hr>
                 <ul class="px-3">
@@ -152,7 +153,7 @@
                     </li>
                 </ul>
                 <hr>
-                <p class="colorbox total mt-0">今日消費總計 : @ViewBag.totalPrice 元</p>
+                <p class="colorbox total mt-0">今日消費總計 : @ViewBag.total 元</p>
             </div>
             <!-- 底部選單按鈕 -->
             <div class="paymentway">
@@ -207,7 +208,7 @@
         methods: {
             pay: function (paytype) {
                 fetch("/api/order/payment", {
-                    body: JSON.stringify({ OrderId: "", PayType: paytype }),
+                    body: JSON.stringify({ OrderId: @ViewBag.orderId , PayType: paytype }),
                     headers: { 'content-type': 'application/json' },
                     method: "POST"
                 })
