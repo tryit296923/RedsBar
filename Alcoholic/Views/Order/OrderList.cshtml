@@ -657,9 +657,7 @@
                     cartStr = JSON.stringify(cartArray);
                     break;
                 }
-                //陣列回圈跑完前持續找
-                else {
-                }
+                
 
             }
             const Toast = Swal.mixin({
@@ -694,7 +692,6 @@
     });
 
     function addCartSession() {
-        console.log(cartStr);
         fetch("/Order/AddToCart", {
             method: 'POST',
             headers: { "Content-Type": "application/json" },

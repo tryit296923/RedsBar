@@ -131,11 +131,11 @@
                         <div id="multipleselect" class="col-12 ">
                                 <div class="col-12 ">
                                 <label class="my-2">折扣：</label>
-                                <multiselect v-model="discount" deselect-label="無法移除" track-by="discountId"
-                                             label="name" placeholder="請選擇折扣" :options="discountselected" :searchable="false"
-                                             :allow-empty="false">
-                                    <template slot="singleLabel"
-                                              slot-scope="{ option }"><strong>{{option.name}}</strong> </template>
+                                <multiselect v-model="discount" placeholder="請選擇折扣" label="discountName" track-by="discountId" :options="discountOpt"  :allow-empty="false">
+                                    <template slot="singleLabel" slot-scope="props">  <span>{{ props.option.discountName }}</span></template>
+                                    <template slot="option" slot-scope="props">
+                                        <div><span>{{ props.option.discountName }}</span></div>
+                                    </template>
                                 </multiselect>
                             </div>
                         </div>
@@ -224,18 +224,22 @@
         data:{
             product:[],
             vueid: "",
-            item:"",
             imagesrc: "",
             name: "",
             cost:"",
             price:"",
-            discount: "",
+            discount:{
+                discountId:"",
+                discountName:""
+            },
             description: "",
-            discountvalue: "",
-            discountselected: [
-                { name: '原價', discountId: '1' },
-                { name: '8折', discountId: '2' },
-                { name: '7折', discountId: '3' }
+            discountOpt: [
+                { discountId: '1', discountName: 'default' },
+                { discountId: '2', discountName: 'regular' },
+                { discountId: '3' ,discountName: 'bronze' },
+                { discountId: '4', discountName: 'silver' },
+                { discountId: '5', discountName: 'golden' },
+                { discountId: '6' ,discountName: 'earlybird' }
             ],
         },
         components: {
@@ -244,16 +248,16 @@
         
         methods: {
             seleEdit: function (e) {
-                this.value = 0;
-                this.formdata = 0;
                 this.vueid = e.currentTarget.id;
                 var item = this.product[this.vueid - 1];
+                this.test = this.product[this.vueid - 1];
                 this.imagesrc = item.path;
                 this.name = item.name;
                 this.cost = item.cost;
                 this.price = item.price;
-                this.discount = item.discount;
                 this.description = item.description;
+                this.discount.discountId = item.discountId;
+                this.discount.discountName = item.discountName;
             },
             send: function () {
                 let data = new FormData();
