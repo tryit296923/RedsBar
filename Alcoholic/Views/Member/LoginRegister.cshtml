@@ -531,37 +531,78 @@
                     .then((e) => e.json())
                     .then((result) => {
                         console.log(result);
-                            if (result && result.status != 400) {
-                            Swal.fire({
-                                title: '登入成功',
-                                icon: 'success',
-                                background: '#333',
-                                color: '#FFF',
-                                iconColor: '#D8CDB9',
-                                confirmButtonColor: '#721B29',
-                                showCancelButton: true,
-                                cancelButtonColor: '#d8cdb9',
-                                confirmButtonText: '去點餐',
-                                cancelButtonText: '回首頁'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    window.location.assign("/Order/Orderlist");
-                                }
-                                else if(result.dismiss === Swal.DismissReason.cancel){
-                                    window.location.assign("/member/member");
-                                }
-                            })
-                        } else {
-                            Swal.fire({
-                                color: '#FFF',
-                                iconColor: '#D8CDB9',
-                                confirmButtonColor: '#721B29',
-                                background: '#333',
-                                icon: 'error',
-                                title: '帳號密碼錯誤!登入大失敗!',
-                            })
+                        switch (result.status) {
+                            case 200: {
+                                Swal.fire({
+                                    title: '登入成功',
+                                    icon: 'success',
+                                    background: '#333',
+                                    color: '#FFF',
+                                    iconColor: '#D8CDB9',
+                                    confirmButtonColor: '#721B29',
+                                    showCancelButton: true,
+                                    cancelButtonColor: '#d8cdb9',
+                                    confirmButtonText: '去點餐',
+                                    cancelButtonText: '回首頁'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.assign("/Order/Orderlist");
+                                    }
+                                    else if (result.dismiss === Swal.DismissReason.cancel) {
+                                        window.location.assign("/member/member");
+                                    }
+                                })
+                            }
+                            break;
+                            case 1: {
+                                Swal.fire({
+                                    color: '#FFF',
+                                    iconColor: '#D8CDB9',
+                                    confirmButtonColor: '#721B29',
+                                    background: '#333',
+                                    icon: 'info',
+                                    title: '已經登入過囉!',
+                                    text: `您好${result.object}`,
+                                    showCancelButton: true,
+                                    confirmButtonText: '去點餐',
+                                    cancelButtonText: '登出'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.assign("/Order/Orderlist");
+                                    }
+                                    else if (result.dismiss === Swal.DismissReason.cancel) {
+                                            fetch("/api/member/Logout").then(() => {
+                                            Swal.fire({
+                                                title: '登出成功',
+                                                color: '#FFF',
+                                                iconColor: '#D8CDB9',
+                                                background: '#333',
+                                                timer: 1000,
+                                                didOpen: () => {
+                                                    Swal.showLoading()
+                                                },
+                                                willClose: () => {
+                                                    window.location.assign("/home/index")
+                                                }
+                                            })
+                                        })
+                                    }
+                                })
+                            }
+                            break;
+                            default: {
+                                Swal.fire({
+                                    color: '#FFF',
+                                    iconColor: '#D8CDB9',
+                                    confirmButtonColor: '#721B29',
+                                    background: '#333',
+                                    icon: 'error',
+                                    title: '帳號密碼錯誤!登入大失敗!',
+                                })
+                            }
+                            break;
                         }
-                        }).catch(error => console.log(error))
+                    }).catch(error => console.log(error))
                 },50);
                 Swal.fire({
                     title: '登入中 請稍後',
@@ -573,9 +614,6 @@
                     timer: 12000,
                     didOpen: () => {
                         Swal.showLoading()
-                    },
-                    willClose: () => {
-                        clearInterval(timerInterval)
                     }
                 })
             },

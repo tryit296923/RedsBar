@@ -69,6 +69,8 @@ namespace Alcoholic.Controllers.API
                         };
                         _db.Add(orderDetail);
                     }
+
+                    x = orderId;
                 }
                 else
                 {

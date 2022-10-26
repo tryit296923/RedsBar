@@ -9,8 +9,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Razor.Templating.Core;
-using static NuGet.Packaging.PackagingConstants;
-using System.IO;
+using System.Collections.Generic;
+using Alcoholic.Models;
 
 namespace Alcoholic.Controllers.API
 {
@@ -100,14 +100,22 @@ namespace Alcoholic.Controllers.API
         [HttpPost]
         public IActionResult Login([FromBody] LoginViewModel memberData)
         {
+            ReturnModel returnModel = new();
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
                 return Ok(false);
             }
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("MemberID")))
+            string id = HttpContext.Session.GetString("MemberID");
+            if (!string.IsNullOrEmpty(id))
             {
-                return Ok(false);
+                Guid guid = Guid.Parse(id);
+                Member? logged = (from member in db.Members
+                                where member.MemberID == guid
+                                select member).SingleOrDefault();
+                returnModel.Status = 1;
+                returnModel.Object = logged.MemberName;
+                return Ok(returnModel);
             }
             Member? user = (from member in db.Members
                             where member.MemberAccount == memberData.Account
@@ -137,7 +145,8 @@ namespace Alcoholic.Controllers.API
                 // 將此類別(原則 ClaimsIdentity)，帶入方案(AuthenticationScheme)中
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
                 HttpContext.Session.SetString("MemberID", user.MemberID.ToString());
-                return Ok(true);
+                returnModel.Status = 200;
+                return Ok(returnModel);
                 // 在想要經驗證後才可讀取的API上加 [Authorize]
                 // 未登入也可以使用的API [AllowAnonymous]
             }
@@ -206,11 +215,10 @@ namespace Alcoholic.Controllers.API
         }
 
         [Authorize(Roles = "member")]
-        [HttpDelete]
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return Ok(true);
+            return RedirectToAction("Index","Home");
         }
         public ActionResult<IEnumerable<Member>> GetAllMember()
         {
@@ -281,9 +289,10 @@ namespace Alcoholic.Controllers.API
             return Ok(dataPageModel);
         }
 
-        public List<Order> GetOrders()
+        public IActionResult GetOrders()
         {
-            string? ses = HttpContext.Session.GetString("MemberID");
+            string ? ses = HttpContext.Session.GetString("MemberID");
+            if (string.IsNullOrEmpty(ses)) { return Ok(); }
             Guid? memberId = Guid.Parse(ses);
             Member? member = db.Members.Select(x => x).Where(x => x.MemberID == memberId).FirstOrDefault();
             List<Order> details = new();
@@ -291,7 +300,7 @@ namespace Alcoholic.Controllers.API
             {
                 details.Add(o);
             }
-            return details;
+            return Ok(details);
         }
 
         [HttpPut]

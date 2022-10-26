@@ -86,7 +86,7 @@
                     <td>{{item.price}}</td>
                     <td>{{item.description}}</td>
                     <td>
-                        <button :id="item.id" class="btnproducts" data-bs-toggle="modal" data-bs-target="#editProd" @@click="seleEdit"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button :id="item.id" class="btnproducts" data-bs-toggle="modal" data-bs-target="#editProd" @@click="[seleEdit($event)]"><i class="fa-solid fa-pen-to-square"></i></button>
                     </td>
                     <td>
                     <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
@@ -228,11 +228,9 @@
             name: "",
             cost:"",
             price:"",
-            discount:{
-                discountId:"",
-                discountName:""
-            },
             description: "",
+            allDiscount:[],
+            discount: { discountId: '', discountName: '' },
             discountOpt: [
                 { discountId: '1', discountName: 'default' },
                 { discountId: '2', discountName: 'regular' },
@@ -245,7 +243,6 @@
         components: {
             Multiselect: window.VueMultiselect.default
         },
-        
         methods: {
             seleEdit: function (e) {
                 this.vueid = e.currentTarget.id;
@@ -256,8 +253,10 @@
                 this.cost = item.cost;
                 this.price = item.price;
                 this.description = item.description;
-                this.discount.discountId = item.discountId;
-                this.discount.discountName = item.discountName;
+                this.discount = {
+                    discountId: this.product[this.vueid - 1].discountId,
+                    discountName: this.product[this.vueid - 1].discountName
+                }
             },
             send: function () {
                 let data = new FormData();
@@ -285,8 +284,12 @@
             let self = this;
             fetch("/api/Products/GetAllBackProducts")
                 .then((response) => response.json())
-                .then((result) => self.product = result)
+                .then((result) => {self.product = result;allProds = result;});
+            fetch("/api/Products/GetDiscount")
+            .then(response=>response.json())
+                .then(result => this.allDiscount =result.concat())
         }
+
     })
     let app = new Vue({
         el: "#staticBackdrop",

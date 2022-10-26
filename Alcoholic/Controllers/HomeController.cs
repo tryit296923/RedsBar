@@ -38,14 +38,14 @@ namespace Alcoholic.Controllers
             if(code == LF2NET)
             {
                 model.Url = url;
-                model.Status = "200";
+                model.Status = 200;
                 model.Result = true;
                 return model;
             }
             else
             {
                 model.Url = "";
-                model.Status = "400";
+                model.Status = 400;
                 model.Result = false;
                 return model;
             }

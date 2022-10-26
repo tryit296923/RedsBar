@@ -25,7 +25,7 @@
         color: azure;
         min-width: 425px;
     }
-    .path > div > a{
+    .path div div{
         text-align: center;
         font-size: 1.3rem;
         font-weight: bolder;
@@ -160,18 +160,21 @@
     }
 
 </style>
-<div class="path container-fluid w-100">
-    <div class="row">
-        <nav class="col-10" style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Member</li>
-            </ol>
-        </nav>
-        <a class="col-2" href="/member/LoginRegister">登入</a>
-    </div>
-</div>
 <div id="member">
+    <div class="path container-fluid w-100">
+        <div class="row">
+            <nav class="col-10" style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Member</li>
+                </ol>
+            </nav>
+            <div class ="col-2">
+                <a href="/member/LoginRegister">登入 </a>/
+                <a v-on:click.prevent="logout" href="#"> 登出</a>
+            </div>
+        </div>
+    </div>
     <div class="membanner">
         <img src="~/Images/BackGround/banner3A.jpg" alt="">
         <div class="container-fluid board">
@@ -369,6 +372,23 @@
                     }
                 })
             },
+            logout:function(){
+                fetch("/api/member/Logout").then(() => {
+                    Swal.fire({
+                        title: '登出成功',
+                        color: '#FFF',
+                        iconColor: '#D8CDB9',
+                        background: '#333',
+                        timer: 1000,
+                        didOpen: () => {
+                            Swal.showLoading()
+                        },
+                        willClose: () => {
+                            window.location.assign("/home/index")
+                        }
+                    })
+                })
+            }
         },
         beforeCreate:function(){
             let self = this;
@@ -385,7 +405,7 @@
                             text: '尚未登入喔!',
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                window.location.assign("/api/member/Login");
+                                window.location.assign("/member/LoginRegister");
                             }
                         });
                     }
