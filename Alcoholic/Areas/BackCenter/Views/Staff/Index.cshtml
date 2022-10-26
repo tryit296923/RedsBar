@@ -1,0 +1,128 @@
+﻿@{
+    ViewData["Title"] = "LoginPage";
+    Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
+}
+<link href="https://use.fontawesome.com/releases/v6.2.0/css/all.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background-image: url('~/images/BackGround/emplogin2.jpg');
+        min-height: 100vh;
+        background-repeat: no-repeat;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        color: aliceblue;
+        font-size: 1rem;
+        font-weight: bolder;
+    }
+
+    .login {
+        width: 80%;
+        max-width: 768px;
+        padding: 30px;
+        margin: 100px;
+        background-color: rgba(200,200,200,0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        border-radius: 00.375rem;
+    }
+
+    form {
+        width: 100%;
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .info {
+        width: 80%;
+        text-align: center;
+    }
+
+        .info > input {
+            width: 70%;
+            margin: 10px;
+            padding: 2px;
+            transition: ease;
+            transition-duration: 0.3s;
+        }
+
+            .info > input:focus {
+                padding: 4px;
+                transition: ease;
+                transition-duration: 0.3s;
+            }
+
+    .btn {
+        width: 80%;
+        display: flex;
+        justify-content: center;
+    }
+
+    button {
+        width: 80%;
+        max-width: 300px;
+        font-size: 1.5rem;
+        border-radius: 00.375rem;
+        border: 0;
+        color: #842029;
+        font-weight: bolder;
+    }
+
+        button:hover {
+            color: #FFF;
+            background-color: #444;
+        }
+</style>
+<div class="login">
+    <form action="">
+        <div class="info">
+            <label>帳號：</label>
+            <input id="account" type="text">
+            <br>
+            <label>密碼：</label>
+            <input id="password" type="text">
+            <br>
+            <label>姓名：</label>
+            <input id="name" type="text">
+            <br>
+            <label>職位：</label>
+            <select name="" id="role">
+                <option value="moderater">管理員</option>
+                <option value="leader">組長</option>
+                <option value="staff">員工</option>
+            </select>
+            <br>
+        </div>
+    </form>
+    <div class="btn">
+        <button>新增</button>
+    </div>
+</div>
+<script>
+    $('.btn').click(
+        $.ajax({
+            url: "/BackCenter/Back/Register",
+            method: "POST",
+            dataType: "json",
+            data: {
+                EmpName: $("#name").val(),
+                EmpAccount: $("#account").val(),
+                EmpPassword: $("#password").val(),
+                Role: $("#role").val()
+            },
+            success: function (res) { console.log(res) },
+            error: function (err) { console.log(err) },
+        })
+    )
+</script>
+
