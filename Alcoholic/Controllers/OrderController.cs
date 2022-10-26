@@ -50,29 +50,20 @@ namespace Alcoholic.Controllers
                             {
                                 sesItem[S].Qty += cartItem[i].Qty;
                                 addItem.Add(sesItem[S]);
-                                Console.WriteLine($"產品ID{sesItem[i].Id}產品數量{sesItem[i].Qty}");
                                 break;
                             }
                             //找完集合沒有重復產品
-                            else if (sesItem[S].Id != cartItem[i].Id & S == sesItem.Count - 1)
+                            else if (sesItem[S].Id != cartItem[i].Id && S == sesItem.Count - 1)
                             {
-                                Console.WriteLine("新商品");
                                 sesItem.Add(cartItem[i]);
-                                Console.WriteLine(addItem);
                                 break;
                             }
-                            else
-                            {
-                                Console.WriteLine("找");
-
-                            }
+                            
                         }
                     }
                     //cartString為購物車字串，additem為物件
-                    Console.WriteLine(sesItem);
                     var cartString = JsonConvert.SerializeObject(sesItem);
                     HttpContext.Session.SetString("CartItem", cartString);
-                    Console.WriteLine(sesStr);
                 }
                 return true;
 

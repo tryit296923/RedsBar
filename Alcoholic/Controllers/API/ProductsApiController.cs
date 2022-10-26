@@ -75,12 +75,12 @@ namespace Alcoholic.Controllers.API
             return menu;
         }
         [HttpGet]
-        public IEnumerable<BackProd> GetAllBackProducts()
+        public IEnumerable<BackProdModel> GetAllBackProducts()
         {
             var prod = from pro in _db.Products
                        join path in _db.ProductImage
                        on pro.ProductId equals path.ProductId
-                       select new BackProd
+                       select new BackProdModel
                        {
                            Id = pro.ProductId,
                            Name = pro.ProductName,
@@ -88,6 +88,8 @@ namespace Alcoholic.Controllers.API
                            Price = pro.UnitPrice,
                            Path = path.Path,
                            Cost = pro.Cost,
+                           DiscountId = pro.Discount.DiscountId,
+                           DiscountName = pro.Discount.DiscountName,
                        };
 
             return prod;
