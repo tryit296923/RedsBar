@@ -65,5 +65,12 @@ namespace Alcoholic.Controllers.API
             _db.SaveChanges();
             return Ok(true);
         }
+
+        //從後台修改訂位
+        [HttpPost]
+        public IActionResult EditBooking()
+        {
+            return Ok(true);
+        }
     }
 }
