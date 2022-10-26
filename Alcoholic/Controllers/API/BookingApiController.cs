@@ -16,7 +16,7 @@ namespace Alcoholic.Controllers.API
 
         //統計每日訂位人數
         [HttpGet]
-        public object GetFrontBookings()
+        public IActionResult GetFrontBookings()
         {
             DateTime mindate = DateTime.Now;
             var bookingArr = (from x in _db.Reserves
@@ -25,27 +25,28 @@ namespace Alcoholic.Controllers.API
                                orderby g.Key
                                select new { Date = g.Key, Total = g.Sum(x => x.Number) });
 
-            return bookingArr;
+            return Ok(bookingArr);
         }
 
-        //送所有訂位資訊給後台
+        // 曾被訂位的日期
         [HttpGet]
-        public IEnumerable<DataCenterBookingModel> GetAllBookings()
+        public IActionResult GetAllBookingDate()
         {
-            var bookingArr = from x in _db.Reserves
-                             orderby x.ReserveDate
-                             select new DataCenterBookingModel
-                             {
-                                 Id = x.ReserveId,
-                                 Date = x.ReserveDate,
-                                 Name = x.ReserveName,
-                                 Phone = x.Phone,
-                                 Email = x.Email,
-                                 Number = x.Number,
-                                 SetDate = x.ReserveSet
-                             };
+            var allBookingDate = (from x in _db.Reserves
+                                  group x by x.ReserveDate into g
+                                  orderby g.Key
+                                  select new { Date = g.Key }).ToList();
+            return Ok(allBookingDate);
+        }
 
-            return bookingArr;
+        // 從後台查詢指定日期之訂位
+        [HttpPost]
+        public IActionResult SearchBooking([FromBody] SearchBookingModel booking)
+        {
+            var bookingInfo = (from x in _db.Reserves
+                               where x.ReserveDate == booking.Date
+                               select x).ToList();
+            return Ok(bookingInfo);
         }
 
         // 從後台新增訂位
@@ -68,8 +69,28 @@ namespace Alcoholic.Controllers.API
 
         //從後台修改訂位
         [HttpPost]
-        public IActionResult EditBooking()
+        public IActionResult EditBooking([FromBody] EditBookingModel bookindData)
         {
+            var bookingInfo = (from x in _db.Reserves
+                              where x.ReserveId == bookindData.Id
+                              select x).FirstOrDefault();
+            bookingInfo.Number = bookindData.Number;
+            bookingInfo.ReserveDate = bookindData.Date;
+            _db.Update(bookingInfo);
+            _db.SaveChanges();
+            return Ok(true);
+        }
+
+        //從後台刪除訂位
+        [HttpPost]
+        public IActionResult DeleteBooking(int id)
+        {
+            var bookingInfo = (from x in _db.Reserves
+                               where x.ReserveId == id
+                               select x).FirstOrDefault();
+            //bookingInfo.狀態 = 0;
+            //_db.Update(bookingInfo);
+            //_db.SaveChanges();
             return Ok(true);
         }
     }

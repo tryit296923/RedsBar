@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<Alcoholic.Models.ViewModels.TodayBookingModel>
+@{
     ViewData["Title"] = "訂位管理";
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
@@ -31,7 +32,7 @@
                     <tbody>
                         <tr v-for="item in todayReserves">
                             <td><input type="checkbox"></td>
-                            <td>{{item.name}}</td>
+                            <td>{{item.reserveName}}</td>
                             <td>{{item.phone}}</td>
                             <td>{{item.number}}</td>
                             <td>{{item.setDate.substring(0,10)}}</td>
@@ -45,8 +46,8 @@
         <div class="spacebetween row-cols-2 mb-3">
             <h3>查詢訂位數據</h3>
             <div class="datepick">
-                <date-picker v-model="SelectDate" value-type="format" class="datepicker p-0" id="datepicker"
-                             placeholder="日期篩選" name="date" :disabled-date="disablerange"></date-picker>
+                <date-picker v-model="selectDate" value-type="format" class="datepicker p-0" id="datepicker"
+                             placeholder="日期篩選" :disabled-date="disablerange"></date-picker>
                 <button class="btn-search" v-on:click="SearchClick()">搜尋</button>
             </div>
         </div>
@@ -59,20 +60,26 @@
                         <th scope="col">電話</th>
                         <th scope="col">人數</th>
                         <th scope="col">下訂日期</th>
-                        <th>變更</th>
+                        <th scope="col">編輯</th>
+                        <th scope="col">刪除</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in SearchDate">
-                        <td>{{item.date.substring(0,10)}}</td>
-                        <td>{{item.name}}</td>
+                    <tr v-for="item in searchInfo">
+                        <td>{{item.reserveDate.substring(0,10)}}</td>
+                        <td>{{item.reserveName}}</td>
                         <td>{{item.phone}}</td>
                         <td>{{item.number}}</td>
-                        <td>{{item.setDate.substring(0,10)}}</td>
+                        <td>{{item.reserveSet.substring(0,10)}}</td>
                         <td>
-                            <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
-                            <button class="btnproducts" data-bs-toggle="modal" data-bs-target="#editbooking" :id="item.id" v-on:click="editbtn">
+                            <button data-bs-toggle="modal" data-bs-target="#editbooking" 
+                                    :class="determine(item.reserveDate)" :id="item.reserveId" v-on:click="editbtn">
                                 <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button :class="determine(item.reserveDate)" :id="item.reserveId" v-on:click="deleteBooking">
+                                <i class="fa-solid fa-trash"></i>
                             </button>
                         </td>
                     </tr>
@@ -93,23 +100,22 @@
                 <form id="booking">
                     <div class="modal-body container">
                         <label for="datepicker">用餐日期：</label>
-                        <date-picker v-model="ReserveDate" valueType="format" 
-                                     placeholder="選擇用餐日期" :disabled-date="modeldisablerange"
+                        <date-picker v-model="add.ReserveDate" value-type="format" 
+                                     placeholder="選擇用餐日期" :disabled-date="modaldisablerange"
                                      class="datepicker p-0 w-100" id="datepicker"></date-picker>
-                        <input name="ReserveDate" v-bind:value="SendDate" hidden>
                         <label for="people">用餐人數：</label>
-                        <select name="Number" id="people" class="form-select w-100" v-model="Number">
+                        <select name="Number" id="people" class="form-select w-100" v-model="add.Number">
                             <option value="" disabled>選擇用餐人數</option>
                             <template v-for="peo in people">
                                 <option :disabled="maxPeople(peo.value)" :value="peo.value">{{peo.txt}}</option>
                             </template>
                         </select>
                         <label for="reserveName">訂位姓名：</label>
-                        <input v-model="ReserveName" type="text" id="reserveName" class="w-100">
+                        <input v-model="add.ReserveName" type="text" id="reserveName" class="w-100">
                         <label for="phone">聯絡電話：</label>
-                        <input v-model="Phone" type="text" id="phone" class="w-100" maxlength="10" minlength="10" placeholder="09xxxxxxxx">
+                        <input v-model="add.Phone" type="text" id="phone" class="w-100" maxlength="10" minlength="10" placeholder="09xxxxxxxx">
                         <label for="email">Email：</label>
-                        <input v-model="Email" type="email" id="email" class="w-100">
+                        <input v-model="add.Email" type="email" id="email" class="w-100">
                     </div>
                     <div class="modal-footer">
                         <div class="row m-0">
@@ -134,24 +140,22 @@
                 <form id="booking">
                     <div class="modal-body container">
                         <label for="datepicker">用餐日期：</label>
-                        <date-picker v-model="editReserveDate" valueType="format" 
-                                     :default-value="new Date()" 
-                                     :disabled-date="modeldisablerange"
+                        <date-picker v-model="edit.ReserveDate" value-type="format"
+                                     :disabled-date="modaldisablerange"
                                      class="datepicker p-0 w-100" id="datepicker"></date-picker>
-                        <input name="ReserveDate" v-bind:value="SendDate" hidden>
                         <label for="people">用餐人數：</label>
-                        <select name="Number" id="people" class="form-select w-100" v-model="editNumber">
+                        <select name="Number" id="people" class="form-select w-100" v-model="edit.Number">
                             <option value="" disabled>選擇用餐人數</option>
                             <template v-for="peo in people">
                                 <option :disabled="maxPeople(peo.value)" :value="peo.value">{{peo.txt}}</option>
                             </template>
                         </select>
                         <label for="reserveName">訂位姓名：</label>
-                        <input v-model="editReserveName" type="text" id="reserveName" class="w-100" disabled>
+                        <input v-model="edit.ReserveName" type="text" id="reserveName" class="w-100" disabled>
                         <label for="phone">聯絡電話：</label>
-                        <input v-model="editPhone" type="text" id="phone" class="w-100" maxlength="10" minlength="10" placeholder="09xxxxxxxx" disabled>
+                        <input v-model="edit.Phone" type="text" id="phone" class="w-100" maxlength="10" minlength="10" placeholder="09xxxxxxxx" disabled>
                         <label for="email">Email：</label>
-                        <input v-model="editEmail" type="email" id="email" class="w-100" disabled>
+                        <input v-model="edit.Email" type="email" id="email" class="w-100" disabled>
                     </div>
                     <div class="modal-footer">
                         <div class="row m-0">
@@ -171,71 +175,52 @@
         el: '#d1',
         data: {
             today: new Date,
-            reserveInfos: [],
-            SelectDate: null,
-            SearchDate:[],
-            /* Add */
-            bookingInfos: [],
+            todayReserves: @Html.Raw(Json.Serialize(Model)),//今日訂位資訊
+            selectDate: null,
+            allBookingDate:[],
+            searchInfo:[],//被查詢的訂位資訊
+            bookingInfos: [],//可訂位日期
             people: [
                 { value: 1, txt: '1位成人' },
                 { value: 2, txt: '2位成人' },
                 { value: 3, txt: '3位成人' },
                 { value: 4, txt: '4位成人' }
             ],
-            ReserveDate: null,
-            SendDate: null,
-            Number: '',
-            ReserveName:'',
-            Phone:'',
-            Email:'',
-            /* Edit */
-            vueid:'',
-            editReserveDate:null,
-            editSendDate:null,
-            editNumber: '',
-            editReserveName: '',
-            editPhone:'',
-            editEmail:'',
-        },
-        computed: {
-            todayReserves() {
-                let todayReserf = [];
-                let day = new Date;
-                day.setHours(8);
-                day = day.toJSON().substring(0, 10);
-                this.reserveInfos.forEach(function (x) {
-                    if (x.date.substring(0, 10) == day)
-                        todayReserf.push(x)
-                })
-                return todayReserf;
+            add:{
+                ReserveDate: null,
+                Number: '',
+                ReserveName:'',
+                Phone:'',
+                Email:'',
             },
-        },
-        watch:{
-            ReserveDate:function(){
-                if (this.ReserveDate!=null)
-                    this.SendDate = this.ReserveDate.toLocaleDateString().replace('/', '-').replace('/', '-');
-            },
-            editReserveDate: function(){
-                if (this.editReserveDate!=null)
-                    this.editSendDate = this.editReserveDate.toLocaleDateString().replace('/', '-').replace('/', '-');
+            edit:{            
+                vueid:'',
+                ReserveDate:null,
+                Number: '',
+                ReserveName: '',
+                Phone:'',
+                Email:'',
             }
         },
         methods: {
             disablerange: function (date) {
-                var isBooking = this.reserveInfos.some(x => new Date(x.date).getTime() == date.getTime());
+                var isBooking = this.allBookingDate.some(x => new Date(x.date).getTime() == date.getTime());
                 return !isBooking;
             },
             SearchClick: function(){
-                let search=[];
-                let day = this.SelectDate;
-                this.reserveInfos.forEach(function (x) {
-                    if ( x.date.substring(0, 10) == day ) {
-                        search.push(x)
-                    }
+                let info ={
+                    Date : this.selectDate
+                }
+                let self = this;
+                fetch('/api/Booking/SearchBooking',{
+                    method: 'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body:JSON.stringify(info)
                 })
-                this.SearchDate = search;
+                .then(response => response.json())
+                .then(result => self.searchInfo = result)
             },
-            modeldisablerange: function (date) {
+            modaldisablerange: function (date) {
                 var today = new Date();
                 today.setHours(0, 0, 0, 0);
                 var mindate = new Date(today.getTime() + 1 * 24 * 3600 * 1000);
@@ -244,8 +229,8 @@
                 return date < mindate || date > maxdate || date.getDay() % 7 == 1 || isBooking;
             },
             maxPeople: function (people) {
-                if (this.ReserveDate) {
-                    let pickTime = this.ReserveDate.getTime();
+                if (this.add.ReserveDate) {
+                    let pickTime = new Date(this.add.ReserveDate).getTime();
                     let currectBookingInfo = this.bookingInfos.find(x => new Date(x.date).getTime() == pickTime);
                     if (currectBookingInfo != null) {
                         return 16 - currectBookingInfo.total < people;
@@ -253,13 +238,21 @@
                     return false;
                 }
             },
+            determine: function(date){
+                let day = new Date().toJSON().substring(0,10);
+                date = date.substring(0,10);
+                if(date<day){
+                    return 'btndisable'
+                }
+                return 'btnproducts';
+            },
             addBookingInfo: function(){
                 let info = {
-                    ReserveDate: this.SendDate,
-                    ReserveName: this.ReserveName,
-                    Email: this.Email,
-                    Phone: this.Phone,
-                    Number: this.Number,
+                    ReserveDate: this.add.ReserveDate,
+                    ReserveName: this.add.ReserveName,
+                    Email: this.add.Email,
+                    Phone: this.add.Phone,
+                    Number: this.add.Number,
                 }
                 fetch('/api/Booking/AddBooking',{
                     method: 'POST',
@@ -281,42 +274,75 @@
                 .catch(err => console.log('Request Failed', err));
             },
             editbtn:function(e){
-                this.modalTitle = '編輯';
-                this.vueid = e.currentTarget.id;
                 let id = e.currentTarget.id;
                 let i ;
-                this.reserveInfos.forEach(function(x,index){
-                    if (x.id == id)
+                this.searchInfo.forEach(function (x, index) {
+                    if (x.reserveId == id)
                         i = index;
                 })
-                let item = this.reserveInfos[i];
-                this.editReserveName = item.name;
-                this.editPhone = item.phone;
-                this.editEmail = item.email;
-                this.editNumber = item.number;
-                this.editReserveDate = new Date(item.date.substring(0,10));
+                let item = this.searchInfo[i];
+                this.edit.ReserveDate = item.reserveDate.substring(0, 10);
+                this.edit.ReserveName = item.reserveName;
+                this.edit.Phone = item.phone;
+                this.edit.Email = item.email;
+                this.edit.Number = item.number;
+                this.edit.vueid = e.currentTarget.id;
+
             },
             editBookingInfo:function(){
                 let info = {
-                    Id: this.vueid,
-                    ReserveDate: this.editSendDate,
-                    ReserveName: this.editNumber,
+                    Id: this.edit.vueid,
+                    Date: this.edit.ReserveDate,
+                    Number: this.edit.Number,
                 }
                 fetch('/api/Booking/EditBooking',{
-                    method:'POST',
-                    hearders:{'Content-Type':'application/json'},
-                    body:JSON.stringify(info)
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(info)
                 })
                 .then(response=>response.json())
-
-            
+                .then(result=>{
+                    if (result) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: '編輯訂位成功',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                })
+                .catch(err => console.log('Request Failed', err));
             },
+            deleteBooking: function(e){
+                let info={
+                    //要補model
+                    Id: e.currentTarget.id,
+                }
+                fetch('/api/Booking/DeleteBooking',{
+                    method:'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body: JSON.stringify(info)
+                })
+                .then(response=>response.json())
+                .then(result=>{
+                    if (result) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: '已移除該訂位資訊',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                })
+            }
         },
         beforeCreate: function () {
             let self = this;
-            fetch('/api/Booking/GetAllBookings')
+            fetch('/api/Booking/GetAllBookingDate')
                 .then( response => response.json())
-                .then( result => self.reserveInfos = result )
+                .then( result => self.allBookingDate = result )
             fetch('/api/Booking/GetFrontBookings')
                 .then( response => response.json())
                 .then( result => self.bookingInfos = result )
