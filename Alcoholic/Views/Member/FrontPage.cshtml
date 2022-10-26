@@ -142,10 +142,10 @@
                     <option value=2>2</option>
                     <option value=3>3</option>
                     <option value=4>4</option>
-                    <option value=5>5</option>
-                    <option value=6>6</option>
-                    <option value=7>7</option>
-                    <option value=8>8</option>
+                    <option v-bind:disabled=multi value=5>5</option>
+                    <option v-bind:disabled=multi value=6>6</option>
+                    <option v-bind:disabled=multi value=7>7</option>
+                    <option v-bind:disabled=multi value=8>8</option>
                 </select>
             </div>
             <div class="people">
@@ -177,22 +177,22 @@
                 ftr: true,
                 number: "0",
                 btn: false,
-                disable: "opacity:0.5"
+                disable: "opacity:0.5",
+                multi: true
             },
             methods: {
                 checkNumber: function () {
                     let desk = this.deskType;
-                    this.startOrder;
                     switch (desk) {
-                        case "1": this.one = false; this.two = true; this.thr = true; this.ftr = true;
+                        case "1": this.one = false; this.two = true; this.thr = true; this.ftr = true; this.multi = false;
                             break;
-                        case "2": this.one = false; this.two = false; this.thr = true; this.ftr = true;
+                        case "2": this.one = false; this.two = false; this.thr = true; this.ftr = true; this.multi = false;
                             break;
-                        case "3": this.one = true; this.two = true; this.thr = false; this.ftr = false;
+                        case "3": this.one = true; this.two = true; this.thr = false; this.ftr = false; this.multi = true;
                             break;
-                        case "4": this.one = true; this.two = true; this.thr = false; this.ftr = false;
+                        case "4": this.one = true; this.two = true; this.thr = false; this.ftr = false; this.multi = true;
                             break;
-                        default: this.one = true; this.two = true; this.thr = true; this.ftr = true;
+                        default: this.one = true; this.two = true; this.thr = true; this.ftr = true; this.multi = true;
                     }
                 },
                 checkRequire: function () {

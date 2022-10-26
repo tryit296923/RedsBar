@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews().AddJsonOptions(opt => opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddTransient<MailService>();
 builder.Services.AddTransient<HashService>();
+builder.Services.AddTransient<AesService>();
 builder.Services.AddRazorTemplating();
 
 builder.Services.AddDbContext<db_a8de26_projectContext>(option =>

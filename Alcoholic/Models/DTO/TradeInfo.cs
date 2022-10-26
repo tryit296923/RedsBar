@@ -10,5 +10,8 @@
         public string Amt { get; internal set; }
         public string ItemDesc { get; internal set; }
         public string? ReturnURL { get; internal set; }
+        public string? Credit { get; internal set; }
+        public string? LinePay { get; internal set; }
+        public string? AndroidPay { get; internal set; }
     }
 }

@@ -13,7 +13,7 @@ namespace Alcoholic.Models.DTO
         public string Name { get; set; }
         [Required, EmailAddress]
         public string Email { get; set; }
-        [Required, StringLength(10)]
+        [Required, MinLength(10),MaxLength(10)]
         public string Phone { get; set; }
         [Required]
         public DateTime Birth { get; set; }
