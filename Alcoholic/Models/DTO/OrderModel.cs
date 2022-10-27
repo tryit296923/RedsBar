@@ -12,21 +12,28 @@ namespace Alcoholic.Models.DTO
         public DateTime? OrderTime { get; set; }
         public string? Status { get; set; } = "N";
     }
-    //public class OrderTotalViewModel
-    //{
-    //    //存入資料庫Order
-    //    public List<OrderListViewModel> Orders { get; set; }
-    //    //存入資料庫OrderDetail
-    //    public List<CartItem> Details { get; set; }
-    //}
-    //public class OrderListViewModel
-    //{
-    //    public string OrderId { get; set; }
-    //    public Guid MemberId { get; set; }
-    //    public string MemberName { get; set; }
-    //    public int Number { get; set; }
-    //    public DateTime OrderTime { get; set; }
-    //    public string Desk { get; set; }
-    //    public string Status { get; set; } = "N";
-    //}
+
+    public class OrderCheckViewModel
+    {
+        public string Number { get; set; }
+        public string Desk { get; set; }
+        public string OrderId { get; set; }
+        public string OrderTime { get; set; }
+        public int Total { get; set; }
+        public List<CartTotal> CartTotal { get; set; }
+
+    }
+
+    public class CartTotal
+    {
+        public CartIdNamePair IdNamePair { get; set; }
+        public int Count { get; set; }
+    }
+
+    public class CartIdNamePair
+    {
+        public int ProductId { get; set; }
+        public string ProductName { get; set; }
+    }
+    
 }
