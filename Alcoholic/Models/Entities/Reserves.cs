@@ -14,5 +14,6 @@ namespace Alcoholic.Models.Entities
         public string? Email { get; set; }
         public int Number { get; set; }
         public DateTime ReserveSet { get; set; }
+        public int Status { get; set; }
     }
 }

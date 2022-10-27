@@ -2,65 +2,17 @@
     ViewData["Title"] = "員工管理";
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
+
 <style>
-    .table {
-        text-align: center;
-    }
-
-    .bookinginfo button {
-        line-height: 24px;
-    }
-    /*當日訂位*/
-    .bookingtoday {
-        border: 1px solid rgb(215, 215, 215);
-        border-radius: 0.375rem;
-    }
-
-    .allstaff {
+    .addemp input,select{
         width: 100%;
-        justify-content: space-around;
     }
 
-        .allstaff thead {
-            background-color: #D8CDB9;
-            height: 30px;
-            line-height: 30px;
-        }
-
-    .bookinginfo thead {
-        background-color: rgb(215, 215, 215);
+    #editbooking input,select{
+        width: 100%;
     }
-
-    .bookinginfo td {
-        line-height: 100px;
-    }
-
-    .allstaff tbody tr:hover {
-        background-color: rgb(241, 241, 241);
-    }
-    /*篩選訂位*/
-    .staffpick {
-        width: auto;
-    }
-
-    .btn-search {
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        color: #555;
-        padding: 6px 10px;
-        font-size: 14px;
-        line-height: 1.4;
-    }
-    /*Modal*/
-    label {
-        padding: 12px 0 6px 3px;
-    }
-
-    .bookingdAdding input, .bookingdAdding select {
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        height: 38px;
-        padding: 6px 12px 6px 12px;
+    i{
+        pointer-events: none
     }
 </style>
 <div class="bookingmanage container-fluid p-5" id="staff">
@@ -72,9 +24,15 @@
     </div>
     <hr>
     <div class="py-4">
-        <div class="allstaff">
-            <div class="bookingtoday p-4">
-                <h5>員工列表</h5>
+        <div class="todaydata">
+            <div class="bookingtoday p-4" style="overflow-y:scroll">
+                <div class="spacebetween">
+                    <h5>員工列表</h5>
+                    <div class="datepick">
+                        <input placeholder="請輸入員工帳號" type="text" v-model="search" />
+                        <button class="btn-search" v-on:click="SearchClick()">搜尋</button>
+                    </div>
+                </div>
                 <br>
                 <table class="table">
                     <thead>
@@ -84,67 +42,91 @@
                             <th scope="col">姓名</th>
                             <th scope="col">代號</th>
                             <th scope="col">聯絡方式</th>
+                            <th scope="col">到職時間</th>
+                            <th scope="col">就職狀態</th>
+                            <th scope="col">編輯</th>
+                            <th scope="col">刪除</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in staffs">
-                            <td>{{item.role}}</td>
-                            <td>{{item.empAccount}}</td>
-                            <td>{{item.empName}}</td>
-                            <td>{{item.nickName}}</td>
-                            <td>{{item.contact}}</td>
+                        <tr v-for="(staff,index) in staffs">
+                            <td>{{staff.role}}</td>
+                            <td>{{staff.empAccount}}</td>
+                            <td>{{staff.empName}}</td>
+                            <td>{{staff.nickName}}</td>
+                            <td>{{staff.contact}}</td>
+                            <td>{{staff.join.substring(0,10)}}</td>
+                            <td>{{giveName(staff.status)}}</td>
+                            <td><button :id="index" v-on:click="editStaff" data-bs-toggle="modal" data-bs-target="#editbooking" class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button></td>
+                            <td><button :id="index" class="btnproducts"><i class="fa-solid fa-trash"></i></button></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    <div class="py-4">
-        <div class="spacebetween row-cols-2 mb-3">
-            <h3>查詢員工</h3>
-            <div class="staffpick">
-                <date-picker v-model="SelectDate" value-type="format" class="staffpicker p-0" id="staffpicker"
-                             placeholder="日期篩選" name="date" :disabled-date="disablerange"></date-picker>
-                <button class="btn-search" v-on:click="SearchClick()">搜尋</button>
+    <!-- Modal -->
+    <div class="modal fade bookingdModal" id="staticBackdrop" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="staticBackdropLabel">新增員工</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body container addemp">
+                    <div><label for="nickName">暱稱：</label><br/><input v-model="nickName" type="text"></div>
+                    <div><label for="empAccount">帳號：</label><br/><input v-model="empAccount" type="text"></div>
+                    <div><label for="empPassword">密碼：</label><br/><input v-model="empPassword" type="text"></div>
+                    <div><label for="empName">姓名：</label><br/><input v-model="empName" type="text"></div>
+                    <div><label for="contact">電話：</label><br/><input v-model="contact" type="text"></div>
+                    <div>
+                        <label for="role">職稱：</label><br/>
+                        <select v-model="role" id="">
+                            <option value="moderater">管理員</option>
+                            <option value="leader">組長</option>
+                            <option value="staff">員工</option>
+                        </select>
+                    </div>
+                    <div><label for="salary">薪資：</label><br/><input v-model="salary" type="number"></div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row m-0">
+                        <button class="col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                        <button v-on:click="addemp" class="col btneditproducts m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="bookinginfo">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">預定日期</th>
-                        <th scope="col">姓名</th>
-                        <th scope="col">電話</th>
-                        <th scope="col">人數</th>
-                        <th scope="col">下訂日期</th>
-                        <th>變更</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="staff in selectStaff">
-                        <td>{{staff.role}}</td>
-                        <td>{{staff.empAccount}}</td>
-                        <td>{{staff.empName}}</td>
-                        <td>{{staff.nickName}}</td>
-                        <td>{{staff.contact}}</td>
-                        <td>
-                            <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
-                            <button class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
-         data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
+    <div class="modal fade bookingdModal" id="editbooking" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="staticBackdropLabel">新增訂位</h3>
+                    <h3 class="modal-title" id="staticBackdropLabel">編輯資訊</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body container">
+                    <div><label for="nickName">暱稱：</label><br /><input v-model="edit.nickName" type="text"></div>
+                    <div><label for="empPassword">密碼：</label><br /><input v-model="edit.empPassword" type="text"></div>
+                    <div><label for="empName">姓名：</label><br /><input v-model="edit.empName" type="text"></div>
+                    <div><label for="contact">電話：</label><br /><input v-model="edit.contact" type="text"></div>
+                    <div>
+                        <label for="role">職稱：</label><br />
+                        <select v-model="edit.role" id="">
+                            <option value="moderater">管理員</option>
+                            <option value="leader">組長</option>
+                            <option value="staff">員工</option>
+                        </select>
+                    </div>
+                    <div><label for="salary">薪資：</label><br /><input v-model="edit.salary" type="number"></div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row m-0">
+                        <button class="col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                        <button v-on:click="editStaffInfo" class="col btneditproducts m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -155,16 +137,141 @@
         el: "#staff",
         data: {
             staffs: [],
-            selectStaff:[],
+            nickName: "",
+            empAccount: "",
+            empPassword: "",
+            empName: "",
+            contact: "",
+            role: "",
+            salary: "",
+            status: "",
+            search:"",
+            edit:{
+                nickName: "",
+                empAccount: "",
+                empPassword: "",
+                empName: "",
+                contact: "",
+                role: "",
+                salary: "",
+            }
         },
         methods: {
+            addemp: function () {
+                let empJson = {
+                    nickName: this.nickName,
+                    empAccount: this.empAccount,
+                    empPassword: this.empPassword,
+                    empName: this.empName,
+                    contact: this.contact,
+                    role: this.role,
+                    salary: this.salary
+                };
+                let JsonString = JSON.stringify(empJson);
+                fetch("./staff/Register", {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JsonString        // to JsonString
+                }).then(response => response.json()).then(r => {
+                    switch(r.status){
+                        case 0:
+                            {Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: '新增成功',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                                this.getStaff();
+                            }
+                        break;
+                        case 1:
+                            {Swal.fire({
+                                position: 'center',
+                                icon: 'error',
+                                title: '帳號有人使用過了!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                                this.getStaff();
+                            }
+                        break;
+                        case 2:
+                            {Swal.fire({
+                                position: 'center',
+                                icon: 'error',
+                                title: '資料格式不符!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                                this.getStaff();
+                            }
+                        break;
+                    }
+                });
+            },
+            getStaff:function () {
+                fetch("/backcenter/staff/GetAllMember").then(e => e.json()).then(r => this.staffs = r);
+            },
+            SearchClick:function(){
+                
+            },
+            giveName:function(status){
+                return status == 1 ? "在職":"已離職";
+            },
+            editStaff:function(e){
+                this.edit = this.staffs[e.target.id];
+            },
+            editStaffInfo:function(){
+                fetch("/backcenter/staff/EditMember", {
+                    method:"PUT",
+                    headers:{"Content-Type":"application/json"},
+                    body: JSON.stringify(this.edit)
+                }).then(e => e.json()).then(r => {
+                    switch (r.status) {
+                        case 0:
+                            {
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'success',
+                                    title: '編輯成功',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                this.getStaff();
+                            }
+                            break;
+                        case 1:
+                            {
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'question',
+                                    title: '不太可能出現這行 找不到使用者',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                this.getStaff();
+                            }
+                            break;
+                        case 2:
+                            {
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'error',
+                                    title: '資料格式不符!',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                this.getStaff();
+                            }
+                            break;
+                    }
 
+                });
+            }
         },
-        beforeCreate: function () {
-            let self = this;
-            fetch("/backcenter/staff/GetAllMember")
-                .then(e => e.json())
-                .then(r => self.staffs = r);
+        mounted: function(){
+            this.getStaff();
         }
     })
 </script>
