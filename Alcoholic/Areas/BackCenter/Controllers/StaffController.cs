@@ -7,6 +7,9 @@ using System.Data;
 using System.Security.Claims;
 using Alcoholic.Services;
 using Alcoholic.Models.DTO;
+using System.Security.Principal;
+using Alcoholic.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Alcoholic.Areas.BackCenter.Controllers
 {
@@ -26,20 +29,47 @@ namespace Alcoholic.Areas.BackCenter.Controllers
         }
         public List<StaffModel> GetAllMember()
         {
-            List<StaffModel> staffs = new();
-            foreach(Employee emp in db.Employees)
+            var staffs = db.Employees.Select(emp => new StaffModel
             {
-                staffs.Add(new StaffModel()
-                {
-                    EmpName = emp.EmpName,
-                    EmpAccount = emp.EmpAccount,
-                    NickName = emp.NickName,
-                    Contact = emp.Contact,
-                    Role = emp.Role,
-                });
-            }
+                EmpName = emp.EmpName,
+                EmpAccount = emp.EmpAccount,
+                NickName = emp.NickName,
+                Contact = emp.Contact,
+                Role = emp.Role,
+                Status = emp.Status,
+                Join = emp.Join
+            }).ToList();
+
             return staffs;
         }
+
+        [HttpPut]
+        public IActionResult EditMember([FromBody] StaffModel staff)
+        {
+            ReturnModel returnModel = new();
+            if (!ModelState.IsValid)
+            {
+                returnModel.Status = 2;
+                return Ok(returnModel);
+            }
+            if (!db.Employees.Any(Member => Member.EmpAccount == staff.EmpAccount))
+            {
+                returnModel.Status = 1;
+                return Ok(returnModel);
+            }
+            Employee emp = db.Employees.Select(e => e).Where(e => e.EmpAccount == staff.EmpAccount).FirstOrDefault();
+            emp.EmpName = staff.EmpName;
+            emp.EmpPassword = staff.EmpPassword;
+            emp.NickName = staff.NickName;
+            emp.Contact = staff.Contact;
+            emp.Salary = staff.Salary.GetValueOrDefault();
+            emp.Role = staff.Role;
+            db.Entry(emp).State = EntityState.Modified;
+            db.SaveChanges();
+            returnModel.Status = 0;
+            return Ok(returnModel);
+        }
+
 
         [HttpPost]
         public IActionResult Login([FromBody] Employee emp)
@@ -70,19 +100,39 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Ok();
         }
-        [Authorize(Roles = "moderater")]
+
+        //[Authorize(Roles = "moderater")]
         [HttpPost]
-        public IActionResult Register([FromBody] Employee emp)
+        public IActionResult Register([FromBody] StaffModel staff)
         {
-            if (emp == null)
+            ReturnModel returnModel = new();
+            if (!ModelState.IsValid)
             {
-                emp.Salt = Guid.NewGuid().ToString("N");
-                emp.EmpPassword = hash.GetHash((string)emp.EmpPassword.Concat(emp.Salt));
-                db.Add(emp);
-                db.SaveChanges();
-                return Ok();
+                returnModel.Status = 2;
+                return Ok(returnModel);
             }
-            return NotFound();
+            if (db.Members.Any(Member => Member.MemberAccount == staff.EmpAccount))
+            {
+                returnModel.Status = 1;
+                return Ok(returnModel);
+            }
+            Employee emp = new()
+            {
+                EmpName = staff.EmpName,
+                EmpAccount = staff.EmpAccount,
+                NickName = staff.NickName,
+                Contact = staff.Contact,
+                Salary = staff.Salary.GetValueOrDefault(),
+                Role = staff.Role,
+                Status = 1,
+                Join = DateTime.Now
+            };
+            emp.Salt = Guid.NewGuid().ToString("N");
+            emp.EmpPassword = hash.GetHash(string.Concat(staff.EmpPassword, emp.Salt));
+            db.Add(emp);
+            db.SaveChanges();
+            returnModel.Status = 0;
+            return Ok(returnModel);
         }
 
     }

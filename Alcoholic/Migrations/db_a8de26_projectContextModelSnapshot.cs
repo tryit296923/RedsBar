@@ -116,6 +116,14 @@ namespace Alcoholic.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("Join")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2022, 10, 27, 19, 40, 56, 562, DateTimeKind.Local).AddTicks(1954));
+
+                    b.Property<DateTime?>("Leave")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("NickName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -132,6 +140,11 @@ namespace Alcoholic.Migrations
                     b.Property<string>("Salt")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
                     b.HasKey("EmpId")
                         .HasName("PK_Employee_1");
@@ -496,6 +509,11 @@ namespace Alcoholic.Migrations
 
                     b.Property<DateTime>("ReserveSet")
                         .HasColumnType("date");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
                     b.HasKey("ReserveId")
                         .HasName("PK_Reserves_1");

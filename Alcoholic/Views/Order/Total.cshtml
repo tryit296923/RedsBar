@@ -385,12 +385,15 @@
             <input name="orderId" value=@Model.OrderId />
             <button type="submit" ref="checkConfirm"></button>
         </form>
+        <form action="OrderList" method="post" class="d-none">
+            <button type="submit" ref="backToMenu"></button>
+        </form>
     </div>
     <!-- 底部按鈕 -->
     <div class="finalCheck">
         <div class="container row w-100">
             <div class="col col-xl-6 text-center">
-                <button type="button" class="bottombtntext btnBacktoMenu w-100 py-2">
+                <button type="button" class="bottombtntext btnBacktoMenu w-100 py-2" v-on:click="backToMenu">
                     繼續加點
                 </button>
             </div>
@@ -496,6 +499,9 @@
             var newOt = ot.substring(0, 16);
             return newOt.replace("T", " ");
         },
+        backToMenu: function () {
+            this.$refs.backToMenu.click();
+        }
     },
         })
 </script>

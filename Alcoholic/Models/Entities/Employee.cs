@@ -22,5 +22,9 @@ namespace Alcoholic.Models.Entities
         public string Salt { get; set; }
         [Required]
         public string Role { get; set; }
+        [Required]
+        public DateTime Join { get; set; }
+        public int Status { get; set; }
+        public DateTime? Leave { get; set; }
     }
 }

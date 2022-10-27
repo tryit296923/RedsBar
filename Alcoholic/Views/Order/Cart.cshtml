@@ -294,6 +294,9 @@
                     <input name="orderId" v-model="orderId" />
                     <button type="submit" ref="orderingSend"></button>
                 </form>
+                <form action="OrderList" method="post" class="d-none">
+                    <button type="submit" ref="backToMenu"></button>
+                </form>
             </div>
             <hr>
             <div class="cartTotal">此筆訂單總額: {{cartTotal()}} 元</div>
@@ -304,7 +307,7 @@
     <div class="orderCheck my-3">
         <div class="container row w-100">
             <div class="col col-xl-6 text-center">
-                <button class="bottombtntext btnBacktoMenu w-100 py-2">
+                <button class="bottombtntext btnBacktoMenu w-100 py-2" v-on:click="backToMenu">
                     繼續點餐
                 </button>
             </div>
@@ -377,13 +380,13 @@
             orderingSend: function () {
                 this.confirmSend();
             },
-            seperate: function (obj, ary) {
-                //切分cookie
-                var key = obj.split('=')[0].trim();
-                var val = obj.split('=')[1];
+            //seperate: function (obj, ary) {
+            //    //切分cookie
+            //    var key = obj.split('=')[0].trim();
+            //    var val = obj.split('=')[1];
 
-                ary[key] = val; //ary的key屬性值是val
-            },
+            //    ary[key] = val; //ary的key屬性值是val
+            //},
             getProductSession() {
                 //var cartList = '@ViewBag.stest'
                 //console.log(cartList);
@@ -421,6 +424,9 @@
                 //this.itemList.forEach(x => {
                 //    console.log(x);
                 //})
+            },
+            backToMenu:function(){
+                this.$refs.backToMenu.click();
             }
         },
     })

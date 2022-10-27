@@ -61,13 +61,16 @@ namespace Alcoholic.Models.Entities
                 entity.Property(e => e.Salt).HasColumnType("nvarchar(max)");
 
                 entity.Property(e => e.Role).HasColumnType("nvarchar(max)");
+
+                entity.Property(e => e.Status).HasDefaultValue(1);
+
+                entity.Property(e => e.Join).HasDefaultValue(DateTime.Now);
+
             });
 
             modelBuilder.Entity<Material>(entity =>
             {
                 entity.HasKey(e => e.MaterialId).HasName("PK_Material_1");
-
-                
 
                 entity.Property(e => e.Name).HasColumnType("nvarchar(max)");
 
@@ -207,6 +210,8 @@ namespace Alcoholic.Models.Entities
                 entity.Property(e => e.Email).HasColumnType("nvarchar(max)");
 
                 entity.Property(e => e.ReserveSet).HasColumnType("date");
+
+                entity.Property(e => e.Status).HasDefaultValue(1);
             });
 
             modelBuilder.Entity<DeskInfo>(entity =>
