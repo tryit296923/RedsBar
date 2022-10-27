@@ -2,8 +2,8 @@
 using Alcoholic.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using NuGet.Packaging.Signing;
 
 namespace Alcoholic.Controllers
 {
@@ -58,7 +58,7 @@ namespace Alcoholic.Controllers
                                 sesItem.Add(cartItem[i]);
                                 break;
                             }
-                            
+
                         }
                     }
                     //cartString為購物車字串，additem為物件
@@ -100,7 +100,7 @@ namespace Alcoholic.Controllers
             //var x = projectContext.Discount.FirstOrDefault();
 
             var cartItems = JsonConvert.DeserializeObject<List<CartItem>>(sesStr);
-           
+
             foreach (var cartItem in cartItems)
             {
                 var product = projectContext.Products.Find(cartItem.Id);
@@ -144,28 +144,28 @@ namespace Alcoholic.Controllers
         {
             string sDeskTotal = HttpContext.Session.GetString("Desk");
 
-            var orderDetail = (from y in projectContext.Orders 
-                               where y.Status == "N" && y.DeskNum == sDeskTotal 
+            var orderDetail = (from y in projectContext.Orders
+                               where y.Status == "N" && y.DeskNum == sDeskTotal
                                select y).Select(y => new OrderViewModel
-            {
-                Desk = y.DeskNum,
-                Number = y.Number,
-                OrderId = y.OrderId,
-                OrderTime = y.OrderTime,
-                MemberName = y.Member.MemberName,
-                Status = y.Status,
-                ItemList = y.OrderDetails.Select(z => new CartItem
-                {
-                    Id = z.ProductId,
-                    Qty = z.Quantity,
-                    ProductName = z.Product.ProductName,
-                    OrderId = z.OrderId,
-                    UnitPrice = z.UnitPrice,
-                    DiscountAmount = z.Product.Discount.DiscountAmount,
-                    Path = z.Product.Images.FirstOrDefault().Path,
-                    Sequence = z.Sequence,
-                }).ToList(),
-            }).FirstOrDefault();
+                               {
+                                   Desk = y.DeskNum,
+                                   Number = y.Number,
+                                   OrderId = y.OrderId,
+                                   OrderTime = y.OrderTime,
+                                   MemberName = y.Member.MemberName,
+                                   Status = y.Status,
+                                   ItemList = y.OrderDetails.Select(z => new CartItem
+                                   {
+                                       Id = z.ProductId,
+                                       Qty = z.Quantity,
+                                       ProductName = z.Product.ProductName,
+                                       OrderId = z.OrderId,
+                                       UnitPrice = z.UnitPrice,
+                                       DiscountAmount = z.Product.Discount.DiscountAmount,
+                                       Path = z.Product.Images.FirstOrDefault().Path,
+                                       Sequence = z.Sequence,
+                                   }).ToList(),
+                               }).FirstOrDefault();
 
             return View(orderDetail);
 
@@ -213,18 +213,56 @@ namespace Alcoholic.Controllers
             string sNumberCheck = HttpContext.Session.GetString("Number");
             string sMemberID = HttpContext.Session.GetString("MemberID");
 
-            ViewBag.orderTime = now;
-            ViewBag.Number = sNumberCheck;
-            ViewBag.Desk = sDeskCheck;
-            ViewBag.total = total;
-            ViewBag.orderId = orderId;
+            if (!Guid.TryParse(sMemberID, out var memberId))
+            {
+                throw new Exception("Guid is error");
+            }
+            var getOrder = projectContext.Orders.Where(x => x.MemberId == memberId && x.Status == "N").FirstOrDefault();
+            var cartTotalList = getOrder.OrderDetails.Select(x => new { x.Product.ProductName, x.ProductId })
+                .GroupBy(x => new { x.ProductId, x.ProductName }, (k, v) => new CartTotal
+                {
+                    Count = v.Count(),
+                    IdNamePair = new CartIdNamePair() { ProductName = k.ProductName, ProductId = k.ProductId }
+                }).ToList();
 
+            //var carts = (from o in projectContext.OrderDetails // all od LIST
+            //             where o.Order.MemberId == Guid.Parse(sMemberID) && o.Order.Status == "N"
+            //             select new CartIdNamePair
+            //             {
+            //                 ProductId = o.ProductId,
+            //                 ProductName = o.Product.ProductName,
+            //             });// all LIST od(with ID % N restrict)
+            //var count = from cart in carts
+            //            group cart by cart.ProductName into groupedCart
+            //            select groupedCart.Count();
 
-            var cartTotal = (from o in projectContext.OrderDetails
-                             where o.Order.MemberId == Guid.Parse(sMemberID) && o.Order.Status == "N"
-                             group o by new{ o.ProductId, o.Product.ProductName} into n
-                             select new { item = n.Key, cnt = n.Count() }).ToList();
-            return View(cartTotal);
+            //group o by new { o.ProductId, o.Product.ProductName } into n // (pId-pName)(List) => od(group) LIST(LIST)
+            //select new { item = n.Key, count = n.Count() }).ToList(); // (item-count)List(List(List))
+
+            //List<CartIdNamePair> cartIdNamePair = carts.ToList();
+            //List<int> Counts = count.ToList();
+            //List<CartTotal> cartTotals = new();
+            //for (int i = 0; i < cartIdNamePair.Count(); i++)
+            //{
+            //    cartTotals.Add(
+            //        new CartTotal()
+            //        {
+            //            IdNamePair = cartIdNamePair[i],
+            //            Count = Counts[i],
+            //        });
+            //}
+
+            OrderCheckViewModel orderCheckViewModel = new OrderCheckViewModel
+            {
+                Desk = sDeskCheck,
+                Number = sNumberCheck,
+                OrderId = orderId,
+                OrderTime = now,
+                Total = total,
+                CartTotal = cartTotalList,
+            };
+
+            return View(orderCheckViewModel);
         }
         public IActionResult FrontDeskCheckout()
         {

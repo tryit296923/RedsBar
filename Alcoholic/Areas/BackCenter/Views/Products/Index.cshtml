@@ -34,7 +34,7 @@
                             <button :id="item.id" class="btnproducts" data-bs-toggle="modal" data-bs-target="#editProd" @@click="[seleEdit($event)]"><i class="fa-solid fa-pen-to-square"></i></button>
                     </td>
                     <td>
-                    <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
+                            <button :id="item.id" class="btnproducts" @@click="sendDelete"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             </tbody>
@@ -49,29 +49,29 @@
                 <div class="modal-header editproducttitle">
                     <h3 class="modal-title" id="editProd">編輯商品</h3>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                            aria-label="Close" @@click="refreshPage"></button>
                 </div>
                 <div class="modal-body container productEditing">
                     <div class="row">
                         <div class="col-12 my-2">
                             <label for="productPic">圖片：</label>
-                            <img class="modal-image" :src="imagesrc" />
+                            <img class="modal-image" :src="editProductData.imagesrc" />
                         </div>
                         <div class="col-12 my-2">
                             <label for="productName" class="form-label">商品名稱：</label>
-                            <input type="text" class="form-control w-100" id=" productName" v-model="name" required>
+                            <input type="text" class="form-control w-100" id=" productName" v-model="editProductData.productName" required>
                         </div>
                         <div class="col-6 my-2">
                             <label for="productCost" class="form-label">商品成本：</label>
-                            <input type="number" class="form-control w-100" placeholder="NTD" id="productCost" v-model="cost" min="0" required>
+                            <input type="number" class="form-control w-100" placeholder="NTD" id="productCost" v-model="editProductData.productCost" min="0" required>
                         </div>
                         <div class="col-6 my-2">
                             <label for="productPrice" class="form-label">商品售價：</label>
-                            <input type="number" class="form-control w-100" placeholder="NTD" id="productPrice" v-model="price" min="0" required>
+                            <input type="number" class="form-control w-100" placeholder="NTD" id="productPrice" v-model="editProductData.productPrice" min="0" required>
                         </div>
                         <div class="col-12 my-2">
                             <label for="productDescription" class="form-label">商品敘述：</label>
-                            <input type="text" class="form-control w-100" placeholder="請簡述特色" id="productDescription" v-model="description" required>
+                            <input type="text" class="form-control w-100" placeholder="請簡述特色" id="productDescription" v-model="editProductData.productDescription" required>
                         </div>
                         <div id="multipleselect" class="col-12 ">
                                 <div class="col-12 ">
@@ -88,8 +88,8 @@
                 </div>
                 <div class="modal-footer">
                     <div class="row m-0">
-                        <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
-                        <button class=" col btneditproducts m-1" type="button" v-on:click="send"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                        <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal" @@click="refreshPage"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                        <button class=" col btneditproducts m-1" type="button" v-on:click="sendEdit"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
                     </div>
                 </div>
             </div>
@@ -107,7 +107,7 @@
             <div class="modal-header addproducttitle">
                 <h3 class="modal-title" id="staticBackdropLabel">新增商品</h3>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                        aria-label="Close" @@click="refreshPage"></button>
             </div>
             <div class="modal-body container productAdding">
                 <div class="row">
@@ -142,10 +142,10 @@
                         <div class="col-12 ">
                             <label class="my-2">折扣：</label>
                             <multiselect v-model="discountvalue" deselect-label="無法移除" track-by="discountId"
-                                         label="name" placeholder="請選擇折扣" :options="discountselected" :searchable="false"
+                                         label="discountName" placeholder="請選擇折扣" :options="discountselected" :searchable="false"
                                          :allow-empty="false">
                                 <template slot="singleLabel"
-                                          slot-scope="{ option }"><strong>{{option.name}}</strong> </template>
+                                          slot-scope="{ option }"><strong>{{option.discountName}}</strong> </template>
                             </multiselect>
                         </div>
                     </div>
@@ -153,7 +153,7 @@
             </div>
             <div class="modal-footer">
                 <div class="row m-0">
-                    <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                    <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark" @@click="refreshPage"></i> 離開編輯</button>
                     <button class=" col btneditproducts m-1" type="button" v-on:click="send"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
                 </div>
             </div>
@@ -186,54 +186,64 @@
                 { discountId: '5', discountName: 'golden' },
                 { discountId: '6' ,discountName: 'earlybird' }
             ],
+            editProductData: {
+                productId:"",
+                imagesrc: "",
+                productName: "",
+                productPrice: "",
+                productCost: "",
+                productDescription: "",
+            },
         },
         components: {
             Multiselect: window.VueMultiselect.default
         },
         methods: {
             seleEdit: function (e) {
-                this.vueid = e.currentTarget.id;
-                var item = this.product[this.vueid - 1];
-                var self = this.product;
-                this.imagesrc = item.path;
-                this.name = item.name;
-                this.cost = item.cost;
-                this.price = item.price;
-                this.description = item.description;
+                var editData = this.editProductData;
+                editData.productId = e.currentTarget.id;
+                var item = this.product[editData.productId - 1];
+                editData.imagesrc = item.path;
+                editData.productName = item.name;
+                editData.productCost = item.cost;
+                editData.productPrice = item.price;
+                editData.productDescription = item.description;
                 this.discount = {
-                    discountId: this.product[this.vueid - 1].discountId,
-                    discountName: this.product[this.vueid - 1].discountName
+                    discountId: this.product[editData.productId - 1].discountId,
+                    discountName: this.product[editData.productId - 1].discountName
                 }
             },
-            //loadDiscount:function(){
-            //    console.log("test")
-            //    for(i=0;i<this.product.length;i++){
-            //        var tempDiscount = { discountId :"",discountName:""};
-            //        tempDiscount.discountId = this.product[i].discountId;
-            //        tempDiscount.discountName = this.product[i].discountName;
-            //        console.log(tempDiscount);
-            //    }
-            //},
-            send: function () {
+            sendEdit: function () {
+                let self = this;
                 let data = new FormData();
-                data.append("ProductName", this.createProductData.productName)
-                data.append("Cost", this.createProductData.productCost)
-                data.append("UnitPrice", this.createProductData.productPrice)
-                data.append("ProductDescription", this.createProductData.productDescription)
-                var img = this.$refs.myVueDropzone.getQueuedFiles();
-                img.forEach(x => data.append("Images", x));
-                this.$refs.myVueDropzone.removeAllFiles();
-                this.createProductData.productName = "";
-                this.createProductData.productPrice = "";
-                this.createProductData.productCost = "";
-                this.createProductData.productDescription = "";
-                this.createProductData.images = [];
-
-                fetch("/api/Products/CreateProduct", {
+                data.append("ProductId", this.editProductData.productId)
+                data.append("ProductName", this.editProductData.productName)
+                data.append("Cost", this.editProductData.productCost)
+                data.append("UnitPrice", this.editProductData.productPrice)
+                data.append("ProductDescription", this.editProductData.productDescription)
+                data.append("DiscountId", this.discount.discountId)
+                fetch("/api/Products/EditProduct", {
                     method: 'POST',
                     //headers: { "Content-Type": "multipart/form-data" },
                     body: data
+                });
+                fetch("/api/Products/GetAllBackProducts")
+                    .then((response) => response.json())
+                    .then((result) => { self.product = result; allProds = result; console.log(self.product) });
+                
+            },
+            sendDelete:function(e){
+                /*prodId = {Id:""}*/
+                  var   prodId = e.currentTarget.id;
+                fetch("/api/Products/DeleteProduct", {
+                      method:'POST',
+                      headers:{"Content-Type":"application/json"},
+                      body:JSON.stringify(prodId)
+                              
                 })
+            },
+            refreshPage: function(){
+                window.location.reload();
             }
         },
         mounted:function(){
@@ -350,6 +360,9 @@
                 }
                 this.options.push(tag)
                 this.value.push(tag)
+            },
+            refreshPage: function () {
+                window.location.reload();
             }
         },
         mounted: function () {

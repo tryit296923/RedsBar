@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Alcoholic.Models.DTO.OrderCheckViewModel
+@{
     ViewData["Title"] = "今日消費結算";
     Layout = "_LayoutMobile";
 }
@@ -135,10 +136,10 @@
             <!-- 訂單簡單資訊 -->
             <div class="checkdetail p-3">
                 <div class="px-3">
-                    <p class="checkinfotext ordertime">日期 : @ViewBag.orderTime</p>
-                    <p class="checkinfotext tablenum">桌號 : @ViewBag.Desk</p>
-                    <p class="checkinfotext custnum">用餐人數 : @ViewBag.Number 人</p>
-                    <p class="checkinfotext custnum">訂單編號 : @ViewBag.orderId</p>
+                    <p class="checkinfotext ordertime">日期 : @Model.OrderTime</p>
+                    <p class="checkinfotext tablenum">桌號 : @Model.Desk</p>
+                    <p class="checkinfotext custnum">用餐人數 : @Model.Number 人</p>
+                    <p class="checkinfotext custnum">訂單編號 : @Model.OrderId</p>
                 </div>
                 <hr>
                 <ul class="px-3">
@@ -147,13 +148,13 @@
                         <span class="col-3 text-center">數量</span>
                         <hr>
                     </li>
-                    <li class="orderDetail row" v-for="items in cartTotal">
-                        <span class="col-7">{{items.item.productName}}</span>
-                        <span class="pe-3 col-3 text-center">{{items.cnt}}</span>
+                    <li class="orderDetail row" v-for="items in orderCheckViewModel.cartTotal">
+                        <span class="col-7">{{items.idNamePair.productName}}</span>
+                        <span class="pe-3 col-3 text-center">{{items.count}}</span>
                     </li>
                 </ul>
                 <hr>
-                <p class="colorbox total mt-0">今日消費總計 : @ViewBag.total 元</p>
+                <p class="colorbox total mt-0">今日消費總計 : @Model.Total 元</p>
             </div>
             <!-- 底部選單按鈕 -->
             <div class="paymentway">
@@ -202,35 +203,33 @@
         el: "#orderCheck",
         data() {
             return {
-                cartTotal: @Html.Raw(Json.Serialize(Model))
-                }
+                orderCheckViewModel: @Html.Raw(Json.Serialize(Model))
+            }
         },
         methods: {
             pay: function (paytype) {
-                fetch("/api/order/payment", {
-                    body: JSON.stringify({ OrderId: @ViewBag.orderId , PayType: paytype }),
+                fetch("/api/Order/Payment", {
+                    body: JSON.stringify({ OrderId: "@Model.OrderId" , PayType: paytype }),
                     headers: { 'content-type': 'application/json' },
                     method: "POST"
                 })
-                    .then(response => response.json())
-                    .then(result => {
-                        console.log(result);
-                        var form = document.createElement("form");
-                        form.method = 'post';
-                        form.action = "https://ccore.newebpay.com/MPG/mpg_gateway";
-                        Object.entries(result).forEach(x => {
-                            var inp = document.createElement("input");
-                            inp.value = x[1];
-                            inp.name = x[0].charAt(0).toUpperCase() + x[0].slice(1);
-                            inp.type = "hidden";
-                            form.append(inp);
-                        });
-                        window.document.body.appendChild(form);
-                        form.submit();
-                    })
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result);
+                    var form = document.createElement("form");
+                    form.method = 'post';
+                    form.action = "https://ccore.newebpay.com/MPG/mpg_gateway";
+                    Object.entries(result).forEach(x => {
+                        var inp = document.createElement("input");
+                        inp.value = x[1];
+                        inp.name = x[0].charAt(0).toUpperCase() + x[0].slice(1);
+                        inp.type = "hidden";
+                        form.append(inp);
+                    });
+                    window.document.body.appendChild(form);
+                    form.submit();
+                })
             }
-
         }
-
     })
 </script>
