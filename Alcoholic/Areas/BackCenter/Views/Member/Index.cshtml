@@ -2,11 +2,8 @@
     ViewData["Title"] = "會員管理";
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
-<style>
-    .addemp input, select {
-        width: 100%;
-    }
 
+<style>
     #editbooking input, select {
         width: 100%;
     }
@@ -29,91 +26,79 @@
     .none {
         display: none;
     }
-</style>
-<div class="bookingmanage container-fluid p-5" id="staff">
-    <div class="spacebetween row-cols-2 mb-3">
-        <h3>員工管理</h3>
 
-        <button type="button" class="addbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-            <i class="fa-sharp fa-solid fa-plus"></i> 新增員工
-        </button>
+    .bookinginfo td {
+        line-height: 1rem;
+    }
+</style>
+<div class="bookingmanage container-fluid p-5" id="member">
+    <div class="spacebetween row-cols-2 mb-3">
+        <h3>會員管理</h3>
     </div>
     <hr>
     <div class="py-4">
         <div class="todaydata">
             <div class="bookingtoday p-4">
                 <div class="spacebetween">
-                    <h5>員工列表</h5>
+                    <h5>會員列表</h5>
                     <div class="datepick">
-                        <input placeholder="請輸入員工帳號" type="text" v-model="search" />
+                        <input placeholder="請輸入會員帳號" type="text" v-model="search" />
                     </div>
                 </div>
                 <br>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">職位</th>
                             <th scope="col">帳號</th>
                             <th scope="col">姓名</th>
                             <th scope="col">代號</th>
                             <th scope="col">聯絡方式</th>
-                            <th scope="col">到職時間</th>
-                            <th scope="col">就職狀態</th>
+                            <th scope="col">狀態</th>
                             <th scope="col">編輯</th>
                             <th scope="col">刪除</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(staff,index) in staffs" :name="staff.empAccount">
-                            <td>{{staff.role}}</td>
                             <td>{{staff.empAccount}}</td>
                             <td>{{staff.empName}}</td>
                             <td>{{staff.nickName}}</td>
                             <td>{{staff.contact}}</td>
-                            <td>{{staff.join.substring(0,10)}}</td>
                             <td>{{giveName(staff.status)}}</td>
                             <td><button :id="index" v-on:click="editStaff" data-bs-toggle="modal" data-bs-target="#editbooking" class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button></td>
-                            <td><button :id="index" class="btnproducts"><i class="fa-solid fa-trash"></i></button></td>
+                            <td><button :id="index" v-on:click="deleteStaff" class="btnproducts"><i class="fa-solid fa-trash"></i></button></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    <!-- Modal -->
-    <div class="modal fade bookingdModal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="staticBackdropLabel">新增員工</h3>
-
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body container addemp">
-                    <div><label for="nickName">暱稱：</label><br /><input v-model="nickName" type="text"></div>
-                    <div><label for="empAccount">帳號：</label><br /><input v-model="empAccount" type="text"></div>
-                    <div><label for="empPassword">密碼：</label><br /><input v-model="empPassword" type="text"></div>
-                    <div><label for="empName">姓名：</label><br /><input v-model="empName" type="text"></div>
-                    <div><label for="contact">電話：</label><br /><input v-model="contact" type="text"></div>
-                    <div>
-                        <label for="role">職稱：</label><br />
-                        <select v-model="role" id="">
-                            <option value="moderater">管理員</option>
-                            <option value="leader">組長</option>
-                            <option value="staff">員工</option>
-                        </select>
-                    </div>
-                    <div><label for="salary">薪資：</label><br /><input v-model="salary" type="number"></div>
-                </div>
-                <div class="modal-footer">
-                    <div class="row m-0">
-                        <button class="col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
-                        <button v-on:click="addemp" class="col btneditproducts m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
-                    </div>
-                </div>
-            </div>
+    <div class="py-4">
+        <div class="bookinginfo">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">帳號</th>
+                        <th scope="col">姓名</th>
+                        <th scope="col">代號</th>
+                        <th scope="col">聯絡方式</th>
+                        <th scope="col">狀態</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in gstaffs">
+                        <td>{{item.empAccount}}</td>
+                        <td>{{item.empName}}</td>
+                        <td>{{item.nickName}}</td>
+                        <td>{{item.contact}}</td>
+                        <td>{{giveName(item.status)}}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+
+    <!-- Modal -->
     <div class="modal fade bookingdModal" id="editbooking" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0">
@@ -123,7 +108,6 @@
                 </div>
                 <div class="modal-body container">
                     <div><label for="nickName">暱稱：</label><br /><input v-model="edit.nickName" type="text"></div>
-                    <div><label for="empPassword">密碼：</label><br /><input v-model="edit.empPassword" type="text"></div>
                     <div><label for="empName">姓名：</label><br /><input v-model="edit.empName" type="text"></div>
                     <div><label for="contact">電話：</label><br /><input v-model="edit.contact" type="text"></div>
                     <div>
@@ -147,10 +131,11 @@
     </div>
 </div>
 <script>
-    const staff = new Vue({
-        el: "#staff",
+    const member = new Vue({
+        el: "#member",
         data: {
             staffs: [],
+            gstaffs: [],
             nickName: "",
             empAccount: "",
             empPassword: "",
@@ -166,7 +151,6 @@
             edit: {
                 nickName: "",
                 empAccount: "",
-                empPassword: "",
                 empName: "",
                 contact: "",
                 role: "",
@@ -243,10 +227,39 @@
                 });
             },
             getStaff: function () {
-                fetch("/backcenter/staff/GetAllMember").then(e => e.json()).then(r => this.staffs = r);
+                fetch("/backcenter/staff/GetAllMember").then(e => e.json()).then(r => { this.staffs = r[0]; this.gstaffs = r[1]; });
             },
             giveName: function (status) {
                 return status == 1 ? "在職" : "已離職";
+            },
+            deleteStaff: function (e) {
+                var acc = this.staffs[e.target.id].empAccount;
+                Swal.fire({
+                    title: '確定刪除?',
+                    text: "確定該員工已離職?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#D8CDB9',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '是',
+                    cancelButtonText: '否'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch("/backcenter/staff/StaffGone", {
+                            method: "Put",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(acc)
+                        }).then(e => e.json()).then(r => this.edit = r);
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: '刪除成功',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                    this.getStaff();
+                })
             },
             editStaff: function (e) {
                 var acc = this.staffs[e.target.id].empAccount;
@@ -254,7 +267,7 @@
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(acc)
-                }).then(e => console.log(e.json()));
+                }).then(e => e.json()).then(r => this.edit = r);
             },
             editStaffInfo: function () {
                 fetch("/backcenter/staff/EditMember", {
@@ -309,5 +322,3 @@
         }
     })
 </script>
-
-
