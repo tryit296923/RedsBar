@@ -56,7 +56,26 @@ namespace Alcoholic.Controllers.API
             _db.Products.Add(prod);
             _db.SaveChanges();
         }
+        [HttpPost]
+        public IActionResult EditProduct([FromForm] EditProductModel editData)
+        {
+            var productData= (from x in _db.Products 
+                             where x.ProductId==editData.ProductId
+                             select x).FirstOrDefault();
+            productData.ProductName = editData.ProductName;
+            productData.ProductDescription = editData.ProductDescription;
+            productData.Cost = editData.Cost;
+            productData.UnitPrice = editData.UnitPrice;
+            if (editData.DiscountId!=0)
+            {
+                productData.DiscountId = editData.DiscountId;
 
+            }
+            
+            _db.Update(productData);
+            _db.SaveChanges();
+            return Ok(true);
+        }
         [HttpGet]
         public IEnumerable<MenuModel> GetAllProducts()
         {
