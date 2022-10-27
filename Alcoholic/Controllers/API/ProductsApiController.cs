@@ -50,13 +50,41 @@ namespace Alcoholic.Controllers.API
                 Cost = model.Cost,
                 UnitPrice = model.UnitPrice,
                 ProductName = model.ProductName,
-                ProductDescription = "",
+                ProductDescription = model.ProductDescription,
                 Images = tempFilePath.Select(x=> new ProductImage() { Path = x}).ToList()
             };
             _db.Products.Add(prod);
             _db.SaveChanges();
         }
+        [HttpPost]
+        public IActionResult EditProduct([FromForm] EditProductModel editData)
+        {
+            var productData= (from x in _db.Products 
+                             where x.ProductId==editData.ProductId
+                             select x).FirstOrDefault();
+            productData.ProductName = editData.ProductName;
+            productData.ProductDescription = editData.ProductDescription;
+            productData.Cost = editData.Cost;
+            productData.UnitPrice = editData.UnitPrice;
+            if (editData.DiscountId!=0)
+            {
+                productData.DiscountId = editData.DiscountId;
 
+            }
+            
+            _db.Update(productData);
+            _db.SaveChanges();
+            return Ok(true);
+        }
+        [HttpPost]
+        public IActionResult DeleteProduct([FromBody]int productId)
+        {
+            var productDelete = (from x in _db.Products
+                                 where x.ProductId == productId
+                                 select x).FirstOrDefault();
+            _db.Remove(productDelete);
+            return Ok(true);
+        }
         [HttpGet]
         public IEnumerable<MenuModel> GetAllProducts()
         {
