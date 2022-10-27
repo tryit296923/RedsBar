@@ -50,7 +50,7 @@ namespace Alcoholic.Controllers.API
                 Cost = model.Cost,
                 UnitPrice = model.UnitPrice,
                 ProductName = model.ProductName,
-                ProductDescription = "",
+                ProductDescription = model.ProductDescription,
                 Images = tempFilePath.Select(x=> new ProductImage() { Path = x}).ToList()
             };
             _db.Products.Add(prod);
@@ -74,6 +74,15 @@ namespace Alcoholic.Controllers.API
             
             _db.Update(productData);
             _db.SaveChanges();
+            return Ok(true);
+        }
+        [HttpPost]
+        public IActionResult DeleteProduct([FromBody]int productId)
+        {
+            var productDelete = (from x in _db.Products
+                                 where x.ProductId == productId
+                                 select x).FirstOrDefault();
+            _db.Remove(productDelete);
             return Ok(true);
         }
         [HttpGet]

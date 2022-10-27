@@ -34,7 +34,7 @@
                             <button :id="item.id" class="btnproducts" data-bs-toggle="modal" data-bs-target="#editProd" @@click="[seleEdit($event)]"><i class="fa-solid fa-pen-to-square"></i></button>
                     </td>
                     <td>
-                    <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
+                            <button :id="item.id" class="btnproducts" @@click="sendDelete"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             </tbody>
@@ -142,10 +142,10 @@
                         <div class="col-12 ">
                             <label class="my-2">折扣：</label>
                             <multiselect v-model="discountvalue" deselect-label="無法移除" track-by="discountId"
-                                         label="name" placeholder="請選擇折扣" :options="discountselected" :searchable="false"
+                                         label="discountName" placeholder="請選擇折扣" :options="discountselected" :searchable="false"
                                          :allow-empty="false">
                                 <template slot="singleLabel"
-                                          slot-scope="{ option }"><strong>{{option.name}}</strong> </template>
+                                          slot-scope="{ option }"><strong>{{option.discountName}}</strong> </template>
                             </multiselect>
                         </div>
                     </div>
@@ -231,6 +231,16 @@
                     .then((response) => response.json())
                     .then((result) => { self.product = result; allProds = result; console.log(self.product) });
                 
+            },
+            sendDelete:function(e){
+                /*prodId = {Id:""}*/
+                  var   prodId = e.currentTarget.id;
+                fetch("/api/Products/DeleteProduct", {
+                      method:'POST',
+                      headers:{"Content-Type":"application/json"},
+                      body:JSON.stringify(prodId)
+                              
+                })
             },
             refreshPage: function(){
                 window.location.reload();
@@ -350,6 +360,9 @@
                 }
                 this.options.push(tag)
                 this.value.push(tag)
+            },
+            refreshPage: function () {
+                window.location.reload();
             }
         },
         mounted: function () {
