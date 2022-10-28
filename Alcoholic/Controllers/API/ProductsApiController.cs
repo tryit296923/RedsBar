@@ -23,6 +23,43 @@ namespace Alcoholic.Controllers.API
             this._db = projectContext;
             this.env = env;
         }
+        [HttpGet]
+        public IEnumerable<MenuModel> GetAllProducts()
+        {
+            var menu = from pro in _db.Products
+                       join path in _db.ProductImage
+                       on pro.ProductId equals path.ProductId
+                       select new MenuModel
+                       {
+                           Id = pro.ProductId,
+                           Name = pro.ProductName,
+                           Description = pro.ProductDescription,
+                           Price = pro.UnitPrice,
+                           Path = path.Path
+                       };
+
+            return menu;
+        }
+        [HttpGet]
+        public IEnumerable<BackProdModel> GetAllBackProducts()
+        {
+            var prod = from pro in _db.Products
+                       join path in _db.ProductImage
+                       on pro.ProductId equals path.ProductId
+                       select new BackProdModel
+                       {
+                           Id = pro.ProductId,
+                           Name = pro.ProductName,
+                           Description = pro.ProductDescription,
+                           Price = pro.UnitPrice,
+                           Path = path.Path,
+                           Cost = pro.Cost,
+                           DiscountId = pro.Discount.DiscountId,
+                           DiscountName = pro.Discount.DiscountName,
+                       };
+
+            return prod;
+        }
         [HttpPost]
         public void CreateProduct([FromForm]CreateProductModel model)
         {
@@ -57,70 +94,28 @@ namespace Alcoholic.Controllers.API
             _db.SaveChanges();
         }
         [HttpPost]
-        public IActionResult EditProduct([FromForm] EditProductModel editData)
+        public void EditProduct([FromForm] EditProductModel editData)
         {
             var productData= (from x in _db.Products 
                              where x.ProductId==editData.ProductId
                              select x).FirstOrDefault();
-            if (editData.DiscountId!=0)
-            {
-                productData.DiscountId = editData.DiscountId;
                 productData.ProductName = editData.ProductName;
                 productData.ProductDescription = editData.ProductDescription;
                 productData.Cost = editData.Cost;
                 productData.UnitPrice = editData.UnitPrice;
 
-            }
             
             _db.Update(productData);
             _db.SaveChanges();
-            return Ok(true);
         }
         [HttpPost]
-        public IActionResult DeleteProduct([FromBody]int productId)
+        public void DeleteProduct([FromBody]int productId)
         {
             var productDelete = (from x in _db.Products
                                  where x.ProductId == productId
                                  select x).FirstOrDefault();
             _db.Remove(productDelete);
-            return Ok(true);
-        }
-        [HttpGet]
-        public IEnumerable<MenuModel> GetAllProducts()
-        {
-            var menu = from pro in _db.Products
-                    join path in _db.ProductImage
-                    on pro.ProductId equals path.ProductId
-                    select new MenuModel
-                    {
-                        Id = pro.ProductId,
-                        Name = pro.ProductName,
-                        Description = pro.ProductDescription,
-                        Price = pro.UnitPrice,
-                        Path = path.Path
-                    };
-
-            return menu;
-        }
-        [HttpGet]
-        public IEnumerable<BackProdModel> GetAllBackProducts()
-        {
-            var prod = from pro in _db.Products
-                       join path in _db.ProductImage
-                       on pro.ProductId equals path.ProductId
-                       select new BackProdModel
-                       {
-                           Id = pro.ProductId,
-                           Name = pro.ProductName,
-                           Description = pro.ProductDescription,
-                           Price = pro.UnitPrice,
-                           Path = path.Path,
-                           Cost = pro.Cost,
-                           DiscountId = pro.Discount.DiscountId,
-                           DiscountName = pro.Discount.DiscountName,
-                       };
-
-            return prod;
+            _db.SaveChanges();
         }
 
         [HttpPost]

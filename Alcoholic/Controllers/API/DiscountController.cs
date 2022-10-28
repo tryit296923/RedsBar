@@ -41,23 +41,25 @@ namespace Alcoholic.Controllers.API
             _db.SaveChanges();
         }
         [HttpPost]
-        public IActionResult EditDiscount([FromForm] DiscountModel editData)
+        public void EditDiscount([FromForm] DiscountModel editData)
         {
             var discountData = (from x in _db.Discount
                                where x.DiscountId == editData.DiscountId
                                 select x).FirstOrDefault();
-            
-            if (editData.DiscountId != 0)
-            {
-                discountData.DiscountId = editData.DiscountId;
-                discountData.DiscountName = editData.DiscountName;
-                discountData.DiscountAmount = editData.DiscountAmount;
-                _db.Update(discountData);
-                _db.SaveChanges();
-            }
+            discountData.DiscountName = editData.DiscountName;
+            discountData.DiscountAmount = editData.DiscountAmount;
+            _db.Update(discountData);
+            _db.SaveChanges();
+        }
 
-            
-            return Ok(true);
+        [HttpPost]
+        public void DeleteDiscount([FromBody]int deleteData)
+        {
+            var discountData = (from x in _db.Discount
+                             where x.DiscountId==deleteData
+                             select x).FirstOrDefault();
+            _db.Remove(discountData);
+            _db.SaveChanges();
         }
     }
 }
