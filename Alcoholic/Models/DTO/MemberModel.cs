@@ -18,7 +18,6 @@ namespace Alcoholic.Models.DTO
         [Required]
         public DateTime Birth { get; set; }
     }
-
     public class LoginViewModel
     {
         [Required, MinLength(8)]
@@ -26,7 +25,6 @@ namespace Alcoholic.Models.DTO
         [Required, MinLength(8)]
         public string Password { get; set; }
     }
-
     public class DataPageModel
     {
         public string account { get; set; }
@@ -45,5 +43,25 @@ namespace Alcoholic.Models.DTO
         public string OrderId { get; set; }
         public string ProductName { get; set; }
         public string path { get; set; }
+    }
+
+    public class DataCenterModel
+    {
+        [Required, MinLength(8)]
+        public string MemberAccount { get; set; }
+        [Required, MinLength(8)]
+        public int MemberLevel { get; set; }
+        [Required]
+        public string MemberName { get; set; }
+        [Required]
+        public DateTime MemberBirth { get; set; }
+        [Required, MinLength(10), MaxLength(10)]
+        public string Phone { get; set; }
+        [Required, EmailAddress]
+        public string Email { get; set; }
+        [Required]
+        public int Age { get; set; }
+        [Required]
+        public string Qualified { get; set; }
     }
 }

@@ -58,22 +58,26 @@ namespace Alcoholic.Controllers.API
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] MemberModel memberData)
         {
-            //ModelState.IsValid
+            ReturnModel returnModel = new();
             if (!ModelState.IsValid)
             {
+                returnModel.Status = 400;
                 var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
-                return Ok(false);
+                return Ok(returnModel);
             }
             if (MemberExists(memberData.Account))
             {
-                return Ok(false);
+                returnModel.Status = 1;
+                return Ok(returnModel);
             }
             if (EmailExists(memberData.Email))
             {
-                return Ok(false);
+                returnModel.Status = 3;
+                return Ok(returnModel);
             }
             else
             {
+                returnModel.Status = 0;
                 Member user = new();
                 string salt = Guid.NewGuid().ToString("N");
                 user.MemberAccount = memberData.Account;
@@ -92,7 +96,7 @@ namespace Alcoholic.Controllers.API
                 var result = await msg;
                 mail.SendMail(memberData.Email, result, "RedsBar 會員認證信件");
                 HttpContext.Session.SetString("EmailID", user.EmailID.ToString());
-                return Ok(true);
+                return Ok(returnModel);
             }
         }
 
@@ -103,13 +107,19 @@ namespace Alcoholic.Controllers.API
             ReturnModel returnModel = new();
             if (!ModelState.IsValid)
             {
+                returnModel.Status = 400;
                 var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
-                return Ok(false);
+                return Ok(returnModel);
             }
             string id = HttpContext.Session.GetString("MemberID");
             if (!string.IsNullOrEmpty(id))
             {
-                Guid guid = Guid.Parse(id);
+                if (!Guid.TryParse(id, out Guid guid))
+                {
+                    returnModel.Status = 400;
+                    return Ok(returnModel);
+                };
+
                 Member? logged = (from member in db.Members
                                 where member.MemberID == guid
                                 select member).SingleOrDefault();
@@ -122,12 +132,14 @@ namespace Alcoholic.Controllers.API
                             select member).SingleOrDefault();
             if (user == null)
             {
-                return Ok(false);
+                returnModel.Status = 400;
+                return Ok(returnModel);
             }
             string password = hash.GetHash(string.Concat(memberData.Password, user.Salt).ToString());
             if (password != user.MemberPassword)
             {
-                return Ok(false);
+                returnModel.Status = 400;
+                return Ok(returnModel);
             }
             else
             {
@@ -178,7 +190,10 @@ namespace Alcoholic.Controllers.API
             {
                 return new EmptyResult();
             }
-            Guid EmailID = Guid.Parse(mailId);
+            if (!Guid.TryParse(mailId, out Guid EmailID))
+            {
+                return new EmptyResult();
+            };
             Member? member = (from m in db.Members
                               where m.EmailID == EmailID
                               select m).FirstOrDefault();
@@ -231,7 +246,11 @@ namespace Alcoholic.Controllers.API
             {
                 return Ok(false);
             }
-            Guid? memberId = Guid.Parse(ses);
+            if (!Guid.TryParse(ses, out Guid memberId))
+            {
+                return Ok(false);
+            };
+
 
             var member = db.Members.Select(x => x).Where(x => x.MemberID == memberId).FirstOrDefault();
             int disId = member.MemberLevel + 1;
@@ -293,7 +312,12 @@ namespace Alcoholic.Controllers.API
         {
             string ? ses = HttpContext.Session.GetString("MemberID");
             if (string.IsNullOrEmpty(ses)) { return Ok(); }
-            Guid? memberId = Guid.Parse(ses);
+
+            if (Guid.TryParse(ses, out Guid memberId))
+            {
+                return Ok(false);
+            }
+
             Member? member = db.Members.Select(x => x).Where(x => x.MemberID == memberId).FirstOrDefault();
             List<Order> details = new();
             foreach(Order o in member.Orders)
