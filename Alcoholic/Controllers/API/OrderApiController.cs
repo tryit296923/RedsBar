@@ -137,7 +137,7 @@ namespace Alcoholic.Controllers.API
                 AndroidPay = paymentInfo.PayType.ToLower() == "googlepay" ? "1" : null,
                 Credit = paymentInfo.PayType.ToLower() == "credit" ? "1" : null,
                 LinePay = paymentInfo.PayType.ToLower() == "linepay" ? "1" : null,
-                ReturnURL = "https://b4f3-114-137-244-87.jp.ngrok.io/api/Order/GetPaymentReturnData",               
+                ReturnURL = "https://45dd-125-227-38-129.jp.ngrok.io/api/Order/GetPaymentReturnData",               
             };
 
             var hashKey = config["Payment:HashKey"];

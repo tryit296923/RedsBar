@@ -1,5 +1,6 @@
 ﻿using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
+using Alcoholic.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +11,16 @@ namespace Alcoholic.Controllers
     public class OrderController : Controller
     {
         private readonly db_a8de26_projectContext projectContext;
+        private readonly IConfiguration config;
+        private readonly AesService aesService;
+        private readonly HashService hashService;
 
-        public OrderController(db_a8de26_projectContext projectContext)
+        public OrderController(db_a8de26_projectContext projectContext, IConfiguration config, AesService aesService, HashService hashService)
         {
             this.projectContext = projectContext;
+            this.config = config;
+            this.aesService = aesService;
+            this.hashService = hashService;
         }
         public IActionResult Order()
         {
@@ -246,6 +253,14 @@ namespace Alcoholic.Controllers
         {
             if (onlinePaymentReturn.Status == "SUCCESS")
             {
+                string hashKey = config["Payment:HashKey"];
+                string hashIV = config["Payment:HashIV"];
+                string decryptTradeInfo = aesService.DecryptAESHex(onlinePaymentReturn.TradeInfo, hashKey, hashIV);
+                PaymentResult obj_PaymentResult = JsonConvert.DeserializeObject<PaymentResult>(decryptTradeInfo);
+
+                var orderId = obj_PaymentResult.Result.MerchantOrderNo;
+                
+                ViewBag.orderId = orderId;
                 return View("OnlinePaymentSucceed");
             }
             else
@@ -255,6 +270,10 @@ namespace Alcoholic.Controllers
             
         }
         public IActionResult FrontDeskCheckout()
+        {
+            return View();
+        }
+        public IActionResult Feedback()
         {
             return View();
         }
