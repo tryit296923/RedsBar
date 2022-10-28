@@ -51,7 +51,7 @@ namespace Alcoholic.Models.DTO
         public string MemberAccount { get; set; }
         [Required, MinLength(8)]
         public int MemberLevel { get; set; }
-        [Required]
+        [Required, Range(0,4)]
         public string MemberName { get; set; }
         [Required]
         public DateTime MemberBirth { get; set; }
@@ -61,6 +61,21 @@ namespace Alcoholic.Models.DTO
         public string Email { get; set; }
         [Required]
         public int Age { get; set; }
+        [Required]
+        public string Qualified { get; set; }
+    }
+    public class EditModel
+    {
+        [Required, MinLength(8)]
+        public string MemberAccount { get; set; }
+        [Required, Range(0, 4)]
+        public int MemberLevel { get; set; }
+        [Required]
+        public string MemberName { get; set; }
+        [Required, MinLength(10), MaxLength(10)]
+        public string Phone { get; set; }
+        [Required, EmailAddress]
+        public string Email { get; set; }
         [Required]
         public string Qualified { get; set; }
     }
