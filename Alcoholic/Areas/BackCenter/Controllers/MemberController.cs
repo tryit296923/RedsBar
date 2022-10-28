@@ -30,7 +30,6 @@ namespace Alcoholic.Areas.BackCenter.Controllers
         {
             return View();
         }
-        
 
         public List<Member> GetAllMember()
         {

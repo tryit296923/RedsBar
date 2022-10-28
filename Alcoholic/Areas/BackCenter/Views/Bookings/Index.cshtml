@@ -55,17 +55,20 @@
             <table class="table">
                 <thead>
                     <tr>
+                        <th scope="col">訂位狀態</th>
                         <th scope="col">預定日期</th>
                         <th scope="col">姓名</th>
                         <th scope="col">電話</th>
                         <th scope="col">人數</th>
                         <th scope="col">下訂日期</th>
-                        <th scope="col">編輯</th>
-                        <th scope="col">刪除</th>
+                        <th scope="col">編輯訂位</th>
+                        <th scope="col">取消訂位</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="item in searchInfo">
+                        <td v-if="item.status == 0">取消</td>
+                        <td v-else></td>
                         <td>{{item.reserveDate.substring(0,10)}}</td>
                         <td>{{item.reserveName}}</td>
                         <td>{{item.phone}}</td>
@@ -73,12 +76,12 @@
                         <td>{{item.reserveSet.substring(0,10)}}</td>
                         <td>
                             <button data-bs-toggle="modal" data-bs-target="#editbooking" 
-                                    :class="determine(item.reserveDate)" :id="item.reserveId" v-on:click="editbtn">
+                                    :class="determine(item.reserveDate,item.status)" :id="item.reserveId" v-on:click="editbtn">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </button>
                         </td>
                         <td>
-                            <button :class="determine(item.reserveDate)" :id="item.reserveId" v-on:click="deleteBooking">
+                            <button :class="determine(item.reserveDate,item.status)" :id="item.reserveId" v-on:click="deleteBooking">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </td>
@@ -238,10 +241,10 @@
                     return false;
                 }
             },
-            determine: function(date){
+            determine: function (date, status) {
                 let day = new Date().toJSON().substring(0,10);
                 date = date.substring(0,10);
-                if(date<day){
+                if (date < day || status == 0) {
                     return 'btndisable'
                 }
                 return 'btnproducts';
@@ -316,7 +319,6 @@
             },
             deleteBooking: function(e){
                 let info={
-                    //要補model
                     Id: e.currentTarget.id,
                 }
                 fetch('/api/Booking/DeleteBooking',{

@@ -27,9 +27,10 @@ namespace Alcoholic.Areas.BackCenter.Controllers
         {
             return View();
         }
-        public List<StaffModel> GetAllMember()
+        public IActionResult GetAllMember()
         {
-            var staffs = db.Employees.Select(emp => new StaffModel
+
+            var staffs = db.Employees.Where(s => s.Status == 1).Select(emp => new StaffModel
             {
                 EmpName = emp.EmpName,
                 EmpAccount = emp.EmpAccount,
@@ -37,10 +38,39 @@ namespace Alcoholic.Areas.BackCenter.Controllers
                 Contact = emp.Contact,
                 Role = emp.Role,
                 Status = emp.Status,
-                Join = emp.Join
+                Join = emp.Join,
             }).ToList();
+            var gstaffs = db.Employees.Where(s => s.Status == 0).Select(emp => new StaffModel
+            {
+                EmpName = emp.EmpName,
+                EmpAccount = emp.EmpAccount,
+                NickName = emp.NickName,
+                Contact = emp.Contact,
+                Role = emp.Role,
+                Status = emp.Status,
+                Join = emp.Join,
+                Leave = emp.Leave,
+            }).ToList();
+            List<List<StaffModel>> lists = new();
+            lists.Add(staffs);
+            lists.Add(gstaffs);
+            return Ok(lists);
+        }
 
-            return staffs;
+        [HttpPost]
+        public IActionResult GetMember([FromBody] string acc)
+        {
+            var emp = db.Employees.Select(e => e).Where(e => e.EmpAccount == acc).FirstOrDefault();
+            StaffModel staffEditModel = new()
+            {
+                EmpName = emp.EmpName,
+                EmpAccount = emp.EmpAccount,
+                NickName = emp.NickName,
+                Contact = emp.Contact,
+                Role = emp.Role,
+                Join = emp.Join
+            };
+            return Ok(staffEditModel);
         }
 
         [HttpPut]
@@ -59,7 +89,6 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             }
             Employee emp = db.Employees.Select(e => e).Where(e => e.EmpAccount == staff.EmpAccount).FirstOrDefault();
             emp.EmpName = staff.EmpName;
-            emp.EmpPassword = staff.EmpPassword;
             emp.NickName = staff.NickName;
             emp.Contact = staff.Contact;
             emp.Salary = staff.Salary.GetValueOrDefault();
@@ -70,9 +99,8 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             return Ok(returnModel);
         }
 
-
         [HttpPost]
-        public IActionResult Login([FromBody] Employee emp)
+        public IActionResult Login([FromBody] StaffLoginModel emp)
         {
             Employee? employee = (from em in db.Employees
                                   where emp.EmpAccount == em.EmpAccount
@@ -85,8 +113,8 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             {
                 List<Claim> claims = new()
                 {
-                    new Claim(ClaimTypes.Name,emp.EmpName),
-                    new Claim(ClaimTypes.Role,emp.Role),
+                    new Claim(ClaimTypes.Name,employee.EmpName),
+                    new Claim(ClaimTypes.Role,employee.Role),
                 };
                 ClaimsIdentity claimsIdentity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
@@ -94,6 +122,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             }
             return NotFound();
         }
+
         [Authorize(Roles = "moderater,leader,staff")]
         public IActionResult LogOut()
         {
@@ -103,7 +132,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
 
         //[Authorize(Roles = "moderater")]
         [HttpPost]
-        public IActionResult Register([FromBody] StaffModel staff)
+        public IActionResult Register([FromBody] StaffRegisterModel staff)
         {
             ReturnModel returnModel = new();
             if (!ModelState.IsValid)
@@ -135,5 +164,15 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             return Ok(returnModel);
         }
 
+        [HttpPut]
+        public IActionResult StaffGone([FromBody] string acc)
+        {
+            Employee emp = db.Employees.Select(e => e).Where(e => e.EmpAccount == acc).FirstOrDefault();
+            emp.Status = 0;
+            emp.Leave = DateTime.Now;
+            db.Entry(emp).State = EntityState.Modified;
+            db.SaveChanges();
+            return Ok(true);
+        }
     }
 }

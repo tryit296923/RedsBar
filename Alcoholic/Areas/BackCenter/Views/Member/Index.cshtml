@@ -3,4 +3,158 @@
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    #editbooking input, select {
+        width: 100%;
+    }
 
+    i {
+        pointer-events: none
+    }
+
+    .datepick input, button {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 4px;
+        margin: 0 2px;
+    }
+
+    .datepick {
+        display: flex;
+    }
+
+    .none {
+        display: none;
+    }
+
+    .bookinginfo td {
+        line-height: 1rem;
+    }
+</style>
+<div class="bookingmanage container-fluid p-5" id="member">
+    <div class="spacebetween row-cols-2 mb-3">
+        <h3>會員管理</h3>
+    </div>
+    <hr>
+    <div class="py-4">
+        <div class="todaydata">
+            <div class="bookingtoday p-4">
+                <div class="spacebetween">
+                    <h5>會員列表</h5>
+                    <div class="datepick">
+                        <input placeholder="請輸入會員帳號" type="text" v-model="search" />
+                    </div>
+                </div>
+                <br>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">帳號</th>
+                            <th scope="col">等級</th>
+                            <th scope="col">姓名</th>
+                            <th scope="col">代號</th>
+                            <th scope="col">聯絡方式</th>
+                            <th scope="col">狀態</th>
+                            <th scope="col">編輯</th>
+                            <th scope="col">刪除</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(mem,index) in members" :name="mem.empAccount">
+                            <td>{{mem.empAccount}}</td>
+                            <td>{{mem.MemberLevel}}</td>
+                            <td>{{mem.MemberName}}</td>
+                            <td>{{mem.MemberBirth}}</td>
+                            <td>{{mem.Phone}}</td>
+                            <td>{{mem.Email)}}</td>
+                            <td>{{mem.Age)}}</td>
+                            <td>{{mem.qualified)}}</td>
+                            <td><button :id="index" v-on:click="editmem" data-bs-toggle="modal" data-bs-target="#editbooking" class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button></td>
+                            <td><button :id="index" v-on:click="deletemem" class="btnproducts"><i class="fa-solid fa-trash"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="py-4">
+        <div class="bookinginfo">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">帳號</th>
+                        <th scope="col">姓名</th>
+                        <th scope="col">代號</th>
+                        <th scope="col">聯絡方式</th>
+                        <th scope="col">狀態</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in gstaffs">
+                        <td>{{item.empAccount}}</td>
+                        <td>{{item.empName}}</td>
+                        <td>{{item.nickName}}</td>
+                        <td>{{item.contact}}</td>
+                        <td>{{giveName(item.status)}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade bookingdModal" id="editbooking" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="staticBackdropLabel">編輯資訊</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body container">
+                    <div><label for="nickName">暱稱：</label><br /><input v-model="edit.nickName" type="text"></div>
+                    <div><label for="empName">姓名：</label><br /><input v-model="edit.empName" type="text"></div>
+                    <div><label for="contact">電話：</label><br /><input v-model="edit.contact" type="text"></div>
+                    <div>
+                        <label for="role">職稱：</label><br />
+                        <select v-model="edit.role" id="">
+                            <option value="moderater">管理員</option>
+                            <option value="leader">組長</option>
+                            <option value="staff">員工</option>
+                        </select>
+                    </div>
+                    <div><label for="salary">薪資：</label><br /><input v-model="edit.salary" type="number"></div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row m-0">
+                        <button class="col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                        <button v-on:click="editStaffInfo" class="col btneditproducts m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const member = new Vue({
+        el: "#member",
+        data: {
+            members:[],
+            memberOrders:[],
+            memberAccount:"",
+            memberLevel:"",
+            memberName: "",
+            memberBirth: "",
+            phone: "",
+            email: "",
+            age: "",
+            qualified:"",
+            
+        },
+        methods: {
+            
+        },
+        mounted: function () {
+            this.getStaff();
+        }
+    })
+</script>
