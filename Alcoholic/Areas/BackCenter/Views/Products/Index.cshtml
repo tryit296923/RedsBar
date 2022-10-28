@@ -451,7 +451,7 @@
             let self = this;
             fetch("/api/Products/GetAllBackProducts")
                 .then((response) => response.json())
-                .then((result) => { self.product = result });
+                .then((result) => window.location.assign("/Home/Index");
 
         }
     })
