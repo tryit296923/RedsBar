@@ -1,14 +1,14 @@
 ﻿namespace Alcoholic.Models.DTO
 {
     public class FeedbackIdModel
-    { 
+    {
         public string Id { get; set; }
     }
     public class FeedbackMemberModel
     {
+        public string OrderId { get; set; }
         public string MemberName { get; set; }
         public string Email { get; set; }
-        public int? Age { get; set; }
     }
     public class FeedBackAllModel
     { 

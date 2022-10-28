@@ -1,4 +1,5 @@
 ﻿using Alcoholic.Extensions;
+using Alcoholic.Models;
 using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
 using Alcoholic.Services;
@@ -139,7 +140,7 @@ namespace Alcoholic.Controllers.API
                 AndroidPay = paymentInfo.PayType.ToLower() == "googlepay" ? "1" : null,
                 Credit = paymentInfo.PayType.ToLower() == "credit" ? "1" : null,
                 LinePay = paymentInfo.PayType.ToLower() == "linepay" ? "1" : null,
-                ReturnURL = "https://930c-60-250-79-113.jp.ngrok.io/api/Order/GetPaymentReturnData",               
+                ReturnURL = "https://ff49-36-225-197-20.jp.ngrok.io/api/Order/GetPaymentReturnData",               
             };
 
             var hashKey = config["Payment:HashKey"];
@@ -221,12 +222,13 @@ namespace Alcoholic.Controllers.API
                          select x).FirstOrDefault();
             var member = (from y in _db.Members
                           where y.MemberID == order.MemberId
-                          select new FeedbackMemberModel
+                          select new 
                           {
+                              OrderId = data.Id,
                               MemberName = y.MemberName,
                               Email = y.Email,
                               Age = y.Age,
-                          });
+                          }).FirstOrDefault();
             return Ok(member);
         }
 
@@ -247,9 +249,14 @@ namespace Alcoholic.Controllers.API
                 Overall = data.Overall,
                 Suggestion = data.Suggestion,
             };
+            ReturnModel returnModel = new()
+            {
+                Status=200,
+                Url=$"{Request.Scheme}://{Request.Host}/Home/Index",
+            };
             _db.Add(feedback);
             _db.SaveChanges();
-            return Ok(true);
+            return Ok(returnModel);
         }
     }
 }
