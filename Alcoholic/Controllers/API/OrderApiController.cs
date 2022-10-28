@@ -258,5 +258,20 @@ namespace Alcoholic.Controllers.API
             _db.SaveChanges();
             return Ok(returnModel);
         }
+
+        public IActionResult GetTodayOrders()
+        {
+            var order = (from od in _db.Orders
+                         where od.OrderTime.Date >= DateTime.Today && od.OrderTime.Date <= DateTime.Today.AddDays(1)
+                         select new BCOrder
+                         {
+                             OrderId = od.OrderId,
+                             Desk = od.DeskNum,
+                             MemberName = od.Member.MemberName,
+                             Number = od.Number,
+                             Status = od.Status,
+                         }).ToList();
+            return Ok(order);
+        }
     }
 }
