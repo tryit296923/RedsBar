@@ -22,16 +22,16 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th class="col-2" >編號</th>
-                            <th class="col-4" >優惠等級</th>
-                            <th class="col-4" >折扣率</th>
-                            <th class="col-1" >編輯</th>
-                            <th class="col-1" >刪除</th>
+                            <th class="col-2">編號</th>
+                            <th class="col-4">優惠等級</th>
+                            <th class="col-4">折扣率</th>
+                            <th class="col-1">編輯</th>
+                            <th class="col-1">刪除</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="item in allDiscount">
-                            <td >{{item.discountId}}</td>
+                            <td>{{item.discountId}}</td>
                             <td>{{item.discountName}}</td>
                             <td>{{item.discountAmount}}</td>
                             <td>
@@ -58,7 +58,7 @@
                 </div>
                 <div class="modal-body container ">
                     <div class="row">
-                        <div class="col-2 my-2">
+                        <div class="col-3 my-2">
                             <label for="productName" class="form-label">編號：</label>
                             <input type="number" class="form-control w-100" id=" productName" :value="editDiscountData.discountId" readonly>
                         </div>
@@ -66,7 +66,7 @@
                     <div class="row">
                         <div class="col-6 my-2">
                             <label for="productCost" class="form-label">優惠等級：</label>
-                            <input type="text" class="form-control w-100" placeholder="請輸入" id="productCost" v-model="editDiscountData.discountName"  required>
+                            <input type="text" class="form-control w-100" placeholder="請輸入" id="productCost" v-model="editDiscountData.discountName" required>
                         </div>
                         <div class="col-6 my-2">
                             <label for="productPrice" class="form-label">折扣率：</label>
@@ -77,7 +77,7 @@
                 <div class="modal-footer">
                     <div class="row m-0">
                         <button class=" col btneaddcancel m-1" :name="name" type="button" data-bs-dismiss="modal" @@click="refreshPage"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
-                        <button class=" col btneditproducts m-1" :name="name"  type="button" @@click="sendEdit"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                        <button class=" col btneditproducts m-1" :name="name" type="button" @@click="sendEdit"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
                     </div>
                 </div>
             </div>
@@ -114,7 +114,7 @@
             <div class="modal-footer">
                 <div class="row m-0">
                     <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal" @@click="refreshPage"><i class="fa-solid fa-square-xmark"></i> 取消新增</button>
-                    <button class=" col btneditproducts m-1" type="button" v-on:click="send"><i class="fa-solid fa-square-check"></i> 新增商品</button>
+                    <button class=" col btneditproducts m-1" type="button" v-on:click="send"><i class="fa-solid fa-square-check"></i> 新增優惠</button>
                 </div>
             </div>
         </div>
@@ -129,8 +129,8 @@
     let discount = new Vue({
         el: "#discount",
         data: {
-            discountId: "", 
-            discountName:"",
+            discountId: "",
+            discountName: "",
             allDiscount: [],
             editDiscountData: {
                 discountId: "",
@@ -141,7 +141,7 @@
         methods: {
             seleEdit: function (e) {
                 var editData = this.editDiscountData;
-                for (i = 0; i < this.allDiscount.length;i++){
+                for (i = 0; i < this.allDiscount.length; i++) {
                     if (e.currentTarget.id == this.allDiscount[i].discountId) {
                         editData.discountId = this.allDiscount[i].discountId;
                         editData.discountName = this.allDiscount[i].discountName;
@@ -150,8 +150,8 @@
                         console.log(editData)
                     }
                 }
-                
-                
+
+
             },
             sendEdit: function (e) {
                 let self = this;
@@ -171,25 +171,24 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         let data = new FormData();
-                        data.append("DiscountId", this.editProductData.discountId)
-                        data.append("DiscountName", this.editProductData.discountName)
-                        data.append("DiscountAmount", this.editProductData.discountAmount)
-                        data.append("UnitPrice", this.editProductData.productPrice)
-                        data.append("ProductDescription", this.editProductData.productDescription)
-                        data.append("DiscountId", this.discount.discountId)
-                        fetch("/api/Products/EditProduct", {
+                        data.append("DiscountId", this.editDiscountData.discountId)
+                        data.append("DiscountName", this.editDiscountData.discountName)
+                        data.append("DiscountAmount", this.editDiscountData.discountAmount)
+                        fetch("/api/Discount/EditDiscount", {
                             method: 'POST',
                             body: data
                         });
                         fetch("/api/Discount/GetDiscount")
                             .then(response => response.json())
                             .then(result => self.allDiscount = result.concat())
+                        Swal.fire('編輯成功!', '', 'success');
                     } else if (result.isDenied) {
                         Swal.fire('取消編輯!', '', 'info')
                     }
                 })
 
             },
+            //送出刪除資料
             sendDelete: function (e) {
                 var selDiscount = e.currentTarget
                 Swal.fire({
@@ -205,10 +204,10 @@
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch("/api/Products/DeleteProduct", {
+                        fetch("/api/Discount/DeleteDiscount", {
                             method: 'POST',
                             headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(prod.id)
+                            body: JSON.stringify(selDiscount.id)
                         })
                         Swal.fire('成功刪除!', '', 'success')
                         window.location.reload();
@@ -238,13 +237,6 @@
                 discountName: "",
                 discountAmount: "",
             },
-            createProductData: {
-                productName: "",
-                productPrice: "",
-                productCost: "",
-                productDescription: "",
-                images: [],
-            },
         },
         methods: {
             send: function () {
@@ -270,6 +262,7 @@
                             method: 'POST',
                             body: data
                         });
+                        Swal.fire('新增成功!', '', 'success');
                     } else if (result.isDenied) {
                         Swal.fire('取消新增!', '', 'info')
                     }

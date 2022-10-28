@@ -8,7 +8,6 @@
         margin-left: 10vh;
     }
 
-
 </style>
 <div id="prod">
     <div class="productmanage container-fluid p-5">
@@ -59,7 +58,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header editproducttitle">
-                    <h3 class="modal-title" >編輯商品</h3>
+                    <h3 class="modal-title">編輯商品</h3>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                             aria-label="Close" @@click="refreshPage"></button>
                 </div>
@@ -191,14 +190,6 @@
             description: "",
             allDiscount: [],
             discount: { discountId: '', discountName: '' },
-            discountOpt: [
-                { discountId: '1', discountName: 'default' },
-                { discountId: '2', discountName: 'regular' },
-                { discountId: '3', discountName: 'bronze' },
-                { discountId: '4', discountName: 'silver' },
-                { discountId: '5', discountName: 'golden' },
-                { discountId: '6', discountName: 'earlybird' }
-            ],
             editProductData: {
                 productId: "",
                 imagesrc: "",
@@ -220,7 +211,7 @@
                         editData.productId = this.product[i].id;
                         editData.imagesrc = this.product[i].path;
                         editData.productName = this.product[i].name;
-                        this.name=this.product[i].name;
+                        this.name = this.product[i].name;
                         editData.productPrice = this.product[i].price;
                         editData.productCost = this.product[i].cost;
                         editData.productDescription = this.product[i].description;
@@ -230,11 +221,12 @@
                         }
                     }
                 }
-                
+
             },
+            //送出編輯資料
             sendEdit: function (e) {
                 let self = this;
-                var selProd=e.currentTarget
+                var selProd = e.currentTarget
                 var data = new FormData();
                 Swal.fire({
                     title: '編輯!',
@@ -263,14 +255,16 @@
                         fetch("/api/Products/GetAllBackProducts")
                             .then((response) => response.json())
                             .then((result) => { self.product = result; allProds = result; console.log(self.product) });
+                        Swal.fire('編輯成功!', '', 'success');
                     } else if (result.isDenied) {
                         Swal.fire('取消編輯!', '', 'info')
                     }
                 })
 
             },
+            //送出刪除資料
             sendDelete: function (e) {
-                var selProd = e.currentTarget;
+                var selProd = e.currentTarget
                 Swal.fire({
                     title: '刪除!',
                     text: '確定要刪除商品' + selProd.name + '嗎?',
@@ -287,10 +281,10 @@
                         fetch("/api/Products/DeleteProduct", {
                             method: 'POST',
                             headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(prod.id)
+                            body: JSON.stringify(selProd.id)
                         })
                         Swal.fire('成功刪除!', '', 'success')
-                        window.location.reload();
+                        this.refreshPage();
                     } else if (result.isDenied) {
                         Swal.fire('取消刪除!', '', 'info')
                     }
@@ -300,6 +294,7 @@
                 window.location.reload();
             }
         },
+        //取得產品資訊以進行渲染
         mounted: function () {
             let self = this;
             fetch("/api/Products/GetAllBackProducts")
@@ -315,7 +310,7 @@
         el: "#staticBackdrop",
         data: {
             product: [],
-            allDiscount:[],
+            allDiscount: [],
             createProductData: {
                 productName: "",
                 productPrice: "",
@@ -411,7 +406,8 @@
                             method: 'POST',
                             //headers: { "Content-Type": "multipart/form-data" },
                             body: data
-                        });
+                        })
+                        Swal.fire('新增成功!', '', 'success');
                     } else if (result.isDenied) {
                         Swal.fire('取消新增!', '', 'info')
                     }
