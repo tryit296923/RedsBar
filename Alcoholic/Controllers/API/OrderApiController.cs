@@ -273,5 +273,11 @@ namespace Alcoholic.Controllers.API
                          }).ToList();
             return Ok(order);
         }
+
+        //還沒寫...
+        //public IActionResult SearchHistOrders
+        //{
+        //    return OK();
+        //}
     }
 }

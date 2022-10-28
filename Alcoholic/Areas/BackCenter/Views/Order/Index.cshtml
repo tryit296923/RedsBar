@@ -7,19 +7,28 @@
         font-size: x-large;
         height: 60px;
     }
-    .btnCheck{
+
+    .btnCheck {
         height: 2rem;
         max-width: 50%;
     }
-    .checkMessage{
+
+    .checkMessage {
         margin-top: 1rem;
         margin-left: 1rem;
         font-size: larger;
-        font-weight:bold;
+        font-weight: bold;
     }
-    .btnCheckinModal{
+
+    .btnCheckinModal {
         height: 2rem;
     }
+
+    .iptSearchOrderId{
+        border-radius:4px;
+        height:33px;
+    }
+
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.2/dist/sweetalert2.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.css">
@@ -51,13 +60,54 @@
                             <td>{{item.desk}}</td>
                             <td>{{item.number}}</td>
                             <td>{{item.status}}</td>
-                            <td><button type="button" class="addbtn btnCheck" data-bs-toggle="modal" data-bs-target="#addbooking">
-                            <i class="fa-sharp fa-solid fa-comment-dollar"></i> 手動結帳
-                            </button></td>
+                            <td v-if="item.status == 'N'">
+                                <button type="button" class="addbtn btnCheck" data-bs-toggle="modal" data-bs-target="#addbooking">
+                                    <i class="fa-sharp fa-solid fa-comment-dollar"></i> 手動結帳
+                                </button>
+                            </td>
+                            <td v-else></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+    <div class="py-4">
+        <div class="spacebetween row-cols-2 mb-3">
+            <h3>查詢訂單</h3>
+            <div class="datepick">
+                <input type="text" placeholder="輸入欲查詢之訂單編號" class="p-0 datepicker iptSearchOrderId" maxlength="14"/>
+                <button class="btn-search" v-on:click="SearchClick()">搜尋</button>
+            </div>
+        </div>
+        <div class="bookinginfo">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">訂單編號</th>
+                        <th scope="col">姓名</th>
+                        <th scope="col">桌號</th>
+                        <th scope="col">用餐人數</th>
+                        <th scope="col">付款狀態</th>
+                        <th scope="col">詳細資料</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="order in searchOrder">
+                        <td>{{order.orderId}}</td>
+                        <td>{{order.memberName}}</td>
+                        <td>{{order.desk}}</td>
+                        <td>{{order.number}}</td>
+                        <td v-if="order.status == 'Y'">已結單</td>
+                        <td v-else>未付款</td>
+                        <td>
+                            <button type="button" class="addbtn btnCheck" data-bs-toggle="modal" data-bs-target="#addbooking">
+                            <i class="fa-sharp fa-solid fa-comment-dollar"></i> 詳細資料
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <!-- Add Modal -->
@@ -89,19 +139,23 @@
     var app = new Vue({
         el: '#order_manage',
         data: {
-            orderToday:{},
-            selectOrderId:'',
+            orderToday: {},
+            selectOrderId: '',
+            searchOrder:{},
         },
         methods: {
-            getTodayOrders:function(){
-                fetch("/api/order/getTodayOrders").then(response => response.json()).then(result => {this.orderToday = result});
+            getTodayOrders: function () {
+                fetch("/api/order/getTodayOrders").then(response => response.json()).then(result => { this.orderToday = result });
                 console.log(this.orderToday);
             },
-            selectItem:function(orderId){
+            selectItem: function (orderId) {
                 this.selectOrderId = orderId;
+            },
+            searchHistOrder:function(){
+                fetch("/api/order/searchHistOrders")
             }
         },
-        mounted:function(){
+        mounted: function () {
             this.getTodayOrders();
         }
     });
