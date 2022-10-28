@@ -1,92 +1,291 @@
-﻿@model IEnumerable<Alcoholic.Models.Entities.Discount>
-
-@{
+﻿@{
     ViewData["Title"] = "優惠管理";
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
-<div class="discountmanage container-fluid p-5">
-    <div class="spacebetween row-cols-2 mb-3">
-        <h3>優惠管理</h3>
-        <button type="button" class="addbtn" data-bs-toggle="modal" data-bs-target="#discountBackdrop">
-            <i class="fa-sharp fa-solid fa-plus"></i> 新增商品優惠
-        </button>
+<style>
+    .order-2 {
+        order: 2;
+        margin-left: 10vh;
+    }
+</style>
+<div id="discount">
+    <div class="discountmanage container-fluid p-5">
+        <div class="spacebetween row-cols-2 mb-3">
+            <h3>優惠管理</h3>
+            <button type="button" class="addbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <i class="fa-sharp fa-solid fa-plus"></i> 新增優惠
+            </button>
+        </div>
+        <hr>
+        <div class="discountmanage">
+            <div class="scrollPage">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-2" >編號</th>
+                            <th class="col-4" >優惠等級</th>
+                            <th class="col-4" >折扣率</th>
+                            <th class="col-1" >編輯</th>
+                            <th class="col-1" >刪除</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in allDiscount">
+                            <td >{{item.discountId}}</td>
+                            <td>{{item.discountName}}</td>
+                            <td>{{item.discountAmount}}</td>
+                            <td>
+                                <button :id="item.discountId" class="btnproducts" data-bs-toggle="modal" data-bs-target="#editProd" @@click="[seleEdit($event)]"><i class="fa-solid fa-pen-to-square"></i></button>
+                            </td>
+                            <td>
+                                <button :id="item.discountId" :name="item.discountName" class="btnproducts" @@click="sendDelete"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <hr>
-    <div class="discountmanage">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col" colspan="2">優惠名稱</th>
-                    <th scope="col">折扣率</th>
-                    <th scope="col">適用資格</th>
-                    <th scope="col">適用品項</th>
-                    <th scope="col">期限</th>
-                    <th scope="col">變更</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row"><img src="~/Images/Cocktails/bloodymary.jpeg" alt=""></th>
-                    <td>bloodymary</td>
-                    <td>0.8</td>
-                    <td>All</td>
-                    <td>經典</td>
-                    <td>2022/02/30當日</td>
-                    <td>
-                        <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
-                        <button class="btnproducts icon"><i class="fa-solid fa-pen-to-square"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><img src="~/Images/Cocktails/highball.jpg" alt=""></th>
-                    <td>highball</td>
-                    <td>0.8</td>
-                    <td>All</td>
-                    <td>經典</td>
-                    <td>2022/02/30當日</td>
-                    <td>
-                        <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
-                        <button class="btnproducts icon"><i class="fa-solid fa-pen-to-square"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><img src="~/Images/Cocktails/junglebird.jpg" alt=""></th>
-                    <td>junglebird</td>
-                    <td>0.8</td>
-                    <td>All</td>
-                    <td>經典</td>
-                    <td>2022/02/30當日</td>
-                    <td>
-                        <button class="btnproducts"><i class="fa-solid fa-trash"></i></button>
-                        <button class="btnproducts icon"><i class="fa-solid fa-pen-to-square"></i></button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="discountBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editProd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="editProdLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="staticBackdropLabel">新增優惠</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header editdiscounttitle">
+                    <h3 class="modal-title" id="editProd">編輯優惠</h3>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close" @@click="refreshPage"></button>
                 </div>
-                <div class="modal-body container productAdding">
-                    <label for="discountPic">圖片：<img src="" alt=""></label><input type="file" id="discountPic" class="w-100">
-                    <label for="discountName">名稱：</label><input type="text" id="discountName" class="w-100">
-                    <label for="discountPrice">折扣率：</label><input type="text" id="discountPrice" class="w-100">
-                    <label for="discountCost">適用資格：</label><input type="text" id="discountCost" class="w-100">
-                    <label for="discountInstock">適用品項：</label><input type="text" id="discountInstock" class="w-100">
-                    <label for="discountShip">期限：</label><input type="text" id="discountShip" class="w-100">
+                <div class="modal-body container ">
+                    <div class="row">
+                        <div class="col-2 my-2">
+                            <label for="productName" class="form-label">編號：</label>
+                            <input type="number" class="form-control w-100" id=" productName" :value="editDiscountData.discountId" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 my-2">
+                            <label for="productCost" class="form-label">優惠等級：</label>
+                            <input type="text" class="form-control w-100" placeholder="請輸入" id="productCost" v-model="editDiscountData.discountName"  required>
+                        </div>
+                        <div class="col-6 my-2">
+                            <label for="productPrice" class="form-label">折扣率：</label>
+                            <input type="number" class="form-control w-100" placeholder="請輸入" id="productPrice" v-model="editDiscountData.discountAmount" min="0" required>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <div class="row m-0">
-                        <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
-                        <button class=" col btneditproducts m-1" type="button"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                        <button class=" col btneaddcancel m-1" :name="name" type="button" data-bs-dismiss="modal" @@click="refreshPage"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                        <button class=" col btneditproducts m-1" :name="name"  type="button" @@click="sendEdit"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
+
+
+<!-- Create Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header addproducttitle">
+                <h3 class="modal-title" id="staticBackdropLabel">新增優惠</h3>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close" @@click="refreshPage"></button>
+            </div>
+            <div class="modal-body container productAdding">
+                <div class="row">
+                    <div class="col-6 my-2">
+                        <label for="productCost" class="form-label">優惠等級：</label>
+                        <input type="text" class="form-control w-100" placeholder="請輸入" id="productCost" v-model="editDiscountData.discountName" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 my-2">
+                        <label for="productPrice" class="form-label">折扣率：</label>
+                        <input type="number" class="form-control w-100" placeholder="請輸入" id="productPrice" v-model="editDiscountData.discountAmount" min="0" required>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row m-0">
+                    <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal" @@click="refreshPage"><i class="fa-solid fa-square-xmark"></i> 取消新增</button>
+                    <button class=" col btneditproducts m-1" type="button" v-on:click="send"><i class="fa-solid fa-square-check"></i> 新增商品</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- SWAL -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    let allProds = [];
+    let discount = new Vue({
+        el: "#discount",
+        data: {
+            discountId: "", 
+            discountName:"",
+            allDiscount: [],
+            editDiscountData: {
+                discountId: "",
+                discountName: "",
+                discountAmount: "",
+            },
+        },
+        methods: {
+            seleEdit: function (e) {
+                var editData = this.editDiscountData;
+                for (i = 0; i < this.allDiscount.length;i++){
+                    if (e.currentTarget.id == this.allDiscount[i].discountId) {
+                        editData.discountId = this.allDiscount[i].discountId;
+                        editData.discountName = this.allDiscount[i].discountName;
+                        this.name = this.allDiscount[i].discountName;
+                        editData.discountAmount = this.allDiscount[i].discountAmount;
+                        console.log(editData)
+                    }
+                }
+                
+                
+            },
+            sendEdit: function (e) {
+                let self = this;
+                var selDiscount = e.currentTarget
+                var data = new FormData();
+                Swal.fire({
+                    title: '編輯!',
+                    text: '確定要編輯優惠' + selDiscount.name + '嗎?',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    confirmButtonText: '確認',
+                    denyButtonText: '拒絕',
+                    customClass: {
+                        actions: 'my-actions',
+                        denyButton: 'order-2',
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let data = new FormData();
+                        data.append("DiscountId", this.editProductData.discountId)
+                        data.append("DiscountName", this.editProductData.discountName)
+                        data.append("DiscountAmount", this.editProductData.discountAmount)
+                        data.append("UnitPrice", this.editProductData.productPrice)
+                        data.append("ProductDescription", this.editProductData.productDescription)
+                        data.append("DiscountId", this.discount.discountId)
+                        fetch("/api/Products/EditProduct", {
+                            method: 'POST',
+                            body: data
+                        });
+                        fetch("/api/Discount/GetDiscount")
+                            .then(response => response.json())
+                            .then(result => self.allDiscount = result.concat())
+                    } else if (result.isDenied) {
+                        Swal.fire('取消編輯!', '', 'info')
+                    }
+                })
+
+            },
+            sendDelete: function (e) {
+                var selDiscount = e.currentTarget
+                Swal.fire({
+                    title: '刪除!',
+                    text: '確定要刪除優惠' + selDiscount.name + '嗎?',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    confirmButtonText: '確認',
+                    denyButtonText: '拒絕',
+                    customClass: {
+                        actions: 'my-actions',
+                        denyButton: 'order-2',
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch("/api/Products/DeleteProduct", {
+                            method: 'POST',
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(prod.id)
+                        })
+                        Swal.fire('成功刪除!', '', 'success')
+                        window.location.reload();
+                    } else if (result.isDenied) {
+                        Swal.fire('取消刪除!', '', 'info')
+                    }
+                })
+            },
+            refreshPage: function () {
+                window.location.reload();
+            }
+        },
+        mounted: function () {
+            let self = this;
+            fetch("/api/Discount/GetDiscount")
+                .then(response => response.json())
+                .then(result => self.allDiscount = result.concat())
+        }
+
+    })
+    let app = new Vue({
+        el: "#staticBackdrop",
+        data: {
+            product: [],
+            editDiscountData: {
+                discountId: "",
+                discountName: "",
+                discountAmount: "",
+            },
+            createProductData: {
+                productName: "",
+                productPrice: "",
+                productCost: "",
+                productDescription: "",
+                images: [],
+            },
+        },
+        methods: {
+            send: function () {
+                Swal.fire({
+                    title: '新增!',
+                    text: '請確認新增的優惠訊息無誤',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    confirmButtonText: '確認',
+                    denyButtonText: '拒絕',
+                    customClass: {
+                        actions: 'my-actions',
+                        denyButton: 'order-2',
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let data = new FormData();
+                        data.append("DiscountName", this.editDiscountData.discountName)
+                        data.append("DiscountAmount", this.editDiscountData.discountAmount)
+                        this.editDiscountData.discountName = "";
+                        this.editDiscountData.discountAmount = "";
+                        fetch("/api/Discount/CreateDiscount", {
+                            method: 'POST',
+                            body: data
+                        });
+                    } else if (result.isDenied) {
+                        Swal.fire('取消新增!', '', 'info')
+                    }
+                })
+
+            },
+            refreshPage: function () {
+                window.location.reload();
+            }
+        },
+        mounted: function () {
+            let self = this;
+            fetch("/api/Discount/GetDiscount")
+                .then(response => response.json())
+                .then(result => self.allDiscount = result.concat())
+
+        }
+    })
+</script>

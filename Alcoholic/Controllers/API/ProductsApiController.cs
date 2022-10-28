@@ -62,13 +62,13 @@ namespace Alcoholic.Controllers.API
             var productData= (from x in _db.Products 
                              where x.ProductId==editData.ProductId
                              select x).FirstOrDefault();
-            productData.ProductName = editData.ProductName;
-            productData.ProductDescription = editData.ProductDescription;
-            productData.Cost = editData.Cost;
-            productData.UnitPrice = editData.UnitPrice;
             if (editData.DiscountId!=0)
             {
                 productData.DiscountId = editData.DiscountId;
+                productData.ProductName = editData.ProductName;
+                productData.ProductDescription = editData.ProductDescription;
+                productData.Cost = editData.Cost;
+                productData.UnitPrice = editData.UnitPrice;
 
             }
             
@@ -121,18 +121,6 @@ namespace Alcoholic.Controllers.API
                        };
 
             return prod;
-        }
-        [HttpGet]
-        public IEnumerable<DiscountModel> GetDiscount()
-        {
-            var disLv = from lv in _db.Discount
-                       select new DiscountModel
-                       {
-                           DiscountId = lv.DiscountId,
-                           DiscountName = lv.DiscountName,
-                       };
-
-            return disLv;
         }
 
         [HttpPost]
