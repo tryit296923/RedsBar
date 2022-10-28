@@ -74,7 +74,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditMember([FromBody] DataCenterModel model)
+        public IActionResult EditMember([FromBody] StaffModel model)
         {
             ReturnModel returnModel = new();
             if (!ModelState.IsValid)
@@ -82,20 +82,17 @@ namespace Alcoholic.Areas.BackCenter.Controllers
                 returnModel.Status = 2;
                 return Ok(returnModel);
             }
-            if (!db.Employees.Any(Member => Member.EmpAccount == model.MemberAccount))
+            if (!db.Employees.Any(e => e.EmpAccount == model.EmpAccount))
             {
                 returnModel.Status = 1;
                 return Ok(returnModel);
             }
-            Member emp = db.Members.Select(e => e).Where(e => e.MemberAccount == model.MemberAccount).FirstOrDefault();
-            emp.Age = model.Age;
-            emp.Email = model.Email;
-            emp.MemberAccount = model.MemberAccount;
-            emp.MemberBirth = model.MemberBirth;
-            emp.MemberLevel = model.MemberLevel;
-            emp.MemberName = model.MemberName;
-            emp.Phone = model.Phone;
-            emp.Qualified = model.Qualified;
+            Employee emp = db.Employees.Select(e => e).Where(e => e.EmpAccount == model.EmpAccount).FirstOrDefault();
+            emp.EmpName = model.EmpName;
+            emp.NickName = model.NickName;
+            emp.Contact = model.Contact;
+            emp.Role = model.Role;
+            emp.Salary = model.Salary.GetValueOrDefault();
 
             db.Entry(emp).State = EntityState.Modified;
             db.SaveChanges();
@@ -144,7 +141,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
                 returnModel.Status = 2;
                 return Ok(returnModel);
             }
-            if (db.Members.Any(Member => Member.MemberAccount == staff.EmpAccount))
+            if (db.Employees.Any(emp => emp.EmpAccount == staff.EmpAccount))
             {
                 returnModel.Status = 1;
                 return Ok(returnModel);
