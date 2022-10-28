@@ -14,13 +14,13 @@ namespace Alcoholic.Controllers.API
             _db = projectContext;
         }
 
-        //統計每日訂位人數
+        // 統計30天內訂位人數
         [HttpGet]
         public IActionResult GetFrontBookings()
         {
             DateTime mindate = DateTime.Now;
             var bookingArr = (from x in _db.Reserves
-                               where x.ReserveDate > mindate
+                               where x.ReserveDate > mindate && x.Status == 1
                                group x by x.ReserveDate into g
                                orderby g.Key
                                select new { Date = g.Key, Total = g.Sum(x => x.Number) });
@@ -28,7 +28,7 @@ namespace Alcoholic.Controllers.API
             return Ok(bookingArr);
         }
 
-        // 曾被訂位的日期
+        // 所有曾被訂位的日期
         [HttpGet]
         public IActionResult GetAllBookingDate()
         {
@@ -45,6 +45,7 @@ namespace Alcoholic.Controllers.API
         {
             var bookingInfo = (from x in _db.Reserves
                                where x.ReserveDate == booking.Date
+                               orderby x.Status descending
                                select x).ToList();
             return Ok(bookingInfo);
         }
@@ -61,6 +62,7 @@ namespace Alcoholic.Controllers.API
                 Email = bookingData.Email,
                 Number = bookingData.Number,
                 ReserveSet = DateTime.Now,
+                Status = 1,
             };
             _db.Add(reserves);
             _db.SaveChanges();
@@ -83,14 +85,14 @@ namespace Alcoholic.Controllers.API
 
         //從後台刪除訂位
         [HttpPost]
-        public IActionResult DeleteBooking(int id)
+        public IActionResult DeleteBooking([FromBody] DeleteBookingModel bookindData)
         {
             var bookingInfo = (from x in _db.Reserves
-                               where x.ReserveId == id
+                               where x.ReserveId == bookindData.Id
                                select x).FirstOrDefault();
-            //bookingInfo.狀態 = 0;
-            //_db.Update(bookingInfo);
-            //_db.SaveChanges();
+            bookingInfo.Status = 0;
+            _db.Update(bookingInfo);
+            _db.SaveChanges();
             return Ok(true);
         }
     }

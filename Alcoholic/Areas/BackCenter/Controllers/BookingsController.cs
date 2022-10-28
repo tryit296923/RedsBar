@@ -1,8 +1,6 @@
-﻿using Alcoholic.Models.DTO;
-using Alcoholic.Models.Entities;
+﻿using Alcoholic.Models.Entities;
 using Alcoholic.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Alcoholic.Areas.BackCenter.Controllers
 {
@@ -18,7 +16,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
         {
             DateTime day = DateTime.Now;
             var todayBooking = (from x in _db.Reserves
-                                where x.ReserveDate == day
+                                where x.ReserveDate == day && x.Status == 1
                                 select new TodayBookingModel
                                 {
                                     ReserveName = x.ReserveName,
