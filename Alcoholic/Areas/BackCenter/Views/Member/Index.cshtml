@@ -50,6 +50,7 @@
                     <thead>
                         <tr>
                             <th scope="col">帳號</th>
+                            <th scope="col">等級</th>
                             <th scope="col">姓名</th>
                             <th scope="col">代號</th>
                             <th scope="col">聯絡方式</th>
@@ -59,14 +60,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(staff,index) in staffs" :name="staff.empAccount">
-                            <td>{{staff.empAccount}}</td>
-                            <td>{{staff.empName}}</td>
-                            <td>{{staff.nickName}}</td>
-                            <td>{{staff.contact}}</td>
-                            <td>{{giveName(staff.status)}}</td>
-                            <td><button :id="index" v-on:click="editStaff" data-bs-toggle="modal" data-bs-target="#editbooking" class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button></td>
-                            <td><button :id="index" v-on:click="deleteStaff" class="btnproducts"><i class="fa-solid fa-trash"></i></button></td>
+                        <tr v-for="(mem,index) in members" :name="mem.empAccount">
+                            <td>{{mem.empAccount}}</td>
+                            <td>{{mem.MemberLevel}}</td>
+                            <td>{{mem.MemberName}}</td>
+                            <td>{{mem.MemberBirth}}</td>
+                            <td>{{mem.Phone}}</td>
+                            <td>{{mem.Email)}}</td>
+                            <td>{{mem.Age)}}</td>
+                            <td>{{mem.qualified)}}</td>
+                            <td><button :id="index" v-on:click="editmem" data-bs-toggle="modal" data-bs-target="#editbooking" class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button></td>
+                            <td><button :id="index" v-on:click="deletemem" class="btnproducts"><i class="fa-solid fa-trash"></i></button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -134,188 +138,20 @@
     const member = new Vue({
         el: "#member",
         data: {
-            staffs: [],
-            gstaffs: [],
-            nickName: "",
-            empAccount: "",
-            empPassword: "",
-            empName: "",
-            contact: "",
-            role: "",
-            salary: "",
-            status: "",
-            search: "",
-            mod: "true",
-            lead: "true",
-            staff: "true",
-            edit: {
-                nickName: "",
-                empAccount: "",
-                empName: "",
-                contact: "",
-                role: "",
-                salary: "",
-            }
-        },
-        watch: {
-            search: function () {
-                document.querySelectorAll(".table tbody tr").forEach(e => {
-                    e.classList.add('none');
-                    if (e.getAttribute("name").includes(this.search)) {
-                        e.classList.remove('none');
-                    } else {
-                        e.classList.add('none');
-                    }
-                })
-            },
+            members:[],
+            memberOrders:[],
+            memberAccount:"",
+            memberLevel:"",
+            memberName: "",
+            memberBirth: "",
+            phone: "",
+            email: "",
+            age: "",
+            qualified:"",
+            
         },
         methods: {
-            addemp: function () {
-                let empJson = {
-                    nickName: this.nickName,
-                    empAccount: this.empAccount,
-                    empPassword: this.empPassword,
-                    empName: this.empName,
-                    contact: this.contact,
-                    role: this.role,
-                    salary: this.salary
-                };
-                let JsonString = JSON.stringify(empJson);
-                fetch("./staff/Register", {
-                    method: 'POST',
-                    headers: { "Content-Type": "application/json" },
-                    body: JsonString        // to JsonString
-                }).then(response => response.json()).then(r => {
-                    switch (r.status) {
-                        case 0:
-                            {
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'success',
-                                    title: '新增成功',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                                this.getStaff();
-                            }
-                            break;
-                        case 1:
-                            {
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'error',
-                                    title: '帳號有人使用過了!',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                                this.getStaff();
-                            }
-                            break;
-                        case 2:
-                            {
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'error',
-                                    title: '資料格式不符!',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                this.getStaff();
-                            }
-                            break;
-                    }
-                });
-            },
-            getStaff: function () {
-                fetch("/backcenter/staff/GetAllMember").then(e => e.json()).then(r => { this.staffs = r[0]; this.gstaffs = r[1]; });
-            },
-            giveName: function (status) {
-                return status == 1 ? "在職" : "已離職";
-            },
-            deleteStaff: function (e) {
-                var acc = this.staffs[e.target.id].empAccount;
-                Swal.fire({
-                    title: '確定刪除?',
-                    text: "確定該員工已離職?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#D8CDB9',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: '是',
-                    cancelButtonText: '否'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch("/backcenter/staff/StaffGone", {
-                            method: "Put",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(acc)
-                        }).then(e => e.json()).then(r => this.edit = r);
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: '刪除成功',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                    }
-                    this.getStaff();
-                })
-            },
-            editStaff: function (e) {
-                var acc = this.staffs[e.target.id].empAccount;
-                fetch("/backcenter/staff/GetMember", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(acc)
-                }).then(e => e.json()).then(r => this.edit = r);
-            },
-            editStaffInfo: function () {
-                fetch("/backcenter/staff/EditMember", {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(this.edit)
-                }).then(e => e.json()).then(r => {
-                    switch (r.status) {
-                        case 0:
-                            {
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'success',
-                                    title: '編輯成功',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                                this.getStaff();
-                            }
-                            break;
-                        case 1:
-                            {
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'question',
-                                    title: '不太可能出現這行 找不到使用者',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                                this.getStaff();
-                            }
-                            break;
-                        case 2:
-                            {
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'error',
-                                    title: '資料格式不符!',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                this.getStaff();
-                            }
-                            break;
-                    }
-
-                });
-            },
+            
         },
         mounted: function () {
             this.getStaff();
