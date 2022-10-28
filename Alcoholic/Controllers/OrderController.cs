@@ -1,5 +1,6 @@
 ﻿using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
+using Alcoholic.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +11,16 @@ namespace Alcoholic.Controllers
     public class OrderController : Controller
     {
         private readonly db_a8de26_projectContext projectContext;
+        private readonly IConfiguration config;
+        private readonly AesService aesService;
+        private readonly HashService hashService;
 
-        public OrderController(db_a8de26_projectContext projectContext)
+        public OrderController(db_a8de26_projectContext projectContext, IConfiguration config, AesService aesService, HashService hashService)
         {
             this.projectContext = projectContext;
+            this.config = config;
+            this.aesService = aesService;
+            this.hashService = hashService;
         }
         public IActionResult Order()
         {
@@ -76,11 +83,16 @@ namespace Alcoholic.Controllers
             var sesStr = HttpContext.Session.GetString("CartItem");
             Console.WriteLine(sesStr);
             string sMemberID = HttpContext.Session.GetString("MemberID");
+            if (!Guid.TryParse(sMemberID,out var memberId))
+            {
+                //錯誤訊息待修改
+                throw new Exception("Guid is error");
+            }
             string memberName = "";
             if (sMemberID != null)
             {
                 memberName = (from n in projectContext.Members
-                              where n.MemberID == Guid.Parse(sMemberID)
+                              where n.MemberID == memberId
                               select n.MemberName).FirstOrDefault();
             }
             else
@@ -224,34 +236,7 @@ namespace Alcoholic.Controllers
                     Count = v.Count(),
                     IdNamePair = new CartIdNamePair() { ProductName = k.ProductName, ProductId = k.ProductId }
                 }).ToList();
-
-            //var carts = (from o in projectContext.OrderDetails // all od LIST
-            //             where o.Order.MemberId == Guid.Parse(sMemberID) && o.Order.Status == "N"
-            //             select new CartIdNamePair
-            //             {
-            //                 ProductId = o.ProductId,
-            //                 ProductName = o.Product.ProductName,
-            //             });// all LIST od(with ID % N restrict)
-            //var count = from cart in carts
-            //            group cart by cart.ProductName into groupedCart
-            //            select groupedCart.Count();
-
-            //group o by new { o.ProductId, o.Product.ProductName } into n // (pId-pName)(List) => od(group) LIST(LIST)
-            //select new { item = n.Key, count = n.Count() }).ToList(); // (item-count)List(List(List))
-
-            //List<CartIdNamePair> cartIdNamePair = carts.ToList();
-            //List<int> Counts = count.ToList();
-            //List<CartTotal> cartTotals = new();
-            //for (int i = 0; i < cartIdNamePair.Count(); i++)
-            //{
-            //    cartTotals.Add(
-            //        new CartTotal()
-            //        {
-            //            IdNamePair = cartIdNamePair[i],
-            //            Count = Counts[i],
-            //        });
-            //}
-
+            
             OrderCheckViewModel orderCheckViewModel = new OrderCheckViewModel
             {
                 Desk = sDeskCheck,
@@ -264,7 +249,31 @@ namespace Alcoholic.Controllers
 
             return View(orderCheckViewModel);
         }
+        public IActionResult OnlinePayment(OnlinePaymentReturn onlinePaymentReturn)
+        {
+            if (onlinePaymentReturn.Status == "SUCCESS")
+            {
+                string hashKey = config["Payment:HashKey"];
+                string hashIV = config["Payment:HashIV"];
+                string decryptTradeInfo = aesService.DecryptAESHex(onlinePaymentReturn.TradeInfo, hashKey, hashIV);
+                PaymentResult obj_PaymentResult = JsonConvert.DeserializeObject<PaymentResult>(decryptTradeInfo);
+
+                var orderId = obj_PaymentResult.Result.MerchantOrderNo;
+                
+                ViewBag.orderId = orderId;
+                return View("OnlinePaymentSucceed");
+            }
+            else
+            {
+                return View("OnlinePaymentFailed");
+            }
+            
+        }
         public IActionResult FrontDeskCheckout()
+        {
+            return View();
+        }
+        public IActionResult Feedback()
         {
             return View();
         }

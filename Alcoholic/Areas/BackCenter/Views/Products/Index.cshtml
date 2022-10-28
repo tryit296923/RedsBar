@@ -2,44 +2,73 @@
     ViewData["Title"] = "商品管理";
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
+
+<style>
+    .scrollPage {
+        overflow-y: scroll;
+        height: 70vh;
+    }
+
+    .my-actions {
+        margin: 0 2em;
+    }
+
+    .order-1 {
+        order: 1;
+    }
+
+    .order-2 {
+        order: 2;
+        margin-right: 10vh;
+    }
+    .productAdding{
+        overflow-y:scroll;
+        height:70vh;
+    }
+</style>
+
 <div id="prod">
-<div class="productmanage container-fluid p-5">
-    <div class="spacebetween row-cols-2 mb-3">
-        <h3>商品管理</h3>
-        <button type="button" class="addbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-            <i class="fa-sharp fa-solid fa-plus"></i> 新增商品
-        </button>
-    </div>
-    <hr>
-    <div class="products">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class="col-4" scope="col" colspan="2">商品內容</th>
-                    <th class="col-1" scope="col">成本</th>
-                    <th class="col-1" scope="col">售價</th>
-                    <th class="col-4" scope="col">特色</th>
-                    <th class="col-1" scope="col">編輯</th>
-                    <th class="col-1" scope="col">刪除</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="item in product">
-                    <th scope="row"><img :src="item.path" alt=""></th>
-                    <td>{{item.name}}</td>
-                    <td>{{item.cost}}</td>
-                    <td>{{item.price}}</td>
-                    <td>{{item.description}}</td>
-                    <td>
-                            <button :id="item.id" class="btnproducts" data-bs-toggle="modal" data-bs-target="#editProd" @@click="[seleEdit($event)]"><i class="fa-solid fa-pen-to-square"></i></button>
-                    </td>
-                    <td>
-                            <button :id="item.id" class="btnproducts" @@click="sendDelete"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <div class="productmanage container-fluid p-5">
+        <div class="spacebetween row-cols-2 mb-3">
+            <h3>商品管理</h3>
+            <button type="button" class="addbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <i class="fa-sharp fa-solid fa-plus"></i> 新增商品
+            </button>
+        </div>
+        <hr>
+        <div class="products">
+            <div class="scrollPage">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-3" scope="col" colspan="2">商品內容</th>
+                            <th class="col-1" scope="col">成本</th>
+                            <th class="col-1" scope="col">售價</th>
+                            <th class="col-1" scope="col">優惠等級</th>
+                            <th class="col-4" scope="col">特色</th>
+                            <th class="col-1" scope="col">編輯</th>
+                            <th class="col-1" scope="col">刪除</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in product">
+                            <th scope="row"><img :src="item.path" alt=""></th>
+                            <td>{{item.name}}</td>
+                            <td>{{item.cost}}</td>
+                            <td>{{item.price}}</td>
+                            <td>{{item.discountName}}</td>
+                            <td>{{item.description}}</td>
+                            <td>
+                                <button :id="item.id" class="btnproducts" data-bs-toggle="modal" data-bs-target="#editProd" @@click="[seleEdit($event)]"><i class="fa-solid fa-pen-to-square"></i></button>
+                            </td>
+                            <td>
+                                <button :id="item.id" :name="item.name" class="btnproducts" @@click="sendDelete"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <!-- Edit Modal -->
     <div class="modal fade" id="editProd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -74,7 +103,7 @@
                             <input type="text" class="form-control w-100" placeholder="請簡述特色" id="productDescription" v-model="editProductData.productDescription" required>
                         </div>
                         <div id="multipleselect" class="col-12 ">
-                                <div class="col-12 ">
+                            <div class="col-12 ">
                                 <label class="my-2">折扣：</label>
                                 <multiselect v-model="discount" placeholder="請選擇折扣" label="discountName" track-by="discountId" :options="discountOpt" :allow-empty="false">
                                     <template slot="singleLabel" slot-scope="props">  <span>{{ props.option.discountName }}</span></template>
@@ -114,23 +143,23 @@
                     <div class="col-12 my-2">
                         <label for="productPic">圖片：</label>
                         <vue-dropzone ref="myVueDropzone" id="basezone" :options="dropzoneOptions"
-                        v-on:vdropzone-files-added="fileAdd"></vue-dropzone>
+                                      v-on:vdropzone-files-added="fileAdd"></vue-dropzone>
                     </div>
                     <div class="col-12 my-2">
                         <label for="productName" class="form-label">商品名稱：</label>
-                        <input type="text" class="form-control w-100" id=" productName" v-model="createProductData.productName" required>
+                        <input type="text" class="form-control w-100" id=" productName" v-model="createProductData.productName" >
                     </div>
                     <div class="col-6 my-2">
                         <label for="productCost" class="form-label">商品成本：</label>
-                        <input type="number" class="form-control w-100" placeholder="NTD" id="productCost" v-model="createProductData.productCost" min="0" required>
+                        <input type="number" class="form-control w-100" placeholder="NTD" id="productCost" v-model="createProductData.productCost" min="0" >
                     </div>
                     <div class="col-6 my-2">
                         <label for="productPrice" class="form-label">商品售價：</label>
-                        <input type="number" class="form-control w-100" placeholder="NTD" id="productPrice" v-model="createProductData.productPrice" min="0" required>
+                        <input type="number" class="form-control w-100" placeholder="NTD" id="productPrice" v-model="createProductData.productPrice" min="0" >
                     </div>
                     <div class="col-12 my-2">
                         <label for="productDescription" class="form-label">商品敘述：</label>
-                        <input type="text" class="form-control w-100" placeholder="請簡述特色" id="productDescription" v-model="createProductData.productDescription" required>
+                        <input type="text" class="form-control w-100" placeholder="請簡述特色" id="productDescription" v-model="createProductData.productDescription" >
                     </div>
                     <div id="multipleselect" class="col-12 ">
                         <div class="col-12 my-2">
@@ -153,8 +182,8 @@
             </div>
             <div class="modal-footer">
                 <div class="row m-0">
-                    <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark" @@click="refreshPage"></i> 離開編輯</button>
-                    <button class=" col btneditproducts m-1" type="button" v-on:click="send"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                    <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark" @@click="refreshPage"></i> 取消新增</button>
+                    <button class=" col btneditproducts m-1" type="button" v-on:click="send"><i class="fa-solid fa-square-check"></i> 新增商品</button>
                 </div>
             </div>
         </div>
@@ -162,32 +191,33 @@
 </div>
 
 
-
+<!-- SWAL -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    let allProds=[];
-    
+    let allProds = [];
+
     let prod = new Vue({
         el: "#prod",
-        data:{
-            product:[],
+        data: {
+            product: [],
             vueid: "",
             imagesrc: "",
             name: "",
-            cost:"",
-            price:"",
+            cost: "",
+            price: "",
             description: "",
-            allDiscount:[],
+            allDiscount: [],
             discount: { discountId: '', discountName: '' },
             discountOpt: [
                 { discountId: '1', discountName: 'default' },
                 { discountId: '2', discountName: 'regular' },
-                { discountId: '3' ,discountName: 'bronze' },
+                { discountId: '3', discountName: 'bronze' },
                 { discountId: '4', discountName: 'silver' },
                 { discountId: '5', discountName: 'golden' },
-                { discountId: '6' ,discountName: 'earlybird' }
+                { discountId: '6', discountName: 'earlybird' }
             ],
             editProductData: {
-                productId:"",
+                productId: "",
                 imagesrc: "",
                 productName: "",
                 productPrice: "",
@@ -215,52 +245,85 @@
             },
             sendEdit: function () {
                 let self = this;
-                let data = new FormData();
-                data.append("ProductId", this.editProductData.productId)
-                data.append("ProductName", this.editProductData.productName)
-                data.append("Cost", this.editProductData.productCost)
-                data.append("UnitPrice", this.editProductData.productPrice)
-                data.append("ProductDescription", this.editProductData.productDescription)
-                data.append("DiscountId", this.discount.discountId)
-                fetch("/api/Products/EditProduct", {
-                    method: 'POST',
-                    //headers: { "Content-Type": "multipart/form-data" },
-                    body: data
-                });
-                fetch("/api/Products/GetAllBackProducts")
-                    .then((response) => response.json())
-                    .then((result) => { self.product = result; allProds = result; console.log(self.product) });
-                
-            },
-            sendDelete:function(e){
-                /*prodId = {Id:""}*/
-                  var   prodId = e.currentTarget.id;
-                fetch("/api/Products/DeleteProduct", {
-                      method:'POST',
-                      headers:{"Content-Type":"application/json"},
-                      body:JSON.stringify(prodId)
-                              
+                var data = new FormData();
+                Swal.fire({
+                    title: '編輯!',
+                    text: '確定要編輯商品' + prod.name + '嗎?',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    confirmButtonText: '確認',
+                    denyButtonText: '拒絕',
+                    customClass: {
+                        actions: 'my-actions',
+                        confirmButton: 'order-2',
+                        denyButton: 'order-3',
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let data = new FormData();
+                        data.append("ProductId", this.editProductData.productId)
+                        data.append("ProductName", this.editProductData.productName)
+                        data.append("Cost", this.editProductData.productCost)
+                        data.append("UnitPrice", this.editProductData.productPrice)
+                        data.append("ProductDescription", this.editProductData.productDescription)
+                        data.append("DiscountId", this.discount.discountId)
+                        fetch("/api/Products/EditProduct", {
+                            method: 'POST',
+                            body: data
+                        });
+                        fetch("/api/Products/GetAllBackProducts")
+                            .then((response) => response.json())
+                            .then((result) => { self.product = result; allProds = result; console.log(self.product) });
+                        } else if (result.isDenied) {
+                            Swal.fire('取消編輯!', '', 'info')
+                        }
                 })
+
             },
-            refreshPage: function(){
+            sendDelete: function (e) {
+                var prod = e.currentTarget;
+                Swal.fire({
+                    title: '刪除!',
+                    text: '確定要刪除商品' + prod.name + '嗎?',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    confirmButtonText: '確認',
+                    denyButtonText: '拒絕',
+                    customClass: {
+                        actions: 'my-actions',
+                        confirmButton: 'order-2',
+                        denyButton: 'order-3',
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch("/api/Products/DeleteProduct", {
+                            method: 'POST',
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(prodId)})
+                            Swal.fire('成功刪除!', '', 'success')
+                        } else if (result.isDenied) {
+                            Swal.fire('取消刪除!', '', 'info')
+                        }
+            })},
+            refreshPage: function () {
                 window.location.reload();
             }
         },
-        mounted:function(){
+        mounted: function () {
             let self = this;
             fetch("/api/Products/GetAllBackProducts")
                 .then((response) => response.json())
-                .then((result) => {self.product = result;allProds = result;});
+                .then((result) => { self.product = result; allProds = result; });
             fetch("/api/Products/GetDiscount")
-            .then(response=>response.json())
-                .then(result => this.allDiscount =result.concat())
+                .then(response => response.json())
+                .then(result => this.allDiscount = result.concat())
         }
 
     })
     let app = new Vue({
         el: "#staticBackdrop",
         data: {
-            product:[],
+            product: [],
             createProductData: {
                 productName: "",
                 productPrice: "",
@@ -316,10 +379,10 @@
             discountselected: [
                 { discountId: '1', discountName: 'default' },
                 { discountId: '2', discountName: 'regular' },
-                { discountId: '3' ,discountName: 'bronze' },
+                { discountId: '3', discountName: 'bronze' },
                 { discountId: '4', discountName: 'silver' },
                 { discountId: '5', discountName: 'golden' },
-                { discountId: '6' ,discountName: 'earlybird' }
+                { discountId: '6', discountName: 'earlybird' }
             ],
             basevalue: "",
             discountvalue: "",
@@ -333,25 +396,44 @@
                 document.querySelectorAll(".dz-progress").forEach(x => x.remove())
             },
             send: function () {
-                let data = new FormData();
-                data.append("ProductName", this.createProductData.productName)
-                data.append("Cost", this.createProductData.productCost)
-                data.append("UnitPrice", this.createProductData.productPrice)
-                data.append("ProductDescription", this.createProductData.productDescription)
-                var img = this.$refs.myVueDropzone.getQueuedFiles();
-                img.forEach(x => data.append("Images", x));
-                this.$refs.myVueDropzone.removeAllFiles();
-                this.createProductData.productName = "";
-                this.createProductData.productPrice = "";
-                this.createProductData.productCost = "";
-                this.createProductData.productDescription = "";
-                this.createProductData.images = [];
-
-                fetch("/api/Products/CreateProduct", {
-                    method: 'POST',
-                    //headers: { "Content-Type": "multipart/form-data" },
-                    body: data
+                Swal.fire({
+                    title: '新增!',
+                    text: '請確認新增的商品訊息無誤',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    confirmButtonText: '確認',
+                    denyButtonText: '拒絕',
+                    customClass: {
+                        actions: 'my-actions',
+                        confirmButton: 'order-2',
+                        denyButton: 'order-3',
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let data = new FormData();
+                        data.append("ProductName", this.createProductData.productName)
+                        data.append("Cost", this.createProductData.productCost)
+                        data.append("UnitPrice", this.createProductData.productPrice)
+                        data.append("ProductDescription", this.createProductData.productDescription)
+                        var img = this.$refs.myVueDropzone.getQueuedFiles();
+                        img.forEach(x => data.append("Images", x));
+                        this.$refs.myVueDropzone.removeAllFiles();
+                        this.createProductData.productName = "";
+                        this.createProductData.productPrice = "";
+                        this.createProductData.productCost = "";
+                        this.createProductData.productDescription = "";
+                        this.createProductData.images = [];
+                        this.discountvalue = "";
+                        fetch("/api/Products/CreateProduct", {
+                            method: 'POST',
+                            //headers: { "Content-Type": "multipart/form-data" },
+                            body: data
+                        });
+                    } else if (result.isDenied) {
+                        Swal.fire('取消新增!', '', 'info')
+                    }
                 })
+                
             },
             addTag(newTag) {
                 const tag = {
@@ -369,7 +451,7 @@
             let self = this;
             fetch("/api/Products/GetAllBackProducts")
                 .then((response) => response.json())
-                .then((result) => { self.product = result});
+                .then((result) => { self.product = result });
 
         }
     })
