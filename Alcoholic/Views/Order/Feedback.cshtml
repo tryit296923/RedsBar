@@ -123,11 +123,10 @@ Layout = "_LayoutMobile";
 <p class="container">本問卷蒐集之資訊僅作為內部服務改善使用，</br>絕不外洩或另作其他用途，敬請放心填寫。</p>
 <div class="container col-10 col-xl-6 check-area" id="d1">
     <div class="inputform">
-        <input name="OrderId" :value="orderId" />
-        <template v-if="memberInfo.memberName == 'guestonly123'">
+        <template v-if="memberInfo.memberName == 'guestonly123' ">
             <div>
                 <h5>姓名 <span>*</span></h5>
-            <input type="text" id="name" class="inpName" v-model="feedbackInfo.Name" required maxlength="20">
+                <input type="text" id="name" class="inpName" v-model="feedbackInfo.Name" required maxlength="20">
             </div>
             <div>
                 <h5>Email <span>*</span></h5>
@@ -138,8 +137,8 @@ Layout = "_LayoutMobile";
                 <h5>年齡 <span>*</span></h5>
                 <div class="row m-0">
                     <div v-for="item in age" class="col-4 m-0 p-0">
-                        <input type="radio" :id="item.value" :value="item.value" v-model="feedbackInfo.Age" required>
-                        <label :for="item.value">{{item.txt}}</label>
+                        <input type="radio" :id="item.id" :value="item.value" v-model="feedbackInfo.Age" name="Age" required>
+                        <label :for="item.id">{{item.txt}}</label>
                     </div>
                 </div>
             </div>
@@ -147,19 +146,19 @@ Layout = "_LayoutMobile";
         <template v-else>
             <div>
                 <h5>姓名 <span>*</span></h5>
-                <input type="text" id="name" class="inpName" v-model="feedbackInfo.Name" disabled :value="memberInfo.memberName">
+                <input type="text" id="name" class="inpName" v-model="memberInfo.memberName" >
             </div>
             <div>
                 <h5>Email <span>*</span></h5>
-                <input type="email" id="Email" class="inpEmail" v-model="feedbackInfo.Email" disabled :value="memberInfo.email">
+                <input type="email" id="Email" class="inpEmail" v-model="memberInfo.email" >
             </div>
             <hr>
             <div>
                 <h5>年齡 <span>*</span></h5>
                 <div class="row m-0">
                     <div v-for="item in age" class="col-4 m-0 p-0">
-                        <input type="radio" :id="item.value" v-model="feedbackInfo.Age" disabled :value="memberAge(memberInfo.age)">
-                        <label :for="item.value">{{item.txt}}</label>
+                        <input type="radio" :id="item.id" :value="item.value" v-model="memberInfo.age" name="Age" required>
+                        <label :for="item.id">{{item.txt}}</label>
                     </div>
                 </div>
             </div>
@@ -169,7 +168,7 @@ Layout = "_LayoutMobile";
             <h5>請問您是第幾次光臨本店 <span>*</span></h5>
             <div class="row m-0">
                 <div v-for="item in freq" class="col-6 m-0 p-0">
-                    <input type="radio" :id="item.value" :value="item.value" name="Frequency" v-model="feedbackInfo.Freq" required>
+                    <input type="radio" :id="item.value" :value="item.value" v-model="feedbackInfo.Freq" name="Frequency" required>
                     <label :for="item.value">{{item.txt}}</label>
                 </div>
             </div>
@@ -181,36 +180,36 @@ Layout = "_LayoutMobile";
                 <div class="satisfaction col-3 m-0">環境<span>*</span></div>
                 <div class="col-9 m-0 star-widget">
                     <template v-for="item in env">
-                        <input type="radio" :id="item.value" :value="item.value" v-model="temp.Environment" required>
-                        <label :for="item.value"><i class="fa-solid fa-star"></i></label>
+                        <input type="radio" :id="item.id" :value="item.value" v-model="feedbackInfo.Environment"  equired>
+                        <label :for="item.id"><i class="fa-solid fa-star"></i></label>
                     </template>
                 </div>
                 <div class="satisfaction col-3 m-0">服務<span>*</span></div>
                 <div class="col-9 m-0 star-widget">
                     <template v-for="item in serve">
-                        <input type="radio" :id="item.value" :value="item.value" v-model="temp.Serve" required>
-                        <label :for="item.value"><i class="fa-solid fa-star"></i></label>
+                        <input type="radio" :id="item.id" :value="item.value" v-model="feedbackInfo.Serve"  required>
+                        <label :for="item.id"><i class="fa-solid fa-star"></i></label>
                     </template>
                 </div>
                 <div class="satisfaction col-3 m-0">餐點<span>*</span></div>
                 <div class="col-9 m-0 star-widget">
                     <template v-for="item in dish">
-                        <input type="radio" :id="item.value" :value="item.value" v-model="temp.Dish" required>
-                        <label :for="item.value"><i class="fa-solid fa-star"></i></label>
+                        <input type="radio" :id="item.id" :value="item.value" v-model="feedbackInfo.Dish"  required>
+                        <label :for="item.id"><i class="fa-solid fa-star"></i></label>
                     </template>
                 </div>
                 <div class="satisfaction col-3 m-0">價位<span>*</span></div>
                 <div class="col-9 m-0 star-widget">
                     <template v-for="item in price">
-                        <input type="radio" :id="item.value" :value="item.value" v-model="temp.Price" required>
-                        <label :for="item.value"><i class="fa-solid fa-star"></i></label>
+                        <input type="radio" :id="item.id" :value="item.value" v-model="feedbackInfo.Price"  required>
+                        <label :for="item.id"><i class="fa-solid fa-star"></i></label>
                     </template>
                 </div>
                 <div class="satisfaction col-3 m-0">整體<span>*</span></div>
                 <div class="col-9 m-0 star-widget">
                     <template v-for="item in overall">
-                        <input type="radio" :id="item.value" :value="item.value" v-model="temp.Overall" required>
-                        <label :for="item.value"><i class="fa-solid fa-star"></i></label>
+                        <input type="radio" :id="item.id" :value="item.value" v-model="feedbackInfo.Overall"  required>
+                        <label :for="item.id"><i class="fa-solid fa-star"></i></label>
                     </template>
                 </div>
             </div>
@@ -224,7 +223,7 @@ Layout = "_LayoutMobile";
         <div class="input-btn">
             <div class="row m-0">
                 <!-- <button class=" col btn-return m-1" type="button">取消</button> -->
-                <button class="col btn-submit" type="submit">送出</button>
+                <button class="col btn-submit" type="submit" v-on:click="feedbackSumit">送出</button>
             </div>
         </div>
     </div>
@@ -234,8 +233,7 @@ Layout = "_LayoutMobile";
     var app = new Vue({
         el: '#d1',
         data: {
-            orderId: @ViewBag.order,
-            memberInfo:[],
+            memberInfo:{},
             age: [
                 { value: 18, txt: '18-19歲' },
                 { value: 20, txt: '20-29歲' },
@@ -250,19 +248,43 @@ Layout = "_LayoutMobile";
                 { value: 4, txt: '第4-6次' },
                 { value: 7, txt: '7次以上' },
             ],
-            env: [{ value: 'e-5' }, { value: 'e-4' }, { value: 'e-3' }, { value: 'e-2' }, { value: 'e-1' }],
-            serve: [{ value: 's-5' }, { value: 's-4' }, { value: 's-3' }, { value: 's-2' }, { value: 's-1' }],
-            dish: [{ value: 'd-5' }, { value: 'd-4' }, { value: 'd-3' }, { value: 'd-2' }, { value: 'd-1' }],
-            price: [{ value: 'p-5' }, { value: 'p-4' }, { value: 'p-3' }, { value: 'p-2' }, { value: 'p-1' }],
-            overall: [{ value: 'o-5' }, { value: 'o-4' }, { value: 'o-3' }, { value: 'o-2' }, { value: 'o-1' }],
-            temp:{
-                Environment: '',
-                Serve: '',
-                Dish: '',
-                Price: '',
-                Overall: '',
-            },
+            env: [
+                { value: 5, id:'env5' }, 
+                { value: 4, id:'env4' }, 
+                { value: 3, id:'env3' }, 
+                { value: 2, id:'env2' }, 
+                { value: 1, id:'env1' }
+            ],
+            serve: [
+                { value: 5, id: 'serve5' },
+                { value: 4, id: 'serve4' },
+                { value: 3, id: 'serve3' },
+                { value: 2, id: 'serve2' },
+                { value: 1, id: 'serve1' }
+            ],
+            dish: [
+                { value: 5, id: 'dish5' },
+                { value: 4, id: 'dish4' },
+                { value: 3, id: 'dish3' },
+                { value: 2, id: 'dish2' },
+                { value: 1, id: 'dish1' }
+            ],
+            price: [
+                { value: 5, id: 'price5' },
+                { value: 4, id: 'price4' },
+                { value: 3, id: 'price3' },
+                { value: 2, id: 'price2' },
+                { value: 1, id: 'price1' }
+            ],
+            overall: [
+                { value: 5, id: 'overall5' },
+                { value: 4, id: 'overall4' },
+                { value: 3, id: 'overall3' },
+                { value: 2, id: 'overall2' },
+                { value: 1, id: 'overall1' }
+            ],
             feedbackInfo: {
+                orderId: @ViewBag.order,
                 Name:'',
                 Email:'',
                 Age: null,
@@ -275,29 +297,18 @@ Layout = "_LayoutMobile";
                 Suggestion:'',
             },
         },
-        computed:{
-
-        },
         watch:{
-            'temp.Environment':function(){
-                if(this.Enviornment != null)
-                    this.feedbackInfo.Enviornment = parseInt(this.temp.Enviornment.substring(2, 3));
+            'memberInfo.memberName': function(){
+                if (this.memberInfo.memberName != 'guestonly123')
+                    this.feedbackInfo.Name = this.memberInfo.memberName;
             },
-            'temp.Serve': function () {
-                if (this.Serve != null)
-                    this.feedbackInfo.Serve = parseInt(this.temp.Serve.substring(2, 3));
+            'memberInfo.email': function(){
+                if (this.memberInfo.memberName != 'guestonly123')
+                    this.feedbackInfo.Email = this.memberInfo.email;
             },
-            'temp.Dish': function () {
-                if (this.Dish != null)
-                    this.feedbackInfo.Dish = parseInt(this.temp.Dish.substring(2, 3));
-            },
-            'temp.Price': function() {
-                if (this.Price != null)
-                    this.feedbackInfo.Price = parseInt(this.temp.Price.substring(2, 3));
-            },
-            'temp.Overall': function() {
-                if (this.Overall != null)
-                    this.feedbackInfo.Overall = parseInt(this.temp.Overall.substring(2, 3));
+            'memberInfo.age':function(){
+                if (this.memberInfo.memberName != 'guestonly123')
+                    this.feedbackInfo.Age = this.memberInfo.age;
             }
         },
         methods:{
@@ -315,7 +326,7 @@ Layout = "_LayoutMobile";
             },
             feedbackSumit:function(){
                 let info = {
-                    OrderId: this.orderId,
+                    OrderId: this.feedbackInfo.orderId.toString(),
                     FeedbackName: this.feedbackInfo.Name,
                     Email: this.feedbackInfo.Email,
                     Age: this.feedbackInfo.Age,
@@ -327,28 +338,36 @@ Layout = "_LayoutMobile";
                     Overall: this.feedbackInfo.Overall,
                     Suggestion: this.feedbackInfo.Suggestion,
                 }
-                fetch('api/Order/FeedBackAll', {
+                fetch('https://localhost:7232/api/Order/FeedBackAll', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(info)
+                }).then(response => response.json())
+                    .then(result => window.location.assign(result.url))
+            },
+            Initialdata:function(){
+                let self = this;
+                let info = {
+                    Id: self.feedbackInfo.orderId.toString(),
+                }
+                fetch('https://localhost:7232/api/Order/FeedbackMember', {
+                    method:'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(info)
                 })
-                    .then(response => response.json())
-                    .then(result => {})
-                    .catch(err => console.log('Request Failed', err));
+                .then(response => response.json())
+                .then(result => {
+                    self.memberInfo = {
+                            orderId: result.orderId,
+                            memberName : result.memberName,
+                            email: result.email,
+                            age: self.memberAge(result.age),
+                        }
+                })  
             }
         },
-        Create:function(){
-            let self = this;
-            let info = {
-                Id: self.orderId,
-            }
-            fetch('/api/Order/FeedbackMember', {
-                method:'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(info)
-            })
-            .then(response => response.json())
-            .then(result => self.memberInfo = result)
+        mounted:function(){
+            this.Initialdata();
         }
     });
 </script>

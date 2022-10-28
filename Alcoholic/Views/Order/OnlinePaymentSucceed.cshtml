@@ -93,15 +93,15 @@
             </div>
         </div>
         <form action="Feedback" method="post">
-            <input name="OrderId" value="@ViewBag.orderId"/>
-            <button type="submit" ref="feedbackbtn"></button>
+            <input name="OrderId" value="@ViewBag.orderId" hidden/>
+            <button type="submit" ref="feedbackbtn" hidden></button>
         </form>
         <div class="container-fluid col-10 col-xl-8 text-center align-self-center px-0">
             <div class="feedbackmessage">
                 <p><i class="fa-sharp fa-solid fa-pen mt-4"></i> 為我們留下評分:</p>
             </div>
             <div>
-                <button href="" class="btnfeedback" @@click="feedbackbtn">顧客意見表</button>
+                <button class="btnfeedback col-12" @@click="feedbackbtn">顧客意見表</button>
             </div>
         </div>
     </div>
