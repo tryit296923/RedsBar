@@ -10,14 +10,14 @@ namespace Alcoholic.Controllers
 {
     public class OrderController : Controller
     {
-        private readonly db_a8de26_projectContext projectContext;
+        private readonly db_a8de26_projectContext _db;
         private readonly IConfiguration config;
         private readonly AesService aesService;
         private readonly HashService hashService;
 
         public OrderController(db_a8de26_projectContext projectContext, IConfiguration config, AesService aesService, HashService hashService)
         {
-            this.projectContext = projectContext;
+            this._db = projectContext;
             this.config = config;
             this.aesService = aesService;
             this.hashService = hashService;
@@ -91,7 +91,7 @@ namespace Alcoholic.Controllers
             string memberName = "";
             if (sMemberID != null)
             {
-                memberName = (from n in projectContext.Members
+                memberName = (from n in _db.Members
                               where n.MemberID == memberId
                               select n.MemberName).FirstOrDefault();
             }
@@ -115,7 +115,7 @@ namespace Alcoholic.Controllers
 
             foreach (var cartItem in cartItems)
             {
-                var product = projectContext.Products.Find(cartItem.Id);
+                var product = _db.Products.Find(cartItem.Id);
                 cartItem.ProductName = product.ProductName;
                 cartItem.UnitPrice = product.UnitPrice;
                 cartItem.DiscountAmount = product.Discount.DiscountAmount;
@@ -141,7 +141,7 @@ namespace Alcoholic.Controllers
         [HttpPost]
         public IActionResult Success(string orderId)
         {
-            var order = (from x in projectContext.Orders where x.OrderId == orderId select x).Select(x => new OrderViewModel
+            var order = (from x in _db.Orders where x.OrderId == orderId select x).Select(x => new OrderViewModel
             {
                 Desk = x.DeskNum,
                 Number = x.Number,
@@ -156,7 +156,7 @@ namespace Alcoholic.Controllers
         {
             string sDeskTotal = HttpContext.Session.GetString("Desk");
 
-            var orderDetail = (from y in projectContext.Orders
+            var orderDetail = (from y in _db.Orders
                                where y.Status == "N" && y.DeskNum == sDeskTotal
                                select y).Select(y => new OrderViewModel
                                {
@@ -229,7 +229,7 @@ namespace Alcoholic.Controllers
             {
                 throw new Exception("Guid is error");
             }
-            var getOrder = projectContext.Orders.Where(x => x.MemberId == memberId && x.Status == "N").FirstOrDefault();
+            var getOrder = _db.Orders.Where(x => x.MemberId == memberId && x.Status == "N").FirstOrDefault();
             var cartTotalList = getOrder.OrderDetails.Select(x => new { x.Product.ProductName, x.ProductId })
                 .GroupBy(x => new { x.ProductId, x.ProductName }, (k, v) => new CartTotal
                 {
@@ -273,8 +273,9 @@ namespace Alcoholic.Controllers
         {
             return View();
         }
-        public IActionResult Feedback()
+        public IActionResult Feedback(string OrderId)
         {
+            ViewBag.order = OrderId;
             return View();
         }
     }

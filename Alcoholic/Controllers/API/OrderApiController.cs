@@ -2,7 +2,9 @@
 using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
 using Alcoholic.Services;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
@@ -137,7 +139,7 @@ namespace Alcoholic.Controllers.API
                 AndroidPay = paymentInfo.PayType.ToLower() == "googlepay" ? "1" : null,
                 Credit = paymentInfo.PayType.ToLower() == "credit" ? "1" : null,
                 LinePay = paymentInfo.PayType.ToLower() == "linepay" ? "1" : null,
-                ReturnURL = "https://45dd-125-227-38-129.jp.ngrok.io/api/Order/GetPaymentReturnData",               
+                ReturnURL = "https://930c-60-250-79-113.jp.ngrok.io/api/Order/GetPaymentReturnData",               
             };
 
             var hashKey = config["Payment:HashKey"];
@@ -209,6 +211,45 @@ namespace Alcoholic.Controllers.API
                 Version = r_Version,
             };
             return RedirectToAction("OnlinePayment", "Order", onlinePaymentReturn);
+        }
+
+        [HttpPost]
+        public IActionResult FeedbackMember([FromBody] FeedbackIdModel data)
+        {
+            var order = (from x in _db.Orders
+                         where x.OrderId == data.Id
+                         select x).FirstOrDefault();
+            var member = (from y in _db.Members
+                          where y.MemberID == order.MemberId
+                          select new FeedbackMemberModel
+                          {
+                              MemberName = y.MemberName,
+                              Email = y.Email,
+                              Age = y.Age,
+                          });
+            return Ok(member);
+        }
+
+        [HttpPost]
+        public IActionResult FeedBackAll([FromBody] FeedBackAllModel data)
+        {
+            Feedback feedback = new Feedback()
+            {
+                OrderId = data.OrderId,
+                FeedbackName = data.FeedbackName,
+                Email = data.Email,
+                Age = data.Age.ToString(),
+                Frequency = data.Freq,
+                Environment = data.Environment,
+                Serve = data.Serve,
+                Dish = data.Dish,
+                Price = data.Price,
+                Overall = data.Overall,
+                Suggestion = data.Suggestion,
+            };
+            _db.Add(feedback);
+            _db.SaveChanges();
+            return Ok(true);
         }
     }
 }
