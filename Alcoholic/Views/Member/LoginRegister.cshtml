@@ -550,6 +550,7 @@
                         switch (result.status) {
                             case 200: {
                                 Swal.fire({
+                                    allowOutsideClick: 'false',
                                     title: '登入成功',
                                     icon: 'success',
                                     background: '#333',
@@ -572,6 +573,7 @@
                             break;
                             case 1: {
                                 Swal.fire({
+                                    allowOutsideClick: 'false',
                                     color: '#FFF',
                                     iconColor: '#D8CDB9',
                                     confirmButtonColor: '#721B29',
@@ -587,20 +589,23 @@
                                         window.location.assign("/Order/Orderlist");
                                     }
                                     else if (result.dismiss === Swal.DismissReason.cancel) {
-                                            fetch("/api/member/Logout").then(() => {
-                                            Swal.fire({
-                                                title: '登出成功',
-                                                color: '#FFF',
-                                                iconColor: '#D8CDB9',
-                                                background: '#333',
-                                                timer: 1000,
-                                                didOpen: () => {
-                                                    Swal.showLoading()
-                                                },
-                                                willClose: () => {
-                                                    window.location.assign("/home/index")
-                                                }
-                                            })
+                                        fetch("/api/member/Logout").then(e=>e.json()).then((r) => {
+                                            if(r){
+                                                Swal.fire({
+                                                    allowOutsideClick: 'false',
+                                                    title: '登出成功',
+                                                    color: '#FFF',
+                                                    iconColor: '#D8CDB9',
+                                                    background: '#333',
+                                                    timer: 1000,
+                                                    didOpen: () => {
+                                                        Swal.showLoading()
+                                                    },
+                                                    willClose: () => {
+                                                        window.location.assign("/home/index")
+                                                    }
+                                                })
+                                            }
                                         })
                                     }
                                 })
@@ -608,6 +613,7 @@
                             break;
                             default: {
                                 Swal.fire({
+                                    allowOutsideClick: 'false',
                                     color: '#FFF',
                                     iconColor: '#D8CDB9',
                                     confirmButtonColor: '#721B29',
@@ -621,6 +627,7 @@
                     }).catch(error => console.log(error))
                 },50);
                 Swal.fire({
+                    allowOutsideClick: 'false',
                     title: '登入中 請稍後',
                     color: '#FFF',
                     iconColor: '#D8CDB9',

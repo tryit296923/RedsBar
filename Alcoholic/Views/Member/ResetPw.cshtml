@@ -120,6 +120,7 @@
             body: json
         }).then((e)=>e.json).then((result)=>{if (result) {
             Swal.fire({
+                allowOutsideClick: 'false',
                 color: '#FFF',
                 iconColor: '#D8CDB9',
                 confirmButtonColor: '#721B29',
@@ -130,6 +131,7 @@
             setTimeout(()=> window.location.assign(relocate),1000)
         }else{
             Swal.fire({
+                allowOutsideClick: 'false',
                 color: '#FFF',
                 iconColor: '#D8CDB9',
                 confirmButtonColor: '#721B29',

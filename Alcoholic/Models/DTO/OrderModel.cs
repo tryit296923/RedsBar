@@ -44,6 +44,21 @@ namespace Alcoholic.Models.DTO
         public string Desk { get; set; }
         public string Status { get; set; }
         public int Number { get; set; }
+        public int? Total { get; set; }
+
     }
-    
+    // 後臺輸入訂單編號查詢
+    public class SearchHistOrder
+    {
+        public string OrderId { get; set; }
+    }
+
+    //櫃台結帳頁面顯示
+    public class FrontDeskCheckPage
+    {
+        public string OrderId { get; set; }
+        public string Desk { get; set; }
+        public DateTime OrderTime { get; set; }
+
+    }
 }
