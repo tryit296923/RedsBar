@@ -232,7 +232,6 @@ namespace Alcoholic.Controllers.API
                           where y.MemberID == order.MemberId
                           select new
                           {
-                              OrderId = data.Id,
                               MemberName = y.MemberName,
                               Email = y.Email,
                               Age = y.Age,

@@ -1,13 +1,9 @@
-﻿using Alcoholic.Models.DTO;
+﻿using Alcoholic.Models;
+using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
 using Alcoholic.Models.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
-using System.Linq;
-using System.Xml.Linq;
 
 namespace Alcoholic.Controllers.API
 {
@@ -61,37 +57,54 @@ namespace Alcoholic.Controllers.API
             return prod;
         }
         [HttpPost]
-        public void CreateProduct([FromForm]CreateProductModel model)
+        public IActionResult CreateProduct([FromForm]CreateProductModel model)
         {
-            const string prefix = @"\images\Products\";
-            var folder = env.WebRootPath+prefix;
-            var tempFilePath = new List<string>();
-            if (model.Images != null) {
-                var index = 0;
-                foreach (var img in model.Images)
-                {
-                    if (img.Length > 0)
-                    {
-                        var fileName = $@"{DateTime.Now.Ticks}-{index}-{img.FileName}";
-                        using (var sm = new FileStream($@"{folder}\{fileName}", FileMode.Create)) 
-                        {
-                            img.CopyTo(sm);
-                            tempFilePath.Add(prefix+fileName);
-                            index++;
-                        }
-                    }
-
-                }
+            ReturnModel returnModel = new();
+            if (!ModelState.IsValid)
+            {
+                returnModel.Status = 400;
+                var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
+                return Ok(returnModel);
             }
-            var prod = new Product() {
-                Cost = model.Cost,
-                UnitPrice = model.UnitPrice,
-                ProductName = model.ProductName,
-                ProductDescription = model.ProductDescription,
-                Images = tempFilePath.Select(x=> new ProductImage() { Path = x}).ToList()
-            };
-            _db.Products.Add(prod);
-            _db.SaveChanges();
+            
+            else
+            {
+                returnModel.Status = 0;
+                const string prefix = @"\images\Products\";
+                var folder = env.WebRootPath + prefix;
+                var tempFilePath = new List<string>();
+                if (model.Images != null)
+                {
+                    var index = 0;
+                    foreach (var img in model.Images)
+                    {
+                        if (img.Length > 0)
+                        {
+                            var fileName = $@"{DateTime.Now.Ticks}-{index}-{img.FileName}";
+                            using (var sm = new FileStream($@"{folder}\{fileName}", FileMode.Create))
+                            {
+                                img.CopyTo(sm);
+                                tempFilePath.Add(prefix + fileName);
+                                index++;
+                            }
+                        }
+
+                    }
+                }
+                var prod = new Product()
+                {
+                    Cost = model.Cost,
+                    UnitPrice = model.UnitPrice,
+                    ProductName = model.ProductName,
+                    ProductDescription = model.ProductDescription,
+                    DiscountId = model.DiscountId,
+                    Images = tempFilePath.Select(x => new ProductImage() { Path = x }).ToList(),
+                };
+                _db.Products.Add(prod);
+                _db.SaveChanges();
+                return Ok(returnModel);
+            }
+            
         }
         [HttpPost]
         public void EditProduct([FromForm] EditProductModel editData)

@@ -36,6 +36,10 @@ Layout = "_LayoutMobile";
         color: red;
     }
 
+    :disabled{
+        background: #666;
+    }
+
     .check-area {
         border: 1px solid #D8CDB9;
         padding: 20px 0px 20px 0px;
@@ -126,7 +130,7 @@ Layout = "_LayoutMobile";
         <template v-if="memberInfo.memberName == 'guestonly123' ">
             <div>
                 <h5>姓名 <span>*</span></h5>
-                <input type="text" id="name" class="inpName" v-model="feedbackInfo.Name" required maxlength="20">
+                <input type="text" id="name" class="inpName" v-model="feedbackInfo.Name" maxlength="20" required>
             </div>
             <div>
                 <h5>Email <span>*</span></h5>
@@ -146,18 +150,18 @@ Layout = "_LayoutMobile";
         <template v-else>
             <div>
                 <h5>姓名 <span>*</span></h5>
-                <input type="text" id="name" class="inpName" v-model="memberInfo.memberName" >
+                <input type="text" id="name" class="inpName" v-model="memberInfo.memberName" disabled>
             </div>
             <div>
                 <h5>Email <span>*</span></h5>
-                <input type="email" id="Email" class="inpEmail" v-model="memberInfo.email" >
+                <input type="email" id="Email" class="inpEmail" v-model="memberInfo.email" disabled>
             </div>
             <hr>
             <div>
                 <h5>年齡 <span>*</span></h5>
                 <div class="row m-0">
                     <div v-for="item in age" class="col-4 m-0 p-0">
-                        <input type="radio" :id="item.id" :value="item.value" v-model="memberInfo.age" name="Age" required>
+                        <input type="radio" :id="item.id" :value="item.value" v-model="memberInfo.age" name="Age" disabled>
                         <label :for="item.id">{{item.txt}}</label>
                     </div>
                 </div>
@@ -362,7 +366,7 @@ Layout = "_LayoutMobile";
                             memberName : result.memberName,
                             email: result.email,
                             age: self.memberAge(result.age),
-                        }
+                    }
                 })  
             }
         },

@@ -85,7 +85,7 @@
     <div class="container">
         <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
             <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Signature</li>
             </ol>
         </nav>
@@ -141,7 +141,6 @@
     var app = new Vue({
         el: '#vueproductModal',
         data: {
-            vueid: "",
             imagesrc: "",
             head: "",
             discount: 0.8,
@@ -150,8 +149,13 @@
         },
         methods: {
             selected: function (e) {
-                this.vueid = e.currentTarget.id;
-                let item = this.product[this.vueid - 1];
+                let id = e.currentTarget.id;
+                let i ;
+                this.product.forEach(function(x, index){
+                    if (x.id == id)
+                        i = index;
+                })
+                let item = this.product[i];
                 this.imagesrc = item.path;
                 this.head = item.name;
                 this.description = item.description;
@@ -160,8 +164,8 @@
         beforeCreate: function () {
         let self = this;
         fetch('/api/products/GetAllProducts')
-            .then(function (response) { return response.json() })
-            .then(function (result) { self.product = result })
+            .then( response => response.json())
+            .then( result => self.product = result)
         },
     })   
 </script>
