@@ -7,6 +7,10 @@
         order: 2;
         margin-left: 10vh;
     }
+
+    .nullShow {
+        visibility: hidden;
+    }
 </style>
 <div id="discount">
     <div class="discountmanage container-fluid p-5">
@@ -100,14 +104,14 @@
             <div class="modal-body container productAdding">
                 <div class="row">
                     <div class="col-6 my-2">
-                        <label for="productCost" class="form-label">優惠等級：</label>
-                        <input type="text" class="form-control w-100" placeholder="請輸入" id="productCost" v-model="editDiscountData.discountName" required>
+                        <label for="productCost" class="form-label">優惠等級：</label><label :class="{'nullShow':filled.discountName}">*不能為空</label>
+                        <input type="text" class="form-control w-100" placeholder="請輸入" id="productCost" v-model="addDiscountData.discountName" required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-6 my-2">
-                        <label for="productPrice" class="form-label">折扣率：</label>
-                        <input type="number" class="form-control w-100" placeholder="請輸入" id="productPrice" v-model="editDiscountData.discountAmount" min="0" required>
+                        <label for="productPrice" class="form-label">折扣率：</label><label :class="{'nullShow':filled.discountAmount}">*不能為空</label>
+                        <input type="number" class="form-control w-100" placeholder="請輸入" max="2" id="productPrice" v-model="addDiscountData.discountAmount" min="0" required>
                     </div>
                 </div>
             </div>
@@ -232,10 +236,14 @@
         el: "#staticBackdrop",
         data: {
             product: [],
-            editDiscountData: {
+            addDiscountData: {
                 discountId: "",
                 discountName: "",
                 discountAmount: "",
+            },
+            filled: {
+                discountName: false,
+                discountAmount: false,
             },
         },
         methods: {
@@ -254,31 +262,76 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         let data = new FormData();
-                        data.append("DiscountName", this.editDiscountData.discountName)
-                        data.append("DiscountAmount", this.editDiscountData.discountAmount)
-                        this.editDiscountData.discountName = "";
-                        this.editDiscountData.discountAmount = "";
+                        data.append("DiscountName", this.addDiscountData.discountName)
+                        data.append("DiscountAmount", this.addDiscountData.discountAmount)
                         fetch("/api/Discount/CreateDiscount", {
                             method: 'POST',
                             body: data
-                        });
-                        Swal.fire('新增成功!', '', 'success');
-                    } else if (result.isDenied) {
+                        })
+                            .then(e => e.json())
+                            .then(result => {
+                                console.log("1")
+                                console.log(result);
+                                switch (result.status) {
+                                    case 0: {
+                                        console.log("success")
+                                        Swal.fire('新增成功!', '', 'success');
+                                        this.addDiscountData.discountName = "";
+                                        this.addDiscountData.discountAmount = "";
+                                    }
+                                        break;
+                                    case 1: {
+                                        console.log("name?")
+                                        Swal.fire('名字重複!', '', 'error');
+                                    }
+                                        break;
+                                    case 2: {
+                                        console.log("price?")
+                                        Swal.fire('折扣不可為0!', '', 'error');
+                                    }
+                                        break;
+                                    case 400: {
+                                        console.log("fail")
+                                        Swal.fire('尚有欄位未填寫!', '', 'error');
+                                    }
+                                        break;
+                                }
+                            })
+                    }
+                    else if (result.isDenied) {
                         Swal.fire('取消新增!', '', 'info')
                     }
                 })
-
             },
-            refreshPage: function () {
-                window.location.reload();
-            }
-        },
-        mounted: function () {
-            let self = this;
-            fetch("/api/Discount/GetDiscount")
-                .then(response => response.json())
-                .then(result => self.allDiscount = result.concat())
+        refreshPage: function () {
+        window.location.reload();
+    }
+            },
+    mounted: function () {
+        let self = this;
+        fetch("/api/Discount/GetDiscount")
+            .then(response => response.json())
+            .then(result => self.allDiscount = result.concat())
 
+    },
+        watch: {
+            'addDiscountData.discountName': function (n, o) {
+                if (n != "") {
+                    this.filled.discountName = true;
+                }
+                else {
+                    this.filled.discountName = false;
+                }
+            },
+            'addDiscountData.discountAmount': function (n, o) {
+                if (n != 0) {
+                    this.filled.discountAmount = true;
+                }
+                else {
+                    this.filled.discountAmount = false;
+                }
+            }
         }
-    })
+    }
+)
 </script>

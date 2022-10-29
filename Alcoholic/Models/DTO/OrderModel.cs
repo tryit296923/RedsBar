@@ -35,5 +35,15 @@ namespace Alcoholic.Models.DTO
         public int ProductId { get; set; }
         public string ProductName { get; set; }
     }
+
+    // 後臺顯示本日訂單
+    public class BCOrder
+    {
+        public string OrderId { get; set; }
+        public string MemberName { get; set; }
+        public string Desk { get; set; }
+        public string Status { get; set; }
+        public int Number { get; set; }
+    }
     
 }

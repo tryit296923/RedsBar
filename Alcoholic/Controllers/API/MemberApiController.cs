@@ -354,6 +354,29 @@ namespace Alcoholic.Controllers.API
             return Ok(true);
         }
 
+        [HttpPost]
+        public IActionResult Legal([FromBody] DateTime dateTime)
+        {
+            ReturnModel model = new();
+            Guid.TryParse(HttpContext.Session.GetString("MemberID"), out Guid ses);
+            Member? mem = db.Members.Where(m => m.MemberID == ses).FirstOrDefault();
+            var now = DateTime.Now;
+            TimeSpan duration = now - dateTime;
+            if (duration.TotalDays/365 < 18)
+            {
+                model.Status = 400;
+                return Ok(model);
+            }
+
+            mem.MemberBirth = dateTime;
+            mem.Qualified = "y";
+            db.Entry(mem).State = EntityState.Modified;
+            db.SaveChanges();
+            model.Status = 200;
+            model.Url = $"{Request.Scheme}://{Request.Host}/Order/Cart";
+            return Ok(model);
+        }
+
         private bool MemberExists(string Account)
         {
             return db.Members.Any(member => member.MemberAccount == Account);
@@ -364,6 +387,10 @@ namespace Alcoholic.Controllers.API
         }
         public void MemberLvl(string account)
         {
+            if(account == "guestonly123")
+            {
+                return;
+            }
             Member? member = (from m in db.Members where m.MemberAccount == account select m).FirstOrDefault();
             if (member == null || member.Orders.FirstOrDefault() == null)
             {
@@ -388,6 +415,7 @@ namespace Alcoholic.Controllers.API
             db.Entry(member).State = EntityState.Modified;
             db.SaveChanges();
         }
+
 
     }
 }
