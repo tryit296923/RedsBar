@@ -4,6 +4,8 @@ using Alcoholic.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
+using Microsoft.AspNetCore.Authentication.Twitter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +18,13 @@ namespace Alcoholic.Controllers
     {
         private readonly db_a8de26_projectContext db;
         private readonly HashService hash;
-        public MemberController(db_a8de26_projectContext db, HashService hash)
+        private readonly LvlService lvl;
+
+        public MemberController(db_a8de26_projectContext db, HashService hash, LvlService lvl)
         {
             this.db = db;
             this.hash = hash;
+            this.lvl = lvl;
         }
         public IActionResult FrontPage()
         {
@@ -46,10 +51,6 @@ namespace Alcoholic.Controllers
         }
         public IActionResult Member()
         {
-            if (HttpContext.User.Identity.Name == "guestonly123")
-            {
-
-            }
             return View();
         }
         [AllowAnonymous]
@@ -57,16 +58,36 @@ namespace Alcoholic.Controllers
         {
             var properties = new AuthenticationProperties()
             {
-                RedirectUri = Url.Action("goGoogle")
+                RedirectUri = Url.Action("goOauth")
             };
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
-        public async Task<IActionResult> goGoogle()
+        public IActionResult TwitterLogin()
         {
-            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme); // 拿到個人驗證資料
+            var properties = new AuthenticationProperties()
+            {
+                RedirectUri = Url.Action("goOauth")
+            };
+            return Challenge(properties, TwitterDefaults.AuthenticationScheme);
+        }
+        public IActionResult MSLogin()
+        {
+            var properties = new AuthenticationProperties()
+            {
+                RedirectUri = Url.Action("goOauth")
+            };
+            return Challenge(properties, MicrosoftAccountDefaults.AuthenticationScheme);
+        }
+        public async Task<IActionResult> goOauth()
+        {
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Clear();
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);  // 拿到個人驗證資料
             var claim = result.Principal.Claims.FirstOrDefault();
-            var account = claim.Subject.Claims.Where(c => c.Type.Contains("emailaddress")).Select(c => c.Value).FirstOrDefault();
-            var user = db.Members.Where(x => x.MemberAccount == account).FirstOrDefault();
+            var Acc = claim.Subject.Claims.Where(c => c.Type.Contains("emailaddress")).Select(c => c.Value).FirstOrDefault();
+            var userMG = db.Members.Where(e => e.MemberAccount == Acc).FirstOrDefault();
+            var userT = db.Members.Where(e => e.MemberAccount == claim.Subject.Name).FirstOrDefault();
+            var user = userMG == null ? userT : userMG;
             // 已有會員資料(曾經登入過) => SignIn & SetSession 
             if (user != null)
             {
@@ -77,28 +98,59 @@ namespace Alcoholic.Controllers
                 ClaimsIdentity identity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
                 HttpContext.Session.SetString("MemberID", user.MemberID.ToString());
-                return RedirectToAction("Cart","Order");
+                lvl.MemberLvl(user.MemberAccount);
+                return RedirectToAction("Orderlist", "Order");
             }
-            // 無會員資料 => 建立一個資料, 給予Session 但無SignIn, 至年齡判斷
-            else
+
+
+            var gate = claim.OriginalIssuer.ToString();
+            Member oauth = new()
             {
-                Member gMem = new()
-                {
-                    MemberAccount = account,
-                    MemberPassword = hash.GetHash(claim.Value),
-                    MemberLevel = 0,
-                    Salt = Guid.NewGuid().ToString("N"),
-                    MemberName = claim.Subject.Name,
-                    MemberBirth = new DateTime(0001, 1, 1),
-                    Phone = "0900google",
-                    Email = "",
-                    Qualified = "n"
-                };
-                gMem.Email = gMem.MemberAccount;
-                db.Members.Add(gMem);
-                HttpContext.Session.SetString("MemberID", gMem.MemberID.ToString());
-                return View("Legal");
+                MemberAccount = "",
+                MemberPassword = null,
+                MemberLevel = 0,
+                Salt = Guid.NewGuid().ToString("N"),
+                MemberName = "",
+                MemberBirth = new DateTime(0001, 1, 1),
+                Phone = "09oAuthLog",
+                Email = "noregister@redsbar.com",
+                Qualified = "n"
+            };
+            switch (gate)
+            {
+                case "Google":
+                    {
+                        oauth.MemberAccount = Acc;
+                        oauth.MemberPassword = hash.GetHash(claim.Value);
+                        oauth.MemberName = claim.Subject.Name;
+                        oauth.Email = oauth.MemberAccount;
+                    }
+                    break;
+                case "Twitter":
+                    {
+                        oauth.MemberName = claim.Subject.Name;
+                        oauth.MemberAccount = claim.Subject.Name;
+                        oauth.MemberPassword = hash.GetHash(claim.Value);
+                    }
+                    break;
+                case "Microsoft":
+                    {
+                        oauth.MemberName = claim.Subject.Name;
+                        oauth.MemberAccount = Acc;
+                        oauth.MemberPassword = hash.GetHash(claim.Value);
+                        oauth.Email = oauth.MemberAccount;
+                    }
+                    break;
+                default:
+                    return BadRequest();
+                    break;
             }
+
+            // 無會員資料 => 建立一個資料, 給予Session 但無SignIn, 至年齡判斷
+            db.Members.Add(oauth);
+            db.SaveChanges();
+            HttpContext.Session.SetString("MemberID", oauth.MemberID.ToString());
+            return View("Legal");
         }
 
         [HttpGet]

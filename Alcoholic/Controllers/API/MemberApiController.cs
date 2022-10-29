@@ -9,10 +9,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Razor.Templating.Core;
-using System.Collections.Generic;
 using Alcoholic.Models;
 using Newtonsoft.Json;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Alcoholic.Controllers.API
 {
@@ -23,11 +21,14 @@ namespace Alcoholic.Controllers.API
         private readonly db_a8de26_projectContext db;
         private readonly MailService mail;
         private readonly HashService hash;
-        public MemberApiController(db_a8de26_projectContext db, MailService mail, HashService hash)
+        private readonly LvlService lvl;
+
+        public MemberApiController(db_a8de26_projectContext db, MailService mail, HashService hash, LvlService lvl)
         {
             this.db = db;
             this.mail = mail;
             this.hash = hash;
+            this.lvl = lvl;
         }
         // 入座 => 登入頁面 (導向)
         [HttpPut]
@@ -152,7 +153,7 @@ namespace Alcoholic.Controllers.API
             }
             else
             {
-                MemberLvl(user.MemberAccount);
+                lvl.MemberLvl(user.MemberAccount);
                 // 驗證
                 var claims = new List<Claim>
                 {
@@ -372,7 +373,7 @@ namespace Alcoholic.Controllers.API
         {
             ReturnModel model = new();
             Guid.TryParse(HttpContext.Session.GetString("MemberID"), out Guid ses);
-            Member? mem = db.Members.Where(m => m.MemberID == ses).FirstOrDefault();
+            Member mem = db.Members.Where(m => m.MemberID == ses).FirstOrDefault();
             var now = DateTime.Now;
             TimeSpan duration = now - dateTime;
             // 小於18 未成年 => 導回登入註冊頁面 無SignIn
@@ -388,7 +389,7 @@ namespace Alcoholic.Controllers.API
             db.Entry(mem).State = EntityState.Modified;
             db.SaveChanges();
             model.Status = 200;
-            model.Url = $"{Request.Scheme}://{Request.Host}/Order/Cart";
+            model.Url = $"{Request.Scheme}://{Request.Host}/Order/orderlist";
             List<Claim> claims = new()
             {
                 new Claim(ClaimTypes.Name, mem.MemberName),
@@ -406,36 +407,6 @@ namespace Alcoholic.Controllers.API
         private bool EmailExists(string Email)
         {
             return db.Members.Any(member => member.Email == Email);
-        }
-        public void MemberLvl(string account)
-        {
-            if(account == "guestonly123")
-            {
-                return;
-            }
-            Member? member = (from m in db.Members where m.MemberAccount == account select m).FirstOrDefault();
-            if (member == null || member.Orders.FirstOrDefault() == null)
-            {
-                return;
-            }
-            int sum = 0;
-            foreach (Order order in member.Orders)
-            {
-                sum += order.Total.GetValueOrDefault();
-            }
-
-            int level = 0;
-            switch (sum)
-            {
-                case > 70000: level = 4; break;
-                case > 30000: level = 3; break;
-                case > 10000: level = 2; break;
-                case > 5000: level = 1; break;
-                default: level = 0; break;
-            }
-            member.MemberLevel = level;
-            db.Entry(member).State = EntityState.Modified;
-            db.SaveChanges();
         }
     }
 }
