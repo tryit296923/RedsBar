@@ -1,3 +1,4 @@
+using Alcoholic.Hubs;
 using Alcoholic.Models;
 using Alcoholic.Models.Entities;
 using Alcoholic.Services;
@@ -14,6 +15,7 @@ builder.Services.AddTransient<MailService>();
 builder.Services.AddTransient<HashService>();
 builder.Services.AddTransient<AesService>();
 builder.Services.AddRazorTemplating();
+builder.Services.AddSignalR();
 
 builder.Services.AddDbContext<db_a8de26_projectContext>(option =>
 {
@@ -64,6 +66,8 @@ builder.Services.AddSession(options =>
 });
 
 var app = builder.Build();
+
+app.MapHub<NotifyHub>("/notifyHub");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -24,9 +24,9 @@
         height: 2rem;
     }
 
-    .iptSearchOrderId{
-        border-radius:4px;
-        height:33px;
+    .iptSearchOrderId {
+        border-radius: 4px;
+        height: 33px;
     }
 
 </style>
@@ -61,7 +61,7 @@
                             <td>{{item.number}}</td>
                             <td>{{item.status}}</td>
                             <td v-if="item.status == 'N'">
-                                <button type="button" class="addbtn btnCheck" data-bs-toggle="modal" data-bs-target="#addbooking">
+                                <button type="button" class="addbtn btnCheck" data-bs-toggle="modal" data-bs-target="#addbooking" :id="item.orderId">
                                     <i class="fa-sharp fa-solid fa-comment-dollar"></i> 手動結帳
                                 </button>
                             </td>
@@ -76,8 +76,8 @@
         <div class="spacebetween row-cols-2 mb-3">
             <h3>查詢訂單</h3>
             <div class="datepick">
-                <input type="text" placeholder="輸入欲查詢之訂單編號" class="p-0 datepicker iptSearchOrderId" maxlength="14"/>
-                <button class="btn-search" v-on:click="SearchClick()">搜尋</button>
+                <input type="text" v-model="searchOrderId" placeholder="輸入欲查詢之訂單編號" class="p-0 datepicker iptSearchOrderId" maxlength="14" />
+                <button class="btn-search" v-on:click="searchHistOrder()">搜尋</button>
             </div>
         </div>
         <div class="bookinginfo">
@@ -88,21 +88,21 @@
                         <th scope="col">姓名</th>
                         <th scope="col">桌號</th>
                         <th scope="col">用餐人數</th>
-                        <th scope="col">付款狀態</th>
+                        <th scope="col">總金額</th>
                         <th scope="col">詳細資料</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="order in searchOrder">
-                        <td>{{order.orderId}}</td>
-                        <td>{{order.memberName}}</td>
-                        <td>{{order.desk}}</td>
-                        <td>{{order.number}}</td>
-                        <td v-if="order.status == 'Y'">已結單</td>
+                    <tr v-for="items in searchOrder">
+                        <td>{{items.orderId}}</td>
+                        <td>{{items.memberName}}</td>
+                        <td>{{items.desk}}</td>
+                        <td>{{items.number}}</td>
+                        <td v-if="items.status == 'Y'">{{items.total}}</td>
                         <td v-else>未付款</td>
                         <td>
-                            <button type="button" class="addbtn btnCheck" data-bs-toggle="modal" data-bs-target="#addbooking">
-                            <i class="fa-sharp fa-solid fa-comment-dollar"></i> 詳細資料
+                            <button type="button" class="addbtn btnCheck" data-bs-toggle="modal" data-bs-target="#seeDetails">
+                                <i class="fa-sharp fa-solid fa-comment-dollar"></i> 詳細資料
                             </button>
                         </td>
                     </tr>
@@ -125,7 +125,29 @@
                     <div class="modal-footer">
                         <div class="row m-0">
                             <button class="col btneaddcancel m-1 btnCheckinModal" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 取消</button>
-                            <button class="col btneditproducts m-1 btnCheckinModal" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 結單</button>
+                            <button class="col btneditproducts m-1 btnCheckinModal" type="button" @@click="finishPayment" :id="selectOrderId"><i class="fa-solid fa-square-check"></i> 結單</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--詳細資料Modal-->
+    <!-- Add Modal -->
+    <div class="modal fade bookingdModal" id="seeDetails" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="staticBackdropLabel">訂單詳細內容</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="booking">
+                    <p class="checkMessage"></p>
+                    <div class="modal-footer">
+                        <div class="row m-0">
+                            <button class="col btneditproducts m-1 btnCheckinModal" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 關閉</button>
                         </div>
                     </div>
                 </form>
@@ -141,19 +163,65 @@
         data: {
             orderToday: {},
             selectOrderId: '',
-            searchOrder:{},
+            searchOrder: {},
+            searchOrderId: '',
         },
         methods: {
             getTodayOrders: function () {
-                fetch("/api/order/getTodayOrders").then(response => response.json()).then(result => { this.orderToday = result });
+                fetch("/api/order/getTodayOrders")
+                    .then(response => response.json())
+                    .then(result => { this.orderToday = result });
                 console.log(this.orderToday);
             },
             selectItem: function (orderId) {
                 this.selectOrderId = orderId;
             },
-            searchHistOrder:function(){
-                fetch("/api/order/searchHistOrders")
+            searchHistOrder: function () {
+                let self = this;
+                let info = {
+                    OrderId: self.searchOrderId
+                }
+                fetch("/api/Order/SearchHistOrders", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(info)
+                })
+                    .then(response => response.json())
+                    .then(result => { self.searchOrder = result });
+            },
+            finishPayment: function (e) {
+                let self = this;
+                let data = {
+                    OrderId: e.currentTarget.id
+                    }
+                fetch("/api/Order/FinishPayment", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: '手動結單成功',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    } else {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: '手動結單失敗',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                })
+                .catch(err => console.log('Request Failed', err));
             }
+
         },
         mounted: function () {
             this.getTodayOrders();
