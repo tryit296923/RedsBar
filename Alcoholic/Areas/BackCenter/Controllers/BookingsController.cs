@@ -14,18 +14,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
         }
         public IActionResult Index()
         {
-            DateTime day = DateTime.Now;
-            var todayBooking = (from x in _db.Reserves
-                                where x.ReserveDate == day && x.Status == 1
-                                select new TodayBookingModel
-                                {
-                                    ReserveName = x.ReserveName,
-                                    Number = x.Number,
-                                    Phone = x.Phone,
-                                    SetDate = x.ReserveSet
-                                }).ToList();
-
-            return View(todayBooking);
+            return View();
         }
     }
 }
