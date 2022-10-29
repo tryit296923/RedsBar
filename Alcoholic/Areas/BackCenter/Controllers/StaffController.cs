@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Alcoholic.Areas.BackCenter.Controllers
 {
+
     [Area("BackCenter")]
     public class StaffController : Controller
     {
@@ -23,10 +24,12 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             this.db = db;
             this.hash = hash;
         }
+        [Authorize(Roles = "leader,mod,staff")]
         public IActionResult Index()
         {
             return View();
         }
+        [Authorize(Roles = "leader,mod,staff")]
         public IActionResult GetAllMember()
         {
 
@@ -56,7 +59,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             lists.Add(gstaffs);
             return Ok(lists);
         }
-
+        [Authorize(Roles = "leader,mod,staff")]
         [HttpPost]
         public IActionResult GetMember([FromBody] string acc)
         {
@@ -72,7 +75,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             };
             return Ok(staffEditModel);
         }
-
+        [Authorize(Roles = "leader,mod")]
         [HttpPut]
         public IActionResult EditMember([FromBody] StaffModel model)
         {
@@ -103,35 +106,37 @@ namespace Alcoholic.Areas.BackCenter.Controllers
         [HttpPost]
         public IActionResult Login([FromBody] StaffLoginModel emp)
         {
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            ReturnModel model = new();
             Employee? employee = (from em in db.Employees
                                   where emp.EmpAccount == em.EmpAccount
                                   select em).SingleOrDefault();
-            if (employee == null)
+            if (employee != null && hash.GetHash(string.Concat(emp.EmpAccount,employee.Salt)) == employee.EmpPassword && employee.Status != 0)
             {
-                return NotFound();
-            }
-            if (hash.GetHash(emp.EmpPassword) == employee.EmpPassword)
-            {
-                List<Claim> claims = new()
+                 List<Claim> claims = new()
                 {
                     new Claim(ClaimTypes.Name,employee.EmpName),
                     new Claim(ClaimTypes.Role,employee.Role),
                 };
                 ClaimsIdentity claimsIdentity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-                return Ok();
+
+                model.Result = true;
+                model.Object = employee.NickName;
+                return Ok(model);
             }
-            return NotFound();
+            model.Result = false;
+            return Ok(model);
         }
 
-        [Authorize(Roles = "moderater,leader,staff")]
+        [Authorize(Roles = "mod,leader,staff")]
         public IActionResult LogOut()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Ok();
         }
 
-        //[Authorize(Roles = "moderater")]
+        [Authorize(Roles = "leader,moderater")]
         [HttpPost]
         public IActionResult Register([FromBody] StaffRegisterModel staff)
         {
@@ -165,6 +170,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             return Ok(returnModel);
         }
 
+        [Authorize(Roles = "leader")]
         [HttpPut]
         public IActionResult StaffGone([FromBody] string acc)
         {

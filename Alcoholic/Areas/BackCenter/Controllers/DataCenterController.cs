@@ -1,8 +1,10 @@
 ﻿using Alcoholic.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Alcoholic.Areas.BackCenter.Controllers
 {
+    [Authorize(Roles = "leader,mod,staff")]
     [Area("BackCenter")]
     public class DataCenterController : Controller
     {
