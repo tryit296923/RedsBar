@@ -148,7 +148,10 @@ namespace Alcoholic.Controllers
                 OrderId = x.OrderId,
                 OrderTime = x.OrderTime,
             }).FirstOrDefault();
-
+            // 送出訂單後清除session
+            HttpContext.Session.SetString("Desk" ,"");
+            HttpContext.Session.SetString("Number", "");
+            HttpContext.Session.SetString("CartItem", "");
             return View(order);
         }
 
@@ -156,8 +159,13 @@ namespace Alcoholic.Controllers
         {
             string sMemberId = HttpContext.Session.GetString("MemberID");
 
+            if (!Guid.TryParse(sMemberId, out var memberId))
+            {
+                throw new Exception("Guid is error");
+            }
+
             var orderDetail = (from y in _db.Orders
-                               where y.Status == "N" && y.MemberId == Guid.Parse(sMemberId)
+                               where y.Status == "N" && y.MemberId == memberId
                                select y).Select(y => new OrderViewModel
                                {
                                    Desk = y.DeskNum,
@@ -221,8 +229,6 @@ namespace Alcoholic.Controllers
         public IActionResult Check(int total, string orderId)
         {
             var now = DateTime.Now.ToString("yyyy/MM/dd");
-            string sDeskCheck = HttpContext.Session.GetString("Desk");
-            string sNumberCheck = HttpContext.Session.GetString("Number");
             string sMemberID = HttpContext.Session.GetString("MemberID");
 
             if (!Guid.TryParse(sMemberID, out var memberId))
@@ -239,8 +245,8 @@ namespace Alcoholic.Controllers
 
             OrderCheckViewModel orderCheckViewModel = new OrderCheckViewModel
             {
-                Desk = sDeskCheck,
-                Number = sNumberCheck,
+                Desk = getOrder.DeskNum,
+                Number = getOrder.Number.ToString(),
                 OrderId = orderId,
                 OrderTime = now,
                 Total = total,
