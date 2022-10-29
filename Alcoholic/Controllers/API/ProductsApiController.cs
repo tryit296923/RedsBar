@@ -1,13 +1,8 @@
 ﻿using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
 using Alcoholic.Models.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
-using System.Linq;
-using System.Xml.Linq;
 
 namespace Alcoholic.Controllers.API
 {
