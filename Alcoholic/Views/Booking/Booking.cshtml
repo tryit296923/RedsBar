@@ -310,15 +310,15 @@
                 today.setHours(0, 0, 0, 0);
                 var mindate = new Date(today.getTime() + 1 * 24 * 3600 * 1000);
                 var maxdate = new Date(today.getTime() + 30 * 24 * 3600 * 1000);
-                var isBooking = this.bookingInfos.some(x => new Date(x.date).getTime() == date.getTime() && x.total >= 16);
+                var isBooking = this.bookingInfos.some(x => new Date(x.date).getTime() == date.getTime() && x.total >= 14);
                 return date < mindate || date > maxdate || date.getDay() % 7 == 1 || isBooking;
             },
             maxPeople: function (people) {
                 if (this.ReserveDate) {
-                    let pickTime = new Date(this.ReserveDate).getTime();
+                    let pickTime = new Date(this.ReserveDate).setHours(0);
                     let currectBookingInfo = this.bookingInfos.find(x => new Date(x.date).getTime() == pickTime);
                     if (currectBookingInfo != null) {
-                        return 16 - currectBookingInfo.total < people;
+                        return 14 - currectBookingInfo.total < people;
                     }
                     return false;
                 }

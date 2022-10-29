@@ -1,5 +1,4 @@
-﻿@model List<Alcoholic.Models.ViewModels.TodayBookingModel>
-@{
+﻿@{
     ViewData["Title"] = "訂位管理";
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
@@ -22,20 +21,27 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">狀態</th>
+                            @*<th scope="col">狀態</th>*@
                             <th scope="col">姓名</th>
                             <th scope="col">電話</th>
                             <th scope="col">人數</th>
                             <th scope="col">下訂日期</th>
+                            @*<th scope="col">狀態調整</th>*@
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="item in todayReserves">
-                            <td><input type="checkbox"></td>
+                            @*<td>{{item.status}}</td>*@
                             <td>{{item.reserveName}}</td>
                             <td>{{item.phone}}</td>
                             <td>{{item.number}}</td>
                             <td>{{item.setDate.substring(0,10)}}</td>
+@*                            <td>
+                                <button data-bs-toggle="modal" data-bs-target="#edittoday"
+                                        class="btnproducts" :id="item.id" v-on:click="editTodaybtn">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                            </td>*@
                         </tr>
                     </tbody>
                 </table>
@@ -178,7 +184,7 @@
         el: '#d1',
         data: {
             today: new Date,
-            todayReserves: @Html.Raw(Json.Serialize(Model)),//今日訂位資訊
+            todayReserves:[],//今日訂位資訊
             selectDate: null,
             allBookingDate:[],
             searchInfo:[],//被查詢的訂位資訊
@@ -206,6 +212,24 @@
             }
         },
         methods: {
+            getTodayReserves:function(){//當日訂位資訊
+                let self = this;
+                fetch('/api/Booking/TodayBooking')
+                    .then(response => response.json())
+                    .then(result => self.todayReserves = result)
+            },
+            gatAllBooking:function(){//曾被訂位日期=>影響查詢訂位的日期選擇
+                let self = this;
+                fetch('/api/Booking/GetAllBookingDate')
+                    .then(response => response.json())
+                    .then(result => self.allBookingDate = result)
+            },
+            getFrontBooking:function(){//30天內訂位人數=>影響新增/編輯的日期選擇.人數限制
+                let self = this;
+                fetch('/api/Booking/GetFrontBookings')
+                    .then(response => response.json())
+                    .then(result => self.bookingInfos = result)
+            },
             disablerange: function (date) {
                 var isBooking = this.allBookingDate.some(x => new Date(x.date).getTime() == date.getTime());
                 return !isBooking;
@@ -228,15 +252,15 @@
                 today.setHours(0, 0, 0, 0);
                 var mindate = new Date(today.getTime() + 1 * 24 * 3600 * 1000);
                 var maxdate = new Date(today.getTime() + 30 * 24 * 3600 * 1000);
-                var isBooking = this.bookingInfos.some(x => new Date(x.date).getTime() == date.getTime() && x.total >= 16);
+                var isBooking = this.bookingInfos.some(x => new Date(x.date).getTime() == date.getTime() && x.total >= 14);
                 return date < mindate || date > maxdate || date.getDay() % 7 == 1 || isBooking;
             },
             maxPeople: function (people) {
                 if (this.add.ReserveDate) {
-                    let pickTime = new Date(this.add.ReserveDate).getTime();
+                    let pickTime = new Date(this.add.ReserveDate).setHours(0);
                     let currectBookingInfo = this.bookingInfos.find(x => new Date(x.date).getTime() == pickTime);
                     if (currectBookingInfo != null) {
-                        return 16 - currectBookingInfo.total < people;
+                        return 14 - currectBookingInfo.total < people;
                     }
                     return false;
                 }
@@ -272,6 +296,7 @@
                             showConfirmButton: false,
                             timer: 1500
                         })
+                        this.getFrontBooking();
                     }
                 })
                 .catch(err => console.log('Request Failed', err));
@@ -313,43 +338,65 @@
                             showConfirmButton: false,
                             timer: 1500
                         })
+                            this.SearchClick();
+                            this.gatAllBooking();
+                            this.getFrontBooking();
+                            this.getTodayReserves();
                     }
                 })
                 .catch(err => console.log('Request Failed', err));
             },
             deleteBooking: function(e){
-                let info={
+                let info = {
                     Id: e.currentTarget.id,
                 }
-                fetch('/api/Booking/DeleteBooking',{
-                    method:'POST',
-                    headers:{'Content-Type':'application/json'},
-                    body: JSON.stringify(info)
-                })
-                .then(response=>response.json())
-                .then(result=>{
-                    if (result) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: '已移除該訂位資訊',
-                            showConfirmButton: false,
-                            timer: 1500
+                Swal.fire({
+                    title: '確定取消?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#D8CDB9',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '是',
+                    cancelButtonText: '否'
+                }).then(( result ) =>{
+                    if( result.value ){
+                        fetch('/api/Booking/DeleteBooking',{
+                            method:'POST',
+                            headers:{'Content-Type':'application/json'},
+                            body: JSON.stringify(info)
                         })
-                        //成功後重新呼叫api
+                        .then( response => response.json() )
+                        .then( result => {
+                            if (result) {
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'success',
+                                    title: '已取消該訂位',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                this.SearchClick();
+                            }
+                        })
                     }
                 })
-            }
+            },
+            //bookingStatus: function(s){
+            //    let statusTxt;
+            //    switch(s){
+            //        case 1: statusTxt = '尚未聯繫'; break;
+            //        case 2: statusTxt = '已通知'; break;
+            //        case 3: statusTxt = '入座'; break;
+            //        case 4: statusTxt = '保留'; break;
+            //        default: ageValue = 60; break;
+            //    }
+            //    return statusTxt;
+            //}
         },
-        beforeCreate: function () {
-            //給個名字
-            let self = this;
-            fetch('/api/Booking/GetAllBookingDate')
-                .then( response => response.json())
-                .then( result => self.allBookingDate = result )
-            fetch('/api/Booking/GetFrontBookings')
-                .then( response => response.json())
-                .then( result => self.bookingInfos = result )
+        mounted: function () {
+            this.getTodayReserves();
+            this.gatAllBooking();
+            this.getFrontBooking();
         }
     });
 </script>
