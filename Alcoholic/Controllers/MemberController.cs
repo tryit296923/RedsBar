@@ -21,15 +21,6 @@ namespace Alcoholic.Controllers
             this.db = db;
             this.hash = hash;
         }
-        public IActionResult Member()
-        {
-            return View();
-        }
-
-        public IActionResult AuthorizeP()
-        {
-            return View("Authorize");
-        }
         public IActionResult FrontPage()
         {
             return View();
@@ -53,7 +44,14 @@ namespace Alcoholic.Controllers
         {
             return View();
         }
+        public IActionResult Member()
+        {
+            if (HttpContext.User.Identity.Name == "guestonly123")
+            {
 
+            }
+            return View();
+        }
         [AllowAnonymous]
         public IActionResult GoogleLogin()
         {
@@ -63,13 +61,13 @@ namespace Alcoholic.Controllers
             };
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
-
         public async Task<IActionResult> goGoogle()
         {
             var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme); // 拿到個人驗證資料
             var claim = result.Principal.Claims.FirstOrDefault();
             var account = claim.Subject.Claims.Where(c => c.Type.Contains("emailaddress")).Select(c => c.Value).FirstOrDefault();
             var user = db.Members.Where(x => x.MemberAccount == account).FirstOrDefault();
+            // 已有會員資料(曾經登入過) => SignIn & SetSession 
             if (user != null)
             {
                 List<Claim> claims = new(){
@@ -81,6 +79,7 @@ namespace Alcoholic.Controllers
                 HttpContext.Session.SetString("MemberID", user.MemberID.ToString());
                 return RedirectToAction("Cart","Order");
             }
+            // 無會員資料 => 建立一個資料, 給予Session 但無SignIn, 至年齡判斷
             else
             {
                 Member gMem = new()
@@ -91,7 +90,7 @@ namespace Alcoholic.Controllers
                     Salt = Guid.NewGuid().ToString("N"),
                     MemberName = claim.Subject.Name,
                     MemberBirth = new DateTime(0001, 1, 1),
-                    Phone = claim.Value,
+                    Phone = "0900google",
                     Email = "",
                     Qualified = "n"
                 };

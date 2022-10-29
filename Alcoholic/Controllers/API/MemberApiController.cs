@@ -11,6 +11,8 @@ using System.Data;
 using Razor.Templating.Core;
 using System.Collections.Generic;
 using Alcoholic.Models;
+using Newtonsoft.Json;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Alcoholic.Controllers.API
 {
@@ -108,7 +110,7 @@ namespace Alcoholic.Controllers.API
             if (!ModelState.IsValid)
             {
                 returnModel.Status = 400;
-                var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
+                //var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
                 return Ok(returnModel);
             }
             string id = HttpContext.Session.GetString("MemberID");
@@ -119,14 +121,21 @@ namespace Alcoholic.Controllers.API
                     returnModel.Status = 400;
                     return Ok(returnModel);
                 };
+                if (id.ToUpper() == "07D99A94-13C0-4E4B-5EE1-08DAB1C3E392")
+                {
+                    goto IsGuest;
+                    HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                    HttpContext.Session.Clear();
+                }
 
-                Member? logged = (from member in db.Members
+                Member ? logged = (from member in db.Members
                                 where member.MemberID == guid
                                 select member).SingleOrDefault();
                 returnModel.Status = 1;
                 returnModel.Object = logged.MemberName;
                 return Ok(returnModel);
             }
+            IsGuest:
             Member? user = (from member in db.Members
                             where member.MemberAccount == memberData.Account
                             select member).SingleOrDefault();
@@ -179,7 +188,7 @@ namespace Alcoholic.Controllers.API
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
             HttpContext.Session.SetString("MemberID", user.MemberID.ToString());
-            return RedirectToAction("Cart", "Order");
+            return RedirectToAction("OrderList", "Order");
         }
 
         [HttpGet]
@@ -233,30 +242,33 @@ namespace Alcoholic.Controllers.API
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index","Home");
+            HttpContext.Session.Clear();
+            return Ok(true);
         }
-        public ActionResult<IEnumerable<Member>> GetAllMember()
-        {
-            return db.Members.ToList();
-        }
+
         public IActionResult GetCurrentMember()
         {
+            ReturnModel returnModel = new();
+            returnModel.Url = $"{Request.Scheme}://{Request.Host}/member/LoginRegister";
+            returnModel.Status = 1;
             string? ses = HttpContext.Session.GetString("MemberID");
+
             if (string.IsNullOrEmpty(ses))
             {
-                return Ok(false);
+                return Ok(returnModel);
             }
             if (!Guid.TryParse(ses, out Guid memberId))
             {
-                return Ok(false);
-            };
-
-
+                return Ok(returnModel);
+            }
+            if (ses.ToUpper() == "07D99A94-13C0-4E4B-5EE1-08DAB1C3E392")
+            {
+                returnModel.Status = 2;
+                return Ok(returnModel);
+            }
             var member = db.Members.Select(x => x).Where(x => x.MemberID == memberId).FirstOrDefault();
             int disId = member.MemberLevel + 1;
             var dis = (from d in db.Discount where d.DiscountId == disId select d.DiscountAmount).FirstOrDefault();
-
-            
             DataPageModel dataPageModel = new()
             {
                 account = member.MemberAccount,
@@ -266,7 +278,6 @@ namespace Alcoholic.Controllers.API
                 phone = member.Phone,
                 discount = dis,
             };
-
             List<OrderDetailModel> orders = new();
             foreach(Order o in member.Orders)
             {
@@ -305,19 +316,20 @@ namespace Alcoholic.Controllers.API
                     dataPageModel.max = 100000;
                     break;
             }
-            return Ok(dataPageModel);
+            returnModel.Status = 0;
+            returnModel.Object = JsonConvert.SerializeObject(dataPageModel);
+            return Ok(returnModel);
         }
 
+        [Authorize(Roles = "member")]
         public IActionResult GetOrders()
         {
             string ? ses = HttpContext.Session.GetString("MemberID");
             if (string.IsNullOrEmpty(ses)) { return Ok(); }
-
             if (Guid.TryParse(ses, out Guid memberId))
             {
                 return Ok(false);
             }
-
             Member? member = db.Members.Select(x => x).Where(x => x.MemberID == memberId).FirstOrDefault();
             List<Order> details = new();
             foreach(Order o in member.Orders)
@@ -327,6 +339,7 @@ namespace Alcoholic.Controllers.API
             return Ok(details);
         }
 
+        [Authorize(Roles = "member")]
         [HttpPut]
         public IActionResult EditMember([FromBody] MemberModel memberModel)
         {
@@ -355,25 +368,34 @@ namespace Alcoholic.Controllers.API
         }
 
         [HttpPost]
-        public IActionResult Legal([FromBody] DateTime dateTime)
+        public async Task<IActionResult> Legal([FromBody] DateTime dateTime)
         {
             ReturnModel model = new();
             Guid.TryParse(HttpContext.Session.GetString("MemberID"), out Guid ses);
             Member? mem = db.Members.Where(m => m.MemberID == ses).FirstOrDefault();
             var now = DateTime.Now;
             TimeSpan duration = now - dateTime;
+            // 小於18 未成年 => 導回登入註冊頁面 無SignIn
             if (duration.TotalDays/365 < 18)
             {
                 model.Status = 400;
+                model.Url = $"{Request.Scheme}://{Request.Host}/member/LoginRegister";
                 return Ok(model);
             }
-
+            // 成年 => 導去點餐頁面 有SignIn
             mem.MemberBirth = dateTime;
             mem.Qualified = "y";
             db.Entry(mem).State = EntityState.Modified;
             db.SaveChanges();
             model.Status = 200;
             model.Url = $"{Request.Scheme}://{Request.Host}/Order/Cart";
+            List<Claim> claims = new()
+            {
+                new Claim(ClaimTypes.Name, mem.MemberName),
+                new Claim(ClaimTypes.Role, "member")
+            };
+            ClaimsIdentity identity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
             return Ok(model);
         }
 
@@ -415,7 +437,5 @@ namespace Alcoholic.Controllers.API
             db.Entry(member).State = EntityState.Modified;
             db.SaveChanges();
         }
-
-
     }
 }

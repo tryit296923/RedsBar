@@ -353,6 +353,7 @@
                 .then((e) => e.json()).then((r)=>{
                         if (result && result.status != 400) {
                         Swal.fire({
+                            allowOutsideClick: 'false',
                             icon: 'success',
                             color: '#FFF',
                             iconColor: '#D8CDB9',
@@ -362,6 +363,7 @@
                     })
                     }else{
                         Swal.fire({
+                            allowOutsideClick: 'false',
                             icon: 'error',
                             color: '#FFF',
                             iconColor: '#D8CDB9',
@@ -375,6 +377,7 @@
             logout:function(){
                 fetch("/api/member/Logout").then(() => {
                     Swal.fire({
+                        allowOutsideClick: 'false',
                         title: '登出成功',
                         color: '#FFF',
                         iconColor: '#D8CDB9',
@@ -394,51 +397,79 @@
             let self = this;
             setTimeout(()=>{
                 fetch("/api/member/GetCurrentMember").then((e) => e.json()).then((r) => {
-                    if (!r) {
-                        Swal.fire({
-                            icon: 'info',
-                            color: '#FFF',
-                            iconColor: '#D8CDB9',
-                            confirmButtonColor: '#721B29',
-                            background: '#333',
-                            confirmButtonText: '前去登入',
-                            text: '尚未登入喔!',
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.assign("/member/LoginRegister");
+                    var memberData =  JSON.parse(r.object);
+                    switch(r.status){
+                        case 1:{
+                            Swal.fire({
+                                allowOutsideClick: 'false',
+                                icon: 'info',
+                                color: '#FFF',
+                                iconColor: '#D8CDB9',
+                                background: '#333',
+                                text: '請先登入喔!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then((result) => {
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    window.location.assign(r.url);
+                                }
+                            });
+                        }
+                        break;
+                        case 2:{
+                            Swal.fire({
+                                allowOutsideClick: 'false',
+                                icon: 'error',
+                                title: '您尚未註冊會員!',
+                                color: '#FFF',
+                                iconColor: '#D8CDB9',
+                                confirmButtonColor: '#721B29',
+                                background: '#333',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then((result) => {
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    window.location.assign(r.url);
+                                }
+                            })
+                        }
+                        break;
+                        case 0:{
+                            self.model = memberData;
+                            self.acc = memberData.account;
+                            self.name = memberData.name;
+                            self.bd = memberData.birth.slice(0, 10);
+                            self.mail = memberData.mail;
+                            self.tel = memberData.phone;
+                            self.percent = Math.round(memberData.total / memberData.max * 100) > 100 ? 100 : Math.round(memberData.total / memberData.max * 100);
+                            self.progressbar = `width: ${self.percent}%`;
+                            Swal.fire({
+                                allowOutsideClick: 'false',
+                                icon: 'success',
+                                color: '#FFF',
+                                iconColor: '#D8CDB9',
+                                confirmButtonColor: '#721B29',
+                                background: '#333',
+                            });
+                            switch (self.model.min) {
+                                case 70000: self.lvl = "Platinum"; self.badge = "../images/icons/drinks_p.png";
+                                    break;
+                                case 30000: self.lvl = "Gold"; self.badge = "../images/icons/drinks_g.png";
+                                    break;
+                                case 10000: self.lvl = "Silver"; self.badge = "../images/icons/drinks_s.png";
+                                    break;
+                                case 5000: self.lvl = "Bronze"; self.badge = "../images/icons/drinks_b.png";
+                                    break;
+                                default: self.lvl = "Regular"; self.badge = "../images/icons/drinks_icon.png";
+                                    break;
                             }
-                        });
-                    }
-                    self.model = r;
-                    self.acc = r.account;
-                    self.name = r.name;
-                    self.bd = r.birth.slice(0, 10);
-                    self.mail = r.mail;
-                    self.tel = r.phone;
-                    self.percent = Math.round(r.total / r.max * 100) > 100 ? 100 : Math.round(r.total / r.max * 100);
-                    self.progressbar = `width: ${self.percent}%`;
-                    Swal.fire({
-                        icon: 'success',
-                        color: '#FFF',
-                        iconColor: '#D8CDB9',
-                        confirmButtonColor: '#721B29',
-                        background: '#333',
-                    });
-                    switch (self.model.min) {
-                        case 70000: self.lvl = "Platinum"; self.badge = "../images/icons/drinks_p.png";
-                            break;
-                        case 30000: self.lvl = "Gold"; self.badge = "../images/icons/drinks_g.png";
-                            break;
-                        case 10000: self.lvl = "Silver"; self.badge = "../images/icons/drinks_s.png";
-                            break;
-                        case 5000: self.lvl = "Bronze"; self.badge = "../images/icons/drinks_b.png";
-                            break;
-                        default: self.lvl = "Regular"; self.badge = "../images/icons/drinks_icon.png";
-                            break;
+                        }
+                        break;
                     }
                 });
             },50)
             Swal.fire({
+                allowOutsideClick: 'false',
                 title: '請稍後',
                 color: '#FFF',
                 iconColor: '#D8CDB9',
