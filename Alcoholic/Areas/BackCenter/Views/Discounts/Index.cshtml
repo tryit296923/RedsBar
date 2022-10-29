@@ -179,7 +179,7 @@
                         data.append("DiscountName", this.editDiscountData.discountName)
                         data.append("DiscountAmount", this.editDiscountData.discountAmount)
                         fetch("/api/Discount/EditDiscount", {
-                            method: 'POST',
+                            method: 'PUT',
                             body: data
                         });
                         fetch("/api/Discount/GetDiscount")
@@ -209,12 +209,12 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         fetch("/api/Discount/DeleteDiscount", {
-                            method: 'POST',
+                            method: 'DELETE',
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(selDiscount.id)
                         })
                         Swal.fire('成功刪除!', '', 'success')
-                        window.location.reload();
+                        setInterval(function () { window.location.reload()}, 1200);
                     } else if (result.isDenied) {
                         Swal.fire('取消刪除!', '', 'info')
                     }

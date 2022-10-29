@@ -57,10 +57,10 @@
         border-radius: 0;
     }
 
-    .quantitygroup .btn:hover {
-         background-color: #C28C2E;
-         color: white;
-    }
+        .quantitygroup .btn:hover {
+            background-color: #C28C2E;
+            color: white;
+        }
 
 
     .qty_input {
@@ -89,13 +89,13 @@
         color: #FFF;
     }
 
-    .modal-content{
+    .modal-content {
         background-color: #d8cdb9;
     }
 
-        .modal-footer .btn:hover {
-            color: #D8CDB9;
-        }
+    .modal-footer .btn:hover {
+        color: #D8CDB9;
+    }
 
     .modal-image {
         max-height: 280px;
@@ -262,7 +262,7 @@
                                              @@click="selected">
                                             <p class="card-title">{{item.name}}</p>
                                             <span class="price">${{item.price}}</span>
-                                            <span class="discount">${{Math.round(item.price*0.8@*item.discount*@)}}</span>
+                                            <span class="discount">${{Math.round(item.price*item.discountAmount)}}</span>
                                             <span class="sale px-2">SALE</span>
                                         </div>
                                         <div class="row justify-content-center my-2 mx-0 quantitygroup">
@@ -280,7 +280,7 @@
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </div>
-                                        <button type="button" class="col-12 btn" onclick="sessionStr(event)">加到購物車</button>
+                                        <button type="button" class="col-12 btn" @@click="sessionStr">加到購物車</button>
                                     </div>
                                 </div>
                             </div>
@@ -541,18 +541,12 @@
             </div>
         </div>
     </div>
-</div>
-
-@*購物車*@
-<div id="checkCart" class="shopCart">
-    <form id="cartform" action="/Order/AddToCart">
+    @*購物車*@
+    <div id="checkCart" class="shopCart" @@click="checkCart">
         <div>
-            <a >
             <i class="fa-sharp fa-solid fa-cart-shopping"> <h2> 查看購物車</h2></i>
-        </a>
         </div>
-        
-    </form>
+    </div>
 </div>
 
 <!-- SWAL -->
@@ -568,8 +562,9 @@
             productName: "",
             discount: "",
             description: "",
-            optionsform: []
-            ,
+            optionsform: [],
+            cartArray: [],
+            cartStr: "",
             optionsection1: [
                 { base: 'Vodka' }, { base: 'Rum' }, { base: 'Tequila' }, { base: 'Whiskey' }, { base: 'Gin' }, { base: 'Brandy' }
             ],
@@ -593,7 +588,6 @@
                 var item = this.product[this.vueid - 1];
                 this.imagesrc = item.path;
                 this.productName = item.name;
-                //this.discount = item.discount;
                 this.description = item.description;
             },
             plus: function (e) {
@@ -617,91 +611,77 @@
                 this.optionsform = this.optionsform.concat(e.target.value);
 
             },
+            checkCart: function (e) {
+                fetch("/Order/AddToCart", {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: this.cartStr,
+                })
+                    .then((e) => e.text())
+                    .then((result) => {
+                        if (result) {
+                            window.location.href = "/Order/Cart"
+                        }
+                    }).catch(error => console.log(error))
+                this.cartArray = [];
+                this.cartStr = "";
+            },
+            sessionStr: function (e) {
+                var selProd = e.target.parentElement.children[1].children[1].children[0];
+                if (selProd.value > 0) {
+                    var item = {
+                        id: selProd.id,
+                    };
+                    for (i = 0; i < this.cartArray.length + 1; i++) {
+                        //初始化
+                        if (i == 0 && this.cartArray.length < 1) {
+                            item.qty = selProd.value
+                            this.cartArray.push(item);
+                            this.cartStr = JSON.stringify(this.cartArray);
+                            break;
+                        }
+                        //已添加至購物車
+                        else if (item.id == this.cartArray[i].id) {
+                            item.qty = selProd.value;
+                            this.cartArray[i].qty = (this.cartArray[i].qty * 1 + item.qty * 1).toString();
+                            this.cartStr = JSON.stringify(this.cartArray);
+                            break;
+                        }
+                        //找完陣列且尚未添加至購物車
+                        else if (item.id != this.cartArray[i].id && i == this.cartArray.length - 1) {
+                            item.qty = selProd.value;
+                            this.cartArray.push(item);
+                            this.cartStr = JSON.stringify(this.cartArray);
+                            break;
+                        }
+                    }
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+                    Toast.fire({
+                        icon: 'success',
+                        title: '添加成功',
+                        text: selProd.name
+                    })
+                    selProd.value = 0;
+                }
+            }
+
         },
         created: function () {
             let self = this;
             fetch("/api/Products/GetAllProducts")
                 .then((response) => response.json())
                 .then((result) => self.product = result)
+            
         }
     })
-
-    var cartArray = [];
-
-    var cartStr = "";
-    function sessionStr(e) {
-        var selProd = e.target.parentElement.children[1].children[1].children[0];
-        if (selProd.value > 0) {
-            var item = {
-                id: selProd.id,
-            };
-            for (i = 0; i < cartArray.length + 1; i++) {
-                //初始化
-                if (i == 0 && cartArray.length < 1) {
-                    item.qty = selProd.value
-                    cartArray.push(item);
-                    cartStr = JSON.stringify(cartArray);
-                    break;
-                }
-                //已添加至購物車
-                else if (item.id == cartArray[i].id) {
-                    item.qty = selProd.value;
-                    cartArray[i].qty = (cartArray[i].qty * 1 + item.qty * 1).toString();
-                    cartStr = JSON.stringify(cartArray);
-                    break;
-                }
-                //找完陣列且尚未添加至購物車
-                else if (item.id != cartArray[i].id && i == cartArray.length - 1) {
-                    item.qty = selProd.value;
-                    cartArray.push(item);
-                    cartStr = JSON.stringify(cartArray);
-                    break;
-                }
-                
-
-            }
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            })
-            Toast.fire({
-                icon: 'success',
-                title: '添加成功',
-                text: selProd.name
-            })
-            selProd.value = 0;
-        }
-    };
-
-    let checkCart = document.getElementById("checkCart");
-    let cartform = document.getElementById("cartform");
-
-
-    checkCart.addEventListener("click", (e) => {
-        cartArray = [];
-        e.preventDefault();
-        addCartSession();
-        cartStr = "";
-    });
-
-    function addCartSession() {
-        fetch("/Order/AddToCart", {
-            method: 'POST',
-            headers: { "Content-Type": "application/json" },
-            body: cartStr,
-        })
-            .then((e) =>  e.text())
-            .then((result) => {
-                if(result){
-                    window.location.href = "/Order/Cart"
-                }
-            }).catch(error => console.log(error))
-    }
 </script>

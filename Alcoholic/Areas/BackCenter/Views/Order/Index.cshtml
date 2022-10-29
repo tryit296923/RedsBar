@@ -40,7 +40,8 @@
     <div class="py-4">
         <div class="todaydata">
             <div class="bookingtoday p-4">
-                <h2>本日訂單</h2>
+                <h5>本日訂單</h5>
+                <h2 class="m-0">{{today.toLocaleDateString()}}</h2>
                 <br>
                 <table class="table">
                     <thead>
@@ -89,6 +90,7 @@
                         <th scope="col">桌號</th>
                         <th scope="col">用餐人數</th>
                         <th scope="col">總金額</th>
+                        <th scope="col">訂單日期</th>
                         <th scope="col">詳細資料</th>
                     </tr>
                 </thead>
@@ -100,6 +102,7 @@
                         <td>{{items.number}}</td>
                         <td v-if="items.status == 'Y'">{{items.total}}</td>
                         <td v-else>未付款</td>
+                        <td>{{items.orderTime}}</td>
                         <td>
                             <button type="button" class="addbtn btnCheck" data-bs-toggle="modal" data-bs-target="#seeDetails">
                                 <i class="fa-sharp fa-solid fa-comment-dollar"></i> 詳細資料
@@ -125,7 +128,7 @@
                     <div class="modal-footer">
                         <div class="row m-0">
                             <button class="col btneaddcancel m-1 btnCheckinModal" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 取消</button>
-                            <button class="col btneditproducts m-1 btnCheckinModal" type="button" @@click="finishPayment" :id="selectOrderId"><i class="fa-solid fa-square-check"></i> 結單</button>
+                            <button class="col btneditproducts m-1 btnCheckinModal" type="button" data-bs-dismiss="modal" @@click="finishPayment" :id="selectOrderId"><i class="fa-solid fa-square-check"></i> 結單</button>
                         </div>
                     </div>
                 </form>
@@ -165,6 +168,7 @@
             selectOrderId: '',
             searchOrder: {},
             searchOrderId: '',
+            today: new Date,
         },
         methods: {
             getTodayOrders: function () {

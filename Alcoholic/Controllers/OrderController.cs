@@ -83,7 +83,7 @@ namespace Alcoholic.Controllers
             var sesStr = HttpContext.Session.GetString("CartItem");
             Console.WriteLine(sesStr);
             string sMemberID = HttpContext.Session.GetString("MemberID");
-            if (!Guid.TryParse(sMemberID,out var memberId))
+            if (!Guid.TryParse(sMemberID, out var memberId))
             {
                 //錯誤訊息待修改
                 throw new Exception("Guid is error");
@@ -154,10 +154,10 @@ namespace Alcoholic.Controllers
 
         public IActionResult Total()
         {
-            string sDeskTotal = HttpContext.Session.GetString("Desk");
+            string sMemberId = HttpContext.Session.GetString("MemberID");
 
             var orderDetail = (from y in _db.Orders
-                               where y.Status == "N" && y.DeskNum == sDeskTotal
+                               where y.Status == "N" && y.MemberId == Guid.Parse(sMemberId)
                                select y).Select(y => new OrderViewModel
                                {
                                    Desk = y.DeskNum,
@@ -230,13 +230,13 @@ namespace Alcoholic.Controllers
                 throw new Exception("Guid is error");
             }
             var getOrder = _db.Orders.Where(x => x.MemberId == memberId && x.Status == "N").FirstOrDefault();
-            var cartTotalList = getOrder.OrderDetails.Select(x => new { x.Product.ProductName, x.ProductId })
-                .GroupBy(x => new { x.ProductId, x.ProductName }, (k, v) => new CartTotal
+            var cartTotalList = getOrder.OrderDetails.Select(x => new CartTotal { ProductName = x.Product.ProductName, Quantity = x.Quantity })
+                .GroupBy(x => x.ProductName, (k, v) => new CartTotal
                 {
-                    Count = v.Count(),
-                    IdNamePair = new CartIdNamePair() { ProductName = k.ProductName, ProductId = k.ProductId }
+                    Quantity = v.Sum(x=>x.Quantity),
+                    ProductName = k,
                 }).ToList();
-            
+
             OrderCheckViewModel orderCheckViewModel = new OrderCheckViewModel
             {
                 Desk = sDeskCheck,
@@ -259,7 +259,7 @@ namespace Alcoholic.Controllers
                 PaymentResult obj_PaymentResult = JsonConvert.DeserializeObject<PaymentResult>(decryptTradeInfo);
 
                 var orderId = obj_PaymentResult.Result.MerchantOrderNo;
-                
+
                 ViewBag.orderId = orderId;
                 return View("OnlinePaymentSucceed");
             }
@@ -267,7 +267,7 @@ namespace Alcoholic.Controllers
             {
                 return View("OnlinePaymentFailed");
             }
-            
+
         }
         public IActionResult FrontDeskCheckout()
         {

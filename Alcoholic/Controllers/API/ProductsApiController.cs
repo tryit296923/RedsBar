@@ -31,7 +31,9 @@ namespace Alcoholic.Controllers.API
                            Name = pro.ProductName,
                            Description = pro.ProductDescription,
                            Price = pro.UnitPrice,
-                           Path = path.Path
+                           Path = path.Path,
+                           DiscountId= pro.DiscountId,
+                           DiscountAmount=pro.Discount.DiscountAmount
                        };
 
             return menu;
@@ -106,7 +108,7 @@ namespace Alcoholic.Controllers.API
             }
             
         }
-        [HttpPost]
+        [HttpPut]
         public void EditProduct([FromForm] EditProductModel editData)
         {
             var productData= (from x in _db.Products 
@@ -121,7 +123,7 @@ namespace Alcoholic.Controllers.API
             _db.Update(productData);
             _db.SaveChanges();
         }
-        [HttpPost]
+        [HttpDelete]
         public void DeleteProduct([FromBody]int productId)
         {
             var productDelete = (from x in _db.Products
