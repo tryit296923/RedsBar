@@ -20,7 +20,7 @@
         margin-top: 50px;
     }
 
-    .successedmessage {
+    .succeedmessage {
         font-size: x-large;
         margin-bottom: 0px;
         height: 65px;
@@ -87,11 +87,11 @@
 <div class="container">
     <div class="row" id="frontDeskCheck">
         <div class="container-fluid colorbox py-2 col-10 col-xl-8 text-center">
-            <div class="successedmessage"><i class="fa-sharp fa-solid fa-image"></i> 請於櫃台出示此畫面</div>
+            <div class="succeedmessage"><i class="fa-sharp fa-solid fa-image"></i> 請於櫃台出示此畫面</div>
         </div>
         <div class="container-fluid col-10 col-xl-8 align-self-center my-5 px-0">
             <div class="orderdetail text-center py-2">
-                <p class="orderinfotext">日期 : {{dateTime(orderToCheck.orderTime)}}</p>
+                <p class="orderinfotext">結帳時間 : {{dateTime(orderToCheck.orderTime)}}</p>
                 <p class="orderinfotext">桌號 : {{orderToCheck.desk}}</p>
                 <p class="orderinfotext">訂單編號 : {{orderToCheck.orderId}}</p>
             </div>
@@ -137,7 +137,7 @@
                     .then(result => { this.orderToCheck = result })
             },
             dateTime: function (ot) {
-                var newOt = ot.substring(0, 16);
+                var newOt = ot.toString().substring(0, 16);
                 return newOt.replace("T", " ");
             },
         },

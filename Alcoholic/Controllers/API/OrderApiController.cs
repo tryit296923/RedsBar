@@ -297,6 +297,7 @@ namespace Alcoholic.Controllers.API
                                      Number = histOd.Number,
                                      Status = histOd.Status,
                                      Total = histOd.Total,
+                                     OrderTime = (histOd.OrderTime).ToString(), 
                                  }).ToList();
             return Ok(histOrderInfo);
         }
@@ -328,7 +329,7 @@ namespace Alcoholic.Controllers.API
                     desk.Occupied = 0;
                 }
                 _db.SaveChanges();
-                hub.Clients.All.SendAsync("OK", desk);
+                hub.Clients.All.SendAsync("OK", desk.Desk);
                 return Ok(true);
             }
 
@@ -354,10 +355,11 @@ namespace Alcoholic.Controllers.API
             };
             return Ok(frontDeskCheckPage);
         }
-        public async Task<IActionResult> TestDesk(string desk)
-        {
-            await hub.Clients.All.SendAsync("OK", desk);
-            return Content(desk);
-        }
+        //測試SignalR
+        //public async Task<IActionResult> TestDesk(string desk)
+        //{
+        //    await hub.Clients.All.SendAsync("OK", desk);
+        //    return Content(desk);
+        //}
     }
 }

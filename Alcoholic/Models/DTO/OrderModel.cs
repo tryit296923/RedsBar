@@ -26,14 +26,8 @@ namespace Alcoholic.Models.DTO
 
     public class CartTotal
     {
-        public CartIdNamePair IdNamePair { get; set; }
-        public int Count { get; set; }
-    }
-
-    public class CartIdNamePair
-    {
-        public int ProductId { get; set; }
         public string ProductName { get; set; }
+        public decimal Quantity { get; set; }
     }
 
     // 後臺顯示本日訂單
@@ -45,6 +39,7 @@ namespace Alcoholic.Models.DTO
         public string Status { get; set; }
         public int Number { get; set; }
         public int? Total { get; set; }
+        public string OrderTime { get; set; }
 
     }
     // 後臺輸入訂單編號查詢
