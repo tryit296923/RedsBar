@@ -156,6 +156,9 @@
                 <hr>
                 <p class="colorbox total mt-0">今日消費總計 : @Model.Total 元</p>
             </div>
+            <form action="FrontDeskCheckout" method="post" class="d-none" id="cart">
+                <button type="submit" ref="frontDeskCheckout"></button>
+            </form>
             <!-- 底部選單按鈕 -->
             <div class="paymentway">
                 <div class="container row w-100 px-0">
@@ -165,7 +168,7 @@
                         </button>
                     </div>
                     <div class="col col-xl-6 text-center">
-                        <button type="button" class="btnfrontdesk w-100 py-2">
+                        <button type="button" class="btnfrontdesk w-100 py-2" v-on:click="frontDeskCheckout">
                             櫃台結帳
                         </button>
                     </div>
@@ -188,9 +191,6 @@
                             <div class="col-12 w-50">
                                 <a v-on:click.prevent="pay('googlepay')" class="btn btnpaymentinstrument"><img src="~/images/icons/googlepay.jpg" class="w-50" /></a>
                             </div>
-                            <div class="col-12">
-                                <a v-on:click.prevent="pay('linepay')" class="btn btnpaymentinstrument"><img src="/images/icons/LINE-Pay(h)_W119_n.png" class="" /></a>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -203,7 +203,7 @@
         el: "#orderCheck",
         data() {
             return {
-                orderCheckViewModel: @Html.Raw(Json.Serialize(Model))
+                orderCheckViewModel: @Html.Raw(Json.Serialize(Model)),
             }
         },
         methods: {
@@ -229,6 +229,9 @@
                     window.document.body.appendChild(form);
                     form.submit();
                 })
+            },
+            frontDeskCheckout:function(){
+                this.$refs.frontDeskCheckout.click();
             }
         }
     })

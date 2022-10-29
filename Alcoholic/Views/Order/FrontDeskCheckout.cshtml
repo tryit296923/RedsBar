@@ -44,7 +44,7 @@
         }
 
     .orderinfotext {
-        font-size: x-large;
+        font-size: large;
     }
 
     .feedbackmessage {
@@ -74,23 +74,26 @@
     a {
         text-decoration: none;
     }
-    a:hover{
-        color:white;
-    }
-    a:active{
+
+        a:hover {
+            color: white;
+        }
+
+        a:active {
             background-color: #C28C2E;
-    }
+        }
 </style>
 
 <div class="container">
-    <div class="row">
+    <div class="row" id="frontDeskCheck">
         <div class="container-fluid colorbox py-2 col-10 col-xl-8 text-center">
             <div class="successedmessage"><i class="fa-sharp fa-solid fa-image"></i> 請於櫃台出示此畫面</div>
         </div>
         <div class="container-fluid col-10 col-xl-8 align-self-center my-5 px-0">
             <div class="orderdetail text-center py-2">
-                <p class="orderinfotext">日期: 2022/09/29</p>
-                <p class="orderinfotext">桌號: 8</p>
+                <p class="orderinfotext">日期 : {{dateTime(orderToCheck.orderTime)}}</p>
+                <p class="orderinfotext">桌號 : {{orderToCheck.desk}}</p>
+                <p class="orderinfotext">訂單編號 : {{orderToCheck.orderId}}</p>
             </div>
         </div>
         <div class="container-fluid col-10 col-xl-8 text-center align-self-center px-0">
@@ -104,3 +107,42 @@
         </div>
     </div>
 </div>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script>
+    var connection = new signalR.HubConnectionBuilder().withUrl("/notifyHub").build();
+    connection.on("OK", function (desk) {
+        console.log(desk);
+        if(desk == app.orderToCheck.desk){
+            Swal.fire({
+                title: '付款成功!',
+                text: '請不吝填寫顧客意見表',
+                imageUrl: '',
+                imageWidth: 400,
+                imageHeight: 200,
+                imageAlt: 'Custom image',
+            })
+        }
+    });
+    connection.start();
+
+    var app = new Vue({
+        el: "#frontDeskCheck",
+        data: {
+            orderToCheck: {},
+        },
+        methods: {
+            getOrder: function () {
+                fetch("/api/Order/GetOrder")
+                    .then(response => response.json())
+                    .then(result => { this.orderToCheck = result })
+            },
+            dateTime: function (ot) {
+                var newOt = ot.substring(0, 16);
+                return newOt.replace("T", " ");
+            },
+        },
+        mounted: function () {
+            this.getOrder();
+        }
+    })
+</script>

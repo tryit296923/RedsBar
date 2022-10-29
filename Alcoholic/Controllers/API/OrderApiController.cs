@@ -1,4 +1,5 @@
 ﻿using Alcoholic.Extensions;
+using Alcoholic.Hubs;
 using Alcoholic.Models;
 using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
@@ -6,6 +7,7 @@ using Alcoholic.Services;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
@@ -23,13 +25,19 @@ namespace Alcoholic.Controllers.API
         private readonly IConfiguration config;
         private readonly AesService aesService;
         private readonly HashService hashService;
+        private readonly IHubContext<NotifyHub> hub;
 
-        public OrderApiController(db_a8de26_projectContext projectContext, IConfiguration config, AesService aesService, HashService hashService)
+        public OrderApiController(db_a8de26_projectContext projectContext,
+            IConfiguration config,
+            AesService aesService,
+            HashService hashService,
+            IHubContext<NotifyHub> hub)
         {
             this._db = projectContext;
             this.config = config;
             this.aesService = aesService;
             this.hashService = hashService;
+            this.hub = hub;
         }
         [HttpPost]
         public IActionResult Confirm([FromBody] OrderViewModel orderdata)
@@ -140,7 +148,7 @@ namespace Alcoholic.Controllers.API
                 AndroidPay = paymentInfo.PayType.ToLower() == "googlepay" ? "1" : null,
                 Credit = paymentInfo.PayType.ToLower() == "credit" ? "1" : null,
                 LinePay = paymentInfo.PayType.ToLower() == "linepay" ? "1" : null,
-                ReturnURL = "https://ff49-36-225-197-20.jp.ngrok.io/api/Order/GetPaymentReturnData",               
+                ReturnURL = "https://ff49-36-225-197-20.jp.ngrok.io/api/Order/GetPaymentReturnData",
             };
 
             var hashKey = config["Payment:HashKey"];
@@ -157,7 +165,7 @@ namespace Alcoholic.Controllers.API
             };
         }
         // 付款後ReturnUrl，接收回傳資料
-        [HttpPost]      
+        [HttpPost]
         public IActionResult GetPaymentReturnData([FromForm] OnlinePaymentReturn returnData)
         {
             // 測試用參數
@@ -174,7 +182,7 @@ namespace Alcoholic.Controllers.API
             string r_TradeInfo = returnData.TradeInfo;
             string r_TradeSha = returnData.TradeSha;
             string r_Version = returnData.Version;
-            
+
             // AES解密
             string decryptTradeInfo = aesService.DecryptAESHex(r_TradeInfo, hashKey, hashIV);
             PaymentResult obj_PaymentResult = JsonConvert.DeserializeObject<PaymentResult>(decryptTradeInfo);
@@ -186,22 +194,22 @@ namespace Alcoholic.Controllers.API
             if (r_Status == "SUCCESS")
             {
                 var order = _db.Orders.Where(x => x.OrderId == orderId).FirstOrDefault();
-                if(order!= null)
+                if (order != null)
                 {
                     order.Status = "Y";
                     order.Total = int.Parse(orderTotal);
-                    var desk =_db.DeskInfo.Where(x => x.Desk == order.DeskNum).FirstOrDefault();
-                    if(desk != null)
+                    var desk = _db.DeskInfo.Where(x => x.Desk == order.DeskNum).FirstOrDefault();
+                    if (desk != null)
                     {
                         desk.StartTime = null;
                         desk.Occupied = 0;
                     }
-                    _db.SaveChanges();                   
+                    _db.SaveChanges();
                 }
             }
             else
             {
-                
+
             }
             OnlinePaymentReturn onlinePaymentReturn = new OnlinePaymentReturn
             {
@@ -222,9 +230,8 @@ namespace Alcoholic.Controllers.API
                          select x).FirstOrDefault();
             var member = (from y in _db.Members
                           where y.MemberID == order.MemberId
-                          select new 
+                          select new
                           {
-                              OrderId = data.Id,
                               MemberName = y.MemberName,
                               Email = y.Email,
                               Age = y.Age,
@@ -251,14 +258,15 @@ namespace Alcoholic.Controllers.API
             };
             ReturnModel returnModel = new()
             {
-                Status=200,
-                Url=$"{Request.Scheme}://{Request.Host}/Home/Index",
+                Status = 200,
+                Url = $"{Request.Scheme}://{Request.Host}/Home/Index",
             };
             _db.Add(feedback);
             _db.SaveChanges();
             return Ok(returnModel);
         }
 
+        // 後台顯示今日訂單
         public IActionResult GetTodayOrders()
         {
             var order = (from od in _db.Orders
@@ -270,14 +278,86 @@ namespace Alcoholic.Controllers.API
                              MemberName = od.Member.MemberName,
                              Number = od.Number,
                              Status = od.Status,
+                             Total = null
                          }).ToList();
             return Ok(order);
         }
 
-        //還沒寫...
-        //public IActionResult SearchHistOrders
-        //{
-        //    return OK();
-        //}
+        // 後臺查詢歷史訂單
+        [HttpPost]
+        public IActionResult SearchHistOrders([FromBody] SearchHistOrder histOrder)
+        {
+            var histOrderInfo = (from histOd in _db.Orders
+                                 where histOd.OrderId == histOrder.OrderId
+                                 select new BCOrder
+                                 {
+                                     OrderId = histOrder.OrderId,
+                                     Desk = histOd.DeskNum,
+                                     MemberName = histOd.Member.MemberName,
+                                     Number = histOd.Number,
+                                     Status = histOd.Status,
+                                     Total = histOd.Total,
+                                 }).ToList();
+            return Ok(histOrderInfo);
+        }
+        // 後臺按下確認結單
+        [HttpPost]
+        public IActionResult FinishPayment([FromBody] SearchHistOrder checkConfirm)
+        {
+            var order = (from od in _db.Orders where od.OrderId == checkConfirm.OrderId select od).FirstOrDefault();
+            var orderDetail = (from x in _db.OrderDetails
+                               where x.OrderId == checkConfirm.OrderId
+                               group x by x.ProductId into o
+                               select new { ProductId = o.Key, Total = Math.Round(o.Sum(x => x.Quantity * x.UnitPrice * x.Discount)) }).ToArray();
+
+            var totalPrice = 0;
+
+            foreach (var item in orderDetail)
+            {
+                totalPrice += (int)item.Total;
+            }
+
+            if (order != null)
+            {
+                order.Status = "Y";
+                order.Total = totalPrice;
+                var desk = _db.DeskInfo.Where(x => x.Desk == order.DeskNum).FirstOrDefault();
+                if (desk != null)
+                {
+                    desk.StartTime = null;
+                    desk.Occupied = 0;
+                }
+                _db.SaveChanges();
+                hub.Clients.All.SendAsync("OK", desk);
+                return Ok(true);
+            }
+
+            return Ok(false);
+        }
+
+        // 櫃台結帳頁面出示
+        public IActionResult GetOrder()
+        {
+            string sMemberID = HttpContext.Session.GetString("MemberID");
+            if (!Guid.TryParse(sMemberID, out var memberId))
+            {
+                throw new Exception("Guid is error");
+            }
+            var fd_checkOrder = (from o in _db.Orders
+                                 where o.MemberId == memberId && o.Status == "N"
+                                 select o).FirstOrDefault();
+            FrontDeskCheckPage frontDeskCheckPage = new FrontDeskCheckPage
+            {
+                OrderId = fd_checkOrder.OrderId,
+                Desk = fd_checkOrder.DeskNum,
+                OrderTime = fd_checkOrder.OrderTime,
+            };
+            return Ok(frontDeskCheckPage);
+        }
+        public async Task<IActionResult> TestDesk(string desk)
+        {
+            await hub.Clients.All.SendAsync("OK", desk);
+            return Content(desk);
+        }
     }
 }
