@@ -7,7 +7,9 @@
         order: 2;
         margin-left: 10vh;
     }
-
+    .nullShow{
+        visibility: hidden;
+    }
 </style>
 <div id="prod">
     <div class="productmanage container-fluid p-5">
@@ -123,24 +125,24 @@
             <div class="modal-body container addingPage">
                 <div class="row">
                     <div class="col-12 my-2">
-                        <label for="productPic">圖片：</label>
+                    <label for="productPic">圖片：</label>
                         <vue-dropzone ref="myVueDropzone" id="basezone" :options="dropzoneOptions"
                                       v-on:vdropzone-files-added="fileAdd"></vue-dropzone>
                     </div>
                     <div class="col-12 my-2">
-                        <label for="productName" class="form-label">商品名稱：</label>
+                        <label for="productName" class="form-label">商品名稱：</label><label :class="{'nullShow':filled.productName}">*不能為空</label>
                         <input type="text" class="form-control w-100" id=" productName" v-model="createProductData.productName">
                     </div>
                     <div class="col-6 my-2">
-                        <label for="productCost" class="form-label">商品成本：</label>
+                        <label for="productCost" class="form-label">商品成本：</label><label :class="{'nullShow':filled.productCost}">*不能為空</label>
                         <input type="number" class="form-control w-100" placeholder="NTD" id="productCost" v-model="createProductData.productCost" min="0">
                     </div>
                     <div class="col-6 my-2">
-                        <label for="productPrice" class="form-label">商品售價：</label>
+                        <label for="productPrice" class="form-label">商品售價：</label><label :class="{'nullShow':filled.productPrice}">*不能為空</label>
                         <input type="number" class="form-control w-100" placeholder="NTD" id="productPrice" v-model="createProductData.productPrice" min="0">
                     </div>
                     <div class="col-12 my-2">
-                        <label for="productDescription" class="form-label">商品敘述：</label>
+                        <label for="productDescription" class="form-label">商品敘述：</label><label :class="{'nullShow':filled.productDescription}">*不能為空</label>
                         <input type="text" class="form-control w-100" placeholder="請簡述特色" id="productDescription" v-model="createProductData.productDescription">
                     </div>
                     <div id="multipleselect" class="col-12 ">
@@ -311,12 +313,19 @@
         data: {
             product: [],
             allDiscount: [],
+            filled:{
+                productName:false,
+                productPrice:false,
+                productCost:false,
+                productDescription:false,
+            },
             createProductData: {
                 productName: "",
                 productPrice: "",
                 productCost: "",
                 productDescription: "",
                 images: [],
+                discountId:"",
             },
             fileRecords: [
                 {
@@ -393,21 +402,35 @@
                         data.append("Cost", this.createProductData.productCost)
                         data.append("UnitPrice", this.createProductData.productPrice)
                         data.append("ProductDescription", this.createProductData.productDescription)
+                        data.append("DiscountId", this.discountvalue.discountId)
                         var img = this.$refs.myVueDropzone.getQueuedFiles();
                         img.forEach(x => data.append("Images", x));
-                        this.$refs.myVueDropzone.removeAllFiles();
-                        this.createProductData.productName = "";
-                        this.createProductData.productPrice = "";
-                        this.createProductData.productCost = "";
-                        this.createProductData.productDescription = "";
-                        this.createProductData.images = [];
-                        this.discountvalue = "";
+                        
                         fetch("/api/Products/CreateProduct", {
                             method: 'POST',
                             //headers: { "Content-Type": "multipart/form-data" },
                             body: data
                         })
-                        Swal.fire('新增成功!', '', 'success');
+                         .then(e => e.json())
+                            .then(result => {
+                                switch (result.status) {
+                                    case 0: {
+                                        Swal.fire('新增成功!', '', 'success');
+                                        this.$refs.myVueDropzone.removeAllFiles();
+                                        this.createProductData.productName = "";
+                                        this.createProductData.productPrice = "";
+                                        this.createProductData.productCost = "";
+                                        this.createProductData.productDescription = "";
+                                        this.createProductData.images = [];
+                                        this.discountvalue = "";
+                                    }
+                                        break;
+                                    case 400: {
+                                        Swal.fire('尚有欄位未填寫!', '', 'error');
+                                    }
+                                        break;
+                                }
+                            })
                     } else if (result.isDenied) {
                         Swal.fire('取消新增!', '', 'info')
                     }
@@ -434,6 +457,40 @@
             fetch("/api/Discount/GetDiscount")
                 .then(response => response.json())
                 .then(result => this.allDiscount = result.concat())
+        },
+        watch: {
+            'createProductData.productName': function (n, o) {
+                if (n != "") {
+                    this.filled.productName = true;
+                }
+                else {
+                    this.filled.productName = false;
+                }
+            },
+            'createProductData.productPrice': function (n, o) {
+                if (n != 0) {
+                    this.filled.productPrice = true;
+                }
+                else {
+                    this.filled.productPrice = false;
+                }
+            },
+            'createProductData.productCost': function (n, o) {
+                if (n != 0) {
+                    this.filled.productCost = true;
+                }
+                else {
+                    this.filled.productCost = false;
+                }
+            },
+            'createProductData.productDescription': function (n, o) {
+                if (n != "") {
+                    this.filled.productDescription = true;
+                }
+                else {
+                    this.filled.productDescription = false;
+                }
+            },
         }
     })
 </script>
