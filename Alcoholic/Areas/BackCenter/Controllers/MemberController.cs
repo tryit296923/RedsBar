@@ -1,4 +1,6 @@
-﻿using Alcoholic.Models.Entities;
+﻿using Alcoholic.Models;
+using Alcoholic.Models.DTO;
+using Alcoholic.Models.Entities;
 using Alcoholic.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,26 +33,101 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             return View();
         }
 
-        public List<Member> GetAllMember()
+        public List<List<DataCenterModel>> GetAllMember()
         {
-            return db.Members.ToList();
+            List<List<DataCenterModel>> result = new();
+            var member = db.Members.Where(m => m.Qualified == "y").Select(m => new DataCenterModel
+            {
+                MemberAccount = m.MemberAccount,
+                MemberLevel = m.MemberLevel,
+                MemberName = m.MemberName,
+                MemberBirth = m.MemberBirth,
+                Phone = m.Phone,
+                Email = m.Email,
+                Age = m.Age.GetValueOrDefault(),
+                Qualified = m.Qualified
+            }).ToList();
+            var premember = db.Members.Where(m => m.Qualified == "n").Select(m => new DataCenterModel
+            {
+                MemberAccount = m.MemberAccount,
+                MemberLevel = m.MemberLevel,
+                MemberName = m.MemberName,
+                MemberBirth = m.MemberBirth,
+                Phone = m.Phone,
+                Email = m.Email,
+                Age = m.Age.GetValueOrDefault(),
+                Qualified = m.Qualified
+            }).ToList();
+            result.Add(member);
+            result.Add(premember);
+            return result;
         }
 
-        public IActionResult AuthByStaff(string EmailID)
+        [HttpPost]
+        public IActionResult GetMember([FromBody] string acc)
         {
-            if (string.IsNullOrEmpty(EmailID))
+            var emp = db.Members.Select(e => e).Where(e => e.MemberAccount == acc).FirstOrDefault();
+            EditModel member = new()
             {
-                return Ok(false);
-            }
-            Member? memberData = (from member in db.Members
-                                  where member.EmailID.ToString() == EmailID
-                                  select member).FirstOrDefault();
-            if (memberData == null)
+                MemberAccount = emp.MemberAccount,
+                MemberLevel = emp.MemberLevel,
+                MemberName = emp.MemberName,
+                Phone = emp.Phone,
+                Email = emp.Email,
+                Qualified = emp.Qualified
+            };
+            return Ok(member);
+        }
+
+        [HttpPut]
+        public IActionResult EditMember([FromBody] EditModel member)
+        {
+            ReturnModel returnModel = new();
+            if (!ModelState.IsValid)
             {
-                return Ok(false);
+                returnModel.Status = 2;
+                return Ok(returnModel);
             }
-            memberData.Qualified = "y";
-            db.Entry(memberData).State = EntityState.Modified;
+            if (!db.Members.Any(Member => Member.MemberAccount == member.MemberAccount))
+            {
+                returnModel.Status = 1;
+                return Ok(returnModel);
+            }
+            Member mem = db.Members.Select(e => e).Where(e => e.MemberAccount == member.MemberAccount).FirstOrDefault();
+            mem.MemberAccount = member.MemberAccount;
+            mem.MemberLevel = member.MemberLevel;
+            mem.MemberName = member.MemberName;
+            mem.Phone = member.Phone;
+            mem.Email = member.Email;
+            mem.Qualified = member.Qualified;
+
+            db.Entry(mem).State = EntityState.Modified;
+            db.SaveChanges();
+            returnModel.Status = 0;
+            return Ok(returnModel);
+        }
+
+        [HttpPut]
+        public IActionResult MemberGone([FromBody] string acc)
+        {
+            Member mem = db.Members.Select(e => e).Where(e => e.MemberAccount == acc).FirstOrDefault();
+            mem.Qualified = "n";
+            db.Entry(mem).State = EntityState.Modified;
+            db.SaveChanges();
+            return Ok(true);
+        }
+
+        [HttpPut]
+        public IActionResult MemberRemove([FromBody] string acc)
+        {
+            Member mem = db.Members.Select(e => e).Where(e => e.MemberAccount == acc).FirstOrDefault();
+            mem.MemberAccount = "deletedAcc";
+            mem.Qualified = "X";
+            mem.MemberLevel = 0;
+            mem.MemberName = "XXX";
+            mem.Phone = "notamember";
+            mem.Email = "xxx@xxx.com";
+            db.Entry(mem).State = EntityState.Modified;
             db.SaveChanges();
             return Ok(true);
         }

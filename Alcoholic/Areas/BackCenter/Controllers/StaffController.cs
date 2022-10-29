@@ -74,7 +74,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditMember([FromBody] StaffModel staff)
+        public IActionResult EditMember([FromBody] StaffModel model)
         {
             ReturnModel returnModel = new();
             if (!ModelState.IsValid)
@@ -82,17 +82,18 @@ namespace Alcoholic.Areas.BackCenter.Controllers
                 returnModel.Status = 2;
                 return Ok(returnModel);
             }
-            if (!db.Employees.Any(Member => Member.EmpAccount == staff.EmpAccount))
+            if (!db.Employees.Any(e => e.EmpAccount == model.EmpAccount))
             {
                 returnModel.Status = 1;
                 return Ok(returnModel);
             }
-            Employee emp = db.Employees.Select(e => e).Where(e => e.EmpAccount == staff.EmpAccount).FirstOrDefault();
-            emp.EmpName = staff.EmpName;
-            emp.NickName = staff.NickName;
-            emp.Contact = staff.Contact;
-            emp.Salary = staff.Salary.GetValueOrDefault();
-            emp.Role = staff.Role;
+            Employee emp = db.Employees.Select(e => e).Where(e => e.EmpAccount == model.EmpAccount).FirstOrDefault();
+            emp.EmpName = model.EmpName;
+            emp.NickName = model.NickName;
+            emp.Contact = model.Contact;
+            emp.Role = model.Role;
+            emp.Salary = model.Salary.GetValueOrDefault();
+
             db.Entry(emp).State = EntityState.Modified;
             db.SaveChanges();
             returnModel.Status = 0;
@@ -140,7 +141,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
                 returnModel.Status = 2;
                 return Ok(returnModel);
             }
-            if (db.Members.Any(Member => Member.MemberAccount == staff.EmpAccount))
+            if (db.Employees.Any(emp => emp.EmpAccount == staff.EmpAccount))
             {
                 returnModel.Status = 1;
                 return Ok(returnModel);

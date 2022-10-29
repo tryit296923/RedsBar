@@ -80,7 +80,7 @@
     }
 </style>
 
-<div class="container">
+<div class="container" id="op_Succeed">
     <div class="row">
         <div class="container-fluid logopic col-10 col-xl-8 align-self-center mt-5 mb-3 w-100">
             <img src="/images/icons/logo-w.png" alt="">
@@ -92,12 +92,16 @@
                 <i class="fa-sharp fa-solid fa-check"></i> 付款成功
             </div>
         </div>
+        <form action="Feedback" method="post">
+            <input name="OrderId" value="@ViewBag.orderId" hidden/>
+            <button type="submit" ref="feedbackbtn" hidden></button>
+        </form>
         <div class="container-fluid col-10 col-xl-8 text-center align-self-center px-0">
             <div class="feedbackmessage">
                 <p><i class="fa-sharp fa-solid fa-pen mt-4"></i> 為我們留下評分:</p>
             </div>
             <div>
-                <a href="" class="btnfeedback">顧客意見表</a>
+                <button class="btnfeedback col-12" @@click="feedbackbtn">顧客意見表</button>
             </div>
         </div>
     </div>
@@ -112,7 +116,9 @@
             }
         },
         methods: {
-
+            feedbackbtn: function(){
+                this.$refs.feedbackbtn.click();
+            }
         }
     })
 </script>

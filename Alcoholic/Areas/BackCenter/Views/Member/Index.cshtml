@@ -4,6 +4,9 @@
 }
 
 <style>
+ body{
+        min-width: 1140px;
+ }
     #editbooking input, select {
         width: 100%;
     }
@@ -27,107 +30,123 @@
         display: none;
     }
 
+    .table img{
+        width: 32px;
+    }
+
     .bookinginfo td {
         line-height: 1rem;
     }
+
+    .bookingtoday{
+        font-size: 14px;
+    }
+    .bookinginfo {
+        font-size: 0.5rem;
+    }
 </style>
-<div class="bookingmanage container-fluid p-5" id="member">
-    <div class="spacebetween row-cols-2 mb-3">
-        <h3>會員管理</h3>
-    </div>
-    <hr>
-    <div class="py-4">
-        <div class="todaydata">
-            <div class="bookingtoday p-4">
-                <div class="spacebetween">
-                    <h5>會員列表</h5>
-                    <div class="datepick">
-                        <input placeholder="請輸入會員帳號" type="text" v-model="search" />
+<div id ="memberpage">
+    <div class="bookingmanage container-fluid p-5">
+        <div class="spacebetween row-cols-2 mb-3">
+            <h3>會員管理</h3>
+        </div>
+        <hr>
+        <div class="py-4">
+            <div class="todaydata">
+                <div class="bookingtoday p-4">
+                    <div class="spacebetween">
+                        <h5>會員列表</h5>
+                        <div class="datepick">
+                            <input placeholder="請輸入會員帳號" type="text" v-model="search" />
+                        </div>
                     </div>
+                    <br>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">帳號</th>
+                                <th scope="col">等級</th>
+                                <th scope="col">姓名</th>
+                                <th scope="col">生日</th>
+                                <th scope="col">聯絡方式</th>
+                                <th scope="col">信箱</th>
+                                <th scope="col">年齡</th>
+                                <th scope="col">編輯</th>
+                                <th scope="col">刪除</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(mem,index) in members" :name="mem.memberAccount">
+                                <td>{{mem.memberAccount}}</td>
+                                <td><img :src = pathfind(mem.memberLevel) /></td>
+                                <td>{{mem.memberName}}</td>
+                                <td>{{mem.memberBirth.slice(0,10)}}</td>
+                                <td>{{mem.phone}}</td>
+                                <td>{{mem.email}}</td>
+                                <td>{{mem.age}}</td>
+                                <td><button :id="index" name="y" v-on:click="editmem" data-bs-toggle="modal" data-bs-target="#editbooking" class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button></td>
+                                <td><button :id="index" name="y" v-on:click="deletemem" class="btnproducts"><i class="fa-solid fa-trash"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <br>
+            </div>
+        </div>
+        <div class="py-4">
+            <div class="bookinginfo">
                 <table class="table">
                     <thead>
                         <tr>
                             <th scope="col">帳號</th>
                             <th scope="col">等級</th>
                             <th scope="col">姓名</th>
-                            <th scope="col">代號</th>
+                            <th scope="col">生日</th>
                             <th scope="col">聯絡方式</th>
+                            <th scope="col">信箱</th>
+                            <th scope="col">年齡</th>
                             <th scope="col">狀態</th>
                             <th scope="col">編輯</th>
                             <th scope="col">刪除</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(mem,index) in members" :name="mem.empAccount">
-                            <td>{{mem.empAccount}}</td>
-                            <td>{{mem.MemberLevel}}</td>
-                            <td>{{mem.MemberName}}</td>
-                            <td>{{mem.MemberBirth}}</td>
-                            <td>{{mem.Phone}}</td>
-                            <td>{{mem.Email)}}</td>
-                            <td>{{mem.Age)}}</td>
-                            <td>{{mem.qualified)}}</td>
-                            <td><button :id="index" v-on:click="editmem" data-bs-toggle="modal" data-bs-target="#editbooking" class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button></td>
-                            <td><button :id="index" v-on:click="deletemem" class="btnproducts"><i class="fa-solid fa-trash"></i></button></td>
+                        <tr v-for="(mem,index) in premembers" :name="mem.memberAccount">
+                            <td>{{mem.memberAccount}}</td>
+                            <td>{{mem.memberLevel}}</td>
+                            <td>{{mem.memberName}}</td>
+                            <td>{{mem.memberBirth.slice(0,10)}}</td>
+                            <td>{{mem.phone}}</td>
+                            <td>{{mem.email}}</td>
+                            <td>{{mem.age}}</td>
+                            <td>{{display(mem.qualified)}}</td>
+                            <td><button :id="index" name="n" v-on:click="editmem" data-bs-toggle="modal" data-bs-target="#editbooking" class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button></td>
+                            <td><button :id="index" name="n" v-on:click="deletemem" class="btnproducts"><i class="fa-solid fa-trash"></i></button></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
-    <div class="py-4">
-        <div class="bookinginfo">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">帳號</th>
-                        <th scope="col">姓名</th>
-                        <th scope="col">代號</th>
-                        <th scope="col">聯絡方式</th>
-                        <th scope="col">狀態</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="item in gstaffs">
-                        <td>{{item.empAccount}}</td>
-                        <td>{{item.empName}}</td>
-                        <td>{{item.nickName}}</td>
-                        <td>{{item.contact}}</td>
-                        <td>{{giveName(item.status)}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
 
-    <!-- Modal -->
-    <div class="modal fade bookingdModal" id="editbooking" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="staticBackdropLabel">編輯資訊</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body container">
-                    <div><label for="nickName">暱稱：</label><br /><input v-model="edit.nickName" type="text"></div>
-                    <div><label for="empName">姓名：</label><br /><input v-model="edit.empName" type="text"></div>
-                    <div><label for="contact">電話：</label><br /><input v-model="edit.contact" type="text"></div>
-                    <div>
-                        <label for="role">職稱：</label><br />
-                        <select v-model="edit.role" id="">
-                            <option value="moderater">管理員</option>
-                            <option value="leader">組長</option>
-                            <option value="staff">員工</option>
-                        </select>
+        <!-- Modal -->
+        <div class="modal fade bookingdModal" id="editbooking" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="staticBackdropLabel">查看資訊</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div><label for="salary">薪資：</label><br /><input v-model="edit.salary" type="number"></div>
-                </div>
-                <div class="modal-footer">
-                    <div class="row m-0">
-                        <button class="col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
-                        <button v-on:click="editStaffInfo" class="col btneditproducts m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                    <div class="modal-body container">
+                        <div><label>等級：</label><br /><input v-model="editmodel.memberLevel" max="4" min="0" type="number"></div>
+                        <div><label>姓名：</label><br /><input v-model="editmodel.memberName" type="text"></div>
+                        <div><label>電話：</label><br /><input v-model="editmodel.phone" type="text"></div>
+                        <div><label>信箱：</label><br /><input v-model="editmodel.email" type="text"></div>
+                        <div><label>認證：</label><br /><input v-model="editmodel.qualified" type="text"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row m-0">
+                            <button class="col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                            <button v-on:click="saveInfo" class="col btneditproducts m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -135,26 +154,177 @@
     </div>
 </div>
 <script>
-    const member = new Vue({
-        el: "#member",
+    const memVue = new Vue({
+        el: "#memberpage",
         data: {
             members:[],
-            memberOrders:[],
+            premembers:[],
             memberAccount:"",
-            memberLevel:"",
+            memberLevel:0,
             memberName: "",
             memberBirth: "",
             phone: "",
             email: "",
-            age: "",
+            age: 18,
             qualified:"",
-            
+            search:"",
+            edit:{
+                memberAccount: "",
+                memberLevel: 0,
+                memberName: "",
+                memberBirth: "",
+                phone: "",
+                email: "",
+                age: 18,
+                qualified: "",
+            },
+            editmodel:{
+                memberAccount: "",
+                memberLevel: 0,
+                memberName: "",
+                phone: "",
+                email: "",
+                qualified: "",
+            }
         },
         methods: {
-            
+            getMember: function(){
+                fetch("/backcenter/Member/GetAllMember").then(e => e.json()).then(r => { this.members = r[0]; this.premembers = r[1]; });
+            },
+            display:function(e){
+                return e == "n" ? "未認證" : "已認證";
+            },
+            editmem: function (e) {
+                console.log(e.target.name);
+                var acc = e.target.name == "y" ? this.members[e.target.id].memberAccount : this.premembers[e.target.id].memberAccount
+                fetch("/backcenter/member/GetMember", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(acc)
+                }).then(e => e.json()).then(r => this.editmodel = r);
+            },
+            saveInfo:function(){
+                fetch("/backcenter/Member/EditMember", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(this.editmodel)
+                }).then(e => e.json()).then(r => {
+                    console.log(r)
+                    switch (r.status) {
+                        case 0:
+                            {
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'success',
+                                    title: '編輯成功',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                this.getMember();
+                            }
+                            break;
+                        case 1:
+                            {
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'question',
+                                    title: '找不到使用者',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                this.getMember();
+                            }
+                            break;
+                        case 2:
+                            {
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'error',
+                                    title: '資料格式不符!',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                this.getMember();
+                            }
+                            break;
+                    }
+                });
+            },
+            deletemem:function(e){
+                var acc = e.target.name == "y" ? this.members[e.target.id].memberAccount : this.premembers[e.target.id].memberAccount
+                Swal.fire({
+                    title: '確定刪除?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#D8CDB9',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '是',
+                    cancelButtonText: '否'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if(e.target.name == "y"){
+                            fetch("/backcenter/member/MemberGone", {
+                                method: "Put",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(acc)
+                            }).then(e => e.json());
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: '刪除成功',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            this.getMember();
+                        }else{
+                            fetch("/backcenter/member/MemberRemove", {
+                                method: "Put",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(acc)
+                            }).then(e => e.json());
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: '刪除成功',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            this.getMember();
+                        }
+                    }
+                })
+            },
+            pathfind:function(e){
+                console.log(e)
+                switch(e){
+                    case 1: return "../images/icons/drinks_b.png"
+                    break;
+                    case 2: return "../images/icons/drinks_s.png"
+                    break;
+                    case 3: return "../images/icons/drinks_g.png"
+                    break;
+                    case 4: return "../images/icons/drinks_p.png"
+                    break;                    
+                    default: return "../images/icons/drinks_icon.png"
+                    break;
+                }
+            }
+
+        },
+        watch: {
+            search: function () {
+                document.querySelectorAll(".table tbody tr").forEach(e => {
+                    e.classList.add('none');
+                    if (e.getAttribute("name").includes(this.search)) {
+                        e.classList.remove('none');
+                    } else {
+                        e.classList.add('none');
+                    }
+                })
+            },
         },
         mounted: function () {
-            this.getStaff();
+            this.getMember();
         }
     })
 </script>

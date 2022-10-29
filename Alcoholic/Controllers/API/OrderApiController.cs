@@ -1,8 +1,11 @@
 ﻿using Alcoholic.Extensions;
+using Alcoholic.Models;
 using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
 using Alcoholic.Services;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
@@ -137,7 +140,7 @@ namespace Alcoholic.Controllers.API
                 AndroidPay = paymentInfo.PayType.ToLower() == "googlepay" ? "1" : null,
                 Credit = paymentInfo.PayType.ToLower() == "credit" ? "1" : null,
                 LinePay = paymentInfo.PayType.ToLower() == "linepay" ? "1" : null,
-                ReturnURL = "https://45dd-125-227-38-129.jp.ngrok.io/api/Order/GetPaymentReturnData",               
+                ReturnURL = "https://ff49-36-225-197-20.jp.ngrok.io/api/Order/GetPaymentReturnData",               
             };
 
             var hashKey = config["Payment:HashKey"];
@@ -210,5 +213,71 @@ namespace Alcoholic.Controllers.API
             };
             return RedirectToAction("OnlinePayment", "Order", onlinePaymentReturn);
         }
+
+        [HttpPost]
+        public IActionResult FeedbackMember([FromBody] FeedbackIdModel data)
+        {
+            var order = (from x in _db.Orders
+                         where x.OrderId == data.Id
+                         select x).FirstOrDefault();
+            var member = (from y in _db.Members
+                          where y.MemberID == order.MemberId
+                          select new 
+                          {
+                              OrderId = data.Id,
+                              MemberName = y.MemberName,
+                              Email = y.Email,
+                              Age = y.Age,
+                          }).FirstOrDefault();
+            return Ok(member);
+        }
+
+        [HttpPost]
+        public IActionResult FeedBackAll([FromBody] FeedBackAllModel data)
+        {
+            Feedback feedback = new Feedback()
+            {
+                OrderId = data.OrderId,
+                FeedbackName = data.FeedbackName,
+                Email = data.Email,
+                Age = data.Age.ToString(),
+                Frequency = data.Freq,
+                Environment = data.Environment,
+                Serve = data.Serve,
+                Dish = data.Dish,
+                Price = data.Price,
+                Overall = data.Overall,
+                Suggestion = data.Suggestion,
+            };
+            ReturnModel returnModel = new()
+            {
+                Status=200,
+                Url=$"{Request.Scheme}://{Request.Host}/Home/Index",
+            };
+            _db.Add(feedback);
+            _db.SaveChanges();
+            return Ok(returnModel);
+        }
+
+        public IActionResult GetTodayOrders()
+        {
+            var order = (from od in _db.Orders
+                         where od.OrderTime.Date >= DateTime.Today && od.OrderTime.Date <= DateTime.Today.AddDays(1)
+                         select new BCOrder
+                         {
+                             OrderId = od.OrderId,
+                             Desk = od.DeskNum,
+                             MemberName = od.Member.MemberName,
+                             Number = od.Number,
+                             Status = od.Status,
+                         }).ToList();
+            return Ok(order);
+        }
+
+        //還沒寫...
+        //public IActionResult SearchHistOrders
+        //{
+        //    return OK();
+        //}
     }
 }

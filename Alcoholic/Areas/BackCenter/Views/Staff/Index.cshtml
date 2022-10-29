@@ -4,6 +4,9 @@
 }
 
 <style>
+    body {
+        min-width: 1024px;
+    }
     .addemp input,select{
         width: 100%;
     }
@@ -31,6 +34,10 @@
     .bookinginfo td {
          line-height: 1rem; 
         color:#666;
+    }
+
+    .bookingtoday {
+        font-size: 14px;
     }
     .bookinginfo{
         font-size: 0.5rem;
@@ -298,7 +305,7 @@
                             method: "Put",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(acc)
-                        }).then(e => e.json()).then(r => this.edit = r);
+                        }).then(e => e.json());
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
@@ -342,7 +349,7 @@
                                 Swal.fire({
                                     position: 'center',
                                     icon: 'question',
-                                    title: '不太可能出現這行 找不到使用者',
+                                    title: '找不到使用者',
                                     showConfirmButton: false,
                                     timer: 1500
                                 })
