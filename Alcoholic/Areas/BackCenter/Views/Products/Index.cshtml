@@ -251,7 +251,7 @@
                         data.append("ProductDescription", this.editProductData.productDescription)
                         data.append("DiscountId", this.discount.discountId)
                         fetch("/api/Products/EditProduct", {
-                            method: 'POST',
+                            method: 'PUT',
                             body: data
                         });
                         fetch("/api/Products/GetAllBackProducts")
@@ -281,12 +281,12 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         fetch("/api/Products/DeleteProduct", {
-                            method: 'POST',
+                            method: 'DELETE',
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(selProd.id)
                         })
                         Swal.fire('成功刪除!', '', 'success')
-                        this.refreshPage();
+                        setInterval(function () { window.location.reload()}, 1200);
                     } else if (result.isDenied) {
                         Swal.fire('取消刪除!', '', 'info')
                     }
@@ -369,7 +369,7 @@
                 { name: 'Rum', baseId: '2' },
                 { name: 'Gin', baseId: '3' },
                 { name: 'Brandy', baseId: '4' },
-                { name: 'Wiskey', baseId: '5' },
+                { name: 'Whiskey', baseId: '5' },
                 { name: 'Vodka', baseId: '6' },
             ],
             basevalue: "",
@@ -426,7 +426,7 @@
                                     }
                                         break;
                                     case 400: {
-                                        Swal.fire('尚有欄位未填寫!', '', 'error');
+                                        Swal.fire('尚未添加圖片!', '', 'error');
                                     }
                                         break;
                                 }

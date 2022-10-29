@@ -61,7 +61,7 @@ namespace Alcoholic.Controllers.API
                 return Ok(returnModel);
             }
         }
-        [HttpPost]
+        [HttpPut]
         public void EditDiscount([FromForm] DiscountModel editData)
         {
 
@@ -76,7 +76,7 @@ namespace Alcoholic.Controllers.API
 
         }
 
-        [HttpPost]
+        [HttpDelete]
         public void DeleteDiscount([FromBody] int deleteData)
         {
             var discountData = (from x in _db.Discount
