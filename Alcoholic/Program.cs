@@ -14,6 +14,7 @@ builder.Services.AddControllersWithViews().AddJsonOptions(opt => opt.JsonSeriali
 builder.Services.AddTransient<MailService>();
 builder.Services.AddTransient<HashService>();
 builder.Services.AddTransient<AesService>();
+builder.Services.AddTransient<LvlService>();
 builder.Services.AddRazorTemplating();
 builder.Services.AddSignalR();
 
@@ -48,12 +49,20 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 {
     opt.ClientId = builder.Configuration.GetSection("Auth:Google:ClientId").Value;
     opt.ClientSecret = builder.Configuration.GetSection("Auth:Google:ClientSecret").Value;
-    opt.Events.OnCreatingTicket = context =>
-    {
-        context.Identity.AddClaim(new System.Security.Claims.Claim(ClaimTypes.Role, "Guest"));
-        return Task.CompletedTask;
-    };
-});
+    //opt.Events.OnCreatingTicket = context =>
+    //{
+    //    context.Identity.AddClaim(new System.Security.Claims.Claim(ClaimTypes.Role, "Guest"));
+    //    return Task.CompletedTask;
+    //};
+}).AddTwitter(twitterOptions =>
+{
+    twitterOptions.ConsumerKey = builder.Configuration.GetSection("Auth:Twitter:ConsumerAPIKey").Value;
+    twitterOptions.ConsumerSecret = builder.Configuration.GetSection("Auth:Twitter:ConsumerSecret").Value;
+}).AddMicrosoftAccount(microsoftOptions =>
+{
+    microsoftOptions.ClientId = builder.Configuration.GetSection("Auth:Microsoft:ClientId").Value;
+    microsoftOptions.ClientSecret = builder.Configuration.GetSection("Auth:Microsoft:ClientSecret").Value;
+}); ;
 
 builder.Services.AddDistributedMemoryCache();
 

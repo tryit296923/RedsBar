@@ -70,38 +70,41 @@
 <script>
     document.querySelector('button').addEventListener("click", (e) => {
         e.preventDefault();
-        console.log(document.querySelector('input').value)
         fetch("/api/member/Legal", {
             method: "post",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(document.querySelector('input').value)
-        }).then(e => e.json()).then(r => {if(r.status == 200){
-            Swal.fire({
-                allowOutsideClick: 'false',
-                position: 'center',
-                icon: 'success',
-                title: '登入成功!',
-                showConfirmButton: false,
-                timer: 1500
-                }).then((result) => {
-                    if (result.dismiss === Swal.DismissReason.timer) {
-                        window.location.assign(r.url);
-                    }
-                })
-        }}else{
-            Swal.fire({
-                allowOutsideClick: 'false',
-                position: 'center',
-                icon: 'error',
-                title: '未成年不可註冊!',
-                showConfirmButton: false,
-                timer: 1500
-            }).then((result) => {
-                if (result.dismiss === Swal.DismissReason.timer) {
-                    window.location.assign(r.url);
+        })
+            .then(e => e.json())
+            .then(r => {
+                if (r.status == 200) {
+                    Swal.fire({
+                        allowOutsideClick: 'false',
+                        position: 'center',
+                        icon: 'success',
+                        title: '登入成功!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then((result) => {
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            window.location.assign(r.url);
+                        }
+                    })
+                } else {
+                    Swal.fire({
+                        allowOutsideClick: 'false',
+                        position: 'center',
+                        icon: 'error',
+                        title: '未成年不可註冊!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then((result) => {
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            window.location.assign(r.url);
+                        }
+                    })
                 }
             })
-        })
     })
 </script>
 </html>
