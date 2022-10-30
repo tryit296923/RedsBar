@@ -1,8 +1,4 @@
-﻿@model Alcoholic.Models.DTO.OrderViewModel
-@using Newtonsoft.Json;
-@using System.Web;
-
-@{
+﻿@{
     ViewData["Title"] = "本日訂單總覽";
     Layout = "_LayoutMobile";
     //var orderList = Model.Orders;
@@ -166,7 +162,7 @@
         font-size: small;
         color: gray;
         display: flex;
-        align-items:center;
+        align-items: center;
     }
 
     .align-items-start {
@@ -318,9 +314,8 @@
                 <div class="title w-100">
                     <div class="himessage">
                         <p>Hi, </p>
-                        <p class="user">@Model.MemberName</p>
+                        <p class="user">{{orderDetail.memberName}}</p>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -342,7 +337,7 @@
                             <div class="subOrderText subOrderId">訂單編號 : {{orderDetail.orderId}}</div>
                         </div>
                         <div class="row list-group-item d-flex justify-content-center"
-                            v-for="(sequence,index) in sequenceList()" @*v-bind:key="item.orderId"*@>
+                             v-for="(sequence,index) in sequenceList()">
                             <div class="row list-group-item d-flex align-items-center" v-for="(item,index) in sequence">
                                 <div class="col-3 px-0">
                                     <img :src="item.path" class="w-100 rounded">
@@ -381,8 +376,6 @@
             </div>
         </fieldset>
         <form action="Check" method="post" class="d-none">
-            <input name="total" v-model="totalPrice" />
-            <input name="orderId" value=@Model.OrderId />
             <button type="submit" ref="checkConfirm"></button>
         </form>
         <form action="OrderList" method="post" class="d-none">
@@ -406,7 +399,7 @@
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="delieveBackdrop" data-bs-backdrop="delieve" data-bs-keyboard="false" tabindex="-1"
+    <div class="modal fade" id="delieveBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
          aria-labelledby="delieveBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -434,73 +427,67 @@
             return {
                 orderTime: '',
                 totalPrice: 0,
-                orderDetail: @Html.Raw(Json.Serialize(Model)),
+                orderDetail: {},
             }
         },
-        //mounted(){
-        //    console.log(this.orderDetail)
-        //    var list = {};
-        //    var x = [...new Set(this.orderDetail[0].itemList.map(x => x.sequence))];
-        //    console.log(x)
-        //    x.forEach(y => console.log(this.orderDetail[0].itemList.filter(z => z.sequence == y)))
-
-        //    console.log(this.orderDetail.filter(x => x.sequence));
-        //},
         methods: {
-        getOrderDetail: function () {
-            var list = {};
-            this.orderDetail = JSON.parse(orderDetail);
-            return this.orderDetail;
-        },
-        sequenceList:function(){
-            var sList = [];
-            var x = [...new Set(this.orderDetail.itemList.map(x => x.sequence))];
-            console.log(x)
-            x.forEach(y => sList.push(this.orderDetail.itemList.filter(z => z.sequence == y)))
-            console.log(sList);
-            return sList;
-        },
-        //detail: function (orderid) {
-        //    console.log(orderid);
-        //    console.log(this.orderDetail.filter(x => x.orderId == orderid));
-        //    return this.orderDetail.filter(x => x.orderId == orderid);
-        //},
-        checkConfirm: function () {
-            console.log(this.totalPrice);
-            this.$refs.checkConfirm.click();
-        },
-        discountPrice: function (item) {
-            return Math.round(item.unitPrice * item.qty * item.discountAmount);
-        },
-        total: function (s) {
-            var total = 0;
-            for (let i = 0; i < s.length; i++) {
-                total += s[i].unitPrice * s[i].qty * s[i].discountAmount;
+            //getOrderDetail: function () {
+            //    var list = {};
+            //    this.orderDetail = JSON.parse(orderDetail);
+            //    return this.orderDetail;
+            //},
+            getTotalOrder: function () {
+                fetch("/api/Order/GetTotalOrder")
+                    .then(response => response.json())
+                    .then(result => { this.orderDetail = result })
+            },
+            sequenceList: function () {
+                var sList = [];
+                if(this.orderDetail.itemList){
+                    var x = [...new Set(this.orderDetail.itemList.map(x => x.sequence))];
+                    console.log(x)
+                    x.forEach(y => sList.push(this.orderDetail.itemList.filter(z => z.sequence == y)))
+                    console.log(sList);
+                }               
+                return sList;
+            },
+            checkConfirm: function () {
+                console.log(this.totalPrice);
+                this.$refs.checkConfirm.click();
+            },
+            discountPrice: function (item) {
+                return Math.round(item.unitPrice * item.qty * item.discountAmount);
+            },
+            total: function (s) {
+                console.log(s);
+                var total = 0;
+                if(s){
+                    for (let i = 0; i < s.length; i++) {
+                    total += s[i].unitPrice * s[i].qty * s[i].discountAmount;
+                }
+                this.totalPrice = Math.round(total);
+                }
+                return Math.round(total);
+            },
+            subTotal: function (t) {
+                var subTotal = 0;
+                for (let j = 0; j < t.length; j++) {
+                    subTotal += t[j].unitPrice * t[j].qty * t[j].discountAmount;
+                }
+                this.subTotalPrice = Math.round(subTotal)
+                console.log(this.subTotalPrice);
+                return this.subTotalPrice;
+            },
+            dateTime: function (ot) {
+                var newOt = ot.substring(0, 16);
+                return newOt.replace("T", " ");
+            },
+            backToMenu: function () {
+                this.$refs.backToMenu.click();
             }
-            this.totalPrice = Math.round(total);
-            return Math.round(total);
         },
-        subTotal: function (t) {
-            var subTotal = 0;
-            //for (let j = 0; j < t.length; j++) {
-            //    for (let k = 0; k < t[j].itemList.length; k++) {
-            //        total += t[j].itemList[k].unitPrice * t[j].itemList[k].qty * t[j].itemList[k].discountAmount;
-            //    }
-            //}
-            for(let j = 0;j<t.length;j++){
-                subTotal += t[j].unitPrice * t[j].qty * t[j].discountAmount;
-            }
-            this.subTotalPrice = Math.round(subTotal)
-            console.log(this.subTotalPrice);
-            return this.subTotalPrice;
-        },
-        dateTime: function (ot) {
-            var newOt = ot.substring(0, 16);
-            return newOt.replace("T", " ");
-        },
-        backToMenu: function () {
-            this.$refs.backToMenu.click();
+        beforeMount: function () {
+            this.getTotalOrder();
         }
-    },
-        })
+    })
 </script>

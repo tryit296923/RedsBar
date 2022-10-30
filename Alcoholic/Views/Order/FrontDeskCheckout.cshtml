@@ -45,7 +45,7 @@
 
     .orderinfotext {
         font-size: large;
-        color:white;
+        color: white;
     }
 
     .feedbackmessage {
@@ -84,11 +84,11 @@
             background-color: #C28C2E;
         }
 
-        .swal2-popup{
-            background:#222220;
-            color:white;
-        }
-    </style>
+    .swal2-popup {
+        background: #222220;
+        color: white;
+    }
+</style>
 
 <div class="container">
     <div class="row mt-4" id="frontDeskCheck">
@@ -108,14 +108,14 @@
 </div>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script>
+    // SignalR
     var connection = new signalR.HubConnectionBuilder().withUrl("/notifyHub").build();
     connection.on("OK", function (desk) {
         console.log(desk);
         console.log(document.location.protocol);
         console.log(document.location.host);
-
-        if(desk == app.orderToCheck.desk){
-            var path = document.location.protocol+ "//" + document.location.host;
+        if (desk == app.orderToCheck.desk) {
+            var path = document.location.protocol + "//" + document.location.host;
             Swal.fire({
                 title: '付款成功!',
                 text: '歡迎填寫顧客意見表',
@@ -127,7 +127,8 @@
                 confirmButtonText: '顧客意見表',
                 confirmButtonColor: '#721B29',
                 cancelButtonText: '關閉',
-                })
+                allowOutsideClick: false,
+            })
                 .then((result) => {
                     if (result.isConfirmed) {
                         window.location.href = `/Order/Feedback?OrderId=${this.orderId}`
@@ -141,7 +142,7 @@
         el: "#frontDeskCheck",
         data: {
             orderToCheck: {},
-            orderId:''
+            orderId: ''
         },
         methods: {
             getOrder: function () {
@@ -151,10 +152,10 @@
             },
             dateTime: function (ot) {
                 console.log(ot);
-                if(ot) {
+                if (ot) {
                     var newOt = ot.substring(0, 16);
                     return newOt.replace("T", " ");
-                }else {
+                } else {
                     return '';
                 }
             },
