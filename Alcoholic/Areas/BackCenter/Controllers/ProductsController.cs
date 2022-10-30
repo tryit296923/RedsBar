@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Alcoholic.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Alcoholic.Areas.BackCenter.Controllers
 {
+    [Authorize(Roles = "leader,mod,staff")]
     [Area("BackCenter")]
     public class ProductsController : Controller
     {

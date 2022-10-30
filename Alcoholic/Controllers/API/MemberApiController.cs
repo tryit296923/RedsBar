@@ -140,7 +140,7 @@ namespace Alcoholic.Controllers.API
             Member? user = (from member in db.Members
                             where member.MemberAccount == memberData.Account
                             select member).SingleOrDefault();
-            if (user == null)
+            if (user == null || user.Qualified == "n")
             {
                 returnModel.Status = 400;
                 return Ok(returnModel);

@@ -41,9 +41,9 @@ namespace Alcoholic.Models.DTO
 
     public class StaffLoginModel
     {
-        [Required, MinLength(8)]
+        [Required]
         public string EmpAccount { get; set; }
-        [Required, MinLength(8)]
+        [Required]
         public string EmpPassword { get; set; }
     }
 }

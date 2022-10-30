@@ -1,13 +1,15 @@
-﻿using Alcoholic.Models.DTO;
+﻿using Alcoholic.Models;
+using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
 using Alcoholic.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace Alcoholic.Controllers
 {
+    [Authorize(Roles = "member,Guest")]
     public class OrderController : Controller
     {
         private readonly db_a8de26_projectContext _db;
@@ -75,8 +77,13 @@ namespace Alcoholic.Controllers
         }
         public IActionResult Cart()
         {
+            ReturnModel returnModel = new();
             //session取值是否可用
             var sesStr = HttpContext.Session.GetString("CartItem");
+            if (string.IsNullOrEmpty(sesStr))
+            {
+                throw new Exception("sesStr notfound");
+            }
             Console.WriteLine(sesStr);
             string sMemberID = HttpContext.Session.GetString("MemberID");
             if (!Guid.TryParse(sMemberID, out var memberId))

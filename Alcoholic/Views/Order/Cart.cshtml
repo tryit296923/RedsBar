@@ -334,7 +334,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btnInModal btnModalCancel" data-bs-dismiss="modal">取消</button>
-                    <button class="btnInModal btnModalConfirm" v-on:click="orderingSend">確認送出</button>
+                    <button class="btnInModal btnModalConfirm" v-on:click="confirmSend">確認送出</button>
                 </div>
             </div>
         </div>
@@ -407,8 +407,8 @@
                 })
                     .then(result => result.json())
                     .then(result => {
+                        console.log(result);
                         if (result.status == 1) {
-                            console.log(result);
                             //console.log(this.orderId);
                             this.orderId = result.orderId;
                             console.log(this.orderId);

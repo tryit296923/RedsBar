@@ -4,9 +4,6 @@
 }
 
 <style>
-    body {
-        min-width: 1024px;
-    }
     .addemp input,select{
         width: 100%;
     }
@@ -38,9 +35,11 @@
 
     .bookingtoday {
         font-size: 14px;
+        overflow-x: scroll;
     }
     .bookinginfo{
         font-size: 0.5rem;
+        overflow-x: scroll;
     }
 </style>
 <div class="bookingmanage container-fluid p-5" id="staff">
@@ -142,7 +141,7 @@
                     <div>
                         <label for="role">職稱：</label><br/>
                         <select v-model="role" id="">
-                            <option value="moderater">管理員</option>
+                            <option value="mod">管理員</option>
                             <option value="leader">組長</option>
                             <option value="staff">員工</option>
                         </select>
@@ -229,6 +228,15 @@
             },
         },
         methods: {
+            sweatAlert: function (icon, text) {
+                Swal.fire({
+                    position: 'center',
+                    icon: icon,
+                    title: text,
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            },
             addemp: function () {
                 let empJson = {
                     nickName: this.nickName,
@@ -244,41 +252,19 @@
                     method: 'POST',
                     headers: { "Content-Type": "application/json" },
                     body: JsonString        // to JsonString
-                }).then(response => response.json()).then(r => {
-                    switch(r.status){
-                        case 0:
-                            {Swal.fire({
-                                position: 'center',
-                                icon: 'success',
-                                title: '新增成功',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
-                                this.getStaff();
-                            }
+                }).then(response => response.text())
+                .then(r => {
+                    if(r.startsWith("<")){
+                        this.sweatAlert("warning", "你沒有權限!")
+                    }else{
+                        switch(r.status){
+                        case 0:{this.sweatAlert("success", "新增成功");this.getStaff();}
                         break;
-                        case 1:
-                            {Swal.fire({
-                                position: 'center',
-                                icon: 'error',
-                                title: '帳號有人使用過了!',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
-                                this.getStaff();
-                            }
+                        case 1:{this.sweatAlert("error", "帳號有人使用過了!");this.getStaff();}
                         break;
-                        case 2:
-                            {Swal.fire({
-                                position: 'center',
-                                icon: 'error',
-                                title: '資料格式不符!',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                                this.getStaff();
-                            }
+                        case 2:{this.sweatAlert("error", "資料格式不符!");this.getStaff();}
                         break;
+                    }
                     }
                 });
             },
@@ -305,14 +291,10 @@
                             method: "Put",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(acc)
-                        }).then(e => e.json());
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: '刪除成功',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
+                        }).then(e => e.text()).then(t => {if(t.startsWith("<")){
+                            this.sweatAlert("warning", "你沒有權限!")
+                        }})
+                        this.sweatAlert("success", "刪除成功")
                     }
                     this.getStaff();
                 })
@@ -323,53 +305,26 @@
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(acc)
-                }).then(e => e.json()).then(r => this.edit = r);
+                }).then(e => e.json()).then(r => {this.edit = r} );
             },
             editStaffInfo:function(){
                 fetch("/backcenter/staff/EditMember", {
                     method:"PUT",
                     headers:{"Content-Type":"application/json"},
                     body: JSON.stringify(this.edit)
-                }).then(e => e.json()).then(r => {
-                    switch (r.status) {
-                        case 0:
-                            {
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'success',
-                                    title: '編輯成功',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                                this.getStaff();
-                            }
+                }).then(e => e.text()).then(r => {
+                    if(r.startsWith("<")){
+                        this.sweatAlert("warning", "你沒有權限!")
+                    }else{
+                        switch (r.status) {
+                        case 0:{this.sweatAlert("success", "編輯成功");this.getStaff();}
                             break;
-                        case 1:
-                            {
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'question',
-                                    title: '找不到使用者',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                                this.getStaff();
-                            }
+                        case 1:{this.sweatAlert("question", "找不到使用者");this.getStaff();}
                             break;
-                        case 2:
-                            {
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'error',
-                                    title: '資料格式不符!',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                this.getStaff();
-                            }
+                        case 2:{this.sweatAlert("error", "資料格式不符!");this.getStaff();}
                             break;
+                        }
                     }
-
                 });
             },
         },

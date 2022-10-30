@@ -4,6 +4,7 @@ using Alcoholic.Models;
 using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
 using Alcoholic.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,11 +13,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using NuGet.Protocol;
+using System.Data;
 using System.Net;
 using System.Text;
 
 namespace Alcoholic.Controllers.API
 {
+    [Authorize(Roles = "member,Guest")]
     [Route("api/Order/[action]")]
     [ApiController]
     public class OrderApiController : ControllerBase
@@ -112,9 +115,11 @@ namespace Alcoholic.Controllers.API
                     //分別存入Order, OrderDetail
                     var order = new Order
                     {
-                        MemberId = Guid.Parse(sMemberID),
                         OrderId = orderId,
+                        MemberId = Guid.Parse(sMemberID),
                         Number = int.Parse(sNumber),
+                        Total = null,
+                        OrderTime = Convert.ToDateTime(now),
                         DeskNum = sDesk,
                         OrderTime = Convert.ToDateTime(now),
                         Feedback = null,

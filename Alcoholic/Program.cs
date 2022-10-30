@@ -3,6 +3,7 @@ using Alcoholic.Models;
 using Alcoholic.Models.Entities;
 using Alcoholic.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
@@ -11,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddJsonOptions(opt => opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+//builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler,CookieAuthService>();
 builder.Services.AddTransient<MailService>();
 builder.Services.AddTransient<HashService>();
 builder.Services.AddTransient<AesService>();
@@ -43,8 +45,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(option =>
 {
     // 為登入自動導至此網址
-    option.LoginPath = new PathString("/Home/index");
-    option.AccessDeniedPath = new PathString("/Home/index");
+    option.LoginPath = new PathString("/Home/oops");
+    option.AccessDeniedPath = new PathString("/Home/oops");
 }).AddGoogle(opt =>
 {
     opt.ClientId = builder.Configuration.GetSection("Auth:Google:ClientId").Value;
@@ -91,13 +93,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 app.UseSession();
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseCookiePolicy();
 // UseRouting後 UseAuthorization前
 app.UseCors("Policy");
-
-// 注意順序不可調換
-//app.UseCookiePolicy();
+app.UseAuthentication();
+app.UseAuthorization();
 
 
 app.MapAreaControllerRoute(
