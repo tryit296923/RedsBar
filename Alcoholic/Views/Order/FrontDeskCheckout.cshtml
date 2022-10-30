@@ -45,6 +45,7 @@
 
     .orderinfotext {
         font-size: large;
+        color:white;
     }
 
     .feedbackmessage {
@@ -82,27 +83,25 @@
         a:active {
             background-color: #C28C2E;
         }
-</style>
+
+        .swal2-popup{
+            background:#222220;
+            color:white;
+        }
+    </style>
 
 <div class="container">
-    <div class="row" id="frontDeskCheck">
+    <div class="row mt-4" id="frontDeskCheck">
         <div class="container-fluid colorbox py-2 col-10 col-xl-8 text-center">
             <div class="succeedmessage"><i class="fa-sharp fa-solid fa-image"></i> 請於櫃台出示此畫面</div>
         </div>
+        <div class="orderinfotext text-center">--將由人員為您完成結帳程序--</div>
         <div class="container-fluid col-10 col-xl-8 align-self-center my-5 px-0">
             <div class="orderdetail text-center py-2">
                 <p class="orderinfotext">結帳時間 : {{dateTime(orderToCheck.orderTime)}}</p>
+                <hr />
                 <p class="orderinfotext">桌號 : {{orderToCheck.desk}}</p>
                 <p class="orderinfotext">訂單編號 : {{orderToCheck.orderId}}</p>
-            </div>
-        </div>
-        <div class="container-fluid col-10 col-xl-8 text-center align-self-center px-0">
-            <hr>
-            <div class="feedbackmessage">
-                <p><i class="fa-sharp fa-solid fa-pen"></i> 為我們留下評分:</p>
-            </div>
-            <div>
-                <a href="" class="btnfeedback">顧客意見表</a>
             </div>
         </div>
     </div>
@@ -112,15 +111,28 @@
     var connection = new signalR.HubConnectionBuilder().withUrl("/notifyHub").build();
     connection.on("OK", function (desk) {
         console.log(desk);
+        console.log(document.location.protocol);
+        console.log(document.location.host);
+
         if(desk == app.orderToCheck.desk){
+            var path = document.location.protocol+ "//" + document.location.host;
             Swal.fire({
                 title: '付款成功!',
-                text: '請不吝填寫顧客意見表',
-                imageUrl: '',
-                imageWidth: 400,
-                imageHeight: 200,
+                text: '歡迎填寫顧客意見表',
+                imageUrl: path + "/images/icons/logo-y.png",
+                imageWidth: 300,
+                imageHeight: 300,
                 imageAlt: 'Custom image',
-            })
+                showCancelButton: true,
+                confirmButtonText: '顧客意見表',
+                confirmButtonColor: '#721B29',
+                cancelButtonText: '關閉',
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = `/Order/Feedback?OrderId=${this.orderId}`
+                    }
+                })
         }
     });
     connection.start();
@@ -129,16 +141,22 @@
         el: "#frontDeskCheck",
         data: {
             orderToCheck: {},
+            orderId:''
         },
         methods: {
             getOrder: function () {
                 fetch("/api/Order/GetOrder")
                     .then(response => response.json())
-                    .then(result => { this.orderToCheck = result })
+                    .then(result => { this.orderToCheck = result; this.orderId = this.orderToCheck.orderId })
             },
             dateTime: function (ot) {
-                var newOt = ot.toString().substring(0, 16);
-                return newOt.replace("T", " ");
+                console.log(ot);
+                if(ot) {
+                    var newOt = ot.substring(0, 16);
+                    return newOt.replace("T", " ");
+                }else {
+                    return '';
+                }
             },
         },
         mounted: function () {

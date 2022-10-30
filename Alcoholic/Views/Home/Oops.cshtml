@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "Oops";
+}
+<style>
+    body{
+        color: aliceblue;
+        background-color: #333;
+    }
+    div{
+        text-align:center;
+    }
+    a{
+        color: #D8CDB9;
+    }
+    .error{
+        height: 70vh;
+    }
+    .error img{
+        margin: 12px;
+    }
+    #y{
+        animation-name: flags;
+        animation-duration: 4s;
+        animation-delay: 0.5s;
+        animation-iteration-count: infinite;
+    }
+
+    #b{
+        animation-name: flags;
+        animation-duration: 4s;
+        animation-delay: 1s;
+        animation-iteration-count: infinite;
+    }
+
+    #r{
+        animation-name: flags;
+        animation-duration: 4s;
+        animation-delay: 1.5s;
+        animation-iteration-count: infinite;
+    }
+
+    #w{
+        animation-name: flags;
+        animation-duration: 4s;
+        animation-delay: 2s;
+        animation-iteration-count: infinite;
+    }
+
+
+    @@keyframes flags{
+        from {
+            transform:rotateY(0deg)
+        }
+        to {
+            transform:rotateY(360deg)
+        }
+    }
+
+    @@media screen and (min-width: 768px) {
+        .error {
+            height: 67.7vh;
+        }
+    }
+</style>
+<div class="error">
+    <h1 class="m-5">Oops...</h1>
+    <p><img id="F" src="~/images/icons/404_icon.png" /> </p>
+    <h2>似乎出了一點小狀況</h2>
+    <p>是否尚未登入或帳號未經認證呢?</p>
+    <p class="m-5"><a href="/member/loginregister"><i class="fa-solid fa-door-open"></i> 點擊此處</a>為您導向登入頁面...</p>
+    <img id="y" src="~/images/icons/logoicon-y.png" /><img id="b" src="~/images/icons/logoicon-b.png" /><img id="r" src="~/images/icons/logoicon-r.png" /><img id="w" src="~/images/icons/logoicon-w.png" />
+</div>
+<script>
+    let arr = [];
+    document.getElementById("y").addEventListener("click", () => { arr.push("y"); redirect() });
+    document.getElementById("b").addEventListener("click", () => { arr.push("b"); redirect() });
+    document.getElementById("r").addEventListener("click", () => { arr.push("r"); redirect() });
+    document.getElementById("w").addEventListener("click", () => { arr.push("w"); redirect() });
+    document.getElementById("F").addEventListener("click", () => { arr.push("F"); redirect() });
+
+
+    let arr2 = ["y", "r", "b", "w", "F"];
+    function redirect(){
+        if(arr.length == 6){
+            arr.shift();
+        }
+        if (arr.toString() == arr2.toString()) {
+            console.log("go");
+            window.location.assign("/backcenter/back")
+        }
+    }
+
+
+</script>

@@ -2,9 +2,13 @@
 using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
 using Alcoholic.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Security.Claims;
 
 namespace Alcoholic.Areas.BackCenter.Controllers
 {
@@ -19,20 +23,13 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             this.db = db;
             this.hash = hash;
         }
-
+        [Authorize(Roles = "leader,mod,staff")]
         public IActionResult Index()
         {
             return View();
         }
-        public IActionResult LoginPage()
-        {
-            return View();
-        }
-        public IActionResult ResendAuthPage()
-        {
-            return View();
-        }
 
+        [Authorize(Roles = "leader,mod,staff")]
         public List<List<DataCenterModel>> GetAllMember()
         {
             List<List<DataCenterModel>> result = new();
@@ -62,7 +59,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             result.Add(premember);
             return result;
         }
-
+        [Authorize(Roles = "leader,mod,staff")]
         [HttpPost]
         public IActionResult GetMember([FromBody] string acc)
         {
@@ -78,7 +75,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             };
             return Ok(member);
         }
-
+        [Authorize(Roles = "leader,mod")]
         [HttpPut]
         public IActionResult EditMember([FromBody] EditModel member)
         {
@@ -106,7 +103,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             returnModel.Status = 0;
             return Ok(returnModel);
         }
-
+        [Authorize(Roles = "mod,leader")]
         [HttpPut]
         public IActionResult MemberGone([FromBody] string acc)
         {
@@ -116,7 +113,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             db.SaveChanges();
             return Ok(true);
         }
-
+        [Authorize(Roles = "mod,leader")]
         [HttpPut]
         public IActionResult MemberRemove([FromBody] string acc)
         {

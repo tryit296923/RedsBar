@@ -282,9 +282,9 @@
                     </div>
                 </form>
                 <div id="OAuth" class="OAuth">
-                    <a @*v-on:click.prevent="Google"*@ href="/member/googlelogin" ><img src="~/images/icons/google.png" alt=""></a>
-                    <a href=""><img src="~/images/icons/IG.png" alt=""></a>
-                    <a href=""><img src="~/images/icons/FB.png" alt=""></a>
+                    <a href="/member/googlelogin" ><img src="~/images/icons/google.png" alt=""></a>
+                    <a href="/member/twitterlogin"><img src="~/images/icons/twitter.png" alt=""></a>
+                    <a href="/member/MSLogin"><img src="~/images/icons/ms.png" alt=""></a>
                 </div>
             </div>
             <div class="registerpage tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
@@ -466,7 +466,7 @@
                                         footer: '<a href="/api/Member/Remail">未收到信件? 點擊此處以重發</a>'
                                     }).then((result) => {
                                         if (result.isConfirmed) {
-                                            window.location.assign("/member/member");
+                                            window.location.assign("/member/LoginRegister");
                                         }
                                     })
                             }
@@ -523,6 +523,7 @@
                     },
                 })
             },
+
         }
     })
     const logvm = new Vue({

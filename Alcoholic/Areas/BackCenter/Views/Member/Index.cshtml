@@ -4,9 +4,6 @@
 }
 
 <style>
- body{
-        min-width: 1140px;
- }
     #editbooking input, select {
         width: 100%;
     }
@@ -40,9 +37,11 @@
 
     .bookingtoday{
         font-size: 14px;
+        overflow-x: scroll;
     }
     .bookinginfo {
         font-size: 0.5rem;
+        overflow-x: scroll;
     }
 </style>
 <div id ="memberpage">
@@ -195,7 +194,6 @@
                 return e == "n" ? "未認證" : "已認證";
             },
             editmem: function (e) {
-                console.log(e.target.name);
                 var acc = e.target.name == "y" ? this.members[e.target.id].memberAccount : this.premembers[e.target.id].memberAccount
                 fetch("/backcenter/member/GetMember", {
                     method: "POST",
@@ -203,52 +201,48 @@
                     body: JSON.stringify(acc)
                 }).then(e => e.json()).then(r => this.editmodel = r);
             },
+            sweatAlert:function(icon,text){
+                Swal.fire({
+                    position: 'center',
+                    icon: icon,
+                    title: text,
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            },
             saveInfo:function(){
                 fetch("/backcenter/Member/EditMember", {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(this.editmodel)
-                }).then(e => e.json()).then(r => {
-                    console.log(r)
-                    switch (r.status) {
-                        case 0:
-                            {
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'success',
-                                    title: '編輯成功',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                                this.getMember();
+                }).then(e => e.text())
+                .then(t => { 
+                    if(t.startsWith("<")){
+                        this.sweatAlert("warning", "你沒有權限!")
+                        } else {
+                        var r = JSON.parse(t);
+                        switch (r.status) {
+                            case 0:
+                                {
+                                    this.sweatAlert("success", "編輯成功")
+                                    this.getMember();
+                                }
+                                break;
+                            case 1:
+                                {
+                                    this.sweatAlert("question", "找不到使用者")
+                                    this.getMember();
+                                }
+                                break;
+                            case 2:
+                                {
+                                    this.sweatAlert("error", "資料格式不符!")
+                                    this.getMember();
+                                }
+                                break;
                             }
-                            break;
-                        case 1:
-                            {
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'question',
-                                    title: '找不到使用者',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                                this.getMember();
-                            }
-                            break;
-                        case 2:
-                            {
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'error',
-                                    title: '資料格式不符!',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                this.getMember();
-                            }
-                            break;
                     }
-                });
+                })
             },
             deletemem:function(e){
                 var acc = e.target.name == "y" ? this.members[e.target.id].memberAccount : this.premembers[e.target.id].memberAccount
@@ -267,35 +261,30 @@
                                 method: "Put",
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify(acc)
-                            }).then(e => e.json());
-                            Swal.fire({
-                                position: 'center',
-                                icon: 'success',
-                                title: '刪除成功',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
+                            }).then(e => e.text()).then(r => {if(r.startsWith("<")){
+                                    this.sweatAlert("warning", "你沒有權限!")
+                                } else {
+                                    this.sweatAlert("success", "刪除成功")                           
+                                }});
                             this.getMember();
                         }else{
                             fetch("/backcenter/member/MemberRemove", {
                                 method: "Put",
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify(acc)
-                            }).then(e => e.json());
-                            Swal.fire({
-                                position: 'center',
-                                icon: 'success',
-                                title: '刪除成功',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
+                            }).then(e => e.text()).then(r => {
+                                if (r.startsWith("<")) {
+                                    this.sweatAlert("warning", "你沒有權限!")
+                                } else {
+                                    this.sweatAlert("success", "刪除成功")
+                                }
+                            });
                             this.getMember();
                         }
                     }
                 })
             },
             pathfind:function(e){
-                console.log(e)
                 switch(e){
                     case 1: return "../images/icons/drinks_b.png"
                     break;

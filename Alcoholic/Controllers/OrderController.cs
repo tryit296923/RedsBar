@@ -1,13 +1,15 @@
-﻿using Alcoholic.Models.DTO;
+﻿using Alcoholic.Models;
+using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
 using Alcoholic.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace Alcoholic.Controllers
 {
+    [Authorize(Roles = "member,Guest")]
     public class OrderController : Controller
     {
         private readonly db_a8de26_projectContext _db;
@@ -22,10 +24,7 @@ namespace Alcoholic.Controllers
             this.aesService = aesService;
             this.hashService = hashService;
         }
-        public IActionResult Order()
-        {
-            return RedirectToAction("Cart", "Order");
-        }
+
         [HttpPost]
         public bool AddToCart([FromBody] List<CartItem> cartItem)
         {
@@ -79,8 +78,13 @@ namespace Alcoholic.Controllers
         }
         public IActionResult Cart()
         {
+            ReturnModel returnModel = new();
             //session取值是否可用
             var sesStr = HttpContext.Session.GetString("CartItem");
+            if (string.IsNullOrEmpty(sesStr))
+            {
+                throw new Exception("sesStr notfound");
+            }
             Console.WriteLine(sesStr);
             string sMemberID = HttpContext.Session.GetString("MemberID");
             if (!Guid.TryParse(sMemberID, out var memberId))
@@ -148,7 +152,10 @@ namespace Alcoholic.Controllers
                 OrderId = x.OrderId,
                 OrderTime = x.OrderTime,
             }).FirstOrDefault();
-
+            // 送出訂單後清除session
+            HttpContext.Session.SetString("Desk" ,"");
+            HttpContext.Session.SetString("Number", "");
+            HttpContext.Session.SetString("CartItem", "");
             return View(order);
         }
 
@@ -156,8 +163,13 @@ namespace Alcoholic.Controllers
         {
             string sMemberId = HttpContext.Session.GetString("MemberID");
 
+            if (!Guid.TryParse(sMemberId, out var memberId))
+            {
+                throw new Exception("Guid is error");
+            }
+
             var orderDetail = (from y in _db.Orders
-                               where y.Status == "N" && y.MemberId == Guid.Parse(sMemberId)
+                               where y.Status == "N" && y.MemberId == memberId
                                select y).Select(y => new OrderViewModel
                                {
                                    Desk = y.DeskNum,
@@ -221,8 +233,6 @@ namespace Alcoholic.Controllers
         public IActionResult Check(int total, string orderId)
         {
             var now = DateTime.Now.ToString("yyyy/MM/dd");
-            string sDeskCheck = HttpContext.Session.GetString("Desk");
-            string sNumberCheck = HttpContext.Session.GetString("Number");
             string sMemberID = HttpContext.Session.GetString("MemberID");
 
             if (!Guid.TryParse(sMemberID, out var memberId))
@@ -239,8 +249,8 @@ namespace Alcoholic.Controllers
 
             OrderCheckViewModel orderCheckViewModel = new OrderCheckViewModel
             {
-                Desk = sDeskCheck,
-                Number = sNumberCheck,
+                Desk = getOrder.DeskNum,
+                Number = getOrder.Number.ToString(),
                 OrderId = orderId,
                 OrderTime = now,
                 Total = total,
