@@ -58,6 +58,25 @@ namespace Alcoholic.Controllers.API
 
             return prod;
         }
+        //public IEnumerable<ProductMaterialModel> GetProductMaterial()
+        //{
+        //    var mat = from pro in _db.ProductsMaterials
+        //               join path in _db.ProductImage
+        //               on pro.ProductId equals path.ProductId
+        //               select new BackProdModel
+        //               {
+        //                   Id = pro.ProductId,
+        //                   Name = pro.ProductName,
+        //                   Description = pro.ProductDescription,
+        //                   Price = pro.UnitPrice,
+        //                   Path = path.Path,
+        //                   Cost = pro.Cost,
+        //                   DiscountId = pro.Discount.DiscountId,
+        //                   DiscountName = pro.Discount.DiscountName,
+        //               };
+
+        //    return prod;
+        //}
         [HttpPost]
         public IActionResult CreateProduct([FromForm]CreateProductModel model)
         {
