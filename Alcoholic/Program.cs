@@ -45,8 +45,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(option =>
 {
     // 為登入自動導至此網址
-    //option.LoginPath = new PathString("/Home/index");
-    option.AccessDeniedPath = new PathString("/Home/index");
+    option.LoginPath = new PathString("/Home/oops");
+    option.AccessDeniedPath = new PathString("/Home/oops");
 }).AddGoogle(opt =>
 {
     opt.ClientId = builder.Configuration.GetSection("Auth:Google:ClientId").Value;

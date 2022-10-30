@@ -5,18 +5,18 @@ using Microsoft.AspNetCore.Authorization.Policy;
 
 namespace Alcoholic.Services
 {
-    public class CookieAuthService : CookieAuthenticationEvents
-    {
+    //public class CookieAuthService : CookieAuthenticationEvents
+    //{
 
-        public CookieAuthService()
-        {
+    //    public CookieAuthService()
+    //    {
 
-        }
-        public override Task ValidatePrincipal(CookieValidatePrincipalContext context)
-        {
-            var principal = context.Principal;
-            return base.ValidatePrincipal(context);
-        }
+    //    }
+    //    public override Task ValidatePrincipal(CookieValidatePrincipalContext context)
+    //    {
+    //        var principal = context.Principal;
+    //        return base.ValidatePrincipal(context);
+    //    }
 
-    }
+    //}
 }

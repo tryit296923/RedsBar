@@ -123,6 +123,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
 
                 model.Result = true;
                 model.Object = employee.NickName;
+                HttpContext.Response.Cookies.Append("nick", employee.NickName);
                 return Ok(model);
             }
             model.Result = false;
@@ -136,7 +137,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = "leader,moderater")]
+        [Authorize(Roles = "leader,mod")]
         [HttpPost]
         public IActionResult Register([FromBody] StaffRegisterModel staff)
         {
@@ -170,7 +171,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             return Ok(returnModel);
         }
 
-        [Authorize(Roles = "leader")]
+        [Authorize(Roles = "mod,leader")]
         [HttpPut]
         public IActionResult StaffGone([FromBody] string acc)
         {

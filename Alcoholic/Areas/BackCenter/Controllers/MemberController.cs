@@ -23,13 +23,11 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             this.db = db;
             this.hash = hash;
         }
-        [Authorize(Roles = "leader")]
+        [Authorize(Roles = "leader,mod,staff")]
         public IActionResult Index()
         {
             return View();
         }
-
-
 
         [Authorize(Roles = "leader,mod,staff")]
         public List<List<DataCenterModel>> GetAllMember()
@@ -105,7 +103,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             returnModel.Status = 0;
             return Ok(returnModel);
         }
-        [Authorize(Roles = "leader")]
+        [Authorize(Roles = "mod,leader")]
         [HttpPut]
         public IActionResult MemberGone([FromBody] string acc)
         {
@@ -115,7 +113,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             db.SaveChanges();
             return Ok(true);
         }
-        [Authorize(Roles = "leader")]
+        [Authorize(Roles = "mod,leader")]
         [HttpPut]
         public IActionResult MemberRemove([FromBody] string acc)
         {

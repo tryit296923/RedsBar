@@ -411,6 +411,10 @@
             border-radius: 0.375rem;
         }
 
+                .logincard button:hover{
+                    color: #842029;
+                }
+
         #empName{
             color:aliceblue;
             font-weight:bolder;
@@ -490,12 +494,12 @@
     </div>
 </body>
     <script>
-        const staff = new Vue({
+        const loggedstaff = new Vue({
             el:"#emp",
             data:{
                 acc:"",
                 pw:"",
-                name:""
+                name:"尚未登入"
             },
             methods:{
                 log:function(){
@@ -503,32 +507,49 @@
                         EmpAccount : this.acc,
                         EmpPassword : this.pw
                     }
-                    fetch("/backcenter/staff/login",{
-                        method:"post",
-                        headers:{"Content-Type":"application/json"},
-                        body: JSON.stringify(emp)
-                    }).then(e => e.json()).then( r => {
-                        if (r.result){
-                            Swal.fire({
-                                position: 'center',
-                                icon: 'success',
-                                title: '登入成功',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                            this.name = r.object;
-                        }else{
-                            Swal.fire({
-                                position: 'center',
-                                icon: 'error',
-                                title: '帳號密碼錯誤',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
-                        }
+                    setTimeout(()=>{
+                        fetch("/backcenter/staff/login",{
+                            method:"post",
+                            headers:{"Content-Type":"application/json"},
+                            body: JSON.stringify(emp)
+                        }).then(e => e.json()).then( r => {
+                            if (r.result){
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'success',
+                                    title: '登入成功',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                this.name = r.object;
+                            }else{
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'error',
+                                    title: '帳號密碼錯誤',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                            }
+                        })
+                    },1)
+                const Toast = Swal.mixin({
+                  toast: true,
+                    position: 'bottom-start',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  timerProgressBar: true,
+                })
+                    Toast.fire({
+                      icon: 'success',
+                      title: '登入中'
                     })
                 }
             },
+            mounted:function(){
+                let self = this;
+            fetch("/backcenter/back/getname").then(e => e.json()).then(r => self.name = r);
+            }
         })
     </script>
 </html>
