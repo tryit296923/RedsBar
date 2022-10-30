@@ -21,11 +21,7 @@ namespace Alcoholic.Controllers
             this.config = config;
             this.aesService = aesService;
             this.hashService = hashService;
-        }
-        public IActionResult Order()
-        {
-            return RedirectToAction("Cart", "Order");
-        }
+        }        
         [HttpPost]
         public bool AddToCart([FromBody] List<CartItem> cartItem)
         {
@@ -100,17 +96,6 @@ namespace Alcoholic.Controllers
                 return NotFound();
             }
 
-            //HttpContext.Session.GetString("CartItem");
-
-            //測試用
-            //List<CartItem> cartItems = new List<CartItem>()
-            //{
-            //    new CartItem { Id = 1,Qty = 2 },
-            //    new CartItem { Id = 2,Qty = 3 }
-            //};
-
-            //var x = projectContext.Discount.FirstOrDefault();
-
             var cartItems = JsonConvert.DeserializeObject<List<CartItem>>(sesStr);
 
             foreach (var cartItem in cartItems)
@@ -141,119 +126,21 @@ namespace Alcoholic.Controllers
         [HttpPost]
         public IActionResult Success(string orderId)
         {
-            var order = (from x in _db.Orders where x.OrderId == orderId select x).Select(x => new OrderViewModel
-            {
-                Desk = x.DeskNum,
-                Number = x.Number,
-                OrderId = x.OrderId,
-                OrderTime = x.OrderTime,
-            }).FirstOrDefault();
-            // 送出訂單後清除session
-            HttpContext.Session.SetString("Desk" ,"");
-            HttpContext.Session.SetString("Number", "");
-            HttpContext.Session.SetString("CartItem", "");
-            return View(order);
+            ViewBag.orderId = orderId;
+            return View();
         }
 
         public IActionResult Total()
         {
-            string sMemberId = HttpContext.Session.GetString("MemberID");
-
-            if (!Guid.TryParse(sMemberId, out var memberId))
-            {
-                throw new Exception("Guid is error");
-            }
-
-            var orderDetail = (from y in _db.Orders
-                               where y.Status == "N" && y.MemberId == memberId
-                               select y).Select(y => new OrderViewModel
-                               {
-                                   Desk = y.DeskNum,
-                                   Number = y.Number,
-                                   OrderId = y.OrderId,
-                                   OrderTime = y.OrderTime,
-                                   MemberName = y.Member.MemberName,
-                                   Status = y.Status,
-                                   ItemList = y.OrderDetails.Select(z => new CartItem
-                                   {
-                                       Id = z.ProductId,
-                                       Qty = z.Quantity,
-                                       ProductName = z.Product.ProductName,
-                                       OrderId = z.OrderId,
-                                       UnitPrice = z.UnitPrice,
-                                       DiscountAmount = z.Product.Discount.DiscountAmount,
-                                       Path = z.Product.Images.FirstOrDefault().Path,
-                                       Sequence = z.Sequence,
-                                   }).ToList(),
-                               }).FirstOrDefault();
-
-            return View(orderDetail);
-
-            //OrderTotalViewModel orderList = new OrderTotalViewModel();
-            //orderList.Orders = (from x in projectContext.Orders
-            //                    where x.Status == "N" && x.DeskNum == sDeskTotal
-            //                    select new OrderListViewModel
-            //                    {
-            //                        OrderId = x.OrderId,
-            //                        MemberId = x.MemberId,
-            //                        MemberName = x.Member.MemberName,
-            //                        Number = x.Number,
-            //                        OrderTime = x.OrderTime,
-            //                        Desk = x.DeskNum,
-            //                        Status = x.Status
-            //                    }).ToList();
-
-            //var temp = orderList.Orders.Select(x => x.OrderId).ToList();
-
-            ////var product = _db.Products.FirstOrDefault();
-            //orderList.Details = (from od in projectContext.OrderDetails
-            //                     where temp.Contains(od.OrderId)
-            //                     select new CartItem
-            //                     {
-            //                         OrderId = od.OrderId,
-            //                         ProductName = od.Product.ProductName,
-            //                         Path = od.Product.Images.FirstOrDefault().Path,
-            //                         Qty = od.Quantity,
-            //                         UnitPrice = od.UnitPrice,
-            //                         DiscountAmount = (float)od.Discount,
-            //                         Id = od.ProductId,
-            //                     }).ToList();
-
-            //return View(orderList);
-
+            return View();
         }
         public IActionResult OrderList()
         {
             return View();
         }
-        public IActionResult Check(int total, string orderId)
+        public IActionResult Check()
         {
-            var now = DateTime.Now.ToString("yyyy/MM/dd");
-            string sMemberID = HttpContext.Session.GetString("MemberID");
-
-            if (!Guid.TryParse(sMemberID, out var memberId))
-            {
-                throw new Exception("Guid is error");
-            }
-            var getOrder = _db.Orders.Where(x => x.MemberId == memberId && x.Status == "N").FirstOrDefault();
-            var cartTotalList = getOrder.OrderDetails.Select(x => new CartTotal { ProductName = x.Product.ProductName, Quantity = x.Quantity })
-                .GroupBy(x => x.ProductName, (k, v) => new CartTotal
-                {
-                    Quantity = v.Sum(x=>x.Quantity),
-                    ProductName = k,
-                }).ToList();
-
-            OrderCheckViewModel orderCheckViewModel = new OrderCheckViewModel
-            {
-                Desk = getOrder.DeskNum,
-                Number = getOrder.Number.ToString(),
-                OrderId = orderId,
-                OrderTime = now,
-                Total = total,
-                CartTotal = cartTotalList,
-            };
-
-            return View(orderCheckViewModel);
+            return View();
         }
         public IActionResult OnlinePayment(OnlinePaymentReturn onlinePaymentReturn)
         {
