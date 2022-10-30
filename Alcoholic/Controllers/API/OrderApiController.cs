@@ -82,6 +82,49 @@ namespace Alcoholic.Controllers.API
                     }
 
                     db_OrderId = orderId;
+                    //扣庫存
+                    foreach (var item in orderdata.ItemList)
+                    {
+                        
+                        var orderDetail = new OrderDetail
+                        {
+                            ProductId = item.Id,
+                            Quantity = item.Qty,
+                        };
+                        var prods = from prod in _db.ProductsMaterials
+                                    join material in _db.Materials
+                                    on prod.MaterialId equals material.MaterialId
+                                    where prod.ProductId == orderDetail.ProductId
+                                    select new Material
+                                    {
+                                        MaterialId = material.MaterialId,
+                                        Inventory = material.Inventory - (orderDetail.Quantity * prod.Consumption)
+                                    };
+                        foreach (var prod in prods)
+                        {
+                            _db.Update(prods);
+                        }
+                        //var consump = (from prod in prods
+                        //               where prod.
+                        //               select prod.Consumption * prodQty.Quantity);
+
+                        //var matsInv = (from mat in prods
+                        //            select mat.Material.Inventory);
+                        //var matsConsump = (from mat in _db.Materials
+                        //               where mat.MaterialId== prods.
+                        //foreach (var prod in prodMaterials)
+                        //{
+                        //    var materialInv = (from mat in _db.Materials
+                        //                       where mat.MaterialId == prod.MaterialId
+                        //                       select mat.Inventory).FirstOrDefault();
+                        //    var consump = prod.Consumption * prodQty.Quantity;
+                        //    materialInv = materialInv - consump;
+                        //    _db.Update(materialInv);
+                        //};
+
+
+                        //_db.Add();
+                    }
                 }
                 else
                 {
@@ -102,7 +145,22 @@ namespace Alcoholic.Controllers.API
                             Sequence = seq,
                         };
                         _db.Add(orderDetail);
+                        var prods = from prod in _db.ProductsMaterials
+                                    join material in _db.Materials
+                                    on prod.MaterialId equals material.MaterialId
+                                    where prod.ProductId == orderDetail.ProductId
+                                    select new Material
+                                    {
+                                        MaterialId = material.MaterialId,
+                                        Inventory = material.Inventory - (orderDetail.Quantity * prod.Consumption)
+                                    };
+                        foreach(var prod in prods)
+                        {
+                            _db.Update(prods);
+                        }
+                        
                     }
+                    
                 }
 
                 _db.SaveChanges();
