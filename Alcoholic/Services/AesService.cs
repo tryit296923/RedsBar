@@ -24,7 +24,6 @@ namespace Alcoholic.Services
             return BitConverter.ToString(encryptResult)?.Replace("-", "")?.ToLower();
             
         }
-
         //AES加密轉16進制
         //public string AesEncryptHex(string input, string key, string iv)
         //{
@@ -38,8 +37,6 @@ namespace Alcoholic.Services
         //    }
         //    return encryptHexResult;
         //}
-
-        // 去除PKCS7的Padding???
         public byte[] RemovePKCS7Padding(byte[] data)
         {
             int indexLength = data[data.Length - 1];
@@ -67,16 +64,13 @@ namespace Alcoholic.Services
 
             if (!string.IsNullOrEmpty(source))
             {
-                // 將 16 進制字串 轉為 byte[] 後
                 byte[] sourceBytes = ToByteArray(source);
 
                 if (sourceBytes != null)
                 {
-                    // 使用金鑰解密後，轉回 加密前 value
                     result = Encoding.UTF8.GetString(DecryptAES(sourceBytes, cryptoKey, cryptoIV)).Trim();
                 }
             }
-
             return result;
         }
 
@@ -95,7 +89,6 @@ namespace Alcoholic.Services
                 }
                 result = output;
             }
-
             return result;
         }
         public static byte[] DecryptAES(byte[] source, string cryptoKey, string cryptoIV)
@@ -106,8 +99,6 @@ namespace Alcoholic.Services
             using (var aes = System.Security.Cryptography.Aes.Create())
             {
                 aes.Mode = System.Security.Cryptography.CipherMode.CBC;
-                // 智付通無法直接用PaddingMode.PKCS7，會跳"填補無效，而且無法移除。"
-                // 所以改為PaddingMode.None並搭配RemovePKCS7Padding
                 aes.Padding = System.Security.Cryptography.PaddingMode.None;
                 aes.Key = dataKey;
                 aes.IV = dataIV;

@@ -321,7 +321,7 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="delieveBackdrop" data-bs-backdrop="delieve" data-bs-keyboard="false" tabindex="-1"
+    <div class="modal fade" id="delieveBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
          aria-labelledby="delieveBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -348,7 +348,8 @@
             return {
                 orderTime: '',
                 itemList: this.getProductSession(),
-                orderId: ''
+                orderId: '',
+                //cartInfo:{},
             }
         },
         methods: {
@@ -377,16 +378,9 @@
                 }
                 return Math.round(totalprice);
             },
-            //orderingSend: function () {
-            //    this.confirmSend();
-            //},
-            //seperate: function (obj, ary) {
-            //    //切分cookie
-            //    var key = obj.split('=')[0].trim();
-            //    var val = obj.split('=')[1];
-
-            //    ary[key] = val; //ary的key屬性值是val
-            //},
+            orderingSend: function () {
+                this.confirmSend();
+            },
             getProductSession() {
                 //var cartList = '@ViewBag.stest'
                 //console.log(cartList);
@@ -410,7 +404,7 @@
                     body: JSON.stringify(x),
                     headers: { 'content-type': 'application/json' },
                     method: 'POST'
-                    })
+                })
                     .then(result => result.json())
                     .then(result => {
                         console.log(result);
@@ -421,13 +415,18 @@
                             setTimeout(() => { this.$refs.orderingSend.click() }, 1)
                         }
                     });
-                //this.itemList.forEach(x => {
-                //    console.log(x);
-                //})
             },
-            backToMenu:function(){
+            backToMenu: function () {
                 this.$refs.backToMenu.click();
-            }
+            },
+            //getCartInfo:function(){
+            //    fetch("/api/Order/GetCartInfo")
+            //    .then(response => response.json())
+            //    .then(result => {this.cartInfo = result });
+            //}
         },
+        mounted: function () {
+            this.getCartInfo();
+        }
     })
 </script>

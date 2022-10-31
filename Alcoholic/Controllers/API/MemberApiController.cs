@@ -279,6 +279,15 @@ namespace Alcoholic.Controllers.API
                 phone = member.Phone,
                 discount = dis,
             };
+
+
+
+
+
+
+
+
+
             List<OrderDetailModel> orders = new();
             foreach(Order o in member.Orders)
             {

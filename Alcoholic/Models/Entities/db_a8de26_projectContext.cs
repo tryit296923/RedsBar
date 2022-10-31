@@ -260,6 +260,7 @@ namespace Alcoholic.Models.Entities
                     .IsRequired()
                     .HasColumnType("nvarchar(max)");
 
+                entity.Property(e => e.Average).HasComputedColumnSql("(([Frequency]+[Environment]+[Serve]+[Dish]+[Price]+[Overall])/6)",false);
                 //entity.HasOne(f => f.Order)
                 //    .WithOne(o => o.Feedback)
                 //    .HasForeignKey<Order>(f => f.OrderId)
