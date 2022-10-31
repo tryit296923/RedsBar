@@ -427,13 +427,14 @@
                         data.append("UnitPrice", this.createProductData.productPrice)
                         data.append("ProductDescription", this.createProductData.productDescription)
                         data.append("DiscountId", this.discountvalue.discountId)
-                        var img = this.$refs.myVueDropzone.getQueuedFiles();
-                        img.forEach(x => data.append("Images", x));
-                        var baseCons=[];
-                        for (i=0;i<baseConsumption.length;i++)
-                        if (this.baseConsumption.consumption>0){
-                            baseCons[i]=this.baseConsumption.consumption
-                        }
+                        var img = this.$refs.myVueDropzone.getQueuedFiles()
+                        img.forEach(x => data.append("Images", x))
+                        //var baseCons=[];
+                        //for (i=0;i<this.baseConsumption.length;i++)
+                        //if (this.baseConsumption.consumption>0){
+                        //    console.log(baseCons[i]=this.baseConsumption.consumption)
+                        //    baseCons[i]=this.baseConsumption.consumption
+                        //}
                         
                         fetch("/api/Products/CreateProduct", {
                             method: 'POST',

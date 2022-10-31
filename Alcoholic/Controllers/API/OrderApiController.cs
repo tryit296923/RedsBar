@@ -139,28 +139,21 @@ namespace Alcoholic.Controllers.API
                             Sequence = 1,
                         };
                         _db.Add(orderDetail);
-                    }
+                        //扣庫存
+                        var prods = (from p in _db.Products
+                                     join pm in _db.ProductsMaterials
+                                     on p.ProductId equals pm.ProductId
+                                     where pm.ProductId == item.Id
+                                     select pm.Material).ToList();
+                        foreach (Material material in prods)
+                        {
+                            var cosumption = (from pm in _db.ProductsMaterials where pm.MaterialId == material.MaterialId select pm.Consumption).FirstOrDefault();
+                            material.Inventory = material.Inventory - orderDetail.Quantity * cosumption;
+                            _db.Entry(material).State = EntityState.Modified;
 
-                    db_OrderId = orderId;
-                    //扣庫存
-                    foreach (var item in orderdata.ItemList)
-                    {
-                        
-                        var orderDetail = new OrderDetail
-                        {
-                            ProductId = item.Id,
-                            Quantity = item.Qty,
-                        };
-                        var prods = from prod in _db.ProductsMaterials
-                                    join material in _db.Materials
-                                    on prod.MaterialId equals material.MaterialId
-                                    where prod.ProductId == orderDetail.ProductId
-                                    select _db.Materials.ToList();
-                        foreach (var prod in prods)
-                        {
-                            _db.Update(prods);
                         }
                     }
+                    db_OrderId = orderId;
                 }
                 else
                 {
@@ -182,6 +175,7 @@ namespace Alcoholic.Controllers.API
                             Sequence = seq,
                         };
                         _db.Add(orderDetail);
+                        //扣庫存
                         var prods = (from p in _db.Products
                                       join pm in _db.ProductsMaterials
                                       on p.ProductId equals pm.ProductId
