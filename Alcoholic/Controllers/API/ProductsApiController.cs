@@ -58,6 +58,22 @@ namespace Alcoholic.Controllers.API
 
             return prod;
         }
+        [HttpGet]
+        public IEnumerable<Materials> GetMaterialCategory()
+        {
+            var mats = from x in _db.Category
+                       join y in _db.Materials
+                       on x.CategoryId equals y.CategoryId
+
+                       select new Materials
+                       {
+                           Id = x.CategoryId,
+                           MaterialName = y.Category.CategoryName + "-" + y.Brand,
+                           MaterialId = y.MaterialId,
+                       };
+            return mats.OrderBy(x=>x.MaterialName);
+        }
+        
         [HttpPost]
         public IActionResult CreateProduct([FromForm]CreateProductModel model)
         {
@@ -68,7 +84,11 @@ namespace Alcoholic.Controllers.API
                 var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
                 return Ok(returnModel);
             }
-            
+            else if (model.Cost <= 0 || model.UnitPrice<=0)
+            {
+                returnModel.Status = 1;
+                return Ok(returnModel);
+            }
             else
             {
                 returnModel.Status = 0;

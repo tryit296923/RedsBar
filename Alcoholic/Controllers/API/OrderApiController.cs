@@ -4,6 +4,8 @@ using Alcoholic.Models;
 using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
 using Alcoholic.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +17,13 @@ using Newtonsoft.Json;
 using NuGet.Protocol;
 using System.Data;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 
 namespace Alcoholic.Controllers.API
 {
-    [Authorize(Roles = "member,Guest")]
+    [Authorize(Roles = "member,Guest,leader,mod,staff")]
+
     [Route("api/Order/[action]")]
     [ApiController]
     public class OrderApiController : ControllerBase
@@ -42,56 +46,55 @@ namespace Alcoholic.Controllers.API
             this.hashService = hashService;
             this.hub = hub;
         }
-        //Cart.cshtml還沒改完:(
-        //public IActionResult GetCartInfo()
-        //{
-        //    //session取值是否可用
-        //    var sesStr = HttpContext.Session.GetString("CartItem");
-        //    Console.WriteLine(sesStr);
-        //    string sMemberID = HttpContext.Session.GetString("MemberID");
-        //    if (!Guid.TryParse(sMemberID, out var memberId))
-        //    {
-        //        //錯誤訊息待修改
-        //        throw new Exception("Guid is error");
-        //    }
-        //    string memberName = "";
-        //    if (sMemberID != null)
-        //    {
-        //        memberName = (from n in _db.Members
-        //                      where n.MemberID == memberId
-        //                      select n.MemberName).FirstOrDefault();
-        //    }
-        //    else
-        //    {
-        //        return NotFound();
-        //    }
+        public IActionResult GetCartInfo()
+        {
+            //session取值是否可用
+            var sesStr = HttpContext.Session.GetString("CartItem");
+            Console.WriteLine(sesStr);
+            string sMemberID = HttpContext.Session.GetString("MemberID");
+            if (!Guid.TryParse(sMemberID, out var memberId))
+            {
+                //錯誤訊息待修改
+                throw new Exception("Guid is error");
+            }
+            string memberName = "";
+            if (sMemberID != null)
+            {
+                memberName = (from n in _db.Members
+                              where n.MemberID == memberId
+                              select n.MemberName).FirstOrDefault();
+            }
+            else
+            {
+                return NotFound();
+            }
 
-        //    var cartItems = JsonConvert.DeserializeObject<List<CartItem>>(sesStr);
+            var cartItems = JsonConvert.DeserializeObject<List<CartItem>>(sesStr);
 
-        //    foreach (var cartItem in cartItems)
-        //    {
-        //        var product = _db.Products.Find(cartItem.Id);
-        //        cartItem.ProductName = product.ProductName;
-        //        cartItem.UnitPrice = product.UnitPrice;
-        //        cartItem.DiscountAmount = product.Discount.DiscountAmount;
-        //        cartItem.Path = product.Images.FirstOrDefault().Path;
-        //    }
-        //    //HttpContext.Session.SetString("123", "456");
-        //    //var s = HttpContext.Session.GetString("123");
-        //    HttpContext.Session.SetString("CartItem", JsonConvert.SerializeObject(cartItems));
+            foreach (var cartItem in cartItems)
+            {
+                var product = _db.Products.Find(cartItem.Id);
+                cartItem.ProductName = product.ProductName;
+                cartItem.UnitPrice = product.UnitPrice;
+                cartItem.DiscountAmount = product.Discount.DiscountAmount;
+                cartItem.Path = product.Images.FirstOrDefault().Path;
+            }
+            //HttpContext.Session.SetString("123", "456");
+            //var s = HttpContext.Session.GetString("123");
+            HttpContext.Session.SetString("CartItem", JsonConvert.SerializeObject(cartItems));
 
-        //    string stest = "";
-        //    //若??前面為空，則用""取代
-        //    stest = HttpContext.Session.GetString("CartItem") ?? "";
-        //    //var temp = JsonConvert.DeserializeObject<List<CartItem>>(stest);
-        //    var ovm_Cart = new OrderViewModel
-        //    {
-        //        MemberName = memberName,
-        //        ItemList = cartItems,
-        //    };
+            string stest = "";
+            //若??前面為空，則用""取代
+            stest = HttpContext.Session.GetString("CartItem") ?? "";
+            //var temp = JsonConvert.DeserializeObject<List<CartItem>>(stest);
+            var ovm_Cart = new OrderViewModel
+            {
+                MemberName = memberName,
+                ItemList = cartItems,
+            };
 
-        //    return Ok(ovm_Cart);
-        //}
+            return Ok(ovm_Cart);
+        }
         [HttpPost]
         public IActionResult Confirm([FromBody] OrderViewModel orderdata)
         {
@@ -101,7 +104,7 @@ namespace Alcoholic.Controllers.API
             var orderId = DateTime.Now.ToString("yyyyMMddHHmm") + sDesk;
             var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
             var db_OrderId = (from o in _db.Orders
-                              where o.MemberId == Guid.Parse(sMemberID) && o.Status == "N"
+                              where o.MemberId == Guid.Parse(sMemberID) && o.Status == "N" && o.DeskNum == sDesk
                               select o.OrderId).FirstOrDefault();
             try
             {
@@ -118,10 +121,8 @@ namespace Alcoholic.Controllers.API
                         OrderId = orderId,
                         MemberId = Guid.Parse(sMemberID),
                         Number = int.Parse(sNumber),
-                        Total = null,
                         OrderTime = Convert.ToDateTime(now),
                         DeskNum = sDesk,
-                        OrderTime = Convert.ToDateTime(now),
                         Feedback = null,
                         Total = total,
                     };
@@ -139,8 +140,20 @@ namespace Alcoholic.Controllers.API
                             Sequence = 1,
                         };
                         _db.Add(orderDetail);
-                    }
+                        //扣庫存
+                        var prods = (from p in _db.Products
+                                     join pm in _db.ProductsMaterials
+                                     on p.ProductId equals pm.ProductId
+                                     where pm.ProductId == item.Id
+                                     select pm.Material).ToList();
+                        foreach (Material material in prods)
+                        {
+                            var cosumption = (from pm in _db.ProductsMaterials where pm.MaterialId == material.MaterialId select pm.Consumption).FirstOrDefault();
+                            material.Inventory = material.Inventory - orderDetail.Quantity * cosumption;
+                            _db.Entry(material).State = EntityState.Modified;
 
+                        }
+                    }
                     db_OrderId = orderId;
                 }
                 else
@@ -163,7 +176,21 @@ namespace Alcoholic.Controllers.API
                             Sequence = seq,
                         };
                         _db.Add(orderDetail);
+                        //扣庫存
+                        var prods = (from p in _db.Products
+                                     join pm in _db.ProductsMaterials
+                                     on p.ProductId equals pm.ProductId
+                                     where pm.ProductId == item.Id
+                                     select pm.Material).ToList();
+                        foreach (Material material in prods)
+                        {
+                            var cosumption = (from pm in _db.ProductsMaterials where pm.MaterialId == material.MaterialId select pm.Consumption).FirstOrDefault();
+                            material.Inventory = material.Inventory - orderDetail.Quantity * cosumption;
+                            _db.Entry(material).State = EntityState.Modified;
+
+                        }
                     }
+
                 }
 
                 _db.SaveChanges();
@@ -178,23 +205,23 @@ namespace Alcoholic.Controllers.API
         [HttpPost]
         public IActionResult SendOrderSucceed([FromBody] SearchHistOrder orderInfo)
         {
-            var data = (from x in _db.Orders 
-                        where x.OrderId == orderInfo.OrderId select x).Select(x => new OrderViewModel
-            {
-                Desk = x.DeskNum,
-                Number = x.Number,
-                OrderId = x.OrderId,
-                OrderTime = x.OrderTime,
-            }).FirstOrDefault();
+            var data = (from x in _db.Orders
+                        where x.OrderId == orderInfo.OrderId
+                        select x).Select(x => new OrderViewModel
+                        {
+                            Desk = x.DeskNum,
+                            Number = x.Number,
+                            OrderId = x.OrderId,
+                            OrderTime = x.OrderTime,
+                        }).FirstOrDefault();
             // 送出訂單後清除session
-            HttpContext.Session.SetString("Desk", "");
-            HttpContext.Session.SetString("Number", "");
             HttpContext.Session.SetString("CartItem", "");
             return Ok(data);
         }
         public IActionResult GetTotalOrder()
         {
             string sMemberId = HttpContext.Session.GetString("MemberID");
+            string sDesk = HttpContext.Session.GetString("Desk");
 
             if (!Guid.TryParse(sMemberId, out var memberId))
             {
@@ -202,7 +229,7 @@ namespace Alcoholic.Controllers.API
             }
 
             var orderDetail = (from y in _db.Orders
-                               where y.Status == "N" && y.MemberId == memberId
+                               where y.Status == "N" && y.MemberId == memberId && y.DeskNum == sDesk
                                select y).Select(y => new OrderViewModel
                                {
                                    Desk = y.DeskNum,
@@ -229,13 +256,14 @@ namespace Alcoholic.Controllers.API
         {
             var now = DateTime.Now.ToString("yyyy/MM/dd");
             string sMemberID = HttpContext.Session.GetString("MemberID");
+            string sDesk = HttpContext.Session.GetString("Desk");
 
             if (!Guid.TryParse(sMemberID, out var memberId))
             {
                 throw new Exception("Guid is error");
             }
             // TODO: 處理訪客ID相同的狀況??orderTime/desk
-            var getOrder = _db.Orders.Where(x => x.MemberId == memberId && x.Status == "N").FirstOrDefault();
+            var getOrder = _db.Orders.Where(x => x.MemberId == memberId && x.Status == "N" && x.DeskNum == sDesk).FirstOrDefault();
             var cartTotalList = getOrder.OrderDetails.Select(x => new CartTotal { ProductName = x.Product.ProductName, Quantity = x.Quantity })
                 .GroupBy(x => x.ProductName, (k, v) => new CartTotal
                 {
@@ -271,101 +299,7 @@ namespace Alcoholic.Controllers.API
             _db.SaveChanges();
             return Ok();
         }
-
-        // 付款前接收資訊
-        [HttpPost]
-        public GateWayInfoModel Payment([FromBody] PaymentModel paymentInfo)
-        {
-            var details = _db.OrderDetails.Where(x => x.OrderId == paymentInfo.OrderId);
-            var productName = details.Include(x => x.Product).Select(x => x.Product.ProductName);
-            var totalPrice = (from p in _db.Orders where p.OrderId == paymentInfo.OrderId select p.Total).FirstOrDefault();
-            //var price = details.Select(x => (x.UnitPrice * x.Discount) * x.Quantity).Sum();
-            TradeInfo tradeInfo = new TradeInfo
-            {
-                MerchantID = config["Payment:MerchantID"],
-                RespondType = "JSON",
-                Version = "2.0",
-                TimeStamp = DateTime.Now.Ticks.ToString(),
-                MerchantOrderNo = paymentInfo.OrderId,
-                Amt = totalPrice.ToString(),
-                ItemDesc = String.Join(",", productName),
-                AndroidPay = paymentInfo.PayType.ToLower() == "googlepay" ? "1" : null,
-                Credit = paymentInfo.PayType.ToLower() == "credit" ? "1" : null,
-                LinePay = paymentInfo.PayType.ToLower() == "linepay" ? "1" : null,
-                ReturnURL = "https://ebb4-61-228-177-1.jp.ngrok.io/api/Order/GetPaymentReturnData",
-            };
-
-            var hashKey = config["Payment:HashKey"];
-            var hashIV = config["Payment:HashIV"];
-            var aesString = aesService.AesEncrypt(Encoding.UTF8.GetBytes(tradeInfo.ToQueryString()), hashKey, hashIV);
-            var shaString = hashService.GetHashHex($"HashKey={hashKey}&{aesString}&HashIV={hashIV}").ToUpper();
-
-            return new GateWayInfoModel()
-            {
-                MerchantID = config["Payment:MerchantID"],
-                TradeInfo = aesString,
-                TradeSha = shaString,
-                Version = "2.0"
-            };
-        }
-        // 付款後ReturnUrl，接收回傳資料
-        [HttpPost]
-        public IActionResult GetPaymentReturnData([FromForm] OnlinePaymentReturn returnData)
-        {
-            // 測試用參數
-            //var aaa = "{\"Status\":\"SUCCESS\",\"Message\":\"\\u6388\\u6b0a\\u6210\\u529f\",\"Result\":{\"MerchantID\":\"MS144603124\",\"Amt\":48800,\"TradeNo\":\"22102721422172843\",\"MerchantOrderNo\":\"20221027070512\",\"RespondType\":\"JSON\",\"IP\":\"114.137.244.87\",\"EscrowBank\":\"HNCB\",\"ItemDesc\":\"\\u611b\\u723e\\u862d\\u5496\\u5561 Irish Coffee,\\u87ba\\u7d72\\u8d77\\u5b50 Screwdriver,\\u53e4\\u5178\\u96de\\u5c3e\\u9152 Old Fashioned,\\u8840\\u8165\\u746a\\u9e97 Bloody Mary,\\u7434\\u8cbb\\u53f8 Gin Fizz,\\u67ef\\u5922\\u6ce2\\u4e39 Cosmopolitan,\\u4e7e\\u99ac\\u4e01\\u5c3c Dry Martini,\\u9577\\u5cf6\\u51b0\\u8336 Long Island Iced Tea,\\u746a\\u683c\\u8389\\u7279 Margarita,\\u83ab\\u897f\\u591a Mojito,\\u5496\\u5561\\u5c3c\\u683c\\u7f85\\u5c3c Coffee Negroni,\\u840a\\u59c6\\u4f0f\\u7279\\u52a0 Vodka Lime\",\"PaymentType\":\"CREDIT\",\"PayTime\":\"2022-10-27 21:42:21\",\"RespondCode\":\"00\",\"Auth\":\"394437\",\"Card6No\":\"400022\",\"Card4No\":\"1111\",\"Exp\":\"2911\",\"TokenUseStatus\":0,\"InstFirst\":0,\"InstEach\":0,\"Inst\":0,\"ECI\":\"\",\"PaymentMethod\":\"CREDIT\",\"AuthBank\":\"KGI\"}}";
-            //PaymentResult obj_PaymentResult = JsonConvert.DeserializeObject<PaymentResult>(aaa);
-            //return;
-
-            // var aaa = HttpContext.Request.Form; 檢查參數是否成功回傳
-            string hashKey = config["Payment:HashKey"];
-            string hashIV = config["Payment:HashIV"];
-
-            string r_Status = returnData.Status;
-            string r_MerchantID = returnData.MerchantID;
-            string r_TradeInfo = returnData.TradeInfo;
-            string r_TradeSha = returnData.TradeSha;
-            string r_Version = returnData.Version;
-
-            // AES解密
-            string decryptTradeInfo = aesService.DecryptAESHex(r_TradeInfo, hashKey, hashIV);
-            PaymentResult obj_PaymentResult = JsonConvert.DeserializeObject<PaymentResult>(decryptTradeInfo);
-
-            var orderId = obj_PaymentResult.Result.MerchantOrderNo;
-            var orderTotal = obj_PaymentResult.Result.Amt;
-
-            // 付款成功與否 
-            if (r_Status == "SUCCESS")
-            {
-                var order = _db.Orders.Where(x => x.OrderId == orderId).FirstOrDefault();
-                if (order != null)
-                {
-                    order.Status = "Y";
-                    order.Total = int.Parse(orderTotal);
-                    var desk = _db.DeskInfo.Where(x => x.Desk == order.DeskNum).FirstOrDefault();
-                    if (desk != null)
-                    {
-                        desk.StartTime = null;
-                        desk.Occupied = 0;
-                    }
-                    _db.SaveChanges();
-                }
-            }
-            else
-            {
-
-            }
-            OnlinePaymentReturn onlinePaymentReturn = new OnlinePaymentReturn
-            {
-                MerchantID = r_MerchantID,
-                Status = r_Status,
-                TradeInfo = r_TradeInfo,
-                TradeSha = r_TradeSha,
-                Version = r_Version,
-            };
-            return RedirectToAction("OnlinePayment", "Order", onlinePaymentReturn);
-        }
-
+        
         [HttpPost]
         public IActionResult FeedbackMember([FromBody] FeedbackIdModel data)
         {
@@ -473,6 +407,8 @@ namespace Alcoholic.Controllers.API
                     desk.Occupied = 0;
                 }
                 _db.SaveChanges();
+                HttpContext.Session.SetString("Desk", "");
+                HttpContext.Session.SetString("Number", "");
                 hub.Clients.All.SendAsync("OK", desk.Desk);
                 return Ok(true);
             }
@@ -484,12 +420,14 @@ namespace Alcoholic.Controllers.API
         public IActionResult GetOrder()
         {
             string sMemberID = HttpContext.Session.GetString("MemberID");
+            string sDesk = HttpContext.Session.GetString("Desk");
+
             if (!Guid.TryParse(sMemberID, out var memberId))
             {
                 throw new Exception("Guid is error");
             }
             var fd_checkOrder = (from o in _db.Orders
-                                 where o.MemberId == memberId && o.Status == "N"
+                                 where o.MemberId == memberId && o.Status == "N" && o.DeskNum == sDesk
                                  select o).FirstOrDefault();
             FrontDeskCheckPage frontDeskCheckPage = new FrontDeskCheckPage
             {
@@ -510,7 +448,7 @@ namespace Alcoholic.Controllers.API
         public IActionResult ShowDetailList([FromBody] SearchHistOrder histOrderDetail)
         {
             var temp = Request;
-            var h_OrderDetail = (from h_OD in _db.OrderDetails 
+            var h_OrderDetail = (from h_OD in _db.OrderDetails
                                  where h_OD.OrderId == histOrderDetail.OrderId
                                  select new CartItem
                                  {

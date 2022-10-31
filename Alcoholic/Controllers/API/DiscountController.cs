@@ -45,7 +45,7 @@ namespace Alcoholic.Controllers.API
                 returnModel.Status = 1;
                 return Ok(returnModel);
             }
-            else if (model.DiscountAmount == 0)
+            else if (model.DiscountAmount <= 0)
             {
                 returnModel.Status = 2;
                 return Ok(returnModel);
