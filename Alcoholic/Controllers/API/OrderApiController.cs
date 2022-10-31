@@ -42,56 +42,55 @@ namespace Alcoholic.Controllers.API
             this.hashService = hashService;
             this.hub = hub;
         }
-        //Cart.cshtml還沒改完:(
-        //public IActionResult GetCartInfo()
-        //{
-        //    //session取值是否可用
-        //    var sesStr = HttpContext.Session.GetString("CartItem");
-        //    Console.WriteLine(sesStr);
-        //    string sMemberID = HttpContext.Session.GetString("MemberID");
-        //    if (!Guid.TryParse(sMemberID, out var memberId))
-        //    {
-        //        //錯誤訊息待修改
-        //        throw new Exception("Guid is error");
-        //    }
-        //    string memberName = "";
-        //    if (sMemberID != null)
-        //    {
-        //        memberName = (from n in _db.Members
-        //                      where n.MemberID == memberId
-        //                      select n.MemberName).FirstOrDefault();
-        //    }
-        //    else
-        //    {
-        //        return NotFound();
-        //    }
+        public IActionResult GetCartInfo()
+        {
+            //session取值是否可用
+            var sesStr = HttpContext.Session.GetString("CartItem");
+            Console.WriteLine(sesStr);
+            string sMemberID = HttpContext.Session.GetString("MemberID");
+            if (!Guid.TryParse(sMemberID, out var memberId))
+            {
+                //錯誤訊息待修改
+                throw new Exception("Guid is error");
+            }
+            string memberName = "";
+            if (sMemberID != null)
+            {
+                memberName = (from n in _db.Members
+                              where n.MemberID == memberId
+                              select n.MemberName).FirstOrDefault();
+            }
+            else
+            {
+                return NotFound();
+            }
 
-        //    var cartItems = JsonConvert.DeserializeObject<List<CartItem>>(sesStr);
+            var cartItems = JsonConvert.DeserializeObject<List<CartItem>>(sesStr);
 
-        //    foreach (var cartItem in cartItems)
-        //    {
-        //        var product = _db.Products.Find(cartItem.Id);
-        //        cartItem.ProductName = product.ProductName;
-        //        cartItem.UnitPrice = product.UnitPrice;
-        //        cartItem.DiscountAmount = product.Discount.DiscountAmount;
-        //        cartItem.Path = product.Images.FirstOrDefault().Path;
-        //    }
-        //    //HttpContext.Session.SetString("123", "456");
-        //    //var s = HttpContext.Session.GetString("123");
-        //    HttpContext.Session.SetString("CartItem", JsonConvert.SerializeObject(cartItems));
+            foreach (var cartItem in cartItems)
+            {
+                var product = _db.Products.Find(cartItem.Id);
+                cartItem.ProductName = product.ProductName;
+                cartItem.UnitPrice = product.UnitPrice;
+                cartItem.DiscountAmount = product.Discount.DiscountAmount;
+                cartItem.Path = product.Images.FirstOrDefault().Path;
+            }
+            //HttpContext.Session.SetString("123", "456");
+            //var s = HttpContext.Session.GetString("123");
+            HttpContext.Session.SetString("CartItem", JsonConvert.SerializeObject(cartItems));
 
-        //    string stest = "";
-        //    //若??前面為空，則用""取代
-        //    stest = HttpContext.Session.GetString("CartItem") ?? "";
-        //    //var temp = JsonConvert.DeserializeObject<List<CartItem>>(stest);
-        //    var ovm_Cart = new OrderViewModel
-        //    {
-        //        MemberName = memberName,
-        //        ItemList = cartItems,
-        //    };
+            string stest = "";
+            //若??前面為空，則用""取代
+            stest = HttpContext.Session.GetString("CartItem") ?? "";
+            //var temp = JsonConvert.DeserializeObject<List<CartItem>>(stest);
+            var ovm_Cart = new OrderViewModel
+            {
+                MemberName = memberName,
+                ItemList = cartItems,
+            };
 
-        //    return Ok(ovm_Cart);
-        //}
+            return Ok(ovm_Cart);
+        }
         [HttpPost]
         public IActionResult Confirm([FromBody] OrderViewModel orderdata)
         {
@@ -101,7 +100,7 @@ namespace Alcoholic.Controllers.API
             var orderId = DateTime.Now.ToString("yyyyMMddHHmm") + sDesk;
             var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
             var db_OrderId = (from o in _db.Orders
-                              where o.MemberId == Guid.Parse(sMemberID) && o.Status == "N"
+                              where o.MemberId == Guid.Parse(sMemberID) && o.Status == "N" && o.DeskNum == sDesk
                               select o.OrderId).FirstOrDefault();
             try
             {
@@ -118,10 +117,8 @@ namespace Alcoholic.Controllers.API
                         OrderId = orderId,
                         MemberId = Guid.Parse(sMemberID),
                         Number = int.Parse(sNumber),
-                        Total = null,
                         OrderTime = Convert.ToDateTime(now),
                         DeskNum = sDesk,
-                        OrderTime = Convert.ToDateTime(now),
                         Feedback = null,
                         Total = total,
                     };
@@ -187,14 +184,13 @@ namespace Alcoholic.Controllers.API
                 OrderTime = x.OrderTime,
             }).FirstOrDefault();
             // 送出訂單後清除session
-            HttpContext.Session.SetString("Desk", "");
-            HttpContext.Session.SetString("Number", "");
             HttpContext.Session.SetString("CartItem", "");
             return Ok(data);
         }
         public IActionResult GetTotalOrder()
         {
             string sMemberId = HttpContext.Session.GetString("MemberID");
+            string sDesk = HttpContext.Session.GetString("Desk");
 
             if (!Guid.TryParse(sMemberId, out var memberId))
             {
@@ -202,7 +198,7 @@ namespace Alcoholic.Controllers.API
             }
 
             var orderDetail = (from y in _db.Orders
-                               where y.Status == "N" && y.MemberId == memberId
+                               where y.Status == "N" && y.MemberId == memberId && y.DeskNum == sDesk
                                select y).Select(y => new OrderViewModel
                                {
                                    Desk = y.DeskNum,
@@ -229,13 +225,14 @@ namespace Alcoholic.Controllers.API
         {
             var now = DateTime.Now.ToString("yyyy/MM/dd");
             string sMemberID = HttpContext.Session.GetString("MemberID");
+            string sDesk = HttpContext.Session.GetString("Desk");
 
             if (!Guid.TryParse(sMemberID, out var memberId))
             {
                 throw new Exception("Guid is error");
             }
             // TODO: 處理訪客ID相同的狀況??orderTime/desk
-            var getOrder = _db.Orders.Where(x => x.MemberId == memberId && x.Status == "N").FirstOrDefault();
+            var getOrder = _db.Orders.Where(x => x.MemberId == memberId && x.Status == "N" && x.DeskNum == sDesk).FirstOrDefault();
             var cartTotalList = getOrder.OrderDetails.Select(x => new CartTotal { ProductName = x.Product.ProductName, Quantity = x.Quantity })
                 .GroupBy(x => x.ProductName, (k, v) => new CartTotal
                 {
@@ -292,7 +289,7 @@ namespace Alcoholic.Controllers.API
                 AndroidPay = paymentInfo.PayType.ToLower() == "googlepay" ? "1" : null,
                 Credit = paymentInfo.PayType.ToLower() == "credit" ? "1" : null,
                 LinePay = paymentInfo.PayType.ToLower() == "linepay" ? "1" : null,
-                ReturnURL = "https://ebb4-61-228-177-1.jp.ngrok.io/api/Order/GetPaymentReturnData",
+                ReturnURL = "https://59a0-61-228-171-213.jp.ngrok.io/api/Order/GetPaymentReturnData",
             };
 
             var hashKey = config["Payment:HashKey"];
@@ -484,12 +481,14 @@ namespace Alcoholic.Controllers.API
         public IActionResult GetOrder()
         {
             string sMemberID = HttpContext.Session.GetString("MemberID");
+            string sDesk = HttpContext.Session.GetString("Desk");
+
             if (!Guid.TryParse(sMemberID, out var memberId))
             {
                 throw new Exception("Guid is error");
             }
             var fd_checkOrder = (from o in _db.Orders
-                                 where o.MemberId == memberId && o.Status == "N"
+                                 where o.MemberId == memberId && o.Status == "N" && o.DeskNum == sDesk
                                  select o).FirstOrDefault();
             FrontDeskCheckPage frontDeskCheckPage = new FrontDeskCheckPage
             {
