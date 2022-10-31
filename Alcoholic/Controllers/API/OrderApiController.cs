@@ -118,10 +118,10 @@ namespace Alcoholic.Controllers.API
                         OrderId = orderId,
                         MemberId = Guid.Parse(sMemberID),
                         Number = int.Parse(sNumber),
-                        Total = null,
+                        //Total = null,
                         OrderTime = Convert.ToDateTime(now),
                         DeskNum = sDesk,
-                        OrderTime = Convert.ToDateTime(now),
+                        //OrderTime = Convert.ToDateTime(now),
                         Feedback = null,
                         Total = total,
                     };
