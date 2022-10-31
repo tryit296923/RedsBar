@@ -4,6 +4,7 @@ using Alcoholic.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alcoholic.Migrations
 {
     [DbContext(typeof(db_a8de26_projectContext))]
-    partial class db_a8de26_projectContextModelSnapshot : ModelSnapshot
+    [Migration("20221031064808_newColumnInMemberJoin")]
+    partial class newColumnInMemberJoin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,7 +121,7 @@ namespace Alcoholic.Migrations
                     b.Property<DateTime>("Join")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 10, 31, 17, 43, 33, 241, DateTimeKind.Local).AddTicks(4771));
+                        .HasDefaultValue(new DateTime(2022, 10, 31, 14, 48, 8, 23, DateTimeKind.Local).AddTicks(6750));
 
                     b.Property<DateTime?>("Leave")
                         .HasColumnType("datetime2");
@@ -161,10 +163,10 @@ namespace Alcoholic.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("Average")
+                    b.Property<int?>("Average")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("decimal(38,17)")
-                        .HasComputedColumnSql("CAST(([Frequency]+[Environment]+[Serve]+[Dish]+[Price]+[Overall])/CONVERT(decimal(4,2), 6) AS decimal(3,1))", false);
+                        .HasColumnType("int")
+                        .HasComputedColumnSql("(([Frequency]+[Environment]+[Serve]+[Dish]+[Price]+[Overall])/6)", false);
 
                     b.Property<int?>("Dish")
                         .HasColumnType("int");

@@ -5,7 +5,7 @@
         public int Total { get; set; }
         public int GuestNum { get; set; }
         public int MemberNum { get; set; }
-        public int Rate { get; set; }
+        public double Rate { get; set; }
         public List<HotSales> HotSales { get; set; }
     }
     public class HotSales
@@ -19,7 +19,7 @@
         public int STotal { get; set; }
         public int SGuestNum { get; set; }
         public int SMemberNum { get; set; }
-        public int SRate { get; set; }
+        public double SRate { get; set; }
     }
 
 }

@@ -14,6 +14,7 @@
         public int? Age { get; set; }
         public Guid? EmailID { get; set; }
         public string? Qualified { get; set; }
+        public DateTime Join { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }
 }

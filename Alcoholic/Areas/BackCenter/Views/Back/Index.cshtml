@@ -17,18 +17,18 @@
     <div class="data py-4">
         <div class="spacebetween row-cols-2 mb-3">
             <h3>累計數據</h3>
-            <select class="form-select" name="mark" id="mark">
-                <option value="days">近七日</option>
-                <option value="month">近一個月</option>
-                <option value="season">近一季</option>
-                <option value="year">近一年</option>
+            <select class="form-select" name="mark" id="mark" v-model="diff" v-on:change="selectDiff">
+                <option value="w">近七日</option>
+                <option value="m">近一個月</option>
+                <option value="s">近一季</option>
+                <option value="y">近一年</option>
             </select>
         </div>
         <div class="dataarea row-cols-4">
-            <div class="datadetail p-4"><h2>100</h2><h5>營業額</h5></div>
-            <div class="datadetail p-4"><h2>10</h2><h5>來客量</h5></div>
-            <div class="datadetail p-4"><h2>1</h2><h5>會員數</h5></div>
-            <div class="datadetail p-4"><h2>5/5</h2><h5>評價</h5></div>
+            <div class="datadetail p-4"><h2>{{select.sTotal}}</h2><h5>營業額</h5></div>
+            <div class="datadetail p-4"><h2>{{select.sGuestNum}}</h2><h5>來客量</h5></div>
+            <div class="datadetail p-4"><h2>{{select.sMemberNum}}</h2><h5>會員數</h5></div>
+            <div class="datadetail p-4"><h2>{{select.sRate}}/5</h2><h5>評價</h5></div>
         </div>
     </div>
     <div class="data py-4">
@@ -60,13 +60,22 @@
         el: "#dataMain",
         data:{
             main:[],
+            select:{},
+            diff:"w",
         },
         methods:{
-
+            selectDiff: function () {
+                fetch("/backcenter/back/SelectedData",{
+                    method:"post",
+                    headers:{"Content-Type":"application/json"},
+                    body: JSON.stringify(this.diff)
+                }).then(e => e.json()).then(r => this.select = r)        
+            }
         },
         mounted:function(){
             let self = this;
             fetch("/backcenter/back/HomePageData").then(e => e.json()).then(r => self.main = r);
+            this.selectDiff();
         }
     })
 </script>

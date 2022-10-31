@@ -4,6 +4,7 @@ using Alcoholic.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alcoholic.Migrations
 {
     [DbContext(typeof(db_a8de26_projectContext))]
-    partial class db_a8de26_projectContextModelSnapshot : ModelSnapshot
+    [Migration("20221031074504_changeFeedbackAverageTypeToDecimalstep2")]
+    partial class changeFeedbackAverageTypeToDecimalstep2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,7 +121,7 @@ namespace Alcoholic.Migrations
                     b.Property<DateTime>("Join")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 10, 31, 17, 43, 33, 241, DateTimeKind.Local).AddTicks(4771));
+                        .HasDefaultValue(new DateTime(2022, 10, 31, 15, 45, 4, 53, DateTimeKind.Local).AddTicks(1150));
 
                     b.Property<DateTime?>("Leave")
                         .HasColumnType("datetime2");
@@ -164,7 +166,7 @@ namespace Alcoholic.Migrations
                     b.Property<decimal?>("Average")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("decimal(38,17)")
-                        .HasComputedColumnSql("CAST(([Frequency]+[Environment]+[Serve]+[Dish]+[Price]+[Overall])/CONVERT(decimal(4,2), 6) AS decimal(3,1))", false);
+                        .HasComputedColumnSql("(([Frequency]+[Environment]+[Serve]+[Dish]+[Price]+[Overall])/6)", false);
 
                     b.Property<int?>("Dish")
                         .HasColumnType("int");
