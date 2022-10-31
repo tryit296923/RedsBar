@@ -58,25 +58,22 @@ namespace Alcoholic.Controllers.API
 
             return prod;
         }
-        //public IEnumerable<ProductMaterialModel> GetProductMaterial()
-        //{
-        //    var mat = from pro in _db.ProductsMaterials
-        //               join path in _db.ProductImage
-        //               on pro.ProductId equals path.ProductId
-        //               select new BackProdModel
-        //               {
-        //                   Id = pro.ProductId,
-        //                   Name = pro.ProductName,
-        //                   Description = pro.ProductDescription,
-        //                   Price = pro.UnitPrice,
-        //                   Path = path.Path,
-        //                   Cost = pro.Cost,
-        //                   DiscountId = pro.Discount.DiscountId,
-        //                   DiscountName = pro.Discount.DiscountName,
-        //               };
+        [HttpGet]
+        public IEnumerable<Materials> GetMaterialCategory()
+        {
+            var mats = from x in _db.Category
+                       join y in _db.Materials
+                       on x.CategoryId equals y.CategoryId
 
-        //    return prod;
-        //}
+                       select new Materials
+                       {
+                           Id = x.CategoryId,
+                           MaterialName = y.Category.CategoryName + "-" + y.Brand,
+                           MaterialId = y.MaterialId,
+                       };
+            return mats.OrderBy(x=>x.MaterialName);
+        }
+        
         [HttpPost]
         public IActionResult CreateProduct([FromForm]CreateProductModel model)
         {

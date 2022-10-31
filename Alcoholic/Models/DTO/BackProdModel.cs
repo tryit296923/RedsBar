@@ -24,5 +24,17 @@ namespace Alcoholic.Models.DTO
         [Required]
         public int Consumption { get; set; }
     }
+    public class Materials
+    {
+        public int Id { get; set; }
+        [Required]
+        public int ProductId { get; set; }
+        public int MaterialId { get; set; }
+        [Required]
+        public int CategoryId { get; set; }
+        [Required]
+        public int Consumption { get; set; }
+        public string MaterialName { get; set; }
+    }
 }
 
