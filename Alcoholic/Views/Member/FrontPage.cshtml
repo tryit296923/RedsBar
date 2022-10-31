@@ -28,6 +28,9 @@
         select {
             border-radius: 0.375rem
         }
+        label{
+            font-weight:bolder;
+        }
 
         .message {
             color: #fff;
@@ -111,6 +114,15 @@
                 transition: ease;
                 transition-duration: 0.3s;
             }
+        .valid{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+        .valid input{
+            width:100px;
+            margin: 0 10px;
+        }
     </style>
 </head>
 <body>
@@ -125,8 +137,8 @@
     <div class="selectform" id="form">
         <form class="inputform">
             <div class="desk">
-                <label>桌號: </label>
-                <select name="deskType" id="deskType" v-on:change="checkNumber();checkRequire();" v-model="deskType" required>
+                <label>座位: </label>
+                <select name="deskType" id="deskType" v-model="deskType" required>
                     <option value=0 disabled="true" selected>坐在哪裡呢...?</option>
                     <option value=1>吧檯</option>
                     <option value=2>兩人座</option>
@@ -136,7 +148,7 @@
             </div>
             <div class="deskNum">
                 <label>桌號: </label>
-                <select name="deskNum" id="deskNum" v-on:change="checkNumber();checkRequire();" v-model="deskNum" required>
+                <select name="deskNum" id="deskNum" v-model="deskNum" required>
                     <option value=0 disabled="true" selected>請選擇桌號...</option>
                     <option value=1>1</option>
                     <option value=2>2</option>
@@ -150,7 +162,7 @@
             </div>
             <div class="people">
                 <label>人數: </label>
-                <select v-model="number" v-on:change="checkRequire" required>
+                <select v-model="number" required>
                     <option value="0" disabled="true" selected>今日幾位呢...</option>
                     <option value="1" v-bind:disabled=one>我一個人</option>
                     <option value="2" v-bind:disabled=two>兩位</option>
@@ -158,9 +170,12 @@
                     <option value="4" v-bind:disabled=ftr>四位</option>
                 </select>
             </div>
+            <div class="valid">
+                <label>請輸入驗證碼:</label><input type="text" v-model = "valid"/><img src="/api/Validation/Generate" />
+            </div>
             <div class="idenchoice">
-                <button v-bind:disabled=btn v-bind:style="disable" v-on:click.prevent="StartOrderGuest" class="cust">訪客點餐</button>
-                <button v-bind:disabled=btn v-bind:style="disable" v-on:click.prevent="StartOrder" class="member">會員點餐</button>
+                <button v-bind:disabled=btn v-bind:style="disable" v-on:click.prevent="StartOrderGuest();" class="cust">訪客點餐</button>
+                <button v-bind:disabled=btn v-bind:style="disable" v-on:click.prevent="StartOrder();" class="member">會員點餐</button>
             </div>
         </form>
     </div>
@@ -178,7 +193,42 @@
                 number: "0",
                 btn: false,
                 disable: "opacity:0.5",
-                multi: true
+                multi: true,
+                valid:"",
+                empty: [false, false, false],
+                valided:false,
+            },
+            watch:{
+                deskType:function(){
+                    this.checkRequire();
+                    this.checkNumber();
+                    if(this.deskType != 0){
+                        this.empty[0] = true;
+                    } else { this.empty[0] = false }
+                },
+                deskNum: function () {
+                    this.checkNumber();
+                    this.checkRequire();
+                    if (this.deskNum != 0) {
+                        this.empty[1] = true;
+                    } else { this.empty[0] = false }
+                },
+                number: function () {
+                    this.checkRequire();
+                    if (this.number != 0) {
+                        this.empty[2] = true;
+                    } else { this.empty[0] = false }
+                },
+                valid:function(){
+                    let jbody = this.valid;
+                    fetch("/api/Validation/Validate", {
+                        method: "post",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(jbody)
+                    }).then(e => e.json()).then(r => {
+                        if (r) { this.valided = true } else { this.valided = false }
+                    })
+                }
             },
             methods: {
                 checkNumber: function () {
@@ -204,7 +254,28 @@
                         this.disable = "opacity:1";
                     }
                 },
+                fail:function(str){
+                    Swal.fire({
+                        allowOutsideClick: 'false',
+                        title: str,
+                        timer: 500,
+                        color: '#FFF',
+                        icon: "warning",
+                        iconColor: '#D8CDB9',
+                        background: '#333',
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                    });
+                },
                 StartOrder: function () {
+                    if (this.empty.includes(false)) {
+                        this.fail('尚有欄位未選擇')
+                        return;
+                    }
+                    if (this.valided) {
+                        this.fail('驗證碼錯誤!')
+                        return;
+                    }
                     var desk = this.deskType + this.deskNum;
                     let fetchbody = {
                         DeskType: this.deskType,
@@ -220,22 +291,17 @@
                         }).then(data => window.location.assign("/member/LoginRegister")
                         ).catch(err => console.log(err))
                     },50)
-                    Swal.fire({
-                        allowOutsideClick: 'false',
-                        title: '您好 歡迎光臨Reds\'Bar!',
-                        text: '請稍待片刻 將立即帶您前往登入頁面',
-                        background: '#333',
-                        color: '#FFF',
-                        iconColor: '#D8CDB9',
-                        confirmButtonColor: '#721B29',
-                        timer: 5000,
-                        timerProgressBar: true,
-                        didOpen: () => {
-                            Swal.showLoading()
-                        },
-                    });
+                    this.welcome();
                 },
                 StartOrderGuest: function() {
+                    if (this.empty.includes(false)) {
+                        this.fail('尚有欄位未選擇')
+                        return;
+                    }
+                    if (this.valided) {
+                        this.fail('驗證碼錯誤!')
+                        return;
+                    }
                     var desk = this.deskType + this.deskNum;
                     let fetchbody = {
                         DeskType: this.deskType,
@@ -251,6 +317,9 @@
                         }).then(data => window.location.assign("/api/member/GuestLogin")
                         ).catch(err => console.log(err))
                     },50)
+                    this.welcome();
+                },
+                welcome:function(){
                     Swal.fire({
                         allowOutsideClick: 'false',
                         title: '您好 歡迎光臨Reds\'Bar!',
@@ -265,8 +334,7 @@
                             Swal.showLoading()
                         },
                     });
-
-                }
+                },
             }})
     </script>
 </body>
