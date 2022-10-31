@@ -130,7 +130,7 @@
                                       v-on:vdropzone-files-added="fileAdd"></vue-dropzone>
                     </div>
                     <div class="col-12 my-2">
-                        <label for="productName" class="form-label">商品名稱：</label><label :class="{'nullShow':filled.productName}"><i class="fa-solid fa-pen">必填</i></label>
+                        <label for="productName" class="form-label">商品名稱：</label><label :class="{'nullShow':filled.productName}" disabled><i class="fa-solid fa-pen">必填</i></label>
                         <input type="text" class="form-control w-100" id=" productName" v-model="createProductData.productName">
                     </div>
                     <div class="col-6 my-2">
@@ -154,23 +154,27 @@
                         </div>
                     </div>
                         <div class="col-12 my-2">
-                            <label >成分用量：</label>
+                        <label>成分用量：</label><label :class="{'nullShow':filled.productMaterial}"><i class="fa-solid fa-pen">必填</i></label>
                             </div>
                             <div class="col-6 py-0 my-1">
                                 <label class="form-label py-0">{{baseConsumption[0].materialName}}</label>
-                                <input type="number" class="form-control w-100" v-model="baseConsumption[0].consumption" />
+                                <input v-if="basevalue.length<1" type="number" placeholder="mL" class="form-control w-100" disabled />
+                                <input v-else type="number" placeholder="mL" class="form-control w-100" min="0" v-model="baseConsumption[0].consumption" />
                             </div>
                             <div class="col-6 py-0 my-1">
                                 <label class="form-label py-0">{{baseConsumption[1].materialName}}</label>
-                                <input type="number" class="form-control w-100" v-model="baseConsumption[1].consumption" />
+                        <input v-if="basevalue.length<2" type="number" placeholder="mL" class="form-control w-100" disabled />
+                        <input v-else type="number" placeholder="mL" class="form-control w-100" min="0" v-model="baseConsumption[1].consumption" />
                             </div>
                             <div class="col-6 py-0 my-1">
                                 <label class="form-label py-0">{{baseConsumption[2].materialName}}</label>
-                                <input type="number" class="form-control w-100" v-model="baseConsumption[2].consumption" />
+                        <input v-if="basevalue.length<3" type="number" placeholder="mL" class="form-control w-100" disabled />
+                        <input v-else type="number" placeholder="mL" class="form-control w-100" min="0" v-model="baseConsumption[2].consumption" />
                             </div>
                     <div class="col-6 py-0 my-1">
                         <label class="form-label py-0">{{baseConsumption[3].materialName}}</label>
-                                <input type="number" class="form-control w-100" v-model="baseConsumption[3].consumption" />
+                        <input v-if="basevalue.length<4" type="number" placeholder="mL" class="form-control w-100" disabled />
+                                <input v-else type="number" placeholder="mL" class="form-control w-100" min="0" v-model="baseConsumption[3].consumption" />
                             </div>
                         
                         <div class="col-12 ">
@@ -338,6 +342,7 @@
                 productPrice:false,
                 productCost:false,
                 productDescription:false,
+                productMaterial:false,
             },
             createProductData: {
                 productName: "",
@@ -387,10 +392,10 @@
             selection:[],
             basevalue: [],
             baseConsumption:[
-                { Id: "1", materialId: "", materialName:"成分1",consumption:"" },
-                { Id: "2", materialId: "", materialName:"成分2",consumption:"" },
-                { Id: "3", materialId: "", materialName:"成分3",consumption:"" },
-                { Id: "4", materialId: "", materialName:"成分4",consumption:"" },
+                { Id: "", materialName:"成分",consumption:"" },
+                { Id: "", materialName:"成分",consumption:"" },
+                { Id: "", materialName:"成分",consumption:"" },
+                { Id: "", materialName:"成分",consumption:"" },
             ],
             discountvalue: "",
         },
@@ -424,6 +429,11 @@
                         data.append("DiscountId", this.discountvalue.discountId)
                         var img = this.$refs.myVueDropzone.getQueuedFiles();
                         img.forEach(x => data.append("Images", x));
+                        var baseCons=[];
+                        for (i=0;i<baseConsumption.length;i++)
+                        if (this.baseConsumption.consumption>0){
+                            baseCons[i]=this.baseConsumption.consumption
+                        }
                         
                         fetch("/api/Products/CreateProduct", {
                             method: 'POST',
@@ -442,6 +452,10 @@
                                         this.createProductData.productDescription = "";
                                         this.createProductData.images = [];
                                         this.discountvalue = "";
+                                    }
+                                        break;
+                                    case 1: {
+                                        Swal.fire('成本/價格要大於0!', '', 'error');
                                     }
                                         break;
                                     case 400: {
@@ -513,9 +527,27 @@
                     this.filled.productDescription = false;
                 }
             },
+
             'basevalue':function(n,o){
+                //添加選項
+                if (n.length > o.length){
                 for (i=0;i<n.length;i++){
                     this.baseConsumption[i]=n[i]
+                }
+                }
+                //移除選項
+                else {
+                    for (i=0;i<n.length;i++){
+                        n[i].consumption=0;
+                    this.baseConsumption[i]=n[i]
+                }
+                    this.baseConsumption[n.length] = { Id: "", materialName:"成分",consumption:"" }
+                }
+                if(n.length!=0){
+                    this.filled.productMaterial=true;
+                }
+                else{
+                    this.filled.productMaterial=false;
                 }
 
             },

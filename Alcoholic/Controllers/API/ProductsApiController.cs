@@ -84,7 +84,11 @@ namespace Alcoholic.Controllers.API
                 var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
                 return Ok(returnModel);
             }
-            
+            else if (model.Cost <= 0 || model.UnitPrice<=0)
+            {
+                returnModel.Status = 1;
+                return Ok(returnModel);
+            }
             else
             {
                 returnModel.Status = 0;
