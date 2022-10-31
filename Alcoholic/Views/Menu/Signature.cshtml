@@ -140,9 +140,7 @@
                         <img class="modal-image" :src="modal.imagesrc">
                     </div>
                     <div class="card-body modal-spec">
-                        <p><b>{{modal.productName}}</b></p>
-                        <hr>
-                        <p>{{modal.description}}</p>
+                        <p><b>{{modal.description}}</b></p>
                     </div>
                 </div>
             </div>
@@ -181,5 +179,5 @@
             .then( response => response.json())
             .then( result => self.product = result)
         },
-    })   
+    });   
 </script>
