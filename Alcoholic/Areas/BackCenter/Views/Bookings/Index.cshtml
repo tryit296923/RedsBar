@@ -106,33 +106,31 @@
                     <h3 class="modal-title" id="staticBackdropLabel">新增訂位</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="booking">
-                    <div class="modal-body container">
-                        <label for="datepicker">用餐日期：</label>
-                        <date-picker v-model="add.ReserveDate" value-type="format" 
-                                     placeholder="選擇用餐日期" :disabled-date="modaldisablerange"
-                                     class="datepicker p-0 w-100" id="datepicker"></date-picker>
-                        <label for="people">用餐人數：</label>
-                        <select name="Number" id="people" class="form-select w-100" v-model="add.Number">
-                            <option value="" disabled>選擇用餐人數</option>
-                            <template v-for="peo in people">
-                                <option :disabled="maxPeople(peo.value)" :value="peo.value">{{peo.txt}}</option>
-                            </template>
-                        </select>
-                        <label for="reserveName">訂位姓名：</label>
-                        <input v-model="add.ReserveName" type="text" id="reserveName" class="w-100">
-                        <label for="phone">聯絡電話：</label>
-                        <input v-model="add.Phone" type="text" id="phone" class="w-100" maxlength="10" minlength="10" placeholder="09xxxxxxxx">
-                        <label for="email">Email：</label>
-                        <input v-model="add.Email" type="email" id="email" class="w-100">
+                <div class="modal-body container">
+                    <label for="datepicker">用餐日期：</label>
+                    <date-picker v-model="add.ReserveDate" value-type="format" 
+                                    placeholder="選擇用餐日期" :disabled-date="modaldisablerange"
+                                    class="datepicker p-0 w-100" id="datepicker"></date-picker>
+                    <label for="add_people">用餐人數：</label>
+                    <select name="Number" id="add_people" class="form-select w-100" v-model="add.Number">
+                        <option value="" disabled>選擇用餐人數</option>
+                        <template v-for="peo in people">
+                            <option :disabled="maxPeople(peo.value)" :value="peo.value">{{peo.txt}}</option>
+                        </template>
+                    </select>
+                    <label for="add_reserveName">訂位姓名：</label>
+                    <input v-model="add.ReserveName" type="text" id="add_reserveName" class="w-100">
+                    <label for="add_phone">聯絡電話：</label>
+                    <input v-model="add.Phone" type="text" id="add_phone" class="w-100" maxlength="10" minlength="10" placeholder="09xxxxxxxx">
+                    <label for="add_email">Email：</label>
+                    <input v-model="add.Email" type="email" id="add_email" class="w-100">
+                </div>
+                <div class="modal-footer">
+                    <div class="row m-0">
+                        <button class="col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                        <button v-on:click="addBookingInfo" class="col btneditproducts m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
                     </div>
-                    <div class="modal-footer">
-                        <div class="row m-0">
-                            <button class="col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
-                            <button v-on:click="addBookingInfo" class="col btneditproducts m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -146,33 +144,31 @@
                     <h3 class="modal-title" id="staticBackdropLabel">編輯訂位</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="booking">
-                    <div class="modal-body container">
-                        <label for="datepicker">用餐日期：</label>
-                        <date-picker v-model="edit.ReserveDate" value-type="format"
-                                     :disabled-date="modaldisablerange"
-                                     class="datepicker p-0 w-100" id="datepicker"></date-picker>
-                        <label for="people">用餐人數：</label>
-                        <select name="Number" id="people" class="form-select w-100" v-model="edit.Number">
-                            <option value="" disabled>選擇用餐人數</option>
-                            <template v-for="peo in people">
-                                <option :disabled="maxPeople(peo.value)" :value="peo.value">{{peo.txt}}</option>
-                            </template>
-                        </select>
-                        <label for="reserveName">訂位姓名：</label>
-                        <input v-model="edit.ReserveName" type="text" id="reserveName" class="w-100" disabled>
-                        <label for="phone">聯絡電話：</label>
-                        <input v-model="edit.Phone" type="text" id="phone" class="w-100" maxlength="10" minlength="10" placeholder="09xxxxxxxx" disabled>
-                        <label for="email">Email：</label>
-                        <input v-model="edit.Email" type="email" id="email" class="w-100" disabled>
+                <div class="modal-body container">
+                    <label for="datepicker">用餐日期：</label>
+                    <date-picker v-model="edit.ReserveDate" value-type="format"
+                                    :disabled-date="modaldisablerange"
+                                    class="datepicker p-0 w-100" id="datepicker"></date-picker>
+                    <label for="edit_people">用餐人數：</label>
+                    <select name="Number" id="edit_people" class="form-select w-100" v-model="edit.Number">
+                        <option value="" disabled>選擇用餐人數</option>
+                        <template v-for="peo in people">
+                            <option :disabled="maxPeople(peo.value)" :value="peo.value">{{peo.txt}}</option>
+                        </template>
+                    </select>
+                    <label for="edit_reserveName">訂位姓名：</label>
+                    <input v-model="edit.ReserveName" type="text" id="edit_reserveName" class="w-100" disabled>
+                    <label for="edit_phone">聯絡電話：</label>
+                    <input v-model="edit.Phone" type="text" id="edit_phone" class="w-100" maxlength="10" minlength="10" placeholder="09xxxxxxxx" disabled>
+                    <label for="edit_email">Email：</label>
+                    <input v-model="edit.Email" type="email" id="edit_email" class="w-100" disabled>
+                </div>
+                <div class="modal-footer">
+                    <div class="row m-0">
+                        <button class="col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                        <button v-on:click="editBookingInfo" class="col btneditproducts m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
                     </div>
-                    <div class="modal-footer">
-                        <div class="row m-0">
-                            <button class="col btneaddcancel m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
-                            <button v-on:click="editBookingInfo" class="col btneditproducts m-1" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -212,19 +208,19 @@
             }
         },
         methods: {
-            getTodayReserves:function(){//當日訂位資訊
+            getTodayReserves: function () {//當日訂位資訊
                 let self = this;
                 fetch('/api/Booking/TodayBooking')
                     .then(response => response.json())
                     .then(result => self.todayReserves = result)
             },
-            gatAllBooking:function(){//曾被訂位日期=>影響查詢訂位的日期選擇
+            gatAllBooking:function () {//曾被訂位日期=>影響查詢訂位的日期選擇
                 let self = this;
                 fetch('/api/Booking/GetAllBookingDate')
                     .then(response => response.json())
                     .then(result => self.allBookingDate = result)
             },
-            getFrontBooking:function(){//30天內訂位人數=>影響新增/編輯的日期選擇.人數限制
+            getFrontBooking:function () {//30天內訂位人數=>影響新增/編輯的日期選擇.人數限制
                 let self = this;
                 fetch('/api/Booking/GetFrontBookings')
                     .then(response => response.json())
@@ -324,7 +320,7 @@
                     Number: this.edit.Number,
                 }
                 fetch('/api/Booking/EditBooking',{
-                    method: 'POST',
+                    method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(info)
                 })
@@ -361,7 +357,7 @@
                 }).then(( result ) =>{
                     if( result.value ){
                         fetch('/api/Booking/DeleteBooking',{
-                            method:'POST',
+                            method:'PUT',
                             headers:{'Content-Type':'application/json'},
                             body: JSON.stringify(info)
                         })
@@ -376,6 +372,7 @@
                                     timer: 1500
                                 })
                                 this.SearchClick();
+                                this.getTodayReserves();
                             }
                         })
                     }
@@ -388,15 +385,15 @@
             //        case 2: statusTxt = '已通知'; break;
             //        case 3: statusTxt = '入座'; break;
             //        case 4: statusTxt = '保留'; break;
-            //        default: ageValue = 60; break;
+            //        default: break;
             //    }
             //    return statusTxt;
             //}
         },
-        mounted: function () {
-            this.getTodayReserves();
+        mounted: function () {           
             this.gatAllBooking();
             this.getFrontBooking();
-        }
+            this.getTodayReserves();
+        },
     });
 </script>

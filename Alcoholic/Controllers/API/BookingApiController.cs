@@ -90,7 +90,7 @@ namespace Alcoholic.Controllers.API
         }
 
         //從後台修改訂位
-        [HttpPost]
+        [HttpPut]
         public IActionResult EditBooking([FromBody] EditBookingModel bookindData)
         {
             var bookingInfo = (from x in _db.Reserves
@@ -104,7 +104,7 @@ namespace Alcoholic.Controllers.API
         }
 
         //從後台刪除訂位
-        [HttpPost]
+        [HttpPut]
         public IActionResult DeleteBooking([FromBody] DeleteBookingModel bookindData)
         {
             var bookingInfo = (from x in _db.Reserves

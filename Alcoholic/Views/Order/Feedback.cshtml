@@ -36,10 +36,6 @@ Layout = "_LayoutMobile";
         color: red;
     }
 
-    :disabled{
-        background: #666;
-    }
-
     .check-area {
         border: 1px solid #D8CDB9;
         padding: 20px 0px 20px 0px;
@@ -75,6 +71,15 @@ Layout = "_LayoutMobile";
     .inpName, .inpEmail, .inpDetail {
         padding: 6px 12px 6px 12px;
         width: 100%;
+        color: white;
+    }
+
+    input[type=radio]:disabled {
+        background: var(--inputDisabled);
+    }
+
+    input[type=radio]:disabled:before {
+        background: white;
     }
 
     .satisfaction {
@@ -127,7 +132,7 @@ Layout = "_LayoutMobile";
 <p class="container">本問卷蒐集之資訊僅作為內部服務改善使用，</br>絕不外洩或另作其他用途，敬請放心填寫。</p>
 <div class="container col-10 col-xl-6 check-area" id="d1">
     <div class="inputform">
-        <template v-if="memberInfo.memberName == 'guestonly123' ">
+        <template v-if="memberInfo.memberName == '訪客' ">
             <div>
                 <h5>姓名 <span>*</span></h5>
                 <input type="text" id="name" class="inpName" v-model="feedbackInfo.Name" maxlength="20" required>
@@ -303,15 +308,15 @@ Layout = "_LayoutMobile";
         },
         watch:{
             'memberInfo.memberName': function(){
-                if (this.memberInfo.memberName != 'guestonly123')
+                if (this.memberInfo.memberName != '訪客')
                     this.feedbackInfo.Name = this.memberInfo.memberName;
             },
             'memberInfo.email': function(){
-                if (this.memberInfo.memberName != 'guestonly123')
+                if (this.memberInfo.memberName != '訪客')
                     this.feedbackInfo.Email = this.memberInfo.email;
             },
             'memberInfo.age':function(){
-                if (this.memberInfo.memberName != 'guestonly123')
+                if (this.memberInfo.memberName != '訪客')
                     this.feedbackInfo.Age = this.memberInfo.age;
             }
         },
@@ -342,7 +347,7 @@ Layout = "_LayoutMobile";
                     Overall: this.feedbackInfo.Overall,
                     Suggestion: this.feedbackInfo.Suggestion,
                 }
-                fetch('https://localhost:7232/api/Order/FeedBackAll', {
+                fetch('/api/Order/FeedBackAll', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(info)
@@ -350,25 +355,25 @@ Layout = "_LayoutMobile";
                     .then(result => window.location.assign(result.url))
             },
             Initialdata:function(){
-                let self = this;
-                let info = {
-                    Id: self.feedbackInfo.orderId.toString(),
-                }
-                fetch('https://localhost:7232/api/Order/FeedbackMember', {
+            let self = this;
+            let info = {
+                Id: self.feedbackInfo.orderId.toString(),
+            }
+            fetch('/api/Order/FeedbackMember', {
                     method:'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(info)
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(info)
+            })
                 .then(response => response.json())
                 .then(result => {
                     self.memberInfo = {
-                            orderId: result.orderId,
-                            memberName : result.memberName,
-                            email: result.email,
-                            age: self.memberAge(result.age),
+                        orderId: result.orderId,
+                        memberName : result.memberName,
+                        email: result.email,
+                        age: self.memberAge(result.age),
                     }
-                })  
-            }
+                })
+        }
         },
         mounted:function(){
             this.Initialdata();

@@ -1,5 +1,4 @@
-﻿@model Alcoholic.Models.DTO.OrderViewModel
-@{
+﻿@{
     ViewData["Title"] = "購物車";
     Layout = "_LayoutMobile";
 }
@@ -238,7 +237,7 @@
                 <div class="title w-100">
                     <div class="himessage">
                         <p>Hi, </p>
-                        <p class="user">@Model.MemberName</p>
+                        <p class="user">{{cartInfo.memberName}}</p>
                     </div>
                 </div>
             </div>
@@ -347,9 +346,9 @@
         data() {
             return {
                 orderTime: '',
-                itemList: this.getProductSession(),
+                itemList: [],
                 orderId: '',
-                //cartInfo:{},
+                cartInfo: {},
             }
         },
         methods: {
@@ -373,8 +372,10 @@
             },
             cartTotal: function () {
                 var totalprice = 0;
-                for (let i = 0; i < this.itemList.length; i++) {
-                    totalprice += this.itemList[i].unitPrice * this.itemList[i].qty * this.itemList[i].discountAmount;
+                if (this.itemList) {
+                    for (let i = 0; i < this.itemList.length; i++) {
+                        totalprice += this.itemList[i].unitPrice * this.itemList[i].qty * this.itemList[i].discountAmount;
+                    }
                 }
                 return Math.round(totalprice);
             },
@@ -382,14 +383,12 @@
                 this.confirmSend();
             },
             getProductSession() {
-                //var cartList = '@ViewBag.stest'
-                //console.log(cartList);
                 //var ary = {};
                 //var result = cartList.split(";").map(x => this.seperate(x, ary));
                 //console.log(ary);
                 //console.log(ary['products']);
                 //console.log(JSON.parse(ary['products']));
-                this.itemList = JSON.parse('@Html.Raw(Json.Serialize(Model.ItemList))');
+                this.itemList = cartInfo.ItemList;
                 console.log(this.itemList);
                 return this.itemList;
             },
@@ -419,11 +418,12 @@
             backToMenu: function () {
                 this.$refs.backToMenu.click();
             },
-            //getCartInfo:function(){
-            //    fetch("/api/Order/GetCartInfo")
-            //    .then(response => response.json())
-            //    .then(result => {this.cartInfo = result });
-            //}
+            getCartInfo: function () {
+                fetch("/api/Order/GetCartInfo")
+                    .then(response => response.json())
+                    .then(result => { this.cartInfo = result })
+                    .then(result => { this.itemList = this.cartInfo.itemList })
+            }
         },
         mounted: function () {
             this.getCartInfo();
