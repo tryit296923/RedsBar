@@ -145,13 +145,34 @@
                         <label for="productDescription" class="form-label">商品敘述：</label><label :class="{'nullShow':filled.productDescription}"><i class="fa-solid fa-pen">必填</i></label>
                         <input type="text" class="form-control w-100" placeholder="請簡述特色" id="productDescription" v-model="createProductData.productDescription">
                     </div>
-                    <div id="multipleselect" class="col-12 ">
+                    <div id="multipleselect" >
                         <div class="col-12 my-2">
-                            <label class="my-2">基酒：</label>
+                            <label class="my-2">成分：</label>
                             <multiselect v-model="basevalue" tag-placeholder="Add this as new tag"
-                                         placeholder="請選擇至少一種" label="materialName" track-by="materialId" :options="selection"
+                                         placeholder="最多選4種":max="4" label="materialName" track-by="materialId" :options="selection"
                                          :multiple="true" :taggable="true" @@tag="addTag"></multiselect>
                         </div>
+                    </div>
+                        <div class="col-12 my-2">
+                            <label >成分用量：</label>
+                            </div>
+                            <div class="col-6 py-0 my-1">
+                                <label class="form-label py-0">{{baseConsumption[0].materialName}}</label>
+                                <input type="number" class="form-control w-100" v-model="baseConsumption[0].consumption" />
+                            </div>
+                            <div class="col-6 py-0 my-1">
+                                <label class="form-label py-0">{{baseConsumption[1].materialName}}</label>
+                                <input type="number" class="form-control w-100" v-model="baseConsumption[1].consumption" />
+                            </div>
+                            <div class="col-6 py-0 my-1">
+                                <label class="form-label py-0">{{baseConsumption[2].materialName}}</label>
+                                <input type="number" class="form-control w-100" v-model="baseConsumption[2].consumption" />
+                            </div>
+                    <div class="col-6 py-0 my-1">
+                        <label class="form-label py-0">{{baseConsumption[3].materialName}}</label>
+                                <input type="number" class="form-control w-100" v-model="baseConsumption[3].consumption" />
+                            </div>
+                        
                         <div class="col-12 ">
                             <label class="my-2">折扣：</label>
                             <multiselect v-model="discountvalue" deselect-label="無法移除" track-by="discountId"
@@ -161,7 +182,6 @@
                                           slot-scope="{ option }"><strong>{{option.discountName}}</strong> </template>
                             </multiselect>
                         </div>
-                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -365,7 +385,13 @@
                 headers: { "My-Awesome-Header": "header value" }
             },
             selection:[],
-            basevalue: "",
+            basevalue: [],
+            baseConsumption:[
+                { Id: "1", materialId: "", materialName:"成分1",consumption:"" },
+                { Id: "2", materialId: "", materialName:"成分2",consumption:"" },
+                { Id: "3", materialId: "", materialName:"成分3",consumption:"" },
+                { Id: "4", materialId: "", materialName:"成分4",consumption:"" },
+            ],
             discountvalue: "",
         },
         components: {
@@ -486,6 +512,12 @@
                 else {
                     this.filled.productDescription = false;
                 }
+            },
+            'basevalue':function(n,o){
+                for (i=0;i<n.length;i++){
+                    this.baseConsumption[i]=n[i]
+                }
+
             },
         }
     })
