@@ -123,7 +123,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
 
                 model.Result = true;
                 model.Object = employee.NickName;
-                HttpContext.Response.Cookies.Append("nick", employee.NickName);
+                HttpContext.Session.SetString("nick", employee.NickName);
                 return Ok(model);
             }
             model.Result = false;

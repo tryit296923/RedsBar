@@ -42,6 +42,56 @@ namespace Alcoholic.Controllers.API
             this.hashService = hashService;
             this.hub = hub;
         }
+        //Cart.cshtml還沒改完:(
+        //public IActionResult GetCartInfo()
+        //{
+        //    //session取值是否可用
+        //    var sesStr = HttpContext.Session.GetString("CartItem");
+        //    Console.WriteLine(sesStr);
+        //    string sMemberID = HttpContext.Session.GetString("MemberID");
+        //    if (!Guid.TryParse(sMemberID, out var memberId))
+        //    {
+        //        //錯誤訊息待修改
+        //        throw new Exception("Guid is error");
+        //    }
+        //    string memberName = "";
+        //    if (sMemberID != null)
+        //    {
+        //        memberName = (from n in _db.Members
+        //                      where n.MemberID == memberId
+        //                      select n.MemberName).FirstOrDefault();
+        //    }
+        //    else
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var cartItems = JsonConvert.DeserializeObject<List<CartItem>>(sesStr);
+
+        //    foreach (var cartItem in cartItems)
+        //    {
+        //        var product = _db.Products.Find(cartItem.Id);
+        //        cartItem.ProductName = product.ProductName;
+        //        cartItem.UnitPrice = product.UnitPrice;
+        //        cartItem.DiscountAmount = product.Discount.DiscountAmount;
+        //        cartItem.Path = product.Images.FirstOrDefault().Path;
+        //    }
+        //    //HttpContext.Session.SetString("123", "456");
+        //    //var s = HttpContext.Session.GetString("123");
+        //    HttpContext.Session.SetString("CartItem", JsonConvert.SerializeObject(cartItems));
+
+        //    string stest = "";
+        //    //若??前面為空，則用""取代
+        //    stest = HttpContext.Session.GetString("CartItem") ?? "";
+        //    //var temp = JsonConvert.DeserializeObject<List<CartItem>>(stest);
+        //    var ovm_Cart = new OrderViewModel
+        //    {
+        //        MemberName = memberName,
+        //        ItemList = cartItems,
+        //    };
+
+        //    return Ok(ovm_Cart);
+        //}
         [HttpPost]
         public IActionResult Confirm([FromBody] OrderViewModel orderdata)
         {
@@ -55,6 +105,11 @@ namespace Alcoholic.Controllers.API
                               select o.OrderId).FirstOrDefault();
             try
             {
+                int total = 0;
+                if (orderdata != null)
+                {
+                    orderdata?.ItemList?.ForEach(x => total += Convert.ToInt32(Math.Round((float)(x.Qty * x.DiscountAmount * x.UnitPrice))));
+                }
                 if (db_OrderId == null)
                 {
                     //分別存入Order, OrderDetail
@@ -66,7 +121,9 @@ namespace Alcoholic.Controllers.API
                         Total = null,
                         OrderTime = Convert.ToDateTime(now),
                         DeskNum = sDesk,
-                        //Feedback = null,
+                        OrderTime = Convert.ToDateTime(now),
+                        Feedback = null,
+                        Total = total,
                     };
                     _db.Add(order);
 
@@ -107,9 +164,10 @@ namespace Alcoholic.Controllers.API
                 }
                 else
                 {
-                    var newTime = (from t in _db.Orders where t.OrderId == db_OrderId select t).FirstOrDefault();
-                    newTime.OrderTime = DateTime.Parse(now);
-                    _db.Update(newTime);
+                    var oriOrder = (from t in _db.Orders where t.OrderId == db_OrderId select t).FirstOrDefault();
+                    oriOrder.OrderTime = DateTime.Parse(now);
+                    oriOrder.Total += total;
+                    _db.Update(oriOrder);
 
                     var seq = (from s in _db.OrderDetails where s.OrderId == db_OrderId orderby s.Sequence select s.Sequence).LastOrDefault() + 1;
                     foreach (var item in orderdata.ItemList)
@@ -149,7 +207,89 @@ namespace Alcoholic.Controllers.API
                 return new JsonResult(new { Status = 2, Message = "Save Fail" });
             }
         }
+        [HttpPost]
+        public IActionResult SendOrderSucceed([FromBody] SearchHistOrder orderInfo)
+        {
+            var data = (from x in _db.Orders 
+                        where x.OrderId == orderInfo.OrderId select x).Select(x => new OrderViewModel
+            {
+                Desk = x.DeskNum,
+                Number = x.Number,
+                OrderId = x.OrderId,
+                OrderTime = x.OrderTime,
+            }).FirstOrDefault();
+            // 送出訂單後清除session
+            HttpContext.Session.SetString("Desk", "");
+            HttpContext.Session.SetString("Number", "");
+            HttpContext.Session.SetString("CartItem", "");
+            return Ok(data);
+        }
+        public IActionResult GetTotalOrder()
+        {
+            string sMemberId = HttpContext.Session.GetString("MemberID");
 
+            if (!Guid.TryParse(sMemberId, out var memberId))
+            {
+                throw new Exception("Guid is error");
+            }
+
+            var orderDetail = (from y in _db.Orders
+                               where y.Status == "N" && y.MemberId == memberId
+                               select y).Select(y => new OrderViewModel
+                               {
+                                   Desk = y.DeskNum,
+                                   Number = y.Number,
+                                   OrderId = y.OrderId,
+                                   OrderTime = y.OrderTime,
+                                   MemberName = y.Member.MemberName,
+                                   Status = y.Status,
+                                   ItemList = y.OrderDetails.Select(z => new CartItem
+                                   {
+                                       Id = z.ProductId,
+                                       Qty = z.Quantity,
+                                       ProductName = z.Product.ProductName,
+                                       OrderId = z.OrderId,
+                                       UnitPrice = z.UnitPrice,
+                                       DiscountAmount = z.Product.Discount.DiscountAmount,
+                                       Path = z.Product.Images.FirstOrDefault().Path,
+                                       Sequence = z.Sequence,
+                                   }).ToList(),
+                               }).FirstOrDefault();
+            return Ok(orderDetail);
+        }
+        public IActionResult GetCheckInfo()
+        {
+            var now = DateTime.Now.ToString("yyyy/MM/dd");
+            string sMemberID = HttpContext.Session.GetString("MemberID");
+
+            if (!Guid.TryParse(sMemberID, out var memberId))
+            {
+                throw new Exception("Guid is error");
+            }
+            // TODO: 處理訪客ID相同的狀況??orderTime/desk
+            var getOrder = _db.Orders.Where(x => x.MemberId == memberId && x.Status == "N").FirstOrDefault();
+            var cartTotalList = getOrder.OrderDetails.Select(x => new CartTotal { ProductName = x.Product.ProductName, Quantity = x.Quantity })
+                .GroupBy(x => x.ProductName, (k, v) => new CartTotal
+                {
+                    Quantity = v.Sum(x => x.Quantity),
+                    ProductName = k,
+                }).ToList();
+            var total = 0;
+            if (getOrder != null)
+            {
+                total = (int)getOrder.Total;
+            }
+            OrderCheckViewModel orderCheckViewModel = new OrderCheckViewModel
+            {
+                Desk = getOrder.DeskNum,
+                Number = getOrder.Number.ToString(),
+                OrderId = getOrder.OrderId,
+                OrderTime = now,
+                Total = total,
+                CartTotal = cartTotalList,
+            };
+            return Ok(orderCheckViewModel);
+        }
         // 離席
         [HttpPut]
         public IActionResult Dismiss(string Desk)
@@ -170,7 +310,8 @@ namespace Alcoholic.Controllers.API
         {
             var details = _db.OrderDetails.Where(x => x.OrderId == paymentInfo.OrderId);
             var productName = details.Include(x => x.Product).Select(x => x.Product.ProductName);
-            var price = details.Select(x => (x.UnitPrice * x.Discount) * x.Quantity).Sum();
+            var totalPrice = (from p in _db.Orders where p.OrderId == paymentInfo.OrderId select p.Total).FirstOrDefault();
+            //var price = details.Select(x => (x.UnitPrice * x.Discount) * x.Quantity).Sum();
             TradeInfo tradeInfo = new TradeInfo
             {
                 MerchantID = config["Payment:MerchantID"],
@@ -178,12 +319,12 @@ namespace Alcoholic.Controllers.API
                 Version = "2.0",
                 TimeStamp = DateTime.Now.Ticks.ToString(),
                 MerchantOrderNo = paymentInfo.OrderId,
-                Amt = price.ToString(),
+                Amt = totalPrice.ToString(),
                 ItemDesc = String.Join(",", productName),
                 AndroidPay = paymentInfo.PayType.ToLower() == "googlepay" ? "1" : null,
                 Credit = paymentInfo.PayType.ToLower() == "credit" ? "1" : null,
                 LinePay = paymentInfo.PayType.ToLower() == "linepay" ? "1" : null,
-                ReturnURL = "https://ff49-36-225-197-20.jp.ngrok.io/api/Order/GetPaymentReturnData",
+                ReturnURL = "https://ebb4-61-228-177-1.jp.ngrok.io/api/Order/GetPaymentReturnData",
             };
 
             var hashKey = config["Payment:HashKey"];
@@ -332,7 +473,7 @@ namespace Alcoholic.Controllers.API
                                      Number = histOd.Number,
                                      Status = histOd.Status,
                                      Total = histOd.Total,
-                                     OrderTime = (histOd.OrderTime).ToString(), 
+                                     OrderTime = (histOd.OrderTime).ToString(),
                                  }).ToList();
             return Ok(histOrderInfo);
         }
@@ -396,5 +537,22 @@ namespace Alcoholic.Controllers.API
         //    await hub.Clients.All.SendAsync("OK", desk);
         //    return Content(desk);
         //}
+        // 後臺查詢歷史訂單之詳細資料
+        [HttpPost]
+        public IActionResult ShowDetailList([FromBody] SearchHistOrder histOrderDetail)
+        {
+            var temp = Request;
+            var h_OrderDetail = (from h_OD in _db.OrderDetails 
+                                 where h_OD.OrderId == histOrderDetail.OrderId
+                                 select new CartItem
+                                 {
+                                     Path = h_OD.Product.Images.FirstOrDefault().Path,
+                                     DiscountAmount = h_OD.Discount,
+                                     ProductName = h_OD.Product.ProductName,
+                                     Qty = h_OD.Quantity,
+                                     UnitPrice = h_OD.UnitPrice
+                                 }).ToList();
+            return Ok(h_OrderDetail);
+        }
     }
 }

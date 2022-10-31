@@ -468,7 +468,7 @@
                         </div>
                     </div>
                     <p>
-                        <button  class="loginbtn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">
+                        <button ref="open" class="loginbtn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">
                             <i class="fa-solid fa-circle-chevron-up"></i>
                       </button>
                         <span class="ms-4" id="empName"><i class="fa-solid fa-image-portrait mx-1"></i>{{name}}</span>
@@ -513,6 +513,7 @@
                                     showConfirmButton: false,
                                     timer: 1500
                                 });
+                                this.$refs.open.click();
                                 this.name = r.object;
                             }else{
                                 Swal.fire({

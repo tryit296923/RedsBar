@@ -15,6 +15,7 @@ namespace Alcoholic.Models.Entities
         public int? Dish { get; set; }
         public int? Price { get; set; }
         public int? Overall { get; set; }
+        public int? Average { get; set; }
         public string? Suggestion { get; set; }
         public virtual Order Order { get; set; }
     }

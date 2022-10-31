@@ -1,5 +1,4 @@
-﻿@model Alcoholic.Models.DTO.OrderCheckViewModel
-@{
+﻿@{
     ViewData["Title"] = "今日消費結算";
     Layout = "_LayoutMobile";
 }
@@ -136,10 +135,10 @@
             <!-- 訂單簡單資訊 -->
             <div class="checkdetail p-3">
                 <div class="px-3">
-                    <p class="checkinfotext ordertime">日期 : @Model.OrderTime</p>
-                    <p class="checkinfotext tablenum">桌號 : @Model.Desk</p>
-                    <p class="checkinfotext custnum">用餐人數 : @Model.Number 人</p>
-                    <p class="checkinfotext custnum">訂單編號 : @Model.OrderId</p>
+                    <p class="checkinfotext ordertime">日期 : {{orderCheckViewModel.orderTime}}</p>
+                    <p class="checkinfotext tablenum">桌號 : {{orderCheckViewModel.desk}}</p>
+                    <p class="checkinfotext custnum">用餐人數 : {{orderCheckViewModel.number}} 人</p>
+                    <p class="checkinfotext custnum">訂單編號 : {{orderCheckViewModel.orderId}}</p>
                 </div>
                 <hr>
                 <ul class="px-3">
@@ -154,7 +153,7 @@
                     </li>
                 </ul>
                 <hr>
-                <p class="colorbox total mt-0">今日消費總計 : @Model.Total 元</p>
+                <p class="colorbox total mt-0">今日消費總計 : {{orderCheckViewModel.total}} 元</p>
             </div>
             <form action="FrontDeskCheckout" method="post" class="d-none" id="cart">
                 <button type="submit" ref="frontDeskCheckout"></button>
@@ -203,36 +202,44 @@
         el: "#orderCheck",
         data() {
             return {
-                orderCheckViewModel: @Html.Raw(Json.Serialize(Model)),
+                orderCheckViewModel: {},
             }
         },
         methods: {
             pay: function (paytype) {
                 fetch("/api/Order/Payment", {
-                    body: JSON.stringify({ OrderId: "@Model.OrderId" , PayType: paytype }),
+                    body: JSON.stringify({ OrderId: this.orderCheckViewModel.orderId, PayType: paytype }),
                     headers: { 'content-type': 'application/json' },
                     method: "POST"
                 })
-                .then(response => response.json())
-                .then(result => {
-                    console.log(result);
-                    var form = document.createElement("form");
-                    form.method = 'post';
-                    form.action = "https://ccore.newebpay.com/MPG/mpg_gateway";
-                    Object.entries(result).forEach(x => {
-                        var inp = document.createElement("input");
-                        inp.value = x[1];
-                        inp.name = x[0].charAt(0).toUpperCase() + x[0].slice(1);
-                        inp.type = "hidden";
-                        form.append(inp);
-                    });
-                    window.document.body.appendChild(form);
-                    form.submit();
-                })
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log(result);
+                        var form = document.createElement("form");
+                        form.method = 'post';
+                        form.action = "https://ccore.newebpay.com/MPG/mpg_gateway";
+                        Object.entries(result).forEach(x => {
+                            var inp = document.createElement("input");
+                            inp.value = x[1];
+                            inp.name = x[0].charAt(0).toUpperCase() + x[0].slice(1);
+                            inp.type = "hidden";
+                            form.append(inp);
+                        });
+                        window.document.body.appendChild(form);
+                        form.submit();
+                    })
             },
-            frontDeskCheckout:function(){
+            frontDeskCheckout: function () {
                 this.$refs.frontDeskCheckout.click();
-            }
+            },
+            getCheckInfo: function(){
+                fetch("/api/Order/GetCheckInfo")
+                .then(response => response.json())
+                .then(result => { this.orderCheckViewModel  = result})
+            },
+        },
+        mounted:function(){
+            this.getCheckInfo();
         }
     })
 </script>

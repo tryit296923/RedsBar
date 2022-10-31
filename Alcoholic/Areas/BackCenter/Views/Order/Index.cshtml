@@ -104,7 +104,8 @@
                         <td v-else>未付款</td>
                         <td>{{items.orderTime}}</td>
                         <td>
-                            <button type="button" class="addbtn btnCheck" data-bs-toggle="modal" data-bs-target="#seeDetails">
+                            <button type="button" class="addbtn btnCheck"
+                                    data-bs-toggle="modal" data-bs-target="#seeDetails" v-on:click="showDetailList()">
                                 <i class="fa-sharp fa-solid fa-comment-dollar"></i> 詳細資料
                             </button>
                         </td>
@@ -128,7 +129,10 @@
                     <div class="modal-footer">
                         <div class="row m-0">
                             <button class="col btneaddcancel m-1 btnCheckinModal" type="button" data-bs-dismiss="modal"><i class="fa-solid fa-square-xmark"></i> 取消</button>
-                            <button class="col btneditproducts m-1 btnCheckinModal" type="button" data-bs-dismiss="modal" @@click="finishPayment" :id="selectOrderId"><i class="fa-solid fa-square-check"></i> 結單</button>
+                            <button class="col btneditproducts m-1 btnCheckinModal" type="button" data-bs-dismiss="modal"
+                                    @@click="finishPayment" :id="selectOrderId">
+                                <i class="fa-solid fa-square-check"></i> 結單
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -136,15 +140,36 @@
         </div>
     </div>
     <!--詳細資料Modal-->
-    <!-- Add Modal -->
     <div class="modal fade bookingdModal" id="seeDetails" data-bs-backdrop="static"
          data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
          aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="staticBackdropLabel">訂單詳細內容</h3>
+                    <h3 class="modal-title" id="staticBackdropLabel">訂單 {{searchOrderId}}</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="bookinginfo">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">圖片</th>
+                                <th scope="col">商品名稱</th>
+                                <th scope="col">單價</th>
+                                <th scope="col">優惠折扣</th>
+                                <th scope="col">選購數量</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="detail in detailList">
+                                <td><img :src="detail.path" /></td>
+                                <td>{{detail.productName}}</td>
+                                <td>{{detail.unitPrice}}</td>
+                                <td>{{detail.discountAmount}}</td>
+                                <td>{{detail.qty}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <form id="booking">
                     <p class="checkMessage"></p>
@@ -169,6 +194,7 @@
             searchOrder: {},
             searchOrderId: '',
             today: new Date,
+            detailList: {},
         },
         methods: {
             getTodayOrders: function () {
@@ -197,35 +223,49 @@
                 let self = this;
                 let data = {
                     OrderId: e.currentTarget.id
-                    }
+                }
                 fetch("/api/Order/FinishPayment", {
                     method: "POST",
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 })
-                .then(response => response.json())
-                .then(result => {
-                    if (result) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: '手動結單成功',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                    } else {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'error',
-                            title: '手動結單失敗',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                    }
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result) {
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: '手動結單成功',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                allowOutsideClick: false
+                            })
+                        } else {
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'error',
+                                title: '手動結單失敗',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                allowOutsideClick: false
+                            })
+                        }
+                    })
+                    .catch(err => console.log('Request Failed', err));
+            },
+            showDetailList: function () {
+                let self = this;
+                let info = {
+                    OrderId: self.searchOrderId
+                }
+                fetch("/api/Order/ShowDetailList", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(info)
                 })
-                .catch(err => console.log('Request Failed', err));
+                    .then(response => response.json())
+                    .then(result => { self.detailList = result });
             }
-
         },
         mounted: function () {
             this.getTodayOrders();
