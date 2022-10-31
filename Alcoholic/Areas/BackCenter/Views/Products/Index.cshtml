@@ -125,33 +125,58 @@
             <div class="modal-body container addingPage">
                 <div class="row">
                     <div class="col-12 my-2">
-                    <label for="productPic">圖片：</label>
+                        <label for="productPic">圖片：</label><label ><i class="fa-solid fa-pen">必填</i></label>
                         <vue-dropzone ref="myVueDropzone" id="basezone" :options="dropzoneOptions"
                                       v-on:vdropzone-files-added="fileAdd"></vue-dropzone>
                     </div>
                     <div class="col-12 my-2">
-                        <label for="productName" class="form-label">商品名稱：</label><label :class="{'nullShow':filled.productName}">*不能為空</label>
+                        <label for="productName" class="form-label">商品名稱：</label><label :class="{'nullShow':filled.productName}" disabled><i class="fa-solid fa-pen">必填</i></label>
                         <input type="text" class="form-control w-100" id=" productName" v-model="createProductData.productName">
                     </div>
                     <div class="col-6 my-2">
-                        <label for="productCost" class="form-label">商品成本：</label><label :class="{'nullShow':filled.productCost}">*不能為空</label>
+                        <label for="productCost" class="form-label">商品成本：</label><label :class="{'nullShow':filled.productCost}"><i class="fa-solid fa-pen">必填</i></label>
                         <input type="number" class="form-control w-100" placeholder="NTD" id="productCost" v-model="createProductData.productCost" min="0">
                     </div>
                     <div class="col-6 my-2">
-                        <label for="productPrice" class="form-label">商品售價：</label><label :class="{'nullShow':filled.productPrice}">*不能為空</label>
+                        <label for="productPrice" class="form-label">商品售價：</label><label :class="{'nullShow':filled.productPrice}"><i class="fa-solid fa-pen">必填</i></label>
                         <input type="number" class="form-control w-100" placeholder="NTD" id="productPrice" v-model="createProductData.productPrice" min="0">
                     </div>
                     <div class="col-12 my-2">
-                        <label for="productDescription" class="form-label">商品敘述：</label><label :class="{'nullShow':filled.productDescription}">*不能為空</label>
+                        <label for="productDescription" class="form-label">商品敘述：</label><label :class="{'nullShow':filled.productDescription}"><i class="fa-solid fa-pen">必填</i></label>
                         <input type="text" class="form-control w-100" placeholder="請簡述特色" id="productDescription" v-model="createProductData.productDescription">
                     </div>
-                    <div id="multipleselect" class="col-12 ">
+                    <div id="multipleselect" >
                         <div class="col-12 my-2">
-                            <label class="my-2">基酒：</label>
+                            <label class="my-2">成分：</label>
                             <multiselect v-model="basevalue" tag-placeholder="Add this as new tag"
-                                         placeholder="請選擇至少一種基酒" label="name" track-by="baseId" :options="baseselected"
+                                         placeholder="最多選4種":max="4" label="materialName" track-by="materialId" :options="selection"
                                          :multiple="true" :taggable="true" @@tag="addTag"></multiselect>
                         </div>
+                    </div>
+                        <div class="col-12 my-2">
+                        <label>成分用量：</label><label :class="{'nullShow':filled.productMaterial}"><i class="fa-solid fa-pen">必填</i></label>
+                            </div>
+                            <div class="col-6 py-0 my-1">
+                                <label class="form-label py-0">{{baseConsumption[0].materialName}}</label>
+                                <input v-if="basevalue.length<1" type="number" placeholder="mL" class="form-control w-100" disabled />
+                                <input v-else type="number" placeholder="mL" class="form-control w-100" min="0" v-model="baseConsumption[0].consumption" />
+                            </div>
+                            <div class="col-6 py-0 my-1">
+                                <label class="form-label py-0">{{baseConsumption[1].materialName}}</label>
+                        <input v-if="basevalue.length<2" type="number" placeholder="mL" class="form-control w-100" disabled />
+                        <input v-else type="number" placeholder="mL" class="form-control w-100" min="0" v-model="baseConsumption[1].consumption" />
+                            </div>
+                            <div class="col-6 py-0 my-1">
+                                <label class="form-label py-0">{{baseConsumption[2].materialName}}</label>
+                        <input v-if="basevalue.length<3" type="number" placeholder="mL" class="form-control w-100" disabled />
+                        <input v-else type="number" placeholder="mL" class="form-control w-100" min="0" v-model="baseConsumption[2].consumption" />
+                            </div>
+                    <div class="col-6 py-0 my-1">
+                        <label class="form-label py-0">{{baseConsumption[3].materialName}}</label>
+                        <input v-if="basevalue.length<4" type="number" placeholder="mL" class="form-control w-100" disabled />
+                                <input v-else type="number" placeholder="mL" class="form-control w-100" min="0" v-model="baseConsumption[3].consumption" />
+                            </div>
+                        
                         <div class="col-12 ">
                             <label class="my-2">折扣：</label>
                             <multiselect v-model="discountvalue" deselect-label="無法移除" track-by="discountId"
@@ -161,7 +186,6 @@
                                           slot-scope="{ option }"><strong>{{option.discountName}}</strong> </template>
                             </multiselect>
                         </div>
-                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -318,6 +342,7 @@
                 productPrice:false,
                 productCost:false,
                 productDescription:false,
+                productMaterial:false,
             },
             createProductData: {
                 productName: "",
@@ -364,15 +389,14 @@
                 addRemoveLinks: true,
                 headers: { "My-Awesome-Header": "header value" }
             },
-            baseselected: [
-                { name: 'Tequila', baseId: '1' },
-                { name: 'Rum', baseId: '2' },
-                { name: 'Gin', baseId: '3' },
-                { name: 'Brandy', baseId: '4' },
-                { name: 'Whiskey', baseId: '5' },
-                { name: 'Vodka', baseId: '6' },
+            selection:[],
+            basevalue: [],
+            baseConsumption:[
+                { Id: "", materialName:"成分",consumption:"" },
+                { Id: "", materialName:"成分",consumption:"" },
+                { Id: "", materialName:"成分",consumption:"" },
+                { Id: "", materialName:"成分",consumption:"" },
             ],
-            basevalue: "",
             discountvalue: "",
         },
         components: {
@@ -405,6 +429,11 @@
                         data.append("DiscountId", this.discountvalue.discountId)
                         var img = this.$refs.myVueDropzone.getQueuedFiles();
                         img.forEach(x => data.append("Images", x));
+                        var baseCons=[];
+                        for (i=0;i<baseConsumption.length;i++)
+                        if (this.baseConsumption.consumption>0){
+                            baseCons[i]=this.baseConsumption.consumption
+                        }
                         
                         fetch("/api/Products/CreateProduct", {
                             method: 'POST',
@@ -423,6 +452,10 @@
                                         this.createProductData.productDescription = "";
                                         this.createProductData.images = [];
                                         this.discountvalue = "";
+                                    }
+                                        break;
+                                    case 1: {
+                                        Swal.fire('成本/價格要大於0!', '', 'error');
                                     }
                                         break;
                                     case 400: {
@@ -456,7 +489,10 @@
                 .then((result) => { self.product = result });
             fetch("/api/Discount/GetDiscount")
                 .then(response => response.json())
-                .then(result => this.allDiscount = result.concat())
+                .then(result => self.allDiscount = result);
+            fetch("/api/Products/GetMaterialCategory")
+                .then(response => response.json())
+                .then(result => self.selection = result);
         },
         watch: {
             'createProductData.productName': function (n, o) {
@@ -490,6 +526,30 @@
                 else {
                     this.filled.productDescription = false;
                 }
+            },
+
+            'basevalue':function(n,o){
+                //添加選項
+                if (n.length > o.length){
+                for (i=0;i<n.length;i++){
+                    this.baseConsumption[i]=n[i]
+                }
+                }
+                //移除選項
+                else {
+                    for (i=0;i<n.length;i++){
+                        n[i].consumption=0;
+                    this.baseConsumption[i]=n[i]
+                }
+                    this.baseConsumption[n.length] = { Id: "", materialName:"成分",consumption:"" }
+                }
+                if(n.length!=0){
+                    this.filled.productMaterial=true;
+                }
+                else{
+                    this.filled.productMaterial=false;
+                }
+
             },
         }
     })

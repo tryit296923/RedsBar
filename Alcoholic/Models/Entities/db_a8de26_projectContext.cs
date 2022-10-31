@@ -109,6 +109,8 @@ namespace Alcoholic.Models.Entities
 
                 entity.Property(e => e.Phone).HasColumnType("nvarchar(max)");
 
+                entity.Property(e => e.Join).HasDefaultValueSql("(GETDATE())");
+
                 entity.Property(e => e.Qualified)
                     .HasMaxLength(1)
                     .HasColumnName("qualified")
@@ -260,11 +262,9 @@ namespace Alcoholic.Models.Entities
                     .IsRequired()
                     .HasColumnType("nvarchar(max)");
 
-                entity.Property(e => e.Average).HasComputedColumnSql("(([Frequency]+[Environment]+[Serve]+[Dish]+[Price]+[Overall])/6)",false);
-                //entity.HasOne(f => f.Order)
-                //    .WithOne(o => o.Feedback)
-                //    .HasForeignKey<Order>(f => f.OrderId)
-                //    .OnDelete(DeleteBehavior.Cascade);
+                entity.Property(e => e.Average).HasColumnType("decimal")
+                .HasComputedColumnSql("CAST(([Frequency]+[Environment]+[Serve]+[Dish]+[Price]+[Overall])/CONVERT(decimal(4,2), 6) AS decimal(3,1))", false);
+
             });
 
             modelBuilder.Entity<Category>(entity =>

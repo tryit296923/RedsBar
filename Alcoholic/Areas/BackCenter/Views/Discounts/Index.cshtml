@@ -104,13 +104,13 @@
             <div class="modal-body container productAdding">
                 <div class="row">
                     <div class="col-6 my-2">
-                        <label for="productCost" class="form-label">優惠等級：</label><label :class="{'nullShow':filled.discountName}">*不能為空</label>
+                        <label for="productCost" class="form-label">優惠等級：</label><label :class="{'nullShow':filled.discountName}"><i class="fa-solid fa-pen">必填</i></label>
                         <input type="text" class="form-control w-100" placeholder="請輸入" id="productCost" v-model="addDiscountData.discountName" required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-6 my-2">
-                        <label for="productPrice" class="form-label">折扣率：</label><label :class="{'nullShow':filled.discountAmount}">*不能為空</label>
+                        <label for="productPrice" class="form-label">折扣率：</label><label :class="{'nullShow':filled.discountAmount}"><i class="fa-solid fa-pen">必填</i></label>
                         <input type="number" class="form-control w-100" placeholder="請輸入" max="2" id="productPrice" v-model="addDiscountData.discountAmount" min="0" required>
                     </div>
                 </div>
