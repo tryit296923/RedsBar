@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "會員開通成功";
+    ViewData["Title"] = "密碼更新成功";
     Layout = "_LayOut";
 }
 <style>
@@ -14,8 +14,12 @@
     }
 
     .Success {
-        height: 85vh;
         position: relative;
+        height: 80vh;
+    }
+
+    .container footright {
+        height: 5vh;
     }
 
         .Success > img {
@@ -37,18 +41,21 @@
         }
 
     .text {
-        bottom: 0;
         color: #FFF;
-        position: absolute;
         width: 100%;
         display: flex;
         justify-content: center;
         flex-direction: column;
     }
 
-        .text h3, p {
-            margin: 0 auto 100px auto;
-        }
+    .text h3,.text p,.text a{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    .text a{
+        margin: 10px 0;
+    }
 
     h3 {
         font-size: 2rem;
@@ -65,6 +72,7 @@
     </div>
     <div class="text">
         <h3>密碼更新完成!</h3>
+        <a href="/member/loginregister">點擊此處回登入頁面</a>
         <p>Reds'Bar歡迎您</p>
     </div>
 </div>
