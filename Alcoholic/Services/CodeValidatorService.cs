@@ -38,7 +38,6 @@ namespace Alcoholic.Services
                 if (ServerCode.Equals(code, StringComparison.InvariantCultureIgnoreCase))
                 {
                     isValid = true;
-                    httpContext.Session.Remove(ValidKey);
                 }
             }
             return isValid;

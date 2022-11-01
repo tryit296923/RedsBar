@@ -34,10 +34,18 @@ namespace Alcoholic.Controllers.API
         }
 
         [HttpPost]
-        public IActionResult Validate([FromBody]string code)
+        public IActionResult Validate([FromBody] string code)
         {
-            bool isValid = codeValidation.Validate(code);
-            return Ok(isValid);
+            if (code.Length == 5)
+            {
+                bool isValid = codeValidation.Validate(code);
+                return Ok(isValid);
+            }
+            else
+            {
+                return Ok(false);
+            }
+
         }
 
         private void PaintInterLine(Graphics g, int n, int w, int h)
