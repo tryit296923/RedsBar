@@ -1,11 +1,8 @@
 using Alcoholic.Hubs;
-using Alcoholic.Models;
 using Alcoholic.Models.Entities;
 using Alcoholic.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +14,8 @@ builder.Services.AddTransient<MailService>();
 builder.Services.AddTransient<HashService>();
 builder.Services.AddTransient<AesService>();
 builder.Services.AddTransient<LvlService>();
+builder.Services.AddScoped<CodeValidatorService>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddRazorTemplating();
 builder.Services.AddSignalR();
 
@@ -71,11 +70,11 @@ builder.Services.AddDistributedMemoryCache();
 // set up the in-memory session provider with a default in-memory implementation of IDistributedCache
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromSeconds(10800);
+    options.IdleTimeout = TimeSpan.FromHours(2);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
+builder.Services.AddControllers();
 var app = builder.Build();
 
 app.MapHub<NotifyHub>("/notifyHub");
@@ -107,5 +106,10 @@ app.MapAreaControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.Run();

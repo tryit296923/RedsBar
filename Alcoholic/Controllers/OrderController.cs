@@ -77,57 +77,7 @@ namespace Alcoholic.Controllers
         }
         public IActionResult Cart()
         {
-            ReturnModel returnModel = new();
-            //session取值是否可用
-            var sesStr = HttpContext.Session.GetString("CartItem");
-            if (string.IsNullOrEmpty(sesStr))
-            {
-                throw new Exception("sesStr notfound");
-            }
-            Console.WriteLine(sesStr);
-            string sMemberID = HttpContext.Session.GetString("MemberID");
-            if (!Guid.TryParse(sMemberID, out var memberId))
-            {
-                //錯誤訊息待修改
-                throw new Exception("Guid is error");
-            }
-            string memberName = "";
-            if (sMemberID != null)
-            {
-                memberName = (from n in _db.Members
-                              where n.MemberID == memberId
-                              select n.MemberName).FirstOrDefault();
-            }
-            else
-            {
-                return NotFound();
-            }
-
-            var cartItems = JsonConvert.DeserializeObject<List<CartItem>>(sesStr);
-
-            foreach (var cartItem in cartItems)
-            {
-                var product = _db.Products.Find(cartItem.Id);
-                cartItem.ProductName = product.ProductName;
-                cartItem.UnitPrice = product.UnitPrice;
-                cartItem.DiscountAmount = product.Discount.DiscountAmount;
-                cartItem.Path = product.Images.FirstOrDefault().Path;
-            }
-            //HttpContext.Session.SetString("123", "456");
-            //var s = HttpContext.Session.GetString("123");
-            HttpContext.Session.SetString("CartItem", JsonConvert.SerializeObject(cartItems));
-
-            string stest = "";
-            //若??前面為空，則用""取代
-            stest = HttpContext.Session.GetString("CartItem") ?? "";
-            //var temp = JsonConvert.DeserializeObject<List<CartItem>>(stest);
-            var ovm_Cart = new OrderViewModel
-            {
-                MemberName = memberName,
-                ItemList = cartItems,
-            };
-
-            return View(ovm_Cart);
+            return View();
         }
 
         [HttpPost]
@@ -142,6 +92,19 @@ namespace Alcoholic.Controllers
             return View();
         }
         public IActionResult OrderList()
+        {
+            var yn_sDesk = HttpContext.Session.GetString("Desk");
+            if(yn_sDesk == null)
+            {
+                return RedirectToAction("OrderDenied","Order");
+            }
+            else
+            {
+                return View();
+            }
+        }
+        // 電腦網頁禁止點餐
+        public IActionResult OrderDenied()
         {
             return View();
         }

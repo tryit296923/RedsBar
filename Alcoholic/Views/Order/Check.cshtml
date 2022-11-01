@@ -207,7 +207,7 @@
         },
         methods: {
             pay: function (paytype) {
-                fetch("/api/Order/Payment", {
+                fetch("/api/OnlinePayment/Payment", {
                     body: JSON.stringify({ OrderId: this.orderCheckViewModel.orderId, PayType: paytype }),
                     headers: { 'content-type': 'application/json' },
                     method: "POST"

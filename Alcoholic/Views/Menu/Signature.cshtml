@@ -36,10 +36,13 @@
         padding: 0 50px 0 50px;
     }
     .classicCT p{
-        font-size: small;
-        height: 40px;
+        font-size:medium;
     }
     .price {
+        color: #333;
+    }
+
+    .discount_price{
         color: #333;
         text-decoration: line-through;
     }
@@ -63,14 +66,17 @@
         font-weight: bold;
         color: #842029;
     }
+
+    .modal-body p {
+        margin-top: 15px;
+    }
     .modal-image {
-        max-height: 280px;
-        margin:50px 0 50px 0;
+        max-width: 498px;
     }
 
     .modal-spec {
         overflow-y: auto;
-        max-height: 20vh;
+        text-align: center;
     }
 
     .modal-bodyimg {
@@ -102,11 +108,16 @@
                         <div class="card-body">
                             <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal"
                                 @@click="selected">
-                                <p class="card-title">{{item.name}}</p>
-                                <span class="price">${{item.price}}</span>
-                                <span
-                                    class="discount">${{Math.round(item.price*discount)}}</span>
-                                <span class="sale px-2">SALE</span>
+                                <template v-if="item.discountAmount == 1">
+                                    <p class="card-title">{{item.name}}</p>
+                                    <span class="price">${{item.price}}</span>
+                                </template>
+                                <template v-else>
+                                    <p class="card-title">{{item.name}}</p>
+                                    <span class="discount_price">${{item.price}}</span>
+                                    <span class="discount">${{Math.round(item.price * item.discountAmount)}}</span>
+                                    <span class="sale px-2">SALE</span>
+                                </template>
                             </div>
                         </div>
                     </div>
@@ -120,16 +131,16 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{head}}</h5>
+                    <h5 class="modal-title">{{modal.productName}}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
-                <div class="modal-body py-0">
+                <div class="modal-body p-0">
                     <div class="modal-bodyimg ">
-                        <img class="modal-image" :src="imagesrc">
+                        <img class="modal-image" :src="modal.imagesrc">
                     </div>
                     <div class="card-body modal-spec">
-                       <h3>{{description}}</h3>
+                        <p><b>{{modal.description}}</b></p>
                     </div>
                 </div>
             </div>
@@ -141,10 +152,11 @@
     var app = new Vue({
         el: '#vueproductModal',
         data: {
-            imagesrc: "",
-            head: "",
-            discount: 0.8,
-            description: "",
+            modal:{
+                imagesrc: "",
+                productName: "",
+                description: "",
+            },
             product: []
         },
         methods: {
@@ -156,9 +168,9 @@
                         i = index;
                 })
                 let item = this.product[i];
-                this.imagesrc = item.path;
-                this.head = item.name;
-                this.description = item.description;
+                this.modal.imagesrc = item.path;
+                this.modal.productName = item.name;
+                this.modal.description = item.description;
             },
         },
         beforeCreate: function () {
@@ -167,5 +179,5 @@
             .then( response => response.json())
             .then( result => self.product = result)
         },
-    })   
+    });   
 </script>

@@ -86,7 +86,6 @@ namespace Alcoholic.Areas.BackCenter.Controllers
                 SGuestNum = orders.Select(o => o.Number).Sum(),
                 SMemberNum = members.Count(),
                 SRate = orders.Where(o => o.Feedback != null).Select(o => o.Feedback.Average).Average().GetValueOrDefault()
-                //.Average().GetValueOrDefault(),
             };
             return Ok(model);
         }
