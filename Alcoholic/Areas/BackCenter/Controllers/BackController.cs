@@ -43,7 +43,7 @@ namespace Alcoholic.Areas.BackCenter.Controllers
                 Total = orders.Select(o => o.Total).Sum().GetValueOrDefault(),
                 GuestNum = orders.Select(o => o.Number).Sum(),
                 MemberNum = db.Members.Count(),
-                Rate = orders.Select(o => o.Feedback.Average).Sum().GetValueOrDefault(),
+                Rate = orders.Select(o => o.Feedback).Select(f => f.Average).Average().GetValueOrDefault(),
                 HotSales = hotSales.ToList().GetRange(0, 5)
             };
             return Ok(main);
