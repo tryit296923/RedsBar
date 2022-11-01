@@ -15,6 +15,6 @@ namespace Alcoholic.Models.DTO
         [Required]
         public List<IFormFile> Images { get; set; }
         public int DiscountId { get; set; }
-
+        public List<Materials> Materials { get; set; }
     }
 }
