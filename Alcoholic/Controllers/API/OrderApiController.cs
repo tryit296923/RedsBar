@@ -51,7 +51,7 @@ namespace Alcoholic.Controllers.API
             //session取值是否可用
             var sesStr = HttpContext.Session.GetString("CartItem");
             Console.WriteLine(sesStr);
-            string sMemberID = HttpContext.Session.GetString("MemberID");
+            string sMemberID = HttpContext.Session.GetString("MemberID");           
             if (!Guid.TryParse(sMemberID, out var memberId))
             {
                 //錯誤訊息待修改
@@ -222,35 +222,42 @@ namespace Alcoholic.Controllers.API
         {
             string sMemberId = HttpContext.Session.GetString("MemberID");
             string sDesk = HttpContext.Session.GetString("Desk");
-
-            if (!Guid.TryParse(sMemberId, out var memberId))
+            
+            if(sMemberId != null && sDesk != null)
             {
-                throw new Exception("Guid is error");
-            }
-
-            var orderDetail = (from y in _db.Orders
-                               where y.Status == "N" && y.MemberId == memberId && y.DeskNum == sDesk
-                               select y).Select(y => new OrderViewModel
-                               {
-                                   Desk = y.DeskNum,
-                                   Number = y.Number,
-                                   OrderId = y.OrderId,
-                                   OrderTime = y.OrderTime,
-                                   MemberName = y.Member.MemberName,
-                                   Status = y.Status,
-                                   ItemList = y.OrderDetails.Select(z => new CartItem
+                if (!Guid.TryParse(sMemberId, out var memberId))
+                {
+                    throw new Exception("Guid is error");
+                }
+                var orderDetail = (from y in _db.Orders
+                                   where y.Status == "N" && y.MemberId == memberId && y.DeskNum == sDesk
+                                   select y).Select(y => new OrderViewModel
                                    {
-                                       Id = z.ProductId,
-                                       Qty = z.Quantity,
-                                       ProductName = z.Product.ProductName,
-                                       OrderId = z.OrderId,
-                                       UnitPrice = z.UnitPrice,
-                                       DiscountAmount = z.Product.Discount.DiscountAmount,
-                                       Path = z.Product.Images.FirstOrDefault().Path,
-                                       Sequence = z.Sequence,
-                                   }).ToList(),
-                               }).FirstOrDefault();
-            return Ok(orderDetail);
+                                       Desk = y.DeskNum,
+                                       Number = y.Number,
+                                       OrderId = y.OrderId,
+                                       OrderTime = y.OrderTime,
+                                       MemberName = y.Member.MemberName,
+                                       Status = y.Status,
+                                       ItemList = y.OrderDetails.Select(z => new CartItem
+                                       {
+                                           Id = z.ProductId,
+                                           Qty = z.Quantity,
+                                           ProductName = z.Product.ProductName,
+                                           OrderId = z.OrderId,
+                                           UnitPrice = z.UnitPrice,
+                                           DiscountAmount = z.Product.Discount.DiscountAmount,
+                                           Path = z.Product.Images.FirstOrDefault().Path,
+                                           Sequence = z.Sequence,
+                                       }).ToList(),
+                                   }).FirstOrDefault();
+                return Ok(orderDetail);
+            }
+            else
+            {
+                return Ok(false);
+            }
+            
         }
         public IActionResult GetCheckInfo()
         {
@@ -262,7 +269,6 @@ namespace Alcoholic.Controllers.API
             {
                 throw new Exception("Guid is error");
             }
-            // TODO: 處理訪客ID相同的狀況??orderTime/desk
             var getOrder = _db.Orders.Where(x => x.MemberId == memberId && x.Status == "N" && x.DeskNum == sDesk).FirstOrDefault();
             var cartTotalList = getOrder.OrderDetails.Select(x => new CartTotal { ProductName = x.Product.ProductName, Quantity = x.Quantity })
                 .GroupBy(x => x.ProductName, (k, v) => new CartTotal
@@ -274,17 +280,19 @@ namespace Alcoholic.Controllers.API
             if (getOrder != null)
             {
                 total = (int)getOrder.Total;
+                OrderCheckViewModel orderCheckViewModel = new OrderCheckViewModel
+                {
+                    Desk = getOrder.DeskNum,
+                    Number = getOrder.Number.ToString(),
+                    OrderId = getOrder.OrderId,
+                    OrderTime = now,
+                    Total = total,
+                    CartTotal = cartTotalList,
+                };
+                return Ok(orderCheckViewModel);
             }
-            OrderCheckViewModel orderCheckViewModel = new OrderCheckViewModel
-            {
-                Desk = getOrder.DeskNum,
-                Number = getOrder.Number.ToString(),
-                OrderId = getOrder.OrderId,
-                OrderTime = now,
-                Total = total,
-                CartTotal = cartTotalList,
-            };
-            return Ok(orderCheckViewModel);
+            else { return Ok(false); }
+            
         }
         // 離席
         [HttpPut]
@@ -422,20 +430,25 @@ namespace Alcoholic.Controllers.API
             string sMemberID = HttpContext.Session.GetString("MemberID");
             string sDesk = HttpContext.Session.GetString("Desk");
 
-            if (!Guid.TryParse(sMemberID, out var memberId))
+            if(sMemberID != null && sDesk != null)
             {
-                throw new Exception("Guid is error");
+                if (!Guid.TryParse(sMemberID, out var memberId))
+                {
+                    throw new Exception("Guid is error");
+                }
+                var fd_checkOrder = (from o in _db.Orders
+                                     where o.MemberId == memberId && o.Status == "N" && o.DeskNum == sDesk
+                                     select o).FirstOrDefault();
+                FrontDeskCheckPage frontDeskCheckPage = new FrontDeskCheckPage
+                {
+                    OrderId = fd_checkOrder.OrderId,
+                    Desk = fd_checkOrder.DeskNum,
+                    OrderTime = fd_checkOrder.OrderTime,
+                };
+                return Ok(frontDeskCheckPage);
             }
-            var fd_checkOrder = (from o in _db.Orders
-                                 where o.MemberId == memberId && o.Status == "N" && o.DeskNum == sDesk
-                                 select o).FirstOrDefault();
-            FrontDeskCheckPage frontDeskCheckPage = new FrontDeskCheckPage
-            {
-                OrderId = fd_checkOrder.OrderId,
-                Desk = fd_checkOrder.DeskNum,
-                OrderTime = fd_checkOrder.OrderTime,
-            };
-            return Ok(frontDeskCheckPage);
+            else { return Ok(false); }
+            
         }
         //測試SignalR
         //public async Task<IActionResult> TestDesk(string desk)
