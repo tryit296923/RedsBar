@@ -51,10 +51,20 @@ namespace Alcoholic.Areas.BackCenter.Controllers
                     members.Add(m);
                 }
             }
+            var STotal = orders.GroupBy(o => o.OrderDate).Select(o => new DateTotal
+            {
+                Date = o.Key,
+                Total = o.Select(o => o.Total).Sum()
+            });
+            var SGuestNum = orders.GroupBy(o => o.OrderDate).Select(o => new DateTotal
+            {
+                Date = o.Key,
+                Total = o.Select(o => o.Number).Sum()
+            });
             SelectModel model = new()
             {
-                STotal = orders.Select(o => o.Total).ToList(),
-                SGuestNum = orders.Select(o => o.Number).ToList(),
+                STotal = STotal.ToList(),
+                SGuestNum = SGuestNum.ToList(),
                 SMemberNum = members.Count(),
             };
             return Ok(model);

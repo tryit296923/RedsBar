@@ -16,9 +16,14 @@
     }
     public class SelectModel
     {
-        public List<int> STotal { get; set; }
-        public List<int> SGuestNum { get; set; }
+        public List<DateTotal> STotal { get; set; }
+        public List<DateTotal> SGuestNum { get; set; }
         public int SMemberNum { get; set; }
+    }
+    public class DateTotal 
+    {
+        public string Date { get; set; }
+        public int Total { get; set; }
     }
 
 }
