@@ -25,6 +25,8 @@ namespace Alcoholic.Controllers.API
             var menu = from pro in _db.Products
                        join path in _db.ProductImage
                        on pro.ProductId equals path.ProductId
+                       //不顯示客製化商品
+                       where pro.ProductId != 52
                        select new MenuModel
                        {
                            Id = pro.ProductId,
@@ -70,6 +72,7 @@ namespace Alcoholic.Controllers.API
                            Id = x.CategoryId,
                            MaterialName = y.Category.CategoryName + "-" + y.Brand,
                            MaterialId = y.MaterialId,
+                           Consumption = 0
                        };
             return mats.OrderBy(x=>x.MaterialName);
         }
@@ -77,6 +80,7 @@ namespace Alcoholic.Controllers.API
         [HttpPost]
         public IActionResult CreateProduct([FromForm]CreateProductModel model)
         {
+
             ReturnModel returnModel = new();
             if (!ModelState.IsValid)
             {
@@ -113,6 +117,7 @@ namespace Alcoholic.Controllers.API
 
                     }
                 }
+                //新增商品至Product資料表
                 var prod = new Product()
                 {
                     Cost = model.Cost,
@@ -123,6 +128,18 @@ namespace Alcoholic.Controllers.API
                     Images = tempFilePath.Select(x => new ProductImage() { Path = x }).ToList(),
                 };
                 _db.Products.Add(prod);
+                //新增產品材料至ProductsMaterial資料表
+                foreach (var material in model.Materials)
+                {
+                    var prodMaterials = new ProductsMaterials()
+                    {
+                        ProductId = prod.ProductId,
+                        MaterialId = material.MaterialId,
+                        Consumption=material.Consumption
+                    };
+                    _db.ProductsMaterials.Add(prodMaterials);
+                }
+                
                 _db.SaveChanges();
                 return Ok(returnModel);
             }
@@ -138,6 +155,7 @@ namespace Alcoholic.Controllers.API
                 productData.ProductDescription = editData.ProductDescription;
                 productData.Cost = editData.Cost;
                 productData.UnitPrice = editData.UnitPrice;
+             productData.DiscountId = editData.DiscountId;
 
             
             _db.Update(productData);

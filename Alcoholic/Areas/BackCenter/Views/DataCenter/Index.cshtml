@@ -2,7 +2,7 @@
     ViewData["Title"] = "數據中心";
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
-    <div class="datacenter container-fluid p-5">
+    <div class="datacenter container-fluid p-5" id="datacenter">
         <h3>數據中心</h3>
         <hr>
         <ul class="nav  mb-0" id="pills-tab" role="tablist">
@@ -46,27 +46,30 @@
             <div class="tab-pane fade show active" id="pills-1" role="tabpanel"
                  aria-labelledby="pills-home-tab" tabindex="0">
                 <div class="info">
-                    <div class="tabtop">
+                    <div class="data py-4">
                         <div class="spacebetween row-cols-2 mb-3">
                             <h3>關鍵指標</h3>
-                            <select class="form-select" name="mark" id="mark">
-                                <option value="days">近七日</option>
-                                <option value="month">近一個月</option>
-                                <option value="season">近一季</option>
-                                <option value="year">近一年</option>
+                            <select class="form-select" name="mark" id="mark" v-model="diff" v-on:change="selectDiff">
+                                <option value="m" selected>近一個月</option>
+                                <option value="s">近一季</option>
+                                <option value="y">近一年</option>
                             </select>
                         </div>
+                        <div class="keymark row-cols-4">
+                            <div class="keymarkdetail p-4"><h2>{{select.sTotal}}</h2><h5>營業額</h5></div>
+                            <div class="keymarkdetail p-4"><h2>{{select.sGuestNum}}</h2><h5>來客量</h5></div>
+                            <div class="keymarkdetail p-4"><h2>{{select.sMemberNum}}</h2><h5>會員數</h5></div>
+                            <div class="keymarkdetail p-4"><h2>{{select.sRate}}/5</h2><h5>評價</h5></div>
+                        </div>
+                        <br>
                     </div>
-                    <div class="keymark row-cols-5">
-                        <div class="keymarkdetail p-4"><h5>來客數</h5><h2>888</h2><p>0.00%</p></div>
-                        <div class="keymarkdetail p-4"><h5>訂單數</h5><h2>888</h2><p>0.00%</p></div>
-                        <div class="keymarkdetail p-4"><h5>總營業額</h5><h2>888</h2><p>0.00%</p></div>
-                        <div class="keymarkdetail p-4"><h5>訂單平均金額</h5><h2>888</h2><p>0.00%</p></div>
-                        <div class="keymarkdetail p-4"><h5>會員數</h5><h2>888</h2><p>0.00%</p></div>
-                    </div>
-                    <br>
-                    <div class="chart">
-                        <canvas id="myChart" width="400" height="200"></canvas>
+                    <div class="charts row">
+                        <div class="col-6">
+                            <canvas id="myChart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="col-6"> 
+                            <canvas id="lineChart" width="400" height="200"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -192,7 +195,6 @@
                         <div class="spacebetween row-cols-2 mb-3">
                             <h3>來客數量</h3>
                             <select class="form-select" name="mark" id="mark">
-                                <option value="days">近七日</option>
                                 <option value="month">近一個月</option>
                                 <option value="season">近一季</option>
                                 <option value="year">近一年</option>
@@ -205,39 +207,112 @@
     </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <script>
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-            datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
+    const vm = new Vue({
+        el: "#datacenter",
+        data:{
+            select: {},
+            diff: "m",
+            labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
         },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
+        methods: {
+            selectDiff: function () {
+                fetch("/backcenter/DataCenter/SelectedData", {
+                    method:"post",
+                    headers:{"Content-Type":"application/json"},
+                    body: JSON.stringify(this.diff)
+                }).then(e => e.json()).then(r => {this.select = r;
+                    let self = this;
+                    let sTotal = self.select.sTotal;
+                    let SGuestNum = self.select.SGuestNum;
+                    let SMemberNum = self.select.SMemberNum;
+                    let ctx = document.getElementById('myChart').getContext('2d');
+                    let myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: self.labels,
+                            datasets: [{
+                                label: "",
+                                data: [self.select.sTotal],
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                ],
+                                borderWidth: 1,
+                                barThickness: 100,
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+
+                })
+            },
+            selectDatas: function(){
+                fetch("/backcenter/DataCenter/SelectedData", {
+
+                }).then(e=>e.json()).then(r => {console.log(r);
+                    let ctxline = document.getElementById('lineChart').getContext('2d');
+                    let lineChart = new Chart(ctxline, {
+                        type: 'line',
+                        data: {
+                            labels: [1,2,3,4,5],
+                            datasets: [
+                                {
+                                    label: "來客量",
+                                    data: [self.select.sGuestNum],
+                                    backgroundColor: [
+                                        'rgba(54, 162, 235, 0.2)',
+                                    ],
+                                    borderColor: [
+                                        'rgba(54, 162, 235, 1)',
+                                    ],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: "會員數",
+                                    data: [self.select.sMemberNum],
+                                    backgroundColor: [
+                                        'rgba(255, 206, 86, 0.2)',
+                                    ],
+                                    borderColor: [
+                                        'rgba(255, 206, 86, 1)',
+                                    ],
+                                    borderWidth: 1
+                                }
+                            ]
+                        },
+                        options: {
+                            scales: {
+                                x:{
+                                    display: true,
+                                    title: {
+                                      display: true
+                                    }
+                                },  
+                                y: {
+                                    beginAtZero: true,
+                                    title:{
+                                        display: true,
+                                        text: "人數"
+                                    }
+                                }
+                            }
+                        }
+                    });                
+
+                })
+            },
+        },
+        mounted: function () {
+            this.selectDiff();
         }
-    });
+    })
+
 </script>

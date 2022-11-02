@@ -182,5 +182,20 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             db.SaveChanges();
             return Ok(true);
         }
+
+        [Authorize(Roles = "mod")]
+        [HttpPost]
+        public IActionResult ResetPw([FromBody] StaffLoginModel emp)
+        {
+            var user = db.Employees.Select(e => e).Where(e => e.EmpAccount == emp.EmpAccount).FirstOrDefault();
+            if (user == null)
+            {
+                return Ok(false);
+            }
+            user.EmpPassword = hash.GetHash(String.Concat(emp.EmpPassword, user.Salt));
+            db.Entry(user).State = EntityState.Modified;
+            db.SaveChanges();
+            return Ok(true);
+        }
     }
 }

@@ -109,6 +109,10 @@
     .modal-bodyimg {
         text-align: center;
     }
+    .selModalHead{
+        background-color: #721B29;
+        color: white
+    }
 
     .modal-footer {
         background-color: #721B29;
@@ -358,7 +362,7 @@
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </div>
-                                        <button type="button" class="col-12 btn">加到購物車</button>
+                                        <button type="button" class="col-12 btn" @@click="sessionStr">加到購物車</button>
                                     </div>
                                 </div>
                             </div>
@@ -370,55 +374,42 @@
         </div>
     </div>
     <!-- 產品懸浮視窗Modal -->
-    <form action="./Orderlist.html" method="post">
-        <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header ">
-                        <h3 class="modal-title fw-bold px-5">{{productName}}</h3>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header selModalHead mb-2">
+                    <h3 class="modal-title fw-bold px-5">{{productName}}</h3>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="card-body btnaddtocart">
+                    <div :id="vueid" >
+                        <span class="price p-2 my-2">${{price}}</span>
+                        <span class="discount ">${{Math.round(price*discountAmount)}}</span>
+                        <span class="sale px-2 ">SALE</span>
+                        <img :src="imagesrc" class="w-100 p-2 my-2" />
+                        <h3 class="card-title text-center p-2 my-2">{{description}}</h3>
+
                     </div>
-                    <div class="modal-body py-0">
-                        <div class="modal-bodyimg ">
-                            <img class="modal-image" :src="imagesrc">
+                    <div class="row justify-content-center p-2 my-2 mx-0 quantitygroup">
+                        <button type="button" @@click="minus"class="col-2 p-0 btn btn-dark btn-sm minus-btn">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <div class="col-8 p-0">
+                            <input type="number" :name="productName" :id="vueid"
+                                    class="form-control form-control-sm qty_input text-center"
+                                    value="0" readonly>
                         </div>
-                        <div class="card-body modal-spec text-center">
-                            <h5 class="my-3 fw-bold">{{description}}</h5>
-                        </div>
+                        <button type="button" @@click="plus"
+                                class="col-2 p-0 btn btn-dark btn-sm plus-btn">
+                            <i class="fa fa-plus"></i>
+                        </button>
                     </div>
-                    <div class="container  my-1">
-                        <div class="row justify-content-center quantitygroup">
-                            <button type="button" @@click="minus" class="col-2 p-0 btn btn-sm">
-                                <i class="fa fa-minus"></i>
-                            </button>
-                            <div class="col-5 p-0">
-                                <input type="number" :name="productName"
-                                       class="form-control form-control-sm qty_input text-center" value="0" readonly>
-                            </div>
-                            <button type="button" @@click="plus" class="col-2 p-0 btn btn-sm">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="modal-footer p-0">
-                        <div class="container-fluid ">
-                            <div class="container">
-                                <div class="row justify-content-center">
-                                    <div class="col-12 ">
-                                        <button type="submit" class="btn btncartbackgroundcolor">
-                                            加到購物車
-                                            <i class="fa-solid fa-cart-shopping ps-1"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <button type="button" class="col-12 btn" @@click="sessionStr">加到購物車</button>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
     <!-- 客製化modal懸浮視窗 -->
     <div class="modaloptions">
         <!-- 第一題 -->
@@ -531,9 +522,10 @@
                     </div>
                     <div class="modal-body p-0">
                         <div class="container modal-bodycolor  text-center">
-                            <button type="submit" name="選項" :value="optionsform"
-                                    class="btn btncartbackgroundcolor ">
-                                加到購物車<i class="fa-solid fa-cart-shopping ps-1"></i>
+                            <button type="button" name="客製化調酒" id="52"
+                                    value="1" :optionsform="optionsform"
+                                    class="btn btncartbackgroundcolor " @@click="sessionStr">
+                                加到購物車
                             </button>
                         </div>
                     </div>
@@ -556,15 +548,17 @@
     var app = new Vue({
         el: '#vueproductModal',
         data: {
-            tableid: 13,
             vueid: "",
             imagesrc: "",
             productName: "",
             discount: "",
             description: "",
+            price: "",
+            discountAmount: "",
             optionsform: [],
             cartArray: [],
             cartStr: "",
+            customize:52,
             optionsection1: [
                 { base: 'Vodka' }, { base: 'Rum' }, { base: 'Tequila' }, { base: 'Whiskey' }, { base: 'Gin' }, { base: 'Brandy' }
             ],
@@ -582,13 +576,17 @@
         },
         methods: {
             selected: function (e) {
-                this.value = 0;
-                this.formdata = 0;
-                this.vueid = e.currentTarget.id;
-                var item = this.product[this.vueid - 1];
-                this.imagesrc = item.path;
-                this.productName = item.name;
-                this.description = item.description;
+                //將點選的資料帶入到modal畫面
+                for (i = 0; i < this.product.length; i++) {
+                    if (e.currentTarget.id == this.product[i].id) {
+                        this.vueid = e.currentTarget.id;
+                        this.imagesrc = this.product[i].path;
+                        this.productName = this.product[i].name;
+                        this.description = this.product[i].description;
+                        this.price = this.product[i].price,
+                            this.discountAmount = this.product[i].discountAmount
+                    }
+                }
             },
             plus: function (e) {
                 if (e.currentTarget.parentElement.children[1].children[0].value < 10) {
@@ -627,7 +625,13 @@
                 this.cartStr = "";
             },
             sessionStr: function (e) {
+                if(e.target.id ==52){
+                    selProd = e.target
+                }
+                else{
                 var selProd = e.target.parentElement.children[1].children[1].children[0];
+
+                }
                 if (selProd.value > 0) {
                     var item = {
                         id: selProd.id,
@@ -671,7 +675,9 @@
                         title: '添加成功',
                         text: selProd.name
                     })
+                    if (selProd.id != 52){
                     selProd.value = 0;
+                    }
                 }
             }
 
@@ -681,7 +687,7 @@
             fetch("/api/Products/GetAllProducts")
                 .then((response) => response.json())
                 .then((result) => self.product = result)
-            
+
         }
     })
 </script>
