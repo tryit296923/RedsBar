@@ -93,6 +93,19 @@ namespace Alcoholic.Controllers
         }
         public IActionResult OrderList()
         {
+            var yn_sDesk = HttpContext.Session.GetString("Desk");
+            if(yn_sDesk == null)
+            {
+                return RedirectToAction("OrderDenied","Order");
+            }
+            else
+            {
+                return View();
+            }
+        }
+        // 電腦網頁禁止點餐
+        public IActionResult OrderDenied()
+        {
             return View();
         }
         public IActionResult Check()
