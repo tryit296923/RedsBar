@@ -5,16 +5,16 @@ namespace Alcoholic.Models.DTO
     public class CreateProductModel
     {
         [Required]
-        public string ProductName {get;set; }
+        public string? ProductName {get;set; }
         [Required]
         public int Cost { get; set; }
         [Required]
         public int UnitPrice { get; set; }
         [Required]
-        public string ProductDescription { get; set; }
+        public string? ProductDescription { get; set; }
         [Required]
         public List<IFormFile> Images { get; set; }
         public int DiscountId { get; set; }
-        public List<Materials> Materials { get; set; }
+        public List<string> Materials { get; set; }
     }
 }

@@ -292,7 +292,7 @@
                     </div>
                 </div>
             </div>
-            <!-- 推薦 -->
+            <!-- 推薦/促銷 -->
             <div class="tab-pane fade" id="recommendedCT" role="tabpanel" aria-labelledby="recommendedCT-tab"
                  tabindex="0">
                 <div class="container recommendedCT">
@@ -524,7 +524,7 @@
                         <div class="container modal-bodycolor  text-center">
                             <button type="button" name="客製化調酒" id="52"
                                     value="1" :optionsform="optionsform"
-                                    class="btn btncartbackgroundcolor " @@click="sessionStr">
+                                    class="btn btncartbackgroundcolor " @@click="sessionStr" data-bs-dismiss="modal">
                                 加到購物車
                             </button>
                         </div>
@@ -555,6 +555,8 @@
             description: "",
             price: "",
             discountAmount: "",
+            recommendHeadProd:[],
+            recommendBodyProd:[],
             optionsform: [],
             cartArray: [],
             cartStr: "",
@@ -687,7 +689,12 @@
             fetch("/api/Products/GetAllProducts")
                 .then((response) => response.json())
                 .then((result) => self.product = result)
-
+            fetch("/api/Prodcuts/GetRecommendHeadProd")
+                .then(response=>response.json())
+                .then(result => self.recommendHeadProd = result)
+            fetch("/api/Prodcuts/GetRecommendBodyProd")
+                .then(response => response.json())
+                .then(result => self.recommendBodyProd = result)
         }
     })
 </script>
