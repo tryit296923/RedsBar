@@ -3,6 +3,7 @@ using Alcoholic.Models.Entities;
 using Alcoholic.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Collections.Specialized;
 using System.Linq;
@@ -36,58 +37,17 @@ namespace Alcoholic.Areas.BackCenter.Controllers
                 ProductName = ods.Select(od => od.Product.ProductName).FirstOrDefault(),
                 Quantity = ods.Where(od => od.ProductId == ods.Key).Select(od => od.Quantity).Sum(),
                 ImgPath = ods.Select(od => od.Product.Images.FirstOrDefault().Path).FirstOrDefault(),
-            }).OrderByDescending(l => l.Quantity);
+            }).OrderByDescending(l => l.Quantity).AsNoTracking();
             var orders = db.Orders;
             MainPageModel main = new()
             {
-                Total = orders.Select(o => o.Total).Sum().GetValueOrDefault(),
+                Total = orders.Select(o => o.Total).Sum(),
                 GuestNum = orders.Select(o => o.Number).Sum(),
                 MemberNum = db.Members.Count(),
-                Rate = orders.Select(o => o.Feedback).Select(f => f.Average).Average().GetValueOrDefault(),
+                Rate =  Math.Round(orders.Select(o => o.Feedback).Select(f => f.Average).Average().GetValueOrDefault(),1),
                 HotSales = hotSales.ToList().GetRange(0, 5)
             };
             return Ok(main);
-        }
-
-        [HttpPost]
-        public IActionResult SelectedData([FromBody] string choice)
-        {
-            int days = 30;
-            switch (choice)
-            {
-                case "w": days = 7;
-                    break;
-                case "m": days = 30;
-                    break;
-                case "s": days = 90;
-                    break;
-                case "y": days = 365;
-                    break;
-            }
-            List<Order> orders = new();             
-            foreach(Order o in db.Orders)
-            {
-                if((DateTime.Now - o.OrderTime).TotalDays < days)
-                {
-                    orders.Add(o);
-                }
-            }
-            List<Member> members = new();
-            foreach (Member m in db.Members)
-            {
-                if ((DateTime.Now - m.Join).TotalDays < days)
-                {
-                    members.Add(m);
-                }
-            }
-            SelectModel model = new()
-            {
-                STotal = orders.Select(o => o.Total).Sum().GetValueOrDefault(),
-                SGuestNum = orders.Select(o => o.Number).Sum(),
-                SMemberNum = members.Count(),
-                SRate = orders.Where(o => o.Feedback != null).Select(o => o.Feedback.Average).Average().GetValueOrDefault()
-            };
-            return Ok(model);
         }
     }
 }

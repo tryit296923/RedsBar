@@ -1,4 +1,6 @@
-﻿using Alcoholic.Models.Entities;
+﻿using Alcoholic.Models.DTO;
+using Alcoholic.Models.Entities;
+using Castle.Core.Internal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,14 +10,55 @@ namespace Alcoholic.Areas.BackCenter.Controllers
     [Area("BackCenter")]
     public class DataCenterController : Controller
     {
-        private readonly db_a8de26_projectContext _db;
+        private readonly db_a8de26_projectContext db;
         public DataCenterController(db_a8de26_projectContext context)
         {
-            _db = context;
+            db = context;
         }
         public IActionResult Index()
         {
             return View();
         }
+
+        public IActionResult SelectedData([FromBody] string choice)
+        {
+            int days = 30;
+            switch (choice)
+            {
+                case "m":
+                    days = 30;
+                    break;
+                case "s":
+                    days = 90;
+                    break;
+                case "y":
+                    days = 365;
+                    break;
+            }
+            List<Order> orders = new();
+            foreach (Order o in db.Orders)
+            {
+                if ((DateTime.Now - o.OrderTime).TotalDays < days)
+                {
+                    orders.Add(o);
+                }
+            }
+            List<Member> members = new();
+            foreach (Member m in db.Members)
+            {
+                if ((DateTime.Now - m.Join).TotalDays < days)
+                {
+                    members.Add(m);
+                }
+            }
+            SelectModel model = new()
+            {
+                STotal = orders.Select(o => o.Total).ToList(),
+                SGuestNum = orders.Select(o => o.Number).ToList(),
+                SMemberNum = members.Count(),
+            };
+            return Ok(model);
+        }
+
     }
 }
