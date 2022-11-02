@@ -164,13 +164,13 @@
                         <a href=""><img src="~/images/icons/search.png" alt=""></a>
                     </form>
                     <li class="nav-item">
-                        <a class="nav-link"  href="#">推薦</a>
+                        <a class="nav-link" asp-controller="Menu" asp-action="Recommendation">推薦</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">經典酒款</a>
+                        <a class="nav-link" asp-controller="Menu" asp-action="Signature">經典酒款</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">算命調酒</a>
+                        <a class="nav-link" href="#">心理測驗</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Booking" asp-action="Booking">線上訂位</a>
@@ -231,10 +231,10 @@
                     <li><h2>Menu</h2></li>
                     <hr>
                     <li class="nav-item">
-                        <a class="nav-link" id="recommand" href="#">Recommendation</a>
+                        <a class="nav-link" id="recommand" asp-controller="Menu" asp-action="Recommendation">Recommendation</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="classic" href="#">Classic</a>
+                        <a class="nav-link" id="classic" asp-controller="Menu" asp-action="Signature">Signature</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Divination For You</a>

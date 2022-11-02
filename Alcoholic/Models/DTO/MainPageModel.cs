@@ -16,10 +16,9 @@
     }
     public class SelectModel
     {
-        public int STotal { get; set; }
-        public int SGuestNum { get; set; }
+        public List<int> STotal { get; set; }
+        public List<int> SGuestNum { get; set; }
         public int SMemberNum { get; set; }
-        public double SRate { get; set; }
     }
 
 }

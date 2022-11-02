@@ -291,7 +291,7 @@ namespace Alcoholic.Controllers.API
             List<OrderDetailModel> orders = new();
             foreach(Order o in member.Orders)
             {
-                dataPageModel.total += o.Total.GetValueOrDefault();
+                dataPageModel.total += o.Total;
                 foreach (OrderDetail od in o.OrderDetails)
                 {
                     orders.Add(new OrderDetailModel()

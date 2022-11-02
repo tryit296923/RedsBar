@@ -108,7 +108,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in gstaffs">
+                    <tr v-for="item in gstaffs" :name="item.empAccount">
                         <td>{{item.role}}</td>
                         <td>{{item.empAccount}}</td>
                         <td>{{item.empName}}</td>
