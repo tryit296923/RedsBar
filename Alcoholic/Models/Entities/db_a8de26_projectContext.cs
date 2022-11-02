@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Policy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -143,6 +144,10 @@ namespace Alcoholic.Models.Entities
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
 
                 entity.Property(e => e.OrderTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.Total).HasDefaultValue(0);
+
+                entity.Property(e => e.OrderDate).HasDefaultValueSql("(CONVERT (date, GETDATE()))");
 
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.Orders)

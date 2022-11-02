@@ -405,6 +405,16 @@
                     color: #842029;
                 }
 
+            .logincard div button {
+            border:0;
+            background-color:transparent;
+        }
+        
+        #emp{
+            position: absolute;
+            bottom: 0;
+        }
+
         #empName{
             color:aliceblue;
             font-weight:bolder;
@@ -457,8 +467,9 @@
                 </div>
                 <div id="emp">
                     <div>
-                        <div class="collapse collapse-horizontal mb-2" id="collapseWidthExample">
+                        <div class="collapse collapse-vertical mb-2" id="collapseWidthExample">
                             <div class="card card-body logincard p-2">
+                                <div><button v-on:click="reset"><i class="fa-solid fa-user-lock"></i></button></div>
                                 <label>帳號:</label><input v-model=acc type="text" />
                                 <label>密碼:</label><input v-model=pw type="password" />
                                 <button v-on:click="log" class="m-3"><i class="fa-solid fa-user-tie"></i>Login</button>
@@ -492,6 +503,15 @@
                 name:"尚未登入"
             },
             methods:{
+                swal:function(icon,str){
+                    Swal.fire({
+                        position: 'center',
+                        icon: icon,
+                        title: str,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                },
                 log:function(){
                     let emp = {
                         EmpAccount : this.acc,
@@ -504,42 +524,50 @@
                             body: JSON.stringify(emp)
                         }).then(e => e.json()).then( r => {
                             if (r.result){
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'success',
-                                    title: '登入成功',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
+                                this.swal('success','登入成功')
                                 this.$refs.open.click();
                                 this.name = r.object;
                             }else{
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'error',
-                                    title: '帳號密碼錯誤',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
+                                this.swal('error', '帳號密碼錯誤')
                             }
                         })
                     },1)
-                const Toast = Swal.mixin({
-                  toast: true,
-                    position: 'bottom-start',
-                  showConfirmButton: false,
-                  timer: 3000,
-                  timerProgressBar: true,
-                })
+                    const Toast = Swal.mixin({
+                      toast: true,
+                        position: 'bottom-start',
+                      showConfirmButton: false,
+                      timer: 3000,
+                      timerProgressBar: true,
+                    })
                     Toast.fire({
                       icon: 'success',
                       title: '登入中'
                     })
+                },
+                reset:function(){
+                let emp = {
+                    EmpAccount: this.acc,
+                    EmpPassword: this.pw
+                }
+                setTimeout(() => {
+                    fetch("/backcenter/staff/ResetPw", {
+                        method: "post",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(emp)
+                    }).then(e => e.json()).then(r => {
+                        if (r) {
+                            this.swal('success','更改成功')
+                            this.$refs.open.click();
+                        } else {
+                            this.swal('error', '帳號錯誤')
+                        }
+                    })
+                }, 1)
                 }
             },
             mounted:function(){
                 let self = this;
-            fetch("/backcenter/back/getname").then(e => e.json()).then(r => self.name = r);
+            fetch("/backcenter/back/getname").then(e => e.json()).then(r => {if (r != "") { self.name = r } else { self.name = "尚未登入" }});
             }
         })
     </script>

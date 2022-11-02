@@ -24,7 +24,7 @@ namespace Alcoholic.Services
             int sum = 0;
             foreach (Order order in member.Orders)
             {
-                sum += order.Total.GetValueOrDefault();
+                sum += order.Total;
             }
 
             int level = 0;

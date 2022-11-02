@@ -61,6 +61,50 @@ namespace Alcoholic.Controllers.API
             return prod;
         }
         [HttpGet]
+        public IEnumerable<MenuModel> GetRecommendHeadProd()
+        {
+            var recHeadProd = from pro in _db.Products
+                       join dis in _db.Discount
+                       on pro.ProductId equals dis.DiscountId
+                       join path in _db.ProductImage
+                       on pro.ProductId equals path.ProductId
+                        //熱銷商品的折扣ID
+                        where dis.DiscountId == 5
+                       select new MenuModel
+                       {
+                           Id = pro.ProductId,
+                           Name = pro.ProductName,
+                           Price = pro.UnitPrice,
+                           Description = pro.ProductDescription,
+                           DiscountId = dis.DiscountId,
+                           DiscountName = dis.DiscountName,
+
+                       };
+
+            return recHeadProd;
+        }
+        [HttpGet]
+        public IEnumerable<MenuModel> GetRecommendBodyProd()
+        {
+            var recHeadProd = from pro in _db.Products
+                              join dis in _db.Discount
+                              on pro.ProductId equals dis.DiscountId
+                              //熱銷商品的折扣ID
+                              where dis.DiscountId == 13 | dis.DiscountId == 14
+                              select new MenuModel
+                              {
+                                  Id = pro.ProductId,
+                                  Name = pro.ProductName,
+                                  Price = pro.UnitPrice,
+                                  Description = pro.ProductDescription,
+                                  DiscountId = dis.DiscountId,
+                                  DiscountName = dis.DiscountName,
+
+                              };
+
+            return recHeadProd;
+        }
+        [HttpGet]
         public IEnumerable<Materials> GetMaterialCategory()
         {
             var mats = from x in _db.Category
@@ -70,7 +114,7 @@ namespace Alcoholic.Controllers.API
                        select new Materials
                        {
                            Id = x.CategoryId,
-                           MaterialName = y.Category.CategoryName + "-" + y.Brand,
+                           MaterialName = y.Category.CategoryName + "-" + y.Name,
                            MaterialId = y.MaterialId,
                            Consumption = 0
                        };
@@ -126,21 +170,18 @@ namespace Alcoholic.Controllers.API
                     ProductDescription = model.ProductDescription,
                     DiscountId = model.DiscountId,
                     Images = tempFilePath.Select(x => new ProductImage() { Path = x }).ToList(),
+                    ProductsMaterials= model.Materials.Select(x=> {
+                        var temp = JsonConvert.DeserializeObject<Materials>(x);
+                        return new ProductsMaterials
+                        {
+                            MaterialId = temp.MaterialId,
+                            Consumption = temp.Consumption
+                        };
+                    }).ToList(),
                 };
                 _db.Products.Add(prod);
-                //新增產品材料至ProductsMaterial資料表
-                foreach (var material in model.Materials)
-                {
-                    var prodMaterials = new ProductsMaterials()
-                    {
-                        ProductId = prod.ProductId,
-                        MaterialId = material.MaterialId,
-                        Consumption=material.Consumption
-                    };
-                    _db.ProductsMaterials.Add(prodMaterials);
-                }
-                
                 _db.SaveChanges();
+                
                 return Ok(returnModel);
             }
             

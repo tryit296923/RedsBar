@@ -4,6 +4,7 @@ using Alcoholic.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alcoholic.Migrations
 {
     [DbContext(typeof(db_a8de26_projectContext))]
-    partial class db_a8de26_projectContextModelSnapshot : ModelSnapshot
+    [Migration("20221102092436_newcolumninorder")]
+    partial class newcolumninorder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,7 +121,7 @@ namespace Alcoholic.Migrations
                     b.Property<DateTime>("Join")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 11, 2, 17, 32, 33, 489, DateTimeKind.Local).AddTicks(3214));
+                        .HasDefaultValue(new DateTime(2022, 11, 2, 17, 24, 36, 353, DateTimeKind.Local).AddTicks(8644));
 
                     b.Property<DateTime?>("Leave")
                         .HasColumnType("datetime2");
@@ -365,7 +367,7 @@ namespace Alcoholic.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValueSql("(CONVERT (date, GETDATE()))");
+                        .HasDefaultValue("2022-11-02");
 
                     b.Property<DateTime>("OrderTime")
                         .HasColumnType("smalldatetime");
