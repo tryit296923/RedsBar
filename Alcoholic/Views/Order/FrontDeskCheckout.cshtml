@@ -127,11 +127,11 @@
                 confirmButtonText: '顧客意見表',
                 confirmButtonColor: '#721B29',
                 cancelButtonText: '關閉',
-                allowOutsideClick: false,
+                closeOnClickOutside: false,
             })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = `/Order/Feedback?OrderId=${this.orderId}`
+                        window.location.href = `/Order/Feedback?OrderId=${app.orderId}`
                     }
                 })
         }
@@ -159,6 +159,9 @@
                     return '';
                 }
             },
+            feedbackbtn: function () {
+                this.$refs.feedbackbtn.click();
+            }
         },
         mounted: function () {
             this.getOrder();
