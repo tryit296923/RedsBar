@@ -49,6 +49,18 @@
             height: 38px;
         }
 
+    .valid {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top:20px;
+    }
+
+        .valid input {
+            width: 100px;
+            margin: 0 10px;
+        }
+
     button {
         border: 0;
         border-radius: 0.375rem;
@@ -101,14 +113,63 @@
                 <label for="Email">Email : </label>
                 <input name="Email" type="email" id="Email" required>
             </div>
+            <div class="valid" id="d1">
+                <label>請輸入驗證碼：</label>
+                <input type="text" v-model="valid"/>
+                <img src="/api/Validation/Generate"/>
+            </div>
         </div>
         <br>
         <div class="input-btn">
             <div class="row m-0">
                 <button class="col btn-return m-1" type="button" onclick="javascript:window.history.go(-1);">回上一步</button>
-                <button class="col btn-submit m-1" type="submit">立即預定</button>
+                <button class="col btn-submit m-1" type="submit" v-on:click="starBooking()">立即預定</button>
             </div>
         </div>
     </form>
 </div>
+<script>
+    var app = new Vue({
+        el:'#d1',
+        data:{
+            valid:'',
+            valided: false,
+        },
+        watch:{
+            valid:function(){
+                let info = this.valid;
+                fetch("/api/Validation/Validate", {
+                    method:'POST',
+                    headers:{ "Content-Type": "application/json" },
+                    body: JSON.stringify(info)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if(result){
+                        this.valided = true;
+                    }
+                })
+            }
+        },
+        methods:{
+            starBooking: function(){
+                if ( !this.valided ){
+                    Swal.fire({
+                        allowOutsideClick: 'false',
+                        title: '驗證碼錯誤!',
+                        timer: 500,
+                        color: '#FFF',
+                        icon: "warning",
+                        iconColor: '#D8CDB9',
+                        background: '#333',
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                    });
+                    return
+                }
+            }
+        }
+    });
+
+</script>
 
