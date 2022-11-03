@@ -65,7 +65,7 @@ namespace Alcoholic.Controllers.API
         {
             var recHeadProd = from pro in _db.Products
                        join dis in _db.Discount
-                       on pro.ProductId equals dis.DiscountId
+                       on pro.DiscountId equals dis.DiscountId
                        join path in _db.ProductImage
                        on pro.ProductId equals path.ProductId
                         //熱銷商品的折扣ID
@@ -78,7 +78,7 @@ namespace Alcoholic.Controllers.API
                            Description = pro.ProductDescription,
                            DiscountId = dis.DiscountId,
                            DiscountName = dis.DiscountName,
-
+                           Path = path.Path
                        };
 
             return recHeadProd;
@@ -88,9 +88,11 @@ namespace Alcoholic.Controllers.API
         {
             var recHeadProd = from pro in _db.Products
                               join dis in _db.Discount
-                              on pro.ProductId equals dis.DiscountId
+                              on pro.DiscountId equals dis.DiscountId
+                              join path in _db.ProductImage
+                              on pro.ProductId equals path.ProductId
                               //熱銷商品的折扣ID
-                              where dis.DiscountId == 13 | dis.DiscountId == 14
+                              where dis.DiscountId == 13 || dis.DiscountId == 14
                               select new MenuModel
                               {
                                   Id = pro.ProductId,
@@ -99,7 +101,7 @@ namespace Alcoholic.Controllers.API
                                   Description = pro.ProductDescription,
                                   DiscountId = dis.DiscountId,
                                   DiscountName = dis.DiscountName,
-
+                                  Path = path.Path
                               };
 
             return recHeadProd;
