@@ -30,6 +30,7 @@ namespace Alcoholic.Models.DTO
         public int MaterialId { get; set; }
         public int Consumption { get; set; }
         public string MaterialName { get; set; }
+        public int Inventory { get; set; }
     }
 }
 

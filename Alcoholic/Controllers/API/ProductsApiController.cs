@@ -118,11 +118,24 @@ namespace Alcoholic.Controllers.API
                            Id = x.CategoryId,
                            MaterialName = y.Category.CategoryName + "-" + y.Name,
                            MaterialId = y.MaterialId,
-                           Consumption = 0
+                           Consumption = 0,
+                           Inventory=y.Inventory
                        };
             return mats.OrderBy(x=>x.MaterialName);
         }
-        
+        [HttpPut]
+        public void EditInventory([FromForm] Materials editData)
+        {
+            var inventoryData = (from x in _db.Materials
+                               where x.MaterialId == editData.MaterialId
+                               select x).FirstOrDefault();
+            inventoryData.Inventory = editData.Inventory;
+
+
+            _db.Update(inventoryData);
+            _db.SaveChanges();
+        }
+
         [HttpPost]
         public IActionResult CreateProduct([FromForm]CreateProductModel model)
         {
@@ -213,7 +226,7 @@ namespace Alcoholic.Controllers.API
             _db.Remove(productDelete);
             _db.SaveChanges();
         }
-
+        
         [HttpPost]
         public string AddToCart([FromBody] SendProductsModel model)
         {

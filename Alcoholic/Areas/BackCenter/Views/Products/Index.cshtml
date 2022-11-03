@@ -114,8 +114,80 @@
             </div>
         </div>
     </div>
-
+    <br />
+    <div class=" container-fluid p-5">
+        <div class="spacebetween row-cols-2 mb-3">
+            <h3>庫存查詢</h3>
+        </div>
+        <hr>
+        <div class="discountmanage">
+            <div class="scrollPage">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-1">編號</th>
+                            <th class="col-3">原料名稱</th>
+                            <th class="col-1">庫存</th>
+                            <th class="col-1">編輯</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in selection">
+                            <td>{{item.materialId}}</td>
+                            <td>{{item.materialName}}</td>
+                            <td>{{item.inventory}}</td>
+                            <td>
+                                <button :id="item.materialId" class="btnproducts" data-bs-toggle="modal" data-bs-target="#editInventory" @@click="[seleEditInv($event)]"><i class="fa-solid fa-pen-to-square"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editInventory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="editInventoryLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header editdiscounttitle">
+                    <h3 class="modal-title" id="editProd">原料補貨</h3>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close" @@click="refreshPage"></button>
+                </div>
+                <div class="modal-body container ">
+                    <div class="row">
+                        <div class="col-6 my-2">
+                            <label for="inventoryName" class="form-label">編號：</label>
+                            <input type="number" class="form-control w-100"  :value="editInventoryData.materialId" readonly>
+                        </div>
+                        <div class="col-6 my-2">
+                            <label for="productCost" class="form-label">原料名稱：</label>
+                            <input type="text" class="form-control w-100" v-model="editInventoryData.materialName" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 my-2">
+                            <label for="productCost" class="form-label">庫存：</label>
+                            <input type="text" class="form-control w-100" v-model="editInventoryData.inventory" readonly>
+                        </div>
+                        <div class="col-6 my-2">
+                            <label for="productPrice" class="form-label">進貨數量：</label>
+                            <input type="number" class="form-control w-100" placeholder="請輸入" id="productPrice" v-model="editInventoryData.restock" min="0" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row m-0">
+                        <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal" @@click="refreshPage"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                        <button class=" col btneditproducts m-1" :name="editInventoryData.materialName" type="button" @@click="sendEditInventory"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 
 <!-- Create Modal -->
@@ -221,6 +293,7 @@
             price: "",
             description: "",
             allDiscount: [],
+            selection:[],
             discount: { discountId: '', discountName: '' },
             editProductData: {
                 productId: "",
@@ -229,6 +302,12 @@
                 productPrice: "",
                 productCost: "",
                 productDescription: "",
+            },
+            editInventoryData: {
+                materialId: "",
+                materialName: "",
+                inventory: "",
+                restock:"",
             },
         },
         components: {
@@ -323,6 +402,59 @@
                     }
                 })
             },
+            seleEditInv: function (e) {
+                var editData = this.editInventoryData;
+                //將點選的資料帶入到modal畫面
+                for (i = 0; i < this.selection.length; i++) {
+                    if (e.currentTarget.id == this.selection[i].materialId) {
+                        editData.materialId = this.selection[i].materialId;
+                        editData.materialName = this.selection[i].materialName;
+                        editData.inventory = this.selection[i].inventory;
+                    }
+                }
+
+            },
+            //增加
+            sendEditInventory: function (e) {
+                let self = this;
+                var selInventory = e.currentTarget
+                var data = new FormData();
+                Swal.fire({
+                    title: '補貨!',
+                    text: '確定' + selInventory.name + '補貨數量無誤嗎?',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    confirmButtonText: '確認',
+                    denyButtonText: '拒絕',
+                    customClass: {
+                        actions: 'my-actions',
+                        denyButton: 'order-2',
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var self =this
+                        let data = new FormData();
+                        var newInventory = self.editInventoryData.inventory + self.editInventoryData.restock
+                        console.log("test")
+                        console.log(newInventory)
+                        console.log(self.editInventoryData.materialId)
+                        data.append("MaterialId", self.editInventoryData.materialId)
+                        data.append("Inventory", newInventory)
+                        fetch("/api/Products/EditInventory", {
+                            method: 'PUT',
+                            body: data
+                        });
+                        //fetch("/api/Products/GetMaterialCategory")
+                        //    .then(response => response.json())
+                        //    .then(result => self.selection = result);
+                        Swal.fire('編輯成功!', '', 'success');
+                        //setInterval(function () { window.location.reload() }, 1200);
+                    } else if (result.isDenied) {
+                        Swal.fire('取消編輯!', '', 'info')
+                    }
+                })
+
+            },
             refreshPage: function () {
                 window.location.reload();
             }
@@ -336,6 +468,9 @@
             fetch("/api/Discount/GetDiscount")
                 .then(response => response.json())
                 .then(result => this.allDiscount = result.concat())
+            fetch("/api/Products/GetMaterialCategory")
+                .then(response => response.json())
+                .then(result => self.selection = result);
         }
 
     })
@@ -359,7 +494,7 @@
                 productDescription: "",
                 images: [],
                 discountId:"",
-            },
+            },            
             fileRecords: [
                 {
                     "name": "Some Invalid.exe",
@@ -403,14 +538,8 @@
             { id: 0, materialName: "成分", consumption: 0, materialId: 0 },
             { id: 0, materialName: "成分", consumption: 0, materialId: 0 },
             { id: 0, materialName: "成分", consumption: 0, materialId: 0 },
-                { id: 0, materialName: "成分", consumption: 0, materialId: 0 },
+            { id: 0, materialName: "成分", consumption: 0, materialId: 0 },
             ],
-            //basevalueItem:{
-            //    Id: 0, 
-            //    MaterialName:"成分",
-            //    Consumption:0 ,
-            //    MaterialId:0
-            //},
             baseConsumption:[
 
             ],
@@ -452,12 +581,6 @@
                         this.baseValueArr.forEach((x,idx)=>{ 
                             data.append(`Materials[${idx}]`, JSON.stringify(x))
                         })
-                        //var baseCons=[];
-                        //for (i=0;i<this.baseConsumption.length;i++){
-                        //    if (this.baseConsumption[i].Consumption > 0){
-                        //        baseCons.push(this.baseConsumption[i])
-                        //    }
-                        //}
                         fetch("/api/Products/CreateProduct", {
                             method: 'POST',
                             body: data
@@ -500,7 +623,7 @@
                 }
                 this.options.push(tag)
                 this.value.push(tag)
-            },
+            },            
             refreshPage: function () {
                 window.location.reload();
             },
@@ -571,6 +694,7 @@
                     //將移除後的物件塞給basevalue
                     this.basevalue[i]=n[i]
                     //初始化最後一個選項
+
                     this.basevalue[i+1]={ id: 0, materialName: "成分", consumption: 0, materialId: 0 }
                     }
                 }
@@ -579,6 +703,7 @@
                 }
                 else{
                     this.filled.productMaterial=false;
+                    this.basevalue[0] = { id: 0, materialName: "成分", consumption: 0, materialId: 0 }
                 }
 
             },
