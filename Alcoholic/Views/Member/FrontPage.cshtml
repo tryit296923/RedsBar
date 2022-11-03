@@ -138,7 +138,7 @@
         <form class="inputform">
             <div class="desk">
                 <label>座位: </label>
-                <select name="deskType" id="deskType" v-model="deskType" required>
+                <select name="deskType" id="deskType" v-model="deskType" disabled required>
                     <option value=0 disabled="true" selected>坐在哪裡呢...?</option>
                     <option value=1>吧檯</option>
                     <option value=2>兩人座</option>
@@ -148,7 +148,7 @@
             </div>
             <div class="deskNum">
                 <label>桌號: </label>
-                <select name="deskNum" id="deskNum" v-model="deskNum" required>
+                <select name="deskNum" id="deskNum" v-model="deskNum" disabled required>
                     <option value=0 disabled="true" selected>請選擇桌號...</option>
                     <option value=1>1</option>
                     <option value=2>2</option>
@@ -180,8 +180,14 @@
         </form>
     </div>
     <script src="/js/vue.min.js"></script>
+    <script src="https://unpkg.com/vue-router@3/dist/vue-router.js"></script>
     <script>
+        let router = new VueRouter({
+            mode: 'history',
+            routes: []
+        });
         const vm = new Vue({
+            router,
             el: "#form",
             data: {
                 deskType: 0,
@@ -335,7 +341,12 @@
                         },
                     });
                 },
-            }})
+            },
+            mounted:function(){
+                this.deskType = this.$route.query.seat;
+                this.deskNum = this.$route.query.desk;
+            }
+        })
     </script>
 </body>
 </html>

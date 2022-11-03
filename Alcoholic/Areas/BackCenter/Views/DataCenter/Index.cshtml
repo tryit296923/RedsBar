@@ -56,8 +56,8 @@
                             </select>
                         </div>
                         <div class="keymark row-cols-4">
-                            <div class="keymarkdetail p-4"><h2>{{select.sTotal}}</h2><h5>營業額</h5></div>
-                            <div class="keymarkdetail p-4"><h2>{{select.sGuestNum}}</h2><h5>來客量</h5></div>
+                        <div class="keymarkdetail p-4"><h2>{{STotal}}</h2><h5>營業額</h5></div>
+                        <div class="keymarkdetail p-4"><h2>{{SGuestNum}}</h2><h5>來客量</h5></div>
                             <div class="keymarkdetail p-4"><h2>{{select.sMemberNum}}</h2><h5>會員數</h5></div>
                             <div class="keymarkdetail p-4"><h2>{{select.sRate}}/5</h2><h5>評價</h5></div>
                         </div>
@@ -68,7 +68,7 @@
                             <canvas id="myChart" width="400" height="200"></canvas>
                         </div>
                         <div class="col-6"> 
-                            <canvas id="lineChart" width="400" height="200"></canvas>
+                            <canvas id="memChart" width="400" height="200"></canvas>
                         </div>
                     </div>
                 </div>
@@ -212,7 +212,11 @@
         data:{
             select: {},
             diff: "m",
-            labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+            labels: [],
+            SGuestNum:0,
+            SMemberNum:0,
+            STotal:0,
+
         },
         methods: {
             selectDiff: function () {
@@ -222,17 +226,25 @@
                     body: JSON.stringify(this.diff)
                 }).then(e => e.json()).then(r => {this.select = r;
                     let self = this;
-                    let sTotal = self.select.sTotal;
-                    let SGuestNum = self.select.SGuestNum;
-                    let SMemberNum = self.select.SMemberNum;
+                    let sTotal = r.sTotal;
+                    self.select.sGuestNum.forEach(e => {
+                        self.SGuestNum = self.SGuestNum + e.total
+                    })
+                    self.SMemberNum = r.sMemberNum;
+                    let totalarr = [];
+                    self.select.sTotal.forEach(e => {
+                        self.STotal = self.STotal + e.total;
+                        totalarr.push(e.total);
+                    })
+                    
                     let ctx = document.getElementById('myChart').getContext('2d');
                     let myChart = new Chart(ctx, {
-                        type: 'bar',
+                        type: 'line',
                         data: {
                             labels: self.labels,
                             datasets: [{
                                 label: "",
-                                data: [self.select.sTotal],
+                                data: totalarr,
                                 backgroundColor: [
                                     'rgba(255, 99, 132, 0.2)',
                                 ],
@@ -252,6 +264,22 @@
                         }
                     });
 
+                    let mctx = document.getElementById('memChart').getContext('2d');
+                    let memChart = new Chart(mctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ["Members","Target"],
+                            datasets: [{
+                                label: "Red",
+                                data: [self.SMemberNum, 100],
+                                backgroundColor: [
+                                    'rgba(99, 255, 132, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                ],
+                                hoverOffset: 4
+                            }]
+                        },
+                    });
                 })
             },
             selectDatas: function(){
@@ -311,6 +339,13 @@
             },
         },
         mounted: function () {
+            var day = new Date
+            for (i = 0; i < 30; i++) {
+                day.setDate(day.getDate() - 1)
+                var str = day.toLocaleDateString('en-US')
+                var dd = str.slice(0, str.length - 5)
+                this.labels.push(dd)
+            }
             this.selectDiff();
         }
     })
