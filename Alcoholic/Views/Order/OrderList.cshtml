@@ -303,15 +303,16 @@
                                 <button type="button" data-bs-target="#carouselrecommendCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
                                 <button type="button" data-bs-target="#carouselrecommendCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
                             </div>
+                            <template v-for="(prod,index) in recommendHeadProd">
                             <div class="carousel-inner">
-                                <div class="carousel-item active" data-bs-interval="2000">
-                                    <img src="~/images/Cocktails/example1.jpg" class="d-block w-100">
+                                <div :class="carousel-item active" data-bs-interval="2000">
+                                        <img :src="prod.path" class="d-block w-100">
                                     <div class="carousel-caption d-none d-md-block">
-                                        <h5>"OMAR-豐收系列NO.2</h5>
-                                        <p>推銷的文案</p>
+                                            <h5>{{prod.name}}</h5>
+                                            <p>{{prod.description}}</p>
                                     </div>
                                 </div>
-                                <div class="carousel-item" data-bs-interval="2000">
+                                @*<div class="carousel-item" data-bs-interval="2000">
                                     <img src="~/images/Cocktails/example2.jpg" class="d-block w-100">
                                     <div class="carousel-caption d-none d-md-block">
                                         <h5>"OMAR-豐收系列NO.2</h5>
@@ -324,8 +325,9 @@
                                         <h5>"OMAR-豐收系列NO.2</h5>
                                         <p>推銷的文案</p>
                                     </div>
-                                </div>
+                                </div>*@
                             </div>
+                            </template>
                             <button class="carousel-control-prev" type="button" data-bs-target="#carouselrecommendCaptions" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                 <span class="visually-hidden">Previous</span>
@@ -379,11 +381,11 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header selModalHead mb-2">
-                    <h3 class="modal-title fw-bold px-5">{{productName}}</h3>
+                    <h3 class="modal-title fw-bold ">{{productName}}</h3>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="card-body btnaddtocart">
-                    <div :id="vueid" >
+                    <div class="px-2" >
                         <span class="price p-2 my-2">${{price}}</span>
                         <span class="discount ">${{Math.round(price*discountAmount)}}</span>
                         <span class="sale px-2 ">SALE</span>
@@ -689,12 +691,14 @@
             fetch("/api/Products/GetAllProducts")
                 .then((response) => response.json())
                 .then((result) => self.product = result)
-            fetch("/api/Prodcuts/GetRecommendHeadProd")
-                .then(response=>response.json())
-                .then(result => self.recommendHeadProd = result)
-            fetch("/api/Prodcuts/GetRecommendBodyProd")
-                .then(response => response.json())
-                .then(result => self.recommendBodyProd = result)
+
+            fetch("/api/Products/GetRecommendHeadProd")
+                .then((response)=>response.json())
+                .then((result) => self.recommendHeadProd = result)
+
+            fetch("/api/Products/GetRecommendBodyProd")
+                .then((response) => response.json())
+                .then((result) => self.recommendBodyProd = result)
         }
     })
 </script>
