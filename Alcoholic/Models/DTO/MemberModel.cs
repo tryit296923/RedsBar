@@ -1,4 +1,5 @@
 ﻿using Alcoholic.Models.Entities;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace Alcoholic.Models.DTO
@@ -43,6 +44,23 @@ namespace Alcoholic.Models.DTO
         public string OrderId { get; set; }
         public string ProductName { get; set; }
         public string path { get; set; }
+    }
+
+    public class OrderListModel
+    {
+        public string orderId { get; set; }
+        public List<string> productName { get; set; }
+        public int total { get; set; }
+    }
+    public class ProductModel
+    {
+        public string productName { get; set; }
+        public string paths { get; set; }
+    }
+    public class ReturnListModel
+    {
+        public List<OrderListModel> orderList { get; set; }
+        public List<ProductModel> product { get; set; }
     }
 
     public class DataCenterModel

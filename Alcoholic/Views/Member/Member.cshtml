@@ -30,6 +30,10 @@
         font-size: 1.3rem;
         font-weight: bolder;
     }
+    .topbar{
+        display:flex;
+        justify-content:space-between;
+    }
     /* banner */
     .membanner{
         width: 100%;
@@ -162,14 +166,14 @@
 </style>
 <div id="member">
     <div class="path container-fluid w-100">
-        <div class="row">
-            <nav class="col-10" style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
+        <div class="topbar">
+            <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Member</li>
                 </ol>
             </nav>
-            <div class ="col-2">
+            <div >
                 <a href="/Order/orderlist">回至點餐 </a>/
                 <a href="/member/LoginRegister">登入 </a>/
                 <a v-on:click.prevent="logout" href="#"> 登出</a>
@@ -276,12 +280,12 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <template v-for="order in orders">
+                            <template v-for="order in orders.orderList">
                                 <div>
                                     <h3>訂單號碼：{{order.orderId}}</h3>
                                     <div class="shoplist">
                                         <ul class="list my-3">
-                                            <li v-for="detail in order.orderDetails"><i class="fa-solid fa-martini-glass-empty"></i>{{detail.product.productName}}</li>
+                                            <li v-for="productName in order.productName"><i class="fa-solid fa-martini-glass-empty"></i>{{productName}}</li>
                                         </ul>
                                     </div>
                                     <p>消費金額：{{order.total}} <i class="fa-solid fa-coins"></i></p>
@@ -295,11 +299,11 @@
         </div>
         <hr>
         <div class="products">
-            <template v-for="product in model.orders">
+            <template v-for="order in orders.product">
                 <div class="m-4" >
-                    <img :src="product.path"  alt="">
+                    <img :src="order.paths" alt="">
                     <hr>
-                    <p>{{product.productName}}</p>
+                    <p>{{order.productName}}</p>
                 </div>
             </template>
         </div>
@@ -332,7 +336,8 @@
             tel: "",
             progressbar:"",
             percent:"",
-            orders: [],
+            orders: {},
+            orderdetails:[],
         },
         methods:{
             update:function(){

@@ -20,21 +20,9 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             return View();
         }
 
-        public IActionResult SelectedData([FromBody] string choice)
+        [HttpPost]
+        public IActionResult SelectedData([FromBody] int days)
         {
-            int days = 30;
-            switch (choice)
-            {
-                case "m":
-                    days = 30;
-                    break;
-                case "s":
-                    days = 90;
-                    break;
-                case "y":
-                    days = 365;
-                    break;
-            }
             List<Order> orders = new();
             foreach (Order o in db.Orders)
             {
@@ -51,24 +39,73 @@ namespace Alcoholic.Areas.BackCenter.Controllers
                     members.Add(m);
                 }
             }
-            var STotal = orders.GroupBy(o => o.OrderDate).Select(o => new DateTotal
+            List<OrderDetail> ods = new();
+            foreach (OrderDetail od in db.OrderDetails)
             {
-                Date = o.Key,
-                Total = o.Select(o => o.Total).Sum()
-            });
-            var SGuestNum = orders.GroupBy(o => o.OrderDate).Select(o => new DateTotal
+                if ((DateTime.Now - od.Order.OrderTime).TotalDays < days)
+                {
+                    ods.Add(od);
+                }
+            }
+            List<DateTotal> STotal = new();
+            List<ProductTotal> ProductTotal = new();
+            switch (days)
             {
-                Date = o.Key,
-                Total = o.Select(o => o.Number).Sum()
-            });
+                case 30:
+                    {
+                        STotal = orders.OrderByDescending(o => o.OrderTime).GroupBy(o => o.OrderTime.Day).Select(o => new DateTotal
+                        {
+                            Date = o.Key,
+                            Total = o.Select(o => o.Total).Sum(),
+                            GuestTotal = o.Select(o => o.Number).Sum(),
+                        }).ToList();
+                        ProductTotal = ods.GroupBy(od => od.Product.ProductName).Select(od => new ProductTotal
+                        {
+                            ProductName = od.Key,
+                            Quantity = od.Select(o => o.Quantity).Sum(),
+                        }).OrderByDescending(pt => pt.Quantity).ToList();
+                    }
+                    break;
+                case 90:
+                    {
+                        STotal = orders.OrderByDescending(o => o.OrderTime).GroupBy(o => o.OrderTime.Day).Select(o => new DateTotal
+                        {
+                            Date = o.Key,
+                            Total = o.Select(o => o.Total).Sum(),
+                            GuestTotal = o.Select(o => o.Number).Sum()
+                        }).ToList();
+                        ProductTotal = ods.GroupBy(od => od.Product.ProductName).Select(od => new ProductTotal
+                        {
+                            ProductName = od.Key,
+                            Quantity = od.Select(o => o.Quantity).Sum(),
+                        }).OrderByDescending(pt => pt.Quantity).ToList();
+                    }
+                    break;
+                case 365:
+                    {
+                        STotal = orders.OrderByDescending(o => o.OrderTime).GroupBy(o => o.OrderTime.Month).Select(o => new DateTotal
+                        {
+                            Date = o.Key,
+                            Total = o.Select(o => o.Total).Sum(),
+                            GuestTotal = o.Select(o => o.Number).Sum()
+                        }).ToList();
+                        ProductTotal = ods.GroupBy(od => od.Product.ProductName).Select(od => new ProductTotal
+                        {
+                            ProductName = od.Key,
+                            Quantity = od.Select(o => o.Quantity).Sum(),
+                        }).OrderByDescending(pt => pt.Quantity).ToList();
+                    }
+                    break;
+            }
             SelectModel model = new()
             {
-                STotal = STotal.ToList(),
-                SGuestNum = SGuestNum.ToList(),
+                ProductTotal = ProductTotal,
+                STotal = STotal,
                 SMemberNum = members.Count(),
+                Orders = orders.Count(),
+                Avg = orders.Select(o => o.Total).Average()
             };
             return Ok(model);
         }
-
     }
 }
