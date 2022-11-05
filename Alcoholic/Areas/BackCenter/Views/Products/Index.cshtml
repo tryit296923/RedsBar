@@ -16,6 +16,12 @@
         -webkit-appearance: none;
         margin: 0;
     }
+    .lowInventoryIcon{
+        color: #842029
+    }
+    .lowInventoryNum{
+        color: red
+    }
 </style>
 <div id="prod">
     <div class="productmanage container-fluid p-5">
@@ -135,7 +141,8 @@
                         <tr v-for="item in selection">
                             <td>{{item.materialId}}</td>
                             <td>{{item.materialName}}</td>
-                            <td>{{item.inventory}}</td>
+                            <td v-if="item.inventory >3000">{{item.inventory}}</td>
+                            <td v-else><span class="lowInventoryNum">{{item.inventory}}</span><i class="fa-solid fa-store lowInventoryIcon"></i>
                             <td>
                                 <button :id="item.materialId" class="btnproducts" data-bs-toggle="modal" data-bs-target="#editInventory" @@click="[seleEditInv($event)]"><i class="fa-solid fa-pen-to-square"></i></button>
                             </td>
@@ -434,12 +441,10 @@
                     if (result.isConfirmed) {
                         var self =this
                         let data = new FormData();
-                        var newInventory = self.editInventoryData.inventory + self.editInventoryData.restock
-                        console.log("test")
-                        console.log(newInventory)
-                        console.log(self.editInventoryData.materialId)
+                        self.editInventoryData.restock *=1
                         data.append("MaterialId", self.editInventoryData.materialId)
-                        data.append("Inventory", newInventory)
+                        data.append("Inventory", self.editInventoryData.inventory)
+                        data.append("Restock", self.editInventoryData.restock)
                         fetch("/api/Products/EditInventory", {
                             method: 'PUT',
                             body: data

@@ -124,12 +124,12 @@ namespace Alcoholic.Controllers.API
             return mats.OrderBy(x=>x.MaterialName);
         }
         [HttpPut]
-        public void EditInventory([FromForm] Materials editData)
+        public void EditInventory([FromForm] EditMaterials editData)
         {
             var inventoryData = (from x in _db.Materials
                                where x.MaterialId == editData.MaterialId
                                select x).FirstOrDefault();
-            inventoryData.Inventory = editData.Inventory;
+            inventoryData.Inventory += editData.Restock;
 
 
             _db.Update(inventoryData);

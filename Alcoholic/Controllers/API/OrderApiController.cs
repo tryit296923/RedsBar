@@ -54,7 +54,6 @@ namespace Alcoholic.Controllers.API
             string sMemberID = HttpContext.Session.GetString("MemberID");           
             if (!Guid.TryParse(sMemberID, out var memberId))
             {
-                //錯誤訊息待修改
                 throw new Exception("Guid is error");
             }
             string memberName = "";
@@ -66,7 +65,7 @@ namespace Alcoholic.Controllers.API
             }
             else
             {
-                return NotFound();
+                return Ok(false);
             }
 
             var cartItems = JsonConvert.DeserializeObject<List<CartItem>>(sesStr);
@@ -79,14 +78,10 @@ namespace Alcoholic.Controllers.API
                 cartItem.DiscountAmount = product.Discount.DiscountAmount;
                 cartItem.Path = product.Images.FirstOrDefault().Path;
             }
-            //HttpContext.Session.SetString("123", "456");
-            //var s = HttpContext.Session.GetString("123");
             HttpContext.Session.SetString("CartItem", JsonConvert.SerializeObject(cartItems));
 
             string stest = "";
-            //若??前面為空，則用""取代
             stest = HttpContext.Session.GetString("CartItem") ?? "";
-            //var temp = JsonConvert.DeserializeObject<List<CartItem>>(stest);
             var ovm_Cart = new OrderViewModel
             {
                 MemberName = memberName,

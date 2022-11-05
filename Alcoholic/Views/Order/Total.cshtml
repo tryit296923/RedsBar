@@ -1,10 +1,6 @@
 ﻿@{
     ViewData["Title"] = "本日訂單總覽";
     Layout = "_LayoutMobile";
-    //var orderList = Model.Orders;
-    //var temp = JsonConvert.SerializeObject(Model.Details);
-    //var temp2 = Html.Raw(Model.Details);
-    //var temp3 = "";
 }
 
 <style>
@@ -432,11 +428,6 @@
             }
         },
         methods: {
-            //getOrderDetail: function () {
-            //    var list = {};
-            //    this.orderDetail = JSON.parse(orderDetail);
-            //    return this.orderDetail;
-            //},
             getTotalOrder: function () {
                 fetch("/api/Order/GetTotalOrder")
                     .then(response => response.json())
