@@ -201,7 +201,7 @@
                 disable: "opacity:0.5",
                 multi: true,
                 valid:"",
-                empty: [false, false, false],
+                empty: [true, true, false],
                 valided:false,
             },
             watch:{
@@ -294,8 +294,15 @@
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: jsonStr
-                        }).then(data => window.location.assign("/member/LoginRegister")
-                        ).catch(err => console.log(err))
+                        }).then(e => e.json())
+                        .then(r => {
+                            console.log(r);
+                            if (r.status == 1) {
+                                    window.location.assign(r.url)
+                            }else{
+                                this.fail("桌號已使用")
+                            }
+                        })
                     },50)
                     this.welcome();
                 },
@@ -320,8 +327,12 @@
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: jsonStr
-                        }).then(data => window.location.assign("/api/member/GuestLogin")
-                        ).catch(err => console.log(err))
+                        }).then(e => e.json()).then(r =>{
+                            if(r.status == 1){ window.location.assign("/api/member/GuestLogin")}
+                            else{
+                                this.fail("桌號已使用")
+                            }
+                        })
                     },50)
                     this.welcome();
                 },

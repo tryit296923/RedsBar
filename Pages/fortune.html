@@ -4,15 +4,63 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>酒精算命</title>
     <style>
         body{
+            background-image: url(/RedsBar/Alcoholic/wwwroot/images/BackGround/pexels-photo-260922.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
             background-color: #222220;
             color: azure;
             min-width: 390px;
+            height: 100vh;
+        }
+        #myTab{
+            display: none;
+        }
+        .tab-pane{
+            margin-top: 100px;
+        }
+        h3{
+            padding: 80px;
+            text-align: center;
+            background-color: transparent;
+        }
+        .answerTabs{
+            background-color: rgba(100, 100, 100, .7);
+        }
+        #page1 div{
+            display: flex;
+            justify-content: center;
+        }
+        #page1 input{
+            display: none;
+        }
+        #page1 label{
+            padding: 20px 30px;
+            margin: 1em;
+            text-align: center;
+            background-color: #721B29;
+            border-radius: 00.375rem;
+        }
+        #page2 button{
+            background-color:transparent;
+            border: 0;
+            margin: 40px;
+            border-radius: 00.375rem;
+        }
+        #page2 input{
+            margin: 40px;
+            border-radius: 0.375rem;
+            margin: 100px 0 40px 0;
+        }
+        #page2 h3{
+            color: aliceblue;
+            padding: 0;
         }
     </style>
 </head>
@@ -32,16 +80,23 @@
             <button data-bs-toggle="tab" data-bs-target="#final"  id="btnfinal" >Disabled</button>
         </ul>        
     </div>
-    <div class="container">
+    <div class="container answerTabs">
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="page1" role="tabpanel" aria-labelledby="home-tab">
                 <h3>請問你是否已經滿法定飲酒年齡？</h3>
-                <input type="checkbox" name="" id="">
-                <input type="checkbox" name="" id="">
-                <hr>
+                <div>
+                    <label for="ilegal">否</label><input type="checkbox" name="" id="ilegal">
+                    <label for="legal">是</label>
+                    <input type="checkbox" name="" id="legal">
+                </div>
+                    <hr>
                 <h3>請問你的生理性別是？</h3>
-                <input type="checkbox" name="" id="">
-                <input type="checkbox" name="" id="">
+                <div>
+                    <label for="ilegal">男</label><input type="checkbox" name="" id="male">
+                    <input type="checkbox" name="" id="male">
+                    <label for="ilegal">女</label><input type="checkbox" name="" id="female">
+                    <input type="checkbox" name="" id="female">
+                </div>
             </div>
             <div class="tab-pane fade" id="page2" role="tabpanel" aria-labelledby="profile-tab">
                 <input type="text" placeholder="輸入名字">

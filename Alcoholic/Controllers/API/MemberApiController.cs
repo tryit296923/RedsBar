@@ -34,17 +34,21 @@ namespace Alcoholic.Controllers.API
         [HttpPut]
         public IActionResult StartOrder([FromBody] DeskModel desk)
         {
+            ReturnModel model = new();
+            model.Url = "/member/LoginRegister";
             if (!ModelState.IsValid)
             {
+                model.Status = 0;
                 var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
-                return Ok(false);
+                return Ok(model);
             }
             DeskInfo? deskInfo = (from d in db.DeskInfo
                                   where d.Desk == desk.Desk
                                   select d).FirstOrDefault();
-            if(deskInfo == null)
+            if(deskInfo == null || deskInfo.Occupied == 1)
             {
-                return NotFound();
+                model.Status = 0;
+                return Ok(model);
             }
             deskInfo.Occupied = 1;
             deskInfo.StartTime = DateTime.Now.ToString("yyyyMMddHHmm");
@@ -53,8 +57,8 @@ namespace Alcoholic.Controllers.API
 
             HttpContext.Session.SetString("Number", deskInfo.Number.ToString());
             HttpContext.Session.SetString("Desk", deskInfo.Desk);
-
-            return Ok(true);
+            model.Status = 1;
+            return Ok(model);
         }
 
         // 註冊
@@ -76,6 +80,11 @@ namespace Alcoholic.Controllers.API
             if (EmailExists(memberData.Email))
             {
                 returnModel.Status = 3;
+                return Ok(returnModel);
+            }
+            if ((DateTime.Now - memberData.Birth).TotalDays/365 <= 18)
+            {
+                returnModel.Status = 2;
                 return Ok(returnModel);
             }
             else
@@ -336,17 +345,28 @@ namespace Alcoholic.Controllers.API
         {
             string ? ses = HttpContext.Session.GetString("MemberID");
             if (string.IsNullOrEmpty(ses)) { return Ok(); }
-            if (Guid.TryParse(ses, out Guid memberId))
+            if (!Guid.TryParse(ses, out Guid memberId))
             {
                 return Ok(false);
             }
-            Member? member = db.Members.Select(x => x).Where(x => x.MemberID == memberId).FirstOrDefault();
-            List<Order> details = new();
-            foreach(Order o in member.Orders)
+            var orders = db.Orders.Where(o => o.MemberId == memberId).Select(o => new OrderListModel()
             {
-                details.Add(o);
-            }
-            return Ok(details);
+                orderId = o.OrderId,
+                productName = o.OrderDetails.OrderByDescending(o => o.Quantity).Select(od => od.Product.ProductName).ToList(),
+                //path = o.OrderDetails.OrderByDescending(o => o.Quantity).Select(od => od.Product.Images.FirstOrDefault().Path),
+                total = o.Total
+            }).ToList();
+            var products = db.OrderDetails.Where(o => o.Order.MemberId == memberId).OrderByDescending(o => o.Quantity).Select(od => od.Product).Select(o => new ProductModel()
+            {
+                productName = o.ProductName,
+                paths = o.Images.FirstOrDefault().Path
+            }).ToList();
+            ReturnListModel returnListModel = new()
+            {
+                orderList = orders,
+                product = products
+            };
+            return Ok(returnListModel);
         }
 
         [Authorize(Roles = "member")]

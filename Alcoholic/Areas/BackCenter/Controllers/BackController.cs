@@ -1,13 +1,8 @@
 ﻿using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
-using Alcoholic.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Xml.Serialization;
 
 namespace Alcoholic.Areas.BackCenter.Controllers
 {

@@ -130,11 +130,11 @@
         }
         .register button{
             position: absolute;
-            bottom: -40px;
+            bottom: 70px;
             border-radius: 00.375rem;
             border: 0px;
             width:200px;
-            left: 18px;
+            left: 93px;
             background-color: #721B29;
             color: #fff;
         }
@@ -313,14 +313,14 @@
                             <input v-model="Birth" :class="validBirth" type="date" value="2000-12-10" required>
                         </div>
                     </form>
+                    <div class="register">
+                        <button v-on:click.prevent="register" class="registerbtn">註 冊</button>
+                    </div>
                     <p :class="acs">帳號不可與密碼相同!</p>
                     <p :class="pws">兩次密碼不相符!</p>
                     <p :class="mas">Email格式不符!</p>
                     <p :class="phs">連絡電話請以"09"開頭且為10碼!</p>
                     <p :class="ols">你不該進來這裡!</p>
-                    <div class="register">
-                        <button v-on:click.prevent="register" class="registerbtn">註 冊</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -424,6 +424,17 @@
             },
         },
         methods:{
+            swal: function(string){
+                Swal.fire({
+                    icon: 'error',
+                    color: '#FFF',
+                    iconColor: '#D8CDB9',
+                    confirmButtonColor: '#721B29',
+                    background: '#333',
+                    title: '註冊失敗!',
+                    text: string,
+                })
+            },
             register: function () {
                 let fbody = {
                     "Account": this.Account,
@@ -434,18 +445,11 @@
                     "Email": this.Email,
                 };
                 if (vm.Account == "" || vm.Password == "" || vm.Name == "" || vm.Account == "" || vm.Birth == "" || vm.Phone == "" || "Email" == vm.Email) {
-                    Swal.fire({
-                        icon: 'error',
-                        color: '#FFF',
-                        iconColor: '#D8CDB9',
-                        confirmButtonColor: '#721B29',
-                        background: '#333',
-                        title: '註冊失敗!',
-                        text: '有地方還沒填喔!',
-                    })
+                    this.swal('有地方還沒填喔!');
                     return;
                 }
                 let JsonString = JSON.stringify(fbody);
+                let self = this;
                 setTimeout(()=>{
                     fetch("/api/Member/Register", {
                         method: 'POST',
@@ -473,39 +477,19 @@
                             }
                             break;
                             case 1 : {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        color: '#FFF',
-                                        iconColor: '#D8CDB9',
-                                        confirmButtonColor: '#721B29',
-                                        background: '#333',
-                                        title: '註冊失敗!',
-                                        text: '帳號有人使用過囉!',
-                                    })
+                                    self.swal('帳號有人使用過囉!');
                             }
                             break;
+                            case 2: {
+                                    self.swal('未滿18歲!');
+                            }
+                                break;
                             case 400 : {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        color: '#FFF',
-                                        iconColor: '#D8CDB9',
-                                        confirmButtonColor: '#721B29',
-                                        background: '#333',
-                                        title: '註冊失敗!',
-                                        text: '資料格式錯誤!',
-                                    })
+                                    self.swal('資料格式錯誤!');
                             }
                             break; 
                             case 3 : {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        color: '#FFF',
-                                        iconColor: '#D8CDB9',
-                                        confirmButtonColor: '#721B29',
-                                        background: '#333',
-                                        title: '註冊失敗!',
-                                        text: 'Email有人使用過囉!',
-                                    })
+                                    self.swal('Email有人使用過囉!');
                             }
                             break;
                         }

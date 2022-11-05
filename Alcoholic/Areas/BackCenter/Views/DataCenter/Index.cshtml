@@ -2,6 +2,14 @@
     ViewData["Title"] = "數據中心";
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
+<style>
+    #myTabContent {
+        min-width: 900px;
+    }
+    .total{
+        font-size: 1.5rem;
+    }
+</style>
     <div class="datacenter container-fluid p-5" id="datacenter">
         <h3>數據中心</h3>
         <hr>
@@ -14,31 +22,17 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill"
-                        data-bs-target="#pills-2" type="button" role="tab" aria-controls="pills-profile"
-                        aria-selected="false">
-                    訂單數據
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill"
-                        data-bs-target="#pills-3" type="button" role="tab" aria-controls="pills-contact"
+                        data-bs-target="#pills-2" type="button" role="tab" aria-controls="pills-contact"
                         aria-selected="false">
-                    優惠折抵成效
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill"
-                        data-bs-target="#pills-4" type="button" role="tab"
-                        aria-controls="pills-disabled" aria-selected="false">
                     商品數據
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill"
-                        data-bs-target="#pills-5" type="button" role="tab"
+                        data-bs-target="#pills-3" type="button" role="tab"
                         aria-controls="pills-disabled" aria-selected="false">
-                    來客數量
+                    原料庫存量
                 </button>
             </li>
         </ul>
@@ -49,157 +43,81 @@
                     <div class="data py-4">
                         <div class="spacebetween row-cols-2 mb-3">
                             <h3>關鍵指標</h3>
-                            <select class="form-select" name="mark" id="mark" v-model="diff" v-on:change="selectDiff">
+                            <select class="form-select" name="mark" id="mark" v-model="diff">
                                 <option value="m" selected>近一個月</option>
                                 <option value="s">近一季</option>
                                 <option value="y">近一年</option>
                             </select>
                         </div>
-                        <div class="keymark row-cols-4">
-                        <div class="keymarkdetail p-4"><h2>{{STotal}}</h2><h5>營業額</h5></div>
-                        <div class="keymarkdetail p-4"><h2>{{SGuestNum}}</h2><h5>來客量</h5></div>
+                        <div class="keymark" :style="monthpanel">
+                            <div class="keymarkdetail p-4 "><h2 class="total">{{mTotal}}</h2><h5>營業額</h5></div>
+                            <div class="keymarkdetail p-4"><h2>{{select.orders}}</h2><h5>訂單數</h5></div>
+                            <div class="keymarkdetail p-4"><h2>{{Math.round(select.avg)}}</h2><h5>單平均</h5></div>
+                        <div class="keymarkdetail p-4"><h2>{{mGuestNum}}</h2><h5>來客量</h5></div>
                             <div class="keymarkdetail p-4"><h2>{{select.sMemberNum}}</h2><h5>會員數</h5></div>
-                            <div class="keymarkdetail p-4"><h2>{{select.sRate}}/5</h2><h5>評價</h5></div>
+                        </div>
+                        <div class="keymark" :style="seasonpanel">
+                            <div class="keymarkdetail p-4"><h2 class="total">{{sTotal}}</h2><h5>營業額</h5></div>
+                            <div class="keymarkdetail p-4"><h2>{{seasons.orders}}</h2><h5>訂單數</h5></div>
+                            <div class="keymarkdetail p-4"><h2>{{Math.round(seasons.avg)}}</h2><h5>單平均</h5></div>
+                            <div class="keymarkdetail p-4"><h2>{{sGuestNum}}</h2><h5>來客量</h5></div>
+                            <div class="keymarkdetail p-4"><h2>{{seasons.sMemberNum}}</h2><h5>會員數</h5></div>
+                        </div>
+                        <div class="keymark" :style="yearpanel">
+                            <div class="keymarkdetail p-4"><h2 class="total">{{yTotal}}</h2><h5>營業額</h5></div>
+                            <div class="keymarkdetail p-4"><h2>{{year.orders}}</h2><h5>訂單數</h5></div>
+                            <div class="keymarkdetail p-4"><h2>{{Math.round(year.avg)}}</h2><h5>單平均</h5></div>
+                            <div class="keymarkdetail p-4"><h2>{{yGuestNum}}</h2><h5>來客量</h5></div>
+                            <div class="keymarkdetail p-4"><h2>{{year.sMemberNum}}</h2><h5>會員數</h5></div>
                         </div>
                         <br>
                     </div>
                     <div class="charts row">
-                        <div class="col-6">
-                            <canvas id="myChart" width="400" height="200"></canvas>
+                        <div class="col-8">
+                            <canvas :style="monthpanel" id="myChart" width="400" height="400"></canvas>
+                            <canvas :style="seasonpanel" id="seasonChart" width="400" height="400"></canvas>
+                            <canvas :style="yearpanel" id="yearChart" width="400" height="400"></canvas>
                         </div>
-                        <div class="col-6"> 
-                            <canvas id="memChart" width="400" height="200"></canvas>
+                        <div class="col-4"> 
+                            <canvas id="memChart" width="200" height="200"></canvas>
                         </div>
                     </div>
+                   
                 </div>
             </div>
             <div class="tab-pane fade" id="pills-2" role="tabpanel"
-                 aria-labelledby="pills-profile-tab" tabindex="0">
-                <div class="info">
-                    <div class="tabtop">
-                        <div class="spacebetween row-cols-2 mb-3">
-                            <h3>訂單數據</h3>
-                            <select class="form-select" name="mark" id="mark">
-                                <option value="days">近七日</option>
-                                <option value="month">近一個月</option>
-                                <option value="season">近一季</option>
-                                <option value="year">近一年</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="orders">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>訂單數</th>
-                                    <th>訂單總金額</th>
-                                    <th>訂單平均金額</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>春</td>
-                                    <td>3</td>
-                                    <td>1000</td>
-                                    <td>333</td>
-                                </tr>
-                                <tr>
-                                    <td>春</td>
-                                    <td>3</td>
-                                    <td>1000</td>
-                                    <td>333</td>
-                                </tr>
-                                <tr>
-                                    <td>春</td>
-                                    <td>3</td>
-                                    <td>1000</td>
-                                    <td>333</td>
-                                </tr>
-                                <tr>
-                                    <td>春</td>
-                                    <td>3</td>
-                                    <td>1000</td>
-                                    <td>333</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pills-3" role="tabpanel"
                  aria-labelledby="pills-contact-tab" tabindex="0">
                 <div class="info">
                     <div class="tabtop">
                         <div class="spacebetween row-cols-2 mb-3">
-                            <h3>優惠折抵成效</h3>
-                            <select class="form-select" name="mark" id="mark">
-                                <option value="days">近七日</option>
-                                <option value="month">近一個月</option>
-                                <option value="season">近一季</option>
-                                <option value="year">近一年</option>
+                        <h3>商品數據</h3>
+                        <select class="form-select" name="mark" id="mark" v-model="diff">
+                                <option value="m">近一個月</option>
+                                <option value="s">近一季</option>
+                                <option value="y">近一年</option>
                             </select>
                         </div>
+                        <div>
+                        <canvas id="productsM" :style="monthpanel" width="400" height="400"></canvas>
+                        <canvas id="productsS" :style="seasonpanel" width="400" height="400"></canvas>
+                        <canvas id="productsY" :style="yearpanel" width="400" height="400"></canvas>
+                        </div>
                     </div>
-                    <div class="discount row-cols-3">
-                        <div class="p-4"><h5>含優惠訂單-訂單數</h5><h2>0</h2><p>100%</p></div>
-                        <div class="p-4"><h5>含優惠訂單-訂單總金額</h5><h2>0</h2><p>100%</p></div>
-                        <div class="p-4"><h5>含優惠訂單-訂單平均金額</h5><h2>0</h2><p>100%</p></div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-3" role="tabpanel"
+                 aria-labelledby="pills-disabled-tab" tabindex="0">
+                <div class="info">
+                    <div class="tabtop">
+                        <div class="spacebetween row-cols-2 mb-3">
+                        <h3>原料庫存量</h3>
+
+                        </div>
                     </div>
                     <br>
-                    <div class="undiscount row-cols-3">
-                        <div class="p-4"><h5>不含優惠訂單-訂單數</h5><h2>0</h2><p>100%</p></div>
-                        <div class="p-4"><h5>不含優惠訂單-訂單總金額</h5><h2>0</h2><p>100%</p></div>
-                        <div class="p-4"><h5>不含優惠訂單-訂單平均金額</h5><h2>0</h2><p>100%</p></div>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pills-4" role="tabpanel"
-                 aria-labelledby="pills-disabled-tab" tabindex="0">
-                <div class="info">
-                    <div class="tabtop">
-                        <div class="spacebetween row-cols-2 mb-3">
-                            <h3>商品數據</h3>
-                            <select class="form-select" name="mark" id="mark">
-                                <option value="days">近七日</option>
-                                <option value="month">近一個月</option>
-                                <option value="season">近一季</option>
-                                <option value="year">近一年</option>
-                            </select>
-                        </div>
-                    </div>
-                    <!-- <br>
                     <div class="products">
-                        <ul class="nav">
-                            <li class="nav-item">
-                                <button class="nav-link active" aria-current="page">銷量</button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link">銷售額</button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link">庫存</button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link">???</button>
-                            </li>
-                        </ul>
+
                         <hr class="mt-0">
-                    </div> -->
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pills-5" role="tabpanel"
-                 aria-labelledby="pills-disabled-tab" tabindex="0">
-                <div class="info">
-                    <div class="tabtop">
-                        <div class="spacebetween row-cols-2 mb-3">
-                            <h3>來客數量</h3>
-                            <select class="form-select" name="mark" id="mark">
-                                <option value="month">近一個月</option>
-                                <option value="season">近一季</option>
-                                <option value="year">近一年</option>
-                            </select>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -211,39 +129,76 @@
         el: "#datacenter",
         data:{
             select: {},
+            seasons:{},
+            year:{},
             diff: "m",
             labels: [],
-            SGuestNum:0,
-            SMemberNum:0,
-            STotal:0,
-
+            mlabels: [],
+            ylabels: [],
+            SMemberNum: 0,
+            mTotal:0,
+            sTotal:0,
+            yTotal:0,
+            mGuestNum: 0,
+            sGuestNum: 0,
+            yGuestNum: 0,
+            monthpanel: "display:flex",
+            seasonpanel: "display:none",
+            yearpanel: "display:none",
+        },
+        watch:{
+            diff:function(){
+                switch(this.diff){
+                    case "m": {
+                        this.monthpanel = "display:flex";
+                        this.seasonpanel = "display:none";
+                        this.yearpanel = "display:none";
+                    }
+                        break;
+                    case "s":{
+                        this.monthpanel = "display:none";
+                        this.seasonpanel = "display:flex";
+                        this.yearpanel = "display:none";
+                    }
+                        break;
+                    case "y":{
+                        this.monthpanel = "display:none";
+                        this.seasonpanel = "display:none";
+                        this.yearpanel = "display:flex";
+                    }
+                        break;
+                }
+            }
         },
         methods: {
-            selectDiff: function () {
-                fetch("/backcenter/DataCenter/SelectedData", {
-                    method:"post",
+            selectMonth: function () {
+                fetch("/backcenter/DataCenter/SelectedData",{
+                    method:"POST",
                     headers:{"Content-Type":"application/json"},
-                    body: JSON.stringify(this.diff)
+                    body:JSON.stringify(30)
                 }).then(e => e.json()).then(r => {this.select = r;
                     let self = this;
-                    let sTotal = r.sTotal;
-                    self.select.sGuestNum.forEach(e => {
-                        self.SGuestNum = self.SGuestNum + e.total
-                    })
-                    self.SMemberNum = r.sMemberNum;
                     let totalarr = [];
-                    self.select.sTotal.forEach(e => {
-                        self.STotal = self.STotal + e.total;
-                        totalarr.push(e.total);
+                    let productNames = [];
+                    let protuctSales = [];
+                    r.productTotal.forEach(pt => {
+                        productNames.push(pt.productName);
+                        protuctSales.push(pt.quantity)
                     })
-                    
+                    this.select.sTotal.forEach(e => {
+                        this.mGuestNum = this.mGuestNum + e.guestTotal
+                        this.mTotal = this.mTotal + e.total;
+                        totalarr.push(e.total);
+                        this.labels.push(e.date);
+                    })
+                    this.SMemberNum = r.sMemberNum;
                     let ctx = document.getElementById('myChart').getContext('2d');
                     let myChart = new Chart(ctx, {
                         type: 'line',
                         data: {
-                            labels: self.labels,
+                            labels: this.labels,
                             datasets: [{
-                                label: "",
+                                label: "營業額",
                                 data: totalarr,
                                 backgroundColor: [
                                     'rgba(255, 99, 132, 0.2)',
@@ -271,7 +226,7 @@
                             labels: ["Members","Target"],
                             datasets: [{
                                 label: "Red",
-                                data: [self.SMemberNum, 100],
+                                data: [self.SMemberNum, 100 - self.SMemberNum],
                                 backgroundColor: [
                                     'rgba(99, 255, 132, 0.2)',
                                     'rgba(255, 99, 132, 0.2)',
@@ -280,73 +235,233 @@
                             }]
                         },
                     });
-                })
-            },
-            selectDatas: function(){
-                fetch("/backcenter/DataCenter/SelectedData", {
 
-                }).then(e=>e.json()).then(r => {console.log(r);
-                    let ctxline = document.getElementById('lineChart').getContext('2d');
-                    let lineChart = new Chart(ctxline, {
-                        type: 'line',
+                    let pctx = document.getElementById('productsM').getContext('2d');
+                    let productsM = new Chart(pctx, {
+                        type: 'bar',
                         data: {
-                            labels: [1,2,3,4,5],
+                            labels: productNames,
                             datasets: [
                                 {
-                                    label: "來客量",
-                                    data: [self.select.sGuestNum],
+                                    label: "銷售量",
+                                    data: protuctSales,
                                     backgroundColor: [
-                                        'rgba(54, 162, 235, 0.2)',
+                                        'rgba(17, 15, 18, 0.5)',
+                                        'rgba(237, 186, 1, 0.5)',
+                                        'rgba(246, 131, 1, 0.5)',
+                                        'rgba(154, 23, 6, 0.5)',
+                                        'rgba(250, 143, 136, 0.5)',
+                                        'rgba(216, 111, 4, 0.5)',
+                                        'rgba(232, 210, 160, 0.5)',
+                                        'rgba(218, 229, 212, 0.5)',
+                                        'rgba(238, 245, 230, 0.5)',
+                                        'rgba(222, 82, 49, 0.5)',
+                                        'rgba(219, 212, 194, 0.5)',
+                                        'rgba(237, 238, 242, 0.5)',
+                                        'rgba(110, 24, 39, 0.5)',
                                     ],
-                                    borderColor: [
-                                        'rgba(54, 162, 235, 1)',
-                                    ],
-                                    borderWidth: 1
+                                    borderColor: 'rgba(100, 100, 100, 1)',
+                                    borderWidth: 0.1,
+                                    barThickness: 50,
                                 },
-                                {
-                                    label: "會員數",
-                                    data: [self.select.sMemberNum],
-                                    backgroundColor: [
-                                        'rgba(255, 206, 86, 0.2)',
-                                    ],
-                                    borderColor: [
-                                        'rgba(255, 206, 86, 1)',
-                                    ],
-                                    borderWidth: 1
-                                }
                             ]
                         },
                         options: {
                             scales: {
-                                x:{
-                                    display: true,
-                                    title: {
-                                      display: true
-                                    }
-                                },  
                                 y: {
-                                    beginAtZero: true,
-                                    title:{
-                                        display: true,
-                                        text: "人數"
-                                    }
+                                    beginAtZero: true
                                 }
                             }
                         }
-                    });                
-
+                    });
                 })
             },
+            selectSeason: function () {
+                fetch("/backcenter/DataCenter/SelectedData", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(90)
+                }).then(e => e.json()).then(r => {
+                    this.seasons = r;
+                    let self = this;
+                    let totalarr = [];
+                    let productNames = [];
+                    let protuctSales = [];
+                    r.productTotal.forEach(pt => {
+                        productNames.push(pt.productName);
+                        protuctSales.push(pt.quantity)
+                    })
+                    self.seasons.sTotal.forEach(e => {
+                        self.sGuestNum = self.sGuestNum + e.guestTotal
+                        self.sTotal = self.sTotal + e.total;
+                        totalarr.push(e.total);
+                        self.mlabels.push(e.date);
+                    })
+                    self.SMemberNum = r.sMemberNum;
+
+                    let ctx = document.getElementById('seasonChart').getContext('2d');
+                    let myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: self.mlabels,
+                            datasets: [{
+                                label: "營業額",
+                                data: totalarr,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                ],
+                                borderWidth: 1,
+                                barThickness: 100,
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+
+                    let pctx = document.getElementById('productsS').getContext('2d');
+                    let productsS = new Chart(pctx, {
+                        type: 'bar',
+                        data: {
+                            labels: productNames,
+                            datasets: [
+                                {
+                                    label: "銷售量",
+                                    data: protuctSales,
+                                    backgroundColor: [
+                                        'rgba(17, 15, 18, 0.5)',
+                                        'rgba(237, 186, 1, 0.5)',
+                                        'rgba(246, 131, 1, 0.5)',
+                                        'rgba(154, 23, 6, 0.5)',
+                                        'rgba(250, 143, 136, 0.5)',
+                                        'rgba(216, 111, 4, 0.5)',
+                                        'rgba(232, 210, 160, 0.5)',
+                                        'rgba(218, 229, 212, 0.5)',
+                                        'rgba(238, 245, 230, 0.5)',
+                                        'rgba(222, 82, 49, 0.5)',
+                                        'rgba(219, 212, 194, 0.5)',
+                                        'rgba(237, 238, 242, 0.5)',
+                                        'rgba(110, 24, 39, 0.5)',
+                                    ],
+                                    borderColor: 'rgba(100, 100, 100, 1)',
+                                    borderWidth: 0.1,
+                                    barThickness: 50,
+                                },
+                            ]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                })
+            },
+            selectYear: function () {
+                fetch("/backcenter/DataCenter/SelectedData", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(365)
+                }).then(e => e.json()).then(r => {
+                    this.year = r;
+                    let self = this;
+                    let totalarr = [];
+                    let productNames = [];
+                    let protuctSales = [];
+                    r.productTotal.forEach(pt => {
+                        productNames.push(pt.productName);
+                        protuctSales.push(pt.quantity)
+                    })
+                    self.year.sTotal.forEach(e => {
+                        self.yGuestNum = self.yGuestNum + e.guestTotal
+                        self.yTotal = self.yTotal + e.total;
+                        totalarr.push(e.total);
+                        self.ylabels.push(e.date);
+                    })
+                    self.SMemberNum = r.sMemberNum;
+
+                    let ctx = document.getElementById('yearChart').getContext('2d');
+                    let myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: self.ylabels,
+                            datasets: [{
+                                label: "",
+                                data: totalarr,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                ],
+                                borderWidth: 1,
+                                barThickness: 100,
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+
+                    let pctx = document.getElementById('productsY').getContext('2d');
+                    let productsY = new Chart(pctx, {
+                        type: 'bar',
+                        data: {
+                            labels: productNames,
+                            datasets: [
+                                {
+                                    label: "銷售量",
+                                    data: protuctSales,
+                                    backgroundColor: [
+                                        'rgba(17, 15, 18, 0.5)',
+                                        'rgba(237, 186, 1, 0.5)',
+                                        'rgba(246, 131, 1, 0.5)',
+                                        'rgba(154, 23, 6, 0.5)',
+                                        'rgba(250, 143, 136, 0.5)',
+                                        'rgba(216, 111, 4, 0.5)',
+                                        'rgba(232, 210, 160, 0.5)',
+                                        'rgba(218, 229, 212, 0.5)',
+                                        'rgba(238, 245, 230, 0.5)',
+                                        'rgba(222, 82, 49, 0.5)',
+                                        'rgba(219, 212, 194, 0.5)',
+                                        'rgba(237, 238, 242, 0.5)',
+                                        'rgba(110, 24, 39, 0.5)',
+                                    ],
+                                    borderColor: 'rgba(100, 100, 100, 1)',
+                                    borderWidth: 0.1,
+                                    barThickness: 50,
+                                },
+                            ]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                })
+            },
+
         },
         mounted: function () {
-            var day = new Date
-            for (i = 0; i < 30; i++) {
-                day.setDate(day.getDate() - 1)
-                var str = day.toLocaleDateString('en-US')
-                var dd = str.slice(0, str.length - 5)
-                this.labels.push(dd)
-            }
-            this.selectDiff();
+            this.selectMonth();
+            this.selectSeason();
+            this.selectYear();
         }
     })
 
