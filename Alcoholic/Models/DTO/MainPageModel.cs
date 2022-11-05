@@ -1,4 +1,6 @@
-﻿namespace Alcoholic.Models.DTO
+﻿using Alcoholic.Models.Entities;
+
+namespace Alcoholic.Models.DTO
 {
     public class MainPageModel
     {
@@ -33,6 +35,14 @@
     {
         public string ProductName { get; set; }
         public int Quantity { get; set; }
+    }
+
+    public class MaterialsInv
+    {
+        public string Name { get; set; }
+        public int Inventory { get; set; }
+        public string CategoryName { get; set; }
+        public int Id { get; set; }
     }
 
 }
