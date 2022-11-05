@@ -107,5 +107,17 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             };
             return Ok(model);
         }
+
+        public IActionResult GetMaterials()
+        {
+            List<MaterialsInv> materialsInvs = db.Materials.Select(m => new MaterialsInv
+            {
+                Name = m.Name,
+                Inventory = m.Inventory,
+                CategoryName = m.Category.CategoryName,
+                Id = m.MaterialId
+            }).ToList();
+            return Ok(materialsInvs);
+        }
     }
 }
