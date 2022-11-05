@@ -32,5 +32,12 @@ namespace Alcoholic.Models.DTO
         public string MaterialName { get; set; }
         public int Inventory { get; set; }
     }
+    public class EditMaterials
+    {
+        public int MaterialId { get; set; }
+        public int Inventory { get; set; }
+        public int Restock { get; set; }
+    }
+
 }
 
