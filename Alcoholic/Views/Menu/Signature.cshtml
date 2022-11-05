@@ -32,11 +32,11 @@
         }
     }
     /* 產品 */
-    .classicCT{
-        padding: 0 50px 0 50px;
-    }
     .classicCT p{
         font-size:medium;
+    }
+    .card-title{
+        height:48px;
     }
     .price {
         color: #333;
@@ -69,9 +69,6 @@
 
     .modal-body p {
         margin-top: 15px;
-    }
-    .modal-image {
-        max-width: 498px;
     }
 
     .modal-spec {
@@ -137,7 +134,7 @@
                 </div>
                 <div class="modal-body p-0">
                     <div class="modal-bodyimg ">
-                        <img class="modal-image" :src="modal.imagesrc">
+                        <img class="w-100" :src="modal.imagesrc">
                     </div>
                     <div class="card-body modal-spec">
                         <p><b>{{modal.description}}</b></p>
