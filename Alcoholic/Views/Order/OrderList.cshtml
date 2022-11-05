@@ -258,8 +258,8 @@
                     <div class="row g-4 ">
                         <template v-for="item in product">
                             <div class="col-6 col-md-4 p-1">
-                                <div class="card productcard w-100 h-100">
-                                    <img :src="item.path" class="m-2" :id="item.id" data-bs-toggle="modal"
+                                <div class="card productcard">
+                                    <img :src="item.path" class="p-2 w-100" :id="item.id" data-bs-toggle="modal"
                                          data-bs-target="#productModal" @@click="selected">
                                     <div class="card-body btnaddtocart">
                                         <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal"
@@ -337,8 +337,8 @@
                         </div>
                         <template v-for="item in product">
                             <div class="col-6 col-md-4 p-1">
-                                <div class="card productcard w-100 h-100">
-                                    <img :src="item.path" class="m-2" :id="item.id" data-bs-toggle="modal"
+                                <div class="card productcard">
+                                    <img :src="item.path" class="p-2 w-100" :id="item.id" data-bs-toggle="modal"
                                          data-bs-target="#productModal" @@click="selected">
                                     <div class="card-body btnaddtocart">
                                         <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal" @@click="selected">
