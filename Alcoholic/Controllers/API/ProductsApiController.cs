@@ -101,6 +101,7 @@ namespace Alcoholic.Controllers.API
                                   Description = pro.ProductDescription,
                                   DiscountId = dis.DiscountId,
                                   DiscountName = dis.DiscountName,
+                                  DiscountAmount= dis.DiscountAmount,
                                   Path = path.Path
                               };
 
