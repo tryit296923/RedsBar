@@ -268,8 +268,8 @@
                     <div class="row g-4 ">
                         <template v-for="item in product">
                             <div class="col-6 col-md-4 p-1">
-                                <div class="card productcard w-100 h-100">
-                                    <img :src="item.path" class="m-2" :id="item.id" data-bs-toggle="modal"
+                                <div class="card productcard">
+                                    <img :src="item.path" class="p-2 w-100" :id="item.id" data-bs-toggle="modal"
                                          data-bs-target="#productModal" @@click="selected">
                                     <div class="card-body btnaddtocart">
                                         <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal"
@@ -315,21 +315,21 @@
                             </div>
                             <div class="carousel-inner">
                                 <div  v-for="(item, i) in recommendHeadProd" :key="i" v-if="i==0" class="carousel-item active" data-bs-interval="5000">
-                                    <img :src="item.path" class="d-block w-100">
+                                    <img :src="item.path" class="d-block h-50 w-100 ">
                                     <div class="carousel-caption p-0 d-md-block">
                                         <h5 >{{item.name}}</h5>
                                         <p >{{item.description}}</p>
                                     </div>
                                 </div>
                                 <div  v-for="(item, i) in recommendHeadProd" :key="i" v-if="i==1" class="carousel-item " data-bs-interval="2000">
-                                    <img :src="item.path" class="d-block w-100">
+                                    <img :src="item.path" class="d-block h-100 w-100">
                                     <div class="carousel-caption p-0 d-md-block">
                                         <h5 >{{item.name}}</h5>
                                         <p >{{item.description}}</p>
                                     </div>
                                 </div>
                                 <div v-for="(item, i) in recommendHeadProd" :key="i" v-if="i==recommendHeadProd.length-1" class="carousel-item ">
-                                    <img :src="item.path" class="d-block w-100">
+                                    <img :src="item.path" class="d-block h-100 w-100">
                                     <div class="carousel-caption p-0 d-md-block">
                                         <h5 >{{item.name}}</h5>
                                         <p >{{item.description}}</p>
@@ -346,10 +346,10 @@
                             </button>
                         </div>
                         <template v-for="item in recommendBodyProd">
-                            <div class="col-6 col-md-4 p-1">
+                            <div class="col-6 p-1">
                                 <div class="card productcard w-100 h-100">
                                     <label  ><strong>{{item.discountName}}</strong></label>
-                                    <img :src="item.path" class="m-2" :id="item.id" data-bs-toggle="modal"
+                                    <img :src="item.path" class="p-2 w-100" :id="item.id" data-bs-toggle="modal"
                                          data-bs-target="#productModal" @@click="selected">
                                     <div class="card-body btnaddtocart">
                                         <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal" @@click="selected">

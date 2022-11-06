@@ -110,14 +110,13 @@
                 <div class="info">
                     <div class="tabtop">
                         <div class="spacebetween row-cols-2 mb-3">
-                        <h3>原料庫存量</h3>
-
+                            <h3>原料庫存量</h3>
                         </div>
                     </div>
                     <br>
                     <div class="products">
-
                         <hr class="mt-0">
+                    <canvas id="material" width="400" height="400"></canvas>
                     </div>
                 </div>
             </div>
@@ -131,6 +130,7 @@
             select: {},
             seasons:{},
             year:{},
+            materials:{},
             diff: "m",
             labels: [],
             mlabels: [],
@@ -456,12 +456,72 @@
                     });
                 })
             },
-
+            getmaterials:function(){
+                fetch("/backcenter/DataCenter/GetMaterials").then(e => e.json()).then(r => {
+                    this.materials = r;
+                    let mactx = document.getElementById("material").getContext('2d');
+                    let materialNames = [];
+                    let inv = [];
+                    r.forEach(m => {
+                        materialNames.push(`${m.categoryName}_${m.name}`);
+                        inv.push(m.inventory);
+                        if (m.inventory < 1200){
+                            Swal.fire({
+                                position: 'center',
+                                icon: "error",
+                                title: `${m.name}存量不足`,
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                        }
+                    })
+                    let machart = new Chart(mactx, {
+                        type: 'bar',
+                        data: {
+                            labels: materialNames,
+                            datasets: [
+                                {
+                                    label: "原料庫存",
+                                    data: inv,
+                                    backgroundColor: [
+                                        'rgba(100, 195, 220, 0.5)',
+                                        'rgba(100, 195, 220, 0.5)',
+                                        'rgba(20, 20, 20, 0.5)',
+                                        'rgba(20, 20, 20, 0.5)',
+                                        'rgba(216, 111, 4, 0.5)',
+                                        'rgba(216, 111, 4, 0.5)',
+                                        'rgba(200, 100, 100, 0.5)',
+                                        'rgba(200, 100, 100, 0.5)',
+                                        'rgba(180, 180, 100, 0.5)',
+                                        'rgba(180, 180, 100, 0.5)',
+                                        'rgba(200, 100, 10, 0.5)',
+                                        'rgba(237, 238, 242, 0.5)',
+                                        'rgba(237, 238, 242, 0.5)',
+                                        'rgba(220, 250, 150, 0.5)',
+                                        'rgba(220, 220, 220, 0.5)',
+                                    ],
+                                    borderColor: 'rgba(100, 100, 100, 1)',
+                                    borderWidth: 0.1,
+                                    barThickness: 30,
+                                },
+                            ]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                })
+            }
         },
         mounted: function () {
             this.selectMonth();
             this.selectSeason();
             this.selectYear();
+            this.getmaterials();
         }
     })
 
