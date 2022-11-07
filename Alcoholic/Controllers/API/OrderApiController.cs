@@ -1,23 +1,15 @@
-﻿using Alcoholic.Extensions;
-using Alcoholic.Hubs;
+﻿using Alcoholic.Hubs;
 using Alcoholic.Models;
 using Alcoholic.Models.DTO;
 using Alcoholic.Models.Entities;
 using Alcoholic.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
-using NuGet.Protocol;
 using System.Data;
-using System.Net;
-using System.Security.Claims;
 using System.Text;
 
 namespace Alcoholic.Controllers.API
@@ -101,12 +93,18 @@ namespace Alcoholic.Controllers.API
             var db_OrderId = (from o in _db.Orders
                               where o.MemberId == Guid.Parse(sMemberID) && o.Status == "N" && o.DeskNum == sDesk
                               select o.OrderId).FirstOrDefault();
+            var memberlvl = (from m in _db.Members where m.MemberID == Guid.Parse(sMemberID) select m.MemberLevel).FirstOrDefault()+1;
+            var memberDiscount = (from d in _db.Discount where d.DiscountId == memberlvl select d.DiscountAmount).FirstOrDefault();
             try
             {
                 int total = 0;
                 if (orderdata != null)
                 {
-                    orderdata?.ItemList?.ForEach(x => total += Convert.ToInt32(Math.Round((float)(x.Qty * x.DiscountAmount * x.UnitPrice))));
+
+                    orderdata?.ItemList?.ForEach(x => { 
+                        if(memberDiscount < x.DiscountAmount) { x.DiscountAmount = memberDiscount; }
+                        total += Convert.ToInt32(Math.Round((float)(x.Qty * x.DiscountAmount * x.UnitPrice)));
+                    });
                 }
                 if (db_OrderId == null)
                 {
@@ -217,8 +215,10 @@ namespace Alcoholic.Controllers.API
         {
             string sMemberId = HttpContext.Session.GetString("MemberID");
             string sDesk = HttpContext.Session.GetString("Desk");
-            
-            if(sMemberId != null && sDesk != null)
+            var memberlvl = (from m in _db.Members where m.MemberID == Guid.Parse(sMemberId) select m.MemberLevel).FirstOrDefault() + 1;
+            var memberDiscount = (from d in _db.Discount where d.DiscountId == memberlvl select d.DiscountAmount).FirstOrDefault();
+
+            if (sMemberId != null && sDesk != null)
             {
                 if (!Guid.TryParse(sMemberId, out var memberId))
                 {
@@ -246,6 +246,13 @@ namespace Alcoholic.Controllers.API
                                            Sequence = z.Sequence,
                                        }).ToList(),
                                    }).FirstOrDefault();
+                foreach(var it in orderDetail.ItemList)
+                {
+                    if(memberDiscount < it.DiscountAmount)
+                    {
+                        it.DiscountAmount = memberDiscount;
+                    }
+                }
                 return Ok(orderDetail);
             }
             else
