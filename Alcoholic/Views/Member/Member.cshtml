@@ -253,7 +253,7 @@
                             <div class="w-100 m-2"><label>生日：</label><input class="w-75" type="date" v-model="bd"/></div>
                             <div class="w-100 m-2"><label>信箱：</label><input class="w-75" type="text" v-model="mail"/></div>
                             <div class="w-100 m-2"><label>電話：</label><input class="w-75" type="text" v-model="tel"/></div>
-                            <div class="w-100 m-2"><label>密碼：</label><input class="w-75" type="text" v-model="pass" /></div>
+                            <div class="w-100 m-2"><label>密碼：</label><input placeholder="輸入新密碼以更改" class="w-75" type="text" v-model="pass" /></div>
                         </div>
                         <div class="modal-footer border-0 p-0">
                             <button type="button" class="btn" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
@@ -343,7 +343,7 @@
             update:function(){
                 let body = {
                     Account: this.acc,
-                    Password: "00000000",
+                    Password: "reds1210",
                     Name:this.name,
                     Email:this.mail,
                     Phone:this.tel,
@@ -447,7 +447,7 @@
                             self.bd = memberData.birth.slice(0, 10);
                             self.mail = memberData.mail;
                             self.tel = memberData.phone;
-                            self.percent = Math.round(memberData.total / memberData.max * 100) > 100 ? 100 : Math.round(memberData.total / memberData.max * 100);
+                            self.percent = Math.round(memberData.total / memberData.max * 100) > 100 ? 100 : Math.round((memberData.total-memberData.min) / memberData.max * 100);
                             self.progressbar = `width: ${self.percent}%`;
                             Swal.fire({
                                 allowOutsideClick: 'false',
