@@ -185,6 +185,10 @@
         color:black;
         text-align:center
     }
+
+    [v-cloak] {
+        display: none;
+    }
 </style>
 
 
@@ -256,7 +260,7 @@
     </div>
 </div>
 
-<div id="vueproductModal">
+<div id="vueproductModal" v-cloak>
     <!-- banner -->
     <!-- 菜單 -->
     <div class="menu">
@@ -743,7 +747,6 @@
             <i class="fa-sharp fa-solid fa-cart-shopping"> 查看購物車</i>
         </div>
     </div>
-</div>
 
 <!-- SWAL -->
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -783,7 +786,7 @@
                 { opt: '一位而已' }, { opt: '和朋友兩三人' }
             ],
             optionFatesection2: [
-                { opt: '沙發座位區' }, { opt: '吧檯高腳椅' }, { opt: '好友一大群' }
+                { opt: '沙發座位區' }, { opt: '吧檯高腳椅' }
             ],
             optionFatesection3: [
                 { id:1,opt: '想喝純的威士忌' }, { id:2, opt: '來杯調酒吧!' }

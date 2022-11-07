@@ -255,9 +255,13 @@
     a:active {
         color: white;
     }
+
+    [v-cloak] {
+        display: none;
+    }
 </style>
 
-<div id="orderTotal">
+<div id="orderTotal" v-cloak>
     <div class="outer">
         <!-- navbar -->
         <div class="topnavbar">
