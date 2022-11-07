@@ -302,6 +302,7 @@
         </div>
     </div>
     <div class="scrollregion">
+        <loading :active.sync="isLoading"></loading>
         <div>
             <!-- banner -->
             <div class="backColor container mb-3">
@@ -319,8 +320,6 @@
                 </div>
             </div>
         </div>
-
-
         <fieldset class="mx-3">
             <legend class="p-3">
                 <div>
@@ -418,9 +417,10 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3"></script>
+<link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3/dist/vue-loading.css" rel="stylesheet">
 <script>
-
+    Vue.component('loading', VueLoading);
     var app = new Vue({
         el: '#orderTotal',
         data() {
@@ -428,13 +428,21 @@
                 orderTime: '',
                 totalPrice: 0,
                 orderDetail: {},
+                isLoading: false,
             }
+        },
+        components: {
+            Loading: VueLoading
         },
         methods: {
             getTotalOrder: function () {
+                this.isLoading = true;
                 fetch("/api/Order/GetTotalOrder")
                     .then(response => response.json())
-                    .then(result => { this.orderDetail = result })
+                    .then(result => { 
+                        this.orderDetail = result;
+                        this.isLoading = false;
+                    })
             },
             sequenceList: function () {
                 var sList = [];
