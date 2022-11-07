@@ -126,11 +126,15 @@ Layout = "_LayoutMobile";
             color: #222220;
         }
 
+    [v-cloak] {
+        display: none;
+    }
+
 </style>
 
 <h2>顧客滿意度調查</h2>
 <p class="container">本問卷蒐集之資訊僅作為內部服務改善使用，</br>絕不外洩或另作其他用途，敬請放心填寫。</p>
-<div class="container col-10 col-xl-6 check-area" id="d1">
+<div class="container col-10 col-xl-6 check-area" id="d1" v-cloak>
     <div class="inputform">
         <template v-if="memberInfo.memberName == '訪客' ">
             <div>

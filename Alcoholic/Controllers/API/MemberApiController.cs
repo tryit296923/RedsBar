@@ -120,7 +120,6 @@ namespace Alcoholic.Controllers.API
             if (!ModelState.IsValid)
             {
                 returnModel.Status = 400;
-                //var errors = ModelState.Select(x => x.Value.Errors).Where(y => y.Count > 0).ToList();
                 return Ok(returnModel);
             }
             string id = HttpContext.Session.GetString("MemberID");

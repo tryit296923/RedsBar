@@ -111,7 +111,9 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             Employee? employee = (from em in db.Employees
                                   where emp.EmpAccount == em.EmpAccount
                                   select em).SingleOrDefault();
-            if (employee != null && hash.GetHash(string.Concat(emp.EmpAccount,employee.Salt)) == employee.EmpPassword && employee.Status != 0)
+            string password = hash.GetHash(string.Concat(emp.EmpPassword, employee.Salt).ToString());
+
+            if (employee != null && password == employee.EmpPassword && employee.Status != 0)
             {
                  List<Claim> claims = new()
                 {

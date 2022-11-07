@@ -122,10 +122,14 @@
         display: flex;
         align-items: center;
     }
+
+    [v-cloak] {
+        display: none;
+    }
 </style>
 
 <div class="container">
-    <div class="row" id="orderCheck">
+    <div class="row" id="orderCheck" v-cloak>
         <!-- 標題 -->
         <div class="container-fluid colorbox py-2 col-10 col-xl-8 text-center">
             <div class="thankmessage">消費明細</div>

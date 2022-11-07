@@ -4,6 +4,11 @@
 }
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.2/dist/sweetalert2.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.css">
+<style>
+    [v-clock] {
+        display: none;
+    }
+</style>
 <div class="bookingmanage container-fluid p-5" id="d1">
     <div class="spacebetween row-cols-2 mb-3">
         <h3>訂位管理</h3>
@@ -16,7 +21,7 @@
         <div class="todaydata">
             <div class="bookingtoday p-4">
                 <h5>本日訂位數據</h5>
-                <h2 class="m-0">{{today.toLocaleDateString()}}</h2>
+                <h2 class="m-0" v-clock>{{today.toLocaleDateString()}}</h2>
                 <br>
                 <table class="table">
                     <thead>
@@ -32,10 +37,10 @@
                     <tbody>
                         <tr v-for="item in todayReserves">
                             @*<td>{{item.status}}</td>*@
-                            <td>{{item.reserveName}}</td>
-                            <td>{{item.phone}}</td>
-                            <td>{{item.number}}</td>
-                            <td>{{item.setDate.substring(0,10)}}</td>
+                            <td v-clock>{{item.reserveName}}</td>
+                            <td v-clock>{{item.phone}}</td>
+                            <td v-clock>{{item.number}}</td>
+                            <td v-clock>{{item.setDate.substring(0,10)}}</td>
 @*                            <td>
                                 <button data-bs-toggle="modal" data-bs-target="#edittoday"
                                         class="btnproducts" :id="item.id" v-on:click="editTodaybtn">
