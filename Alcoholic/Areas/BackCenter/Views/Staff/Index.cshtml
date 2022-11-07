@@ -292,11 +292,10 @@
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(acc)
                         }).then(e => e.text()).then(t => {if(t.startsWith("<")){
-                            this.sweatAlert("warning", "你沒有權限!")
+                            this.sweatAlert("warning", "你沒有權限!");
                         }})
-                        this.sweatAlert("success", "刪除成功")
+                        this.sweatAlert("success", "刪除成功"); this.getStaff();
                     }
-                    this.getStaff();
                 })
             },
             editStaff: function (e) {

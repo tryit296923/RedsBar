@@ -289,13 +289,6 @@ namespace Alcoholic.Controllers.API
             };
 
 
-
-
-
-
-
-
-
             List<OrderDetailModel> orders = new();
             foreach(Order o in member.Orders)
             {
@@ -306,7 +299,6 @@ namespace Alcoholic.Controllers.API
                     {
                         OrderId = od.OrderId,
                         ProductName = od.Product.ProductName,
-                        path = od.Product.Images.First().Path
                     });
                 }
             }
@@ -355,10 +347,10 @@ namespace Alcoholic.Controllers.API
                 //path = o.OrderDetails.OrderByDescending(o => o.Quantity).Select(od => od.Product.Images.FirstOrDefault().Path),
                 total = o.Total
             }).ToList();
-            var products = db.OrderDetails.Where(o => o.Order.MemberId == memberId).OrderByDescending(o => o.Quantity).Select(od => od.Product).Select(o => new ProductModel()
+            var products = db.OrderDetails.Where(o => o.Order.MemberId == memberId).OrderByDescending(o => o.Quantity).GroupBy(od => od.ProductId).Select(od => new ProductModel()
             {
-                productName = o.ProductName,
-                paths = o.Images.FirstOrDefault().Path
+                productName = od.FirstOrDefault().Product.ProductName,
+                paths = od.FirstOrDefault().Product.Images.FirstOrDefault().Path
             }).ToList();
             ReturnListModel returnListModel = new()
             {

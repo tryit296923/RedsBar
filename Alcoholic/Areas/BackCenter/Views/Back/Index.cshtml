@@ -2,6 +2,19 @@
     ViewData["Title"] = "後台中心";
     Layout = "~/Areas/BackCenter/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .medals{
+        position: absolute;
+        top:10px;
+        left:10px;
+        height:24px;
+        width:24px;
+    }
+
+    .prouctsrange{
+        position:relative;
+    }
+</style>
 <div class="container-fluid p-5" id="dataMain" v-cloak>
     <h3>後臺首頁</h3>
     <hr>
@@ -28,9 +41,11 @@
             </thead>
             <tbody>
                 <template v-for="(item,index) in main.hotSales">
-                    <tr>
+                    <tr >
                         <td>{{index+1}}</td>
-                        <td><img :src="item.imgPath" alt=""></td>
+                        <td class ="prouctsrange">
+                            <img :src="item.imgPath" alt=""><img v-if="index < 3" class="medals" :src="labels[index]" alt="">
+                        </td>
                         <td>{{item.productName}}</td>
                         <td>{{item.quantity}}</td>
                     </tr>
@@ -46,12 +61,12 @@
             main:[],
             select:{},
             diff:"w",
+            labels: ["../images/icons/medal1.png", "../images/icons/medal2.png", "../images/icons/medal3.png", "", ""]
         },
-
         mounted:function(){
             let self = this;
             fetch("/backcenter/back/HomePageData").then(e => e.json()).then(r => self.main = r);
-            this.selectDiff();
+
         }
     })
 </script>

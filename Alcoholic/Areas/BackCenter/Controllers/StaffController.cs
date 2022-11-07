@@ -111,6 +111,11 @@ namespace Alcoholic.Areas.BackCenter.Controllers
             Employee? employee = (from em in db.Employees
                                   where emp.EmpAccount == em.EmpAccount
                                   select em).SingleOrDefault();
+            if (employee == null)
+            {
+                model.Result = false;
+                return Ok(model);
+            }
             string password = hash.GetHash(string.Concat(emp.EmpPassword, employee.Salt).ToString());
 
             if (employee != null && password == employee.EmpPassword && employee.Status != 0)
