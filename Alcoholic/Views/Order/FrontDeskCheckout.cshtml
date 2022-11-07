@@ -88,10 +88,14 @@
         background: #222220;
         color: white;
     }
+
+    [v-cloak] {
+        display: none;
+    }
 </style>
 
 <div class="container">
-    <div class="row mt-4" id="frontDeskCheck">
+    <div class="row mt-4" id="frontDeskCheck" v-cloak>
         <div class="container-fluid colorbox py-2 col-10 col-xl-8 text-center">
             <div class="succeedmessage"><i class="fa-sharp fa-solid fa-image"></i> 請於櫃台出示此畫面</div>
         </div>

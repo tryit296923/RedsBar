@@ -184,8 +184,12 @@
         height: 30px;
         align-items: center;
     }
+
+    [v-cloak] {
+        display: none;
+    }
 </style>
-<div id="cartList">
+<div id="cartList" v-cloak>
     <!-- navbar -->
     <div class="topnavbar">
         <nav class="navbar navbar-expand-lg">

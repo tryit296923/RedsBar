@@ -29,10 +29,14 @@
         height: 33px;
     }
 
+    [v-cloak] {
+        display: none;
+    }
+
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.2/dist/sweetalert2.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue2-datepicker@3.11.0/index.css">
-<div class="bookingmanage container-fluid p-5" id="order_manage">
+<div class="bookingmanage container-fluid p-5" id="order_manage" v-cloak>
     <div class="spacebetween row-cols-2 mb-3">
         <h3>訂單管理</h3>
     </div>
