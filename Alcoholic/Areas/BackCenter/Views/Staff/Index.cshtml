@@ -42,7 +42,7 @@
         overflow-x: scroll;
     }
 </style>
-<div class="bookingmanage container-fluid p-5" id="staff">
+<div class="bookingmanage container-fluid p-5" v-clock id="staff">
     <div class="spacebetween row-cols-2 mb-3">
         <h3>員工管理</h3>
 
@@ -77,13 +77,13 @@
                     </thead>
                     <tbody>
                         <tr v-for="(staff,index) in staffs" :name="staff.empAccount">
-                            <td>{{staff.role}}</td>
-                            <td>{{staff.empAccount}}</td>
-                            <td>{{staff.empName}}</td>
-                            <td>{{staff.nickName}}</td>
-                            <td>{{staff.contact}}</td>
-                            <td>{{staff.join.substring(0,10)}}</td>
-                            <td>{{giveName(staff.status)}}</td>
+                            <td v-clock>{{staff.role}}</td>
+                            <td v-clock>{{staff.empAccount}}</td>
+                            <td v-clock>{{staff.empName}}</td>
+                            <td v-clock>{{staff.nickName}}</td>
+                            <td v-clock>{{staff.contact}}</td>
+                            <td v-clock>{{staff.join.substring(0,10)}}</td>
+                            <td v-clock>{{giveName(staff.status)}}</td>
                             <td><button :id="index" v-on:click="editStaff" data-bs-toggle="modal" data-bs-target="#editbooking" class="btnproducts"><i class="fa-solid fa-pen-to-square"></i></button></td>
                             <td><button :id="index" v-on:click="deleteStaff" class="btnproducts"><i class="fa-solid fa-trash"></i></button></td>
                         </tr>
@@ -109,14 +109,14 @@
                 </thead>
                 <tbody>
                     <tr v-for="item in gstaffs" :name="item.empAccount">
-                        <td>{{item.role}}</td>
-                        <td>{{item.empAccount}}</td>
-                        <td>{{item.empName}}</td>
-                        <td>{{item.nickName}}</td>
-                        <td>{{item.contact}}</td>
-                        <td>{{item.join.substring(0,10)}}</td>
-                        <td>{{item.leave.substring(0,10)}}</td>
-                        <td>{{giveName(item.status)}}</td>
+                        <td v-clock>{{item.role}}</td>
+                        <td v-clock>{{item.empAccount}}</td>
+                        <td v-clock>{{item.empName}}</td>
+                        <td v-clock>{{item.nickName}}</td>
+                        <td v-clock>{{item.contact}}</td>
+                        <td v-clock>{{item.join.substring(0,10)}}</td>
+                        <td v-clock>{{item.leave.substring(0,10)}}</td>
+                        <td v-clock>{{giveName(item.status)}}</td>
                     </tr>
                 </tbody>
             </table>
