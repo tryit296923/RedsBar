@@ -74,7 +74,7 @@
                 <div class="modal-header editproducttitle">
                     <h3 class="modal-title">編輯商品</h3>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                            aria-label="Close" @@click="refreshPage"></button>
+                            aria-label="Close" ></button>
                 </div>
                 <div class="modal-body container productEditing">
                     <div class="row">
@@ -113,7 +113,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="row m-0">
-                        <button class=" col btneaddcancel m-1" :name="name" type="button" data-bs-dismiss="modal" @@click="refreshPage"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                        <button class=" col btneaddcancel m-1" :name="name" type="button" data-bs-dismiss="modal" ><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
                         <button class=" col btneditproducts m-1" :name="name" type="button" @@click="sendEdit"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
                     </div>
                 </div>
@@ -160,7 +160,7 @@
                 <div class="modal-header editdiscounttitle">
                     <h3 class="modal-title" id="editProd">原料補貨</h3>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                            aria-label="Close" @@click="refreshPage"></button>
+                            aria-label="Close" ></button>
                 </div>
                 <div class="modal-body container ">
                     <div class="row">
@@ -186,7 +186,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="row m-0">
-                        <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal" @@click="refreshPage"><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
+                        <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal" ><i class="fa-solid fa-square-xmark"></i> 離開編輯</button>
                         <button class=" col btneditproducts m-1" :name="editInventoryData.materialName" type="button" @@click="sendEditInventory"><i class="fa-solid fa-square-check"></i> 儲存編輯</button>
                     </div>
                 </div>
@@ -205,7 +205,7 @@
             <div class="modal-header addproducttitle">
                 <h3 class="modal-title" id="staticBackdropLabel">新增商品</h3>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Close" @@click="refreshPage"></button>
+                        aria-label="Close" ></button>
             </div>
             <div class="modal-body container addingPage">
                 <div class="row">
@@ -275,7 +275,7 @@
             </div>
             <div class="modal-footer">
                 <div class="row m-0">
-                    <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal" @@click="refreshPage"><i class="fa-solid fa-square-xmark"></i> 取消新增</button>
+                    <button class=" col btneaddcancel m-1" type="button" data-bs-dismiss="modal" ><i class="fa-solid fa-square-xmark"></i> 取消新增</button>
                     <button class=" col btneditproducts m-1" type="button" v-on:click="send"><i class="fa-solid fa-square-check"></i> 新增商品</button>
                 </div>
             </div>
@@ -449,20 +449,14 @@
                             method: 'PUT',
                             body: data
                         });
-                        //fetch("/api/Products/GetMaterialCategory")
-                        //    .then(response => response.json())
-                        //    .then(result => self.selection = result);
                         Swal.fire('編輯成功!', '', 'success');
-                        //setInterval(function () { window.location.reload() }, 1200);
+                        setInterval(function () { window.location.reload() }, 1200);
                     } else if (result.isDenied) {
                         Swal.fire('取消編輯!', '', 'info')
                     }
                 })
 
             },
-            refreshPage: function () {
-                window.location.reload();
-            }
         },
         //取得產品資訊以進行渲染
         mounted: function () {
@@ -580,9 +574,6 @@
                         data.append("DiscountId", this.discountValue.discountId)
                         var img = this.$refs.myVueDropzone.getQueuedFiles()
                         img.forEach(x => data.append("Images", x))
-                        console.log("ex",img)
-
-                        console.log("testing",this.baseValueArr)
                         this.baseValueArr.forEach((x,idx)=>{ 
                             data.append(`Materials[${idx}]`, JSON.stringify(x))
                         })
@@ -628,10 +619,7 @@
                 }
                 this.options.push(tag)
                 this.value.push(tag)
-            },            
-            refreshPage: function () {
-                window.location.reload();
-            },
+            },   
         },
         mounted: function () {
             let self = this;

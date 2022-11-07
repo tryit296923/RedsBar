@@ -32,11 +32,11 @@
         }
     }
     /* 產品 */
-    .classicCT{
-        padding: 0 50px 0 50px;
-    }
     .classicCT p{
         font-size:medium;
+    }
+    .card-title{
+        height:48px;
     }
     .price {
         color: #333;
@@ -70,9 +70,6 @@
     .modal-body p {
         margin-top: 15px;
     }
-    .modal-image {
-        max-width: 498px;
-    }
 
     .modal-spec {
         overflow-y: auto;
@@ -102,8 +99,8 @@
         <div class="row g-4 mt-2">
             <template v-for="item in product">
                 <div class="col-xl-3 col-md-4 col-6 p-3">
-                    <div class="card productcard w-100 h-100">
-                        <img :src="item.path" class="m-2" :id="item.id" data-bs-toggle="modal"
+                    <div class="card productcard">
+                        <img :src="item.path" class="p-2 w-100" :id="item.id" data-bs-toggle="modal"
                             data-bs-target="#productModal" @@click="selected">
                         <div class="card-body">
                             <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal"
@@ -137,7 +134,7 @@
                 </div>
                 <div class="modal-body p-0">
                     <div class="modal-bodyimg ">
-                        <img class="modal-image" :src="modal.imagesrc">
+                        <img class="w-100" :src="modal.imagesrc">
                     </div>
                     <div class="card-body modal-spec">
                         <p><b>{{modal.description}}</b></p>

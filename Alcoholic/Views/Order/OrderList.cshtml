@@ -175,6 +175,16 @@
             margin: auto 0;
             padding: 0 8px;
         }
+
+    .carousel-inner h5, .carousel-inner p{
+        color: white;
+    font-size:large;
+    font-weight:bold;
+    }
+    .recLabel {
+        color:black;
+        text-align:center
+    }
 </style>
 
 
@@ -258,8 +268,8 @@
                     <div class="row g-4 ">
                         <template v-for="item in product">
                             <div class="col-6 col-md-4 p-1">
-                                <div class="card productcard w-100 h-100">
-                                    <img :src="item.path" class="m-2" :id="item.id" data-bs-toggle="modal"
+                                <div class="card productcard">
+                                    <img :src="item.path" class="p-2 w-100" :id="item.id" data-bs-toggle="modal"
                                          data-bs-target="#productModal" @@click="selected">
                                     <div class="card-body btnaddtocart">
                                         <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal"
@@ -293,7 +303,7 @@
                 </div>
             </div>
             <!-- 推薦/促銷 -->
-            <div class="tab-pane fade" id="recommendedCT" role="tabpanel" aria-labelledby="recommendedCT-tab"
+            <div class="tab-pane fade" id="recommendedCT" role="tabpanel" aria-labelledby="recommendedCT-tab"y
                  tabindex="0">
                 <div class="container recommendedCT">
                     <div class="row g-4 ">
@@ -304,25 +314,25 @@
                                 <button type="button" data-bs-target="#carouselrecommendCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
                             </div>
                             <div class="carousel-inner">
-                                <div class="carousel-item active" data-bs-interval="2000">
-                                        <img src="~/images/Cocktails/example1.jpg" class="d-block w-100">
-                                    <div class="carousel-caption d-none d-md-block">
-                                            <h5>"OMAR-豐收系列NO.2</h5>
-                                            <p>推銷的文案</p>
+                                <div  v-for="(item, i) in recommendHeadProd" :key="i" v-if="i==0" class="carousel-item active" data-bs-interval="5000">
+                                    <img :src="item.path" class="d-block h-50 w-100 ">
+                                    <div class="carousel-caption p-0 d-md-block">
+                                        <h5 >{{item.name}}</h5>
+                                        <p >{{item.description}}</p>
                                     </div>
                                 </div>
-                                <div class="carousel-item" data-bs-interval="2000">
-                                    <img src="~/images/Cocktails/example2.jpg" class="d-block w-100">
-                                    <div class="carousel-caption d-none d-md-block">
-                                        <h5>"OMAR-豐收系列NO.2</h5>
-                                        <p>推銷的文案</p>
+                                <div  v-for="(item, i) in recommendHeadProd" :key="i" v-if="i==1" class="carousel-item " data-bs-interval="2000">
+                                    <img :src="item.path" class="d-block h-100 w-100">
+                                    <div class="carousel-caption p-0 d-md-block">
+                                        <h5 >{{item.name}}</h5>
+                                        <p >{{item.description}}</p>
                                     </div>
                                 </div>
-                                <div class="carousel-item">
-                                    <img src="~/images/Cocktails/example3.jpg" class="d-block w-100">
-                                    <div class="carousel-caption d-none d-md-block">
-                                        <h5>"OMAR-豐收系列NO.2</h5>
-                                        <p>推銷的文案</p>
+                                <div v-for="(item, i) in recommendHeadProd" :key="i" v-if="i==recommendHeadProd.length-1" class="carousel-item ">
+                                    <img :src="item.path" class="d-block h-100 w-100">
+                                    <div class="carousel-caption p-0 d-md-block">
+                                        <h5 >{{item.name}}</h5>
+                                        <p >{{item.description}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -335,16 +345,18 @@
                                 <span class="visually-hidden">Next</span>
                             </button>
                         </div>
-                        <template v-for="item in product">
-                            <div class="col-6 col-md-4 p-1">
+                        <template v-for="item in recommendBodyProd">
+                            <div class="col-6 p-1">
                                 <div class="card productcard w-100 h-100">
-                                    <img :src="item.path" class="m-2" :id="item.id" data-bs-toggle="modal"
+                                    <label  ><strong>{{item.discountName}}</strong></label>
+                                    <img :src="item.path" class="p-2 w-100" :id="item.id" data-bs-toggle="modal"
                                          data-bs-target="#productModal" @@click="selected">
                                     <div class="card-body btnaddtocart">
                                         <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal" @@click="selected">
                                             <p class="card-title">{{item.name}}</p>
+
                                             <span class="price">${{item.price}}</span>
-                                            <span class="discount">${{Math.round(item.price*item.discount)}}</span>
+                                            <span class="discount">${{Math.round(item.price*item.discountAmount)}}</span>
                                             <span class="sale px-2">SALE</span>
                                         </div>
                                         <div class="row justify-content-center my-2 mx-0 quantitygroup">
@@ -535,7 +547,7 @@
     @*購物車*@
     <div id="checkCart" class="shopCart" @@click="checkCart">
         <div>
-            <i class="fa-sharp fa-solid fa-cart-shopping"> <h2> 查看購物車</h2></i>
+            <i class="fa-sharp fa-solid fa-cart-shopping"> 查看購物車</i>
         </div>
     </div>
 </div>

@@ -115,7 +115,7 @@
     }
 
     .paybycreditcard {
-        font-size: x-large;
+        font-size: large;
     }
 
     .icon {
@@ -180,15 +180,17 @@
                             <h1 class="modal-title fs-5" id="staticBackdropLabel">請選擇線上支付工具</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-footer row">
-                            <div class="col-12">
-                                <a v-on:click.prevent="pay('credit')" class="btn btnpaymentinstrument paybycreditcard">
-                                    <i class="fa-solid fa-credit-card icon"></i>
-                                    &nbsp信用卡支付
-                                </a>
-                            </div>
-                            <div class="col-12 w-50">
-                                <a v-on:click.prevent="pay('googlepay')" class="btn btnpaymentinstrument"><img src="~/images/icons/googlepay.jpg" class="w-50" /></a>
+                        <div class="modal-footer">
+                            <div class="row justify-content-center">
+                                <div class="col-12">
+                                    <a v-on:click.prevent="pay('credit')" class="btn btnpaymentinstrument paybycreditcard">
+                                        <i class="fa-solid fa-credit-card icon"></i>
+                                        &nbsp信用卡支付
+                                    </a>
+                                </div>
+                                <div class="col-12 w-50">
+                                    <a v-on:click.prevent="pay('googlepay')" class="btn btnpaymentinstrument"><img src="~/images/icons/googlepay.jpg" class="w-50" /></a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -232,13 +234,13 @@
             frontDeskCheckout: function () {
                 this.$refs.frontDeskCheckout.click();
             },
-            getCheckInfo: function(){
+            getCheckInfo: function () {
                 fetch("/api/Order/GetCheckInfo")
-                .then(response => response.json())
-                .then(result => { this.orderCheckViewModel  = result})
+                    .then(response => response.json())
+                    .then(result => { this.orderCheckViewModel = result })
             },
         },
-        mounted:function(){
+        mounted: function () {
             this.getCheckInfo();
         }
     })

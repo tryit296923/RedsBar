@@ -35,10 +35,6 @@ ViewData["Title"] = "推薦酒款";
     }
     
     /* 產品 */
-    .recommendedCT{
-        padding: 0 50px 0 50px;
-    }
-
     .productcard img {
         padding:20px 30px;
     }
@@ -67,7 +63,9 @@ ViewData["Title"] = "推薦酒款";
         color: #333;
         font-weight:bold;
     }
-
+    .card-body{
+        padding:0 36px;
+    }
     .discount_price{
         color: #333;
         text-decoration: line-through;
@@ -135,9 +133,11 @@ ViewData["Title"] = "推薦酒款";
             <div class="container col-xl-10 col-12 p-3">
                 <div class="card productcard">
                     <div class="row">
-                        <img :src="item.path" class="col-4" :id="item.id" data-bs-toggle="modal"
-                            data-bs-target="#productModal" @@click="selected">
-                        <div class="card-body col-8">
+                        <div class="col-xl-4 col-12">
+                            <img :src="item.path" class="w-100" :id="item.id" data-bs-toggle="modal"
+                                data-bs-target="#productModal" @@click="selected">
+                        </div>
+                        <div class="card-body col-xl-8 col-12">
                             <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal"
                                 @@click="selected">
                                 <h2 class="card-title">{{item.name}}</h2>
@@ -169,7 +169,7 @@ ViewData["Title"] = "推薦酒款";
                 </div>
                 <div class="modal-body p-0">
                     <div class="modal-bodyimg ">
-                        <img class="modal-image" :src="modal.imagesrc">
+                        <img :src="modal.imagesrc" class="w-100">
                     </div>
                     <div class="modal-spec">
                         <p><b>{{modal.productName}}</b></p>
