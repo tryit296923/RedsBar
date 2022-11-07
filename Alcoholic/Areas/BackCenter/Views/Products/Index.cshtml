@@ -22,8 +22,11 @@
     .lowInventoryNum{
         color: red
     }
+    [v-cloak] {
+        display: none;
+    }
 </style>
-<div id="prod">
+<div id="prod" v-cloak>
     <div class="productmanage container-fluid p-5">
         <div class="spacebetween row-cols-2 mb-3">
             <h3>商品管理</h3>
@@ -199,7 +202,7 @@
 
 <!-- Create Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+     aria-labelledby="staticBackdropLabel" aria-hidden="true" v-cloak>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header addproducttitle">
