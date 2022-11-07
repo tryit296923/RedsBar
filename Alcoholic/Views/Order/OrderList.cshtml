@@ -119,7 +119,7 @@
     }
 
     /* 客製化 */
-    .custommodal {
+    .custommodal, .fateModal {
         background-color: #333;
     }
 
@@ -247,8 +247,8 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link px-0" id="fateCT-tab" data-bs-toggle="tab" data-bs-target="#fateCT"
-                        type="button" role="tab" aria-controls="fateCT" aria-selected="false">
+                <button class="tabbtn nav-link px-0" id="customizedCT-tab" type="button" role="tab" @@click="resetFateoptions"
+                        data-bs-toggle="modal" href="#optionFateModalToggle">
                     算命調酒<i class="fa-solid fa-clipboard-question"></i>
                 </button>
             </li>
@@ -315,21 +315,24 @@
                             </div>
                             <div class="carousel-inner">
                                 <div  v-for="(item, i) in recommendHeadProd" :key="i" v-if="i==0" class="carousel-item active" data-bs-interval="5000">
-                                    <img :src="item.path" class="d-block h-50 w-100 ">
+                                    <img :src="item.path" class="d-block h-50 w-100 " :id="item.id" data-bs-toggle="modal"
+                                         data-bs-target="#productModal" @@click="selected">
                                     <div class="carousel-caption p-0 d-md-block">
                                         <h5 >{{item.name}}</h5>
                                         <p >{{item.description}}</p>
                                     </div>
                                 </div>
                                 <div  v-for="(item, i) in recommendHeadProd" :key="i" v-if="i==1" class="carousel-item " data-bs-interval="2000">
-                                    <img :src="item.path" class="d-block h-100 w-100">
+                                    <img :src="item.path" class="d-block h-100 w-100" :id="item.id" data-bs-toggle="modal"
+                                         data-bs-target="#productModal" @@click="selected">
                                     <div class="carousel-caption p-0 d-md-block">
                                         <h5 >{{item.name}}</h5>
                                         <p >{{item.description}}</p>
                                     </div>
                                 </div>
                                 <div v-for="(item, i) in recommendHeadProd" :key="i" v-if="i==recommendHeadProd.length-1" class="carousel-item ">
-                                    <img :src="item.path" class="d-block h-100 w-100">
+                                    <img :src="item.path" class="d-block h-100 w-100" :id="item.id" data-bs-toggle="modal"
+                                         data-bs-target="#productModal" @@click="selected">
                                     <div class="carousel-caption p-0 d-md-block">
                                         <h5 >{{item.name}}</h5>
                                         <p >{{item.description}}</p>
@@ -416,7 +419,7 @@
                             <i class="fa fa-plus"></i>
                         </button>
                     </div>
-                    <button type="button" class="col-12 btn" @@click="sessionStr">加到購物車</button>
+                    <button type="button" class="col-12 btn" @@click="sessionStr" data-bs-dismiss="modal">加到購物車</button>
                 </div>
             </div>
         </div>
@@ -544,6 +547,196 @@
             </div>
         </div>
     </div>
+    <!-- 算命modal懸浮視窗 -->
+    <div class="modaloptions">
+        <!-- 第一題 -->
+        <div class="modal fade" id="optionFateModalToggle" aria-hidden="true" aria-labelledby="optionFateModalToggleLabel"
+             tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered justify-content-center">
+                <div class="modal-content custommodal w-100">
+                    <div class="container modal-headbackgroundcolor text-center">
+                        <div class="modal-header ">
+                            <h5 class="modal-title w-100" id="optionModalToggleLabel">
+                                今天想放鬆一下<br />
+                                不如找間酒吧喝一杯！<br />
+                                「您好，請問幾位？」
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="modal-bodycolor">
+                            <div class="optionbutton m-2 text-center text-center" v-for="option in optionFatesection1">
+                                <input class="modalinput border border-light rounded w-100" type="button" name="人數"  :value="option.opt"
+                                        data-bs-target="#optionFateModalToggle2"
+                                       data-bs-toggle="modal" data-bs-dismiss="modal">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 第二題 -->
+        <div class="modal fade" id="optionFateModalToggle2" aria-hidden="true" aria-labelledby="optionFateModalToggleLabel2"
+             tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered justify-content-center">
+                <div class="modal-content fateModal w-100">
+                    <div class="container-fluid modal-headbackgroundcolor w-100 h-100 text-center">
+                        <div class="modal-header gx-0">
+                            <h5 class="modal-title w-100" id="optionFateModalToggleLabel2">
+                                哇~今天人也太多了吧！<br />
+                                只剩下兩個地方還有座位<br />
+                                那我坐...
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="container modal-bodycolor">
+                            <div class="optionbutton m-2 text-center " v-for="option in optionFatesection2">
+                                <input class="modalinput border border-light rounded w-100" type="button" name="坐位" :value="option.opt"
+                                        data-bs-target="#optionFateModalToggle3"
+                                       data-bs-toggle="modal" data-bs-dismiss="modal">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 第三題 -->
+        <div class="modal fade" id="optionFateModalToggle3" aria-hidden="true" aria-labelledby="optionFateModalToggleLabel3"
+             tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered justify-content-center">
+                <div class="modal-content fateModal w-100">
+                    <div class="container-fluid modal-headbackgroundcolor w-100 h-100 text-center">
+                        <div class="modal-header gx-0">
+                            <h5 class="modal-title w-100" id="optionFateModalToggleLabel3">
+                                自信爆棚的Bartender帥氣地走了過來<br />
+                                「今天，想喝點甚麼？」</h5>
+                        </div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="container modal-bodycolor">
+                            <div class="optionbutton m-2 text-center" v-for="option in optionFatesection3" v-if="option.id==1">
+                                <input class="modalinput border border-light rounded w-100" type="button" name="酒的選項" :value="option.opt"
+                                        data-bs-target="#optionFateModalToggle4A"
+                                       data-bs-toggle="modal" data-bs-dismiss="modal">
+                            </div>
+                            <div class="optionbutton m-2 text-center" v-for="option in optionFatesection3" v-if="option.id==2">
+                                <input class="modalinput border border-light rounded w-100" type="button" name="酒的選項" :value="option.opt"
+                                        data-bs-target="#optionFateModalToggle4B"
+                                       data-bs-toggle="modal" data-bs-dismiss="modal">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 第四題A -->
+        <div class="modal fade" id="optionFateModalToggle4A" aria-hidden="true" aria-labelledby="optionFateModalToggle4A"
+             tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered justify-content-center">
+                <div class="modal-content fateModal w-100">
+                    <div class="container-fluid modal-headbackgroundcolor w-100 h-100 text-center">
+                        <div class="modal-header gx-0">
+                            <h5 class="modal-title w-100" id="optionFateModalToggleLabel4A">
+                                「剛好我們有一瓶風味<br />
+                                和你特質很合的威士忌！」<br />
+                                我想，他指的應該是...
+                                </h5>
+                        </div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="container modal-bodycolor">
+                            <div class="optionbutton m-2 text-center" v-for="option in optionFatesection4A ">
+                                <input class="modalinput border border-light rounded w-100" type="button" name="威士忌" :id="option.id" :value="option.opt"
+                                       @@click="optionFateSelected" data-bs-target="#optionFateModalToggle5"
+                                       data-bs-toggle="modal" data-bs-dismiss="modal">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 第四題B -->
+        <div class="modal fade" id="optionFateModalToggle4B" aria-hidden="true" aria-labelledby="optionFateModalToggleLabel4B"
+             tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered justify-content-center">
+                <div class="modal-content fateModal w-100">
+                    <div class="container-fluid modal-headbackgroundcolor w-100 h-100 text-center">
+                        <div class="modal-header gx-0">
+                            <h5 class="modal-title w-100" id="optionFateModalToggleLabel4B">
+                                「我知道有種調酒的風味<br />
+                                跟你的氣質很搭！」<br />
+                                我想，他說的應該是？
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="container modal-bodycolor">
+                            <div class="optionbutton m-2 text-center" v-for="option in optionFatesection4B ">
+                                <input class="modalinput border border-light rounded w-100" type="button" name="調酒" :id="option.id" :value="option.opt"
+                                       @@click="optionFateSelected" data-bs-target="#optionFateModalToggle5"
+                                       data-bs-toggle="modal" data-bs-dismiss="modal">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 第五題 -->
+        <div class="modal fade" id="optionFateModalToggle5" aria-hidden="true" aria-labelledby="optionFateModalToggleLabel5"
+             tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered justify-content-center">
+                <div class="modal-content fateModal w-100">
+                    <div class="container-fluid modal-headbackgroundcolor w-100 h-100 text-center">
+                        <div class="modal-header gx-0">
+                            <h5 class="modal-title w-100" id="optionFateModalToggleLabel5">
+                                「馬上就來，不如~先點首歌吧？」<br />
+                                他笑著，指向一旁的點歌機<br />
+                                太好了～今晚，我想要來點...</h5>
+                        </div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="container modal-bodycolor">
+                            <div class="optionbutton m-2 text-center" v-for="option in optionFatesection5">
+                                <input class="modalinput border border-light rounded w-100" type="button" name="曲風" :value="option.opt"
+                                        data-bs-target="#optionFateModalToggle6"
+                                       data-bs-toggle="modal" data-bs-dismiss="modal">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 結果 -->
+        <div class="modal fade" id="optionFateModalToggle6" aria-hidden="true" aria-labelledby="optionFateModalToggleLabel6"
+             tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered justify-content-center">
+                <div class="modal-content  w-100">
+                    <div class="container-fluid modal-headbackgroundcolor w-100 h-100">
+                        <div class="modal-header gx-0">
+                            <h5 class="modal-title" id="optionFateModalToggleLabel5">這杯最適合您!</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="container modal-bodycolor  text-center">
+                            <div class="card productcard">
+                                <img :src="fateResult.imagesrc" class="p-2 w-100" :id="fateResult.id" data-bs-toggle="modal"
+                                     data-bs-target="#productModal" @@click="selected">
+                                <div class="card-body btnaddtocart">
+                                        <h2 class="card-title">{{fateResult.productName}}</h2>
+                                    <p class="card-title">{{fateResult.description}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     @*購物車*@
     <div id="checkCart" class="shopCart" @@click="checkCart">
         <div>
@@ -572,6 +765,8 @@
             cartArray: [],
             cartStr: "",
             customize:52,
+            fateResult:{id:"",productName:"",description:"",imagesrc:""},
+            optionsFateForm: { id:"" , name: "", price:"" , description: "", path: "", discountId:"" , discountName: "", discountAmount:"" },
             optionsection1: [
                 { base: 'Vodka' }, { base: 'Rum' }, { base: 'Tequila' }, { base: 'Whiskey' }, { base: 'Gin' }, { base: 'Brandy' }
             ],
@@ -583,6 +778,27 @@
             ],
             optionsection4: [
                 { body: '無感' }, { body: '中等' }, { body: '厚重' }
+            ],
+            optionFatesection1: [
+                { opt: '一位而已' }, { opt: '和朋友兩三人' }
+            ],
+            optionFatesection2: [
+                { opt: '沙發座位區' }, { opt: '吧檯高腳椅' }, { opt: '好友一大群' }
+            ],
+            optionFatesection3: [
+                { id:1,opt: '想喝純的威士忌' }, { id:2, opt: '來杯調酒吧!' }
+            ],
+            optionFatesection4A: [
+                {id:1, opt: '萬人迷的我，就像自帶蜜餞與梅子的馥郁香氣' }, 
+                {id:2, opt: '我圓滑的談吐，散發出辛香料與蜂蜜果香' }, 
+                {id:3, opt: '看似穩重的我，有一種橡木與蘋果肉桂的香氣' }
+            ],
+            optionFatesection4B: [
+                { id: 4, opt: '爽朗的我，氣質有如一種清新的鮮甜果香' },
+                { id: 5, opt: '我的優雅風格，像揉合了甜美的蜜餞與誘人的梅子香' },
+            ],
+            optionFatesection5: [
+                { opt: '超Chill的慵懶爵士樂' }, { opt: '狂放嘶吼的重金搖滾' }, { opt: '懷舊老歌絕不出錯' }, { opt: '電音舞曲Party Time！' }
             ],
             // 產品資料
             product: []
@@ -618,8 +834,23 @@
             resetoptions: function () {
                 this.optionsform = [];
             },
+            resetFateoptions: function () {
+                this.optionsFateForm = "";
+            },
             optionselected: function (e) {
                 this.optionsform = this.optionsform.concat(e.target.value);
+
+            },
+            optionFateSelected: function (e) {
+                //將點選的資料帶入到modal畫面
+                for (i = 0; i < this.product.length; i++) {
+                    if (e.currentTarget.id == this.product[i].id) {
+                        this.fateResult.id = e.currentTarget.id;
+                        this.fateResult.imagesrc = this.product[i].path;
+                        this.fateResult.productName = this.product[i].name;
+                        this.fateResult.description = this.product[i].description;
+                    }
+                }
 
             },
             checkCart: function (e) {
@@ -686,7 +917,7 @@
                     Toast.fire({
                         icon: 'success',
                         title: '添加成功',
-                        text: selProd.name
+                        text: selProd.name + "*" +selProd.value 
                     })
                     if (selProd.id != 52){
                     selProd.value = 0;
