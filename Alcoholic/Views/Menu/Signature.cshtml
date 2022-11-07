@@ -99,8 +99,8 @@
         <div class="row g-4 mt-2">
             <template v-for="item in product">
                 <div class="col-xl-3 col-md-4 col-6 p-3">
-                    <div class="card productcard w-100 h-100">
-                        <img :src="item.path" class="m-2" :id="item.id" data-bs-toggle="modal"
+                    <div class="card productcard">
+                        <img :src="item.path" class="p-2 w-100" :id="item.id" data-bs-toggle="modal"
                             data-bs-target="#productModal" @@click="selected">
                         <div class="card-body">
                             <div :id="item.id" data-bs-toggle="modal" data-bs-target="#productModal"

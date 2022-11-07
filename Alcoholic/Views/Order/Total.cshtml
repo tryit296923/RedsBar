@@ -104,7 +104,6 @@
             border-radius: 0.375rem;
             box-shadow: 0 0 0 3px #D8CDB9;
             width: 40%;
-            height: 50px;
             margin-left: 5%;
             float: none;
             display: flex;
@@ -319,11 +318,11 @@
 
 
         <fieldset class="mx-3">
-            <legend>
+            <legend class="p-3">
                 <div>
-                    <i class="fa-sharp fa-solid fa-cart-shopping me-2"></i>
+                    <i class="fa-sharp fa-solid fa-cart-shopping"></i>
+                    <b>已選購</b>
                 </div>
-                <b>已選購</b>
             </legend>
 
             <!-- 購物車清單 -->
@@ -435,12 +434,12 @@
             },
             sequenceList: function () {
                 var sList = [];
-                if(this.orderDetail.itemList){
+                if (this.orderDetail.itemList) {
                     var x = [...new Set(this.orderDetail.itemList.map(x => x.sequence))];
                     console.log(x)
                     x.forEach(y => sList.push(this.orderDetail.itemList.filter(z => z.sequence == y)))
                     console.log(sList);
-                }               
+                }
                 return sList;
             },
             checkConfirm: function () {
@@ -453,11 +452,11 @@
             total: function (s) {
                 console.log(s);
                 var total = 0;
-                if(s){
+                if (s) {
                     for (let i = 0; i < s.length; i++) {
-                    total += s[i].unitPrice * s[i].qty * s[i].discountAmount;
-                }
-                this.totalPrice = Math.round(total);
+                        total += s[i].unitPrice * s[i].qty * s[i].discountAmount;
+                    }
+                    this.totalPrice = Math.round(total);
                 }
                 return Math.round(total);
             },
