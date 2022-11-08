@@ -5,6 +5,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="~/css/bootstrap.css" rel="stylesheet" />
     <link href="~/css/theme.css" rel="stylesheet" />
     <link rel="shortcut icon" type="image/ico" href="@Url.Content("~/images/icons/logoicon-r.png")">
@@ -64,15 +67,6 @@
             color: white;
         }
 
-        @@media screen and (max-width: 992px) {
-            .searcharea {
-                display: none !important;
-            }
-
-            .searcharea2 {
-                display: block;
-            }
-        }
         /* Footer */
         footer{
             background-color: #D8CDB9; 
@@ -325,9 +319,6 @@
                     }
                 }
             },
-            mounted:function(){
-                window.resizeBy(1,1);
-            }
         });
     </script>
     <script>
