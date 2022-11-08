@@ -275,10 +275,6 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <form class="searcharea2 search" role="search">
-                                <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                                <a href=""><img src="/images/icons/search.png" alt=""></a>
-                            </form>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">推薦</a>
                             </li>
@@ -292,16 +288,13 @@
                                 <a class="nav-link" href="#">線上訂位</a>
                             </li>
                         </ul>
-                        <form class="d-flex searcharea search" role="search">
-                            <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                            <a href=""><img src="/images/icons/search.png" alt=""></a>
-                        </form>
                     </div>
                 </div>
             </nav>
         </div>
     </div>
     <div class="scrollregion">
+        <loading :active.sync="isLoading"></loading>
         <div>
             <!-- banner -->
             <div class="backColor container mb-3">
@@ -319,8 +312,6 @@
                 </div>
             </div>
         </div>
-
-
         <fieldset class="mx-3">
             <legend class="p-3">
                 <div>
@@ -418,9 +409,10 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3"></script>
+<link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3/dist/vue-loading.css" rel="stylesheet">
 <script>
-
+    Vue.component('loading', VueLoading);
     var app = new Vue({
         el: '#orderTotal',
         data() {
@@ -428,13 +420,21 @@
                 orderTime: '',
                 totalPrice: 0,
                 orderDetail: {},
+                isLoading: false,
             }
+        },
+        components: {
+            Loading: VueLoading
         },
         methods: {
             getTotalOrder: function () {
+                this.isLoading = true;
                 fetch("/api/Order/GetTotalOrder")
                     .then(response => response.json())
-                    .then(result => { this.orderDetail = result })
+                    .then(result => { 
+                        this.orderDetail = result;
+                        this.isLoading = false;
+                    })
             },
             sequenceList: function () {
                 var sList = [];

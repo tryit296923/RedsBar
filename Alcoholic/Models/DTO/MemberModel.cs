@@ -43,7 +43,6 @@ namespace Alcoholic.Models.DTO
     {
         public string OrderId { get; set; }
         public string ProductName { get; set; }
-        public string path { get; set; }
     }
 
     public class OrderListModel

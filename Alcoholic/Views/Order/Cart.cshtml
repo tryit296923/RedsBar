@@ -202,10 +202,6 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <form class="searcharea2 search" role="search">
-                            <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                            <a href=""><img src="/images/icons/search.png" alt=""></a>
-                        </form>
                         <li class="nav-item">
                             <a class="nav-link" href="#">推薦</a>
                         </li>
@@ -219,16 +215,13 @@
                             <a class="nav-link" href="#">線上訂位</a>
                         </li>
                     </ul>
-                    <form class="d-flex searcharea search" role="search">
-                        <input class=" form-control" type="search" placeholder="Search" aria-label="Search">
-                        <a href=""><img src="/images/icons/search.png" alt=""></a>
-                    </form>
                 </div>
             </div>
         </nav>
     </div>
 
     <div class="scrollregion">
+        <loading :active.sync="isLoading"></loading>
         <div>
             <!-- banner -->
             <div class="backColor container-fluid mb-3">
@@ -247,7 +240,7 @@
             </div>
         </div>
 
-        <fieldset class="mx-3 my-4">
+        <fieldset class="mx-3 my-4" v-if="itemList.length>0">
             <legend class="p-3">
                 <div>
                     <i class="fa-sharp fa-solid fa-cart-shopping"></i>
@@ -343,8 +336,10 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3"></script>
+<link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3/dist/vue-loading.css" rel="stylesheet">
 <script>
+    Vue.component('loading', VueLoading);
     var app = new Vue({
         el: '#cartList',
         data() {
@@ -353,7 +348,11 @@
                 itemList: [],
                 orderId: '',
                 cartInfo: {},
+                isLoading: false,
             }
+        },
+        components: {
+            Loading: VueLoading
         },
         methods: {
             decrease: function (item) {
@@ -423,9 +422,13 @@
                 this.$refs.backToMenu.click();
             },
             getCartInfo: function () {
+                this.isLoading = true;
                 fetch("/api/Order/GetCartInfo")
                     .then(response => response.json())
-                    .then(result => { this.cartInfo = result })
+                    .then(result => { 
+                        this.cartInfo = result;
+                        this.isLoading = false;
+                    })
                     .then(result => { this.itemList = this.cartInfo.itemList })
             }
         },
