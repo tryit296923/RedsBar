@@ -292,25 +292,25 @@
                 <div id="Register" v-cloak>
                     <form class="Register" method="post" enctype="">
                         <div class="text">
-                            <input v-model="Account" :class="validAccount" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
+                            <input autocomplete="off" v-model="Account" :class="validAccount" required maxlength="20" minlength="8" placeholder="請輸入帳號(8~20字)">
                         </div>
                         <div class="encryp">
-                            <input v-model="Password" :class="validPassword" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
+                            <input autocomplete="off" v-model="Password" :class="validPassword" type="password" required maxlength="20" minlength="8" placeholder="請輸入密碼(8~20字)">
                         </div>
                         <div class="repassword">
-                            <input v-model="rePassword" :class="validrePassword" type="password" required maxlength="20" minlength="8" placeholder="請再次輸入密碼">
+                            <input autocomplete="off" v-model="rePassword" :class="validrePassword" type="password" required maxlength="20" minlength="8" placeholder="請再次輸入密碼">
                         </div>
                         <div class="Email">
-                            <input v-model.lazy="Email" :class="validEmail" type="email" required>
+                            <input autocomplete="off" v-model.lazy="Email" :class="validEmail" type="email" required>
                         </div>
                         <div class="name">
-                            <input v-model="Name" :class="validName" required maxlength="20">
+                            <input autocomplete="off" v-model="Name" :class="validName" required maxlength="20">
                         </div>
                         <div class="phone">
-                            <input v-model="Phone" :class="validPhone" required maxlength="10" minlength="10" placeholder="請輸入連絡電話(09-開頭)">
+                            <input autocomplete="off" v-model="Phone" :class="validPhone" required maxlength="10" minlength="10" placeholder="請輸入連絡電話(09-開頭)">
                         </div>
                         <div class="birth">
-                            <input v-model="Birth" :class="validBirth" type="date" value="2000-12-10" required>
+                            <input autocomplete="off" v-model="Birth" :class="validBirth" type="date" value="2000-12-10" required>
                         </div>
                     </form>
                     <div class="register">
