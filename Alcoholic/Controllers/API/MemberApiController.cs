@@ -215,9 +215,10 @@ namespace Alcoholic.Controllers.API
             Member? member = (from m in db.Members
                               where m.EmailID == EmailID
                               select m).FirstOrDefault();
-            var msg = await RazorTemplateEngine.RenderAsync<Member>("Views/Member/Authorize.cshtml", member);
+            MailModel mailModel = new() { Port = $"{Request.Scheme}://{Request.Host}" };
+            var msg = await RazorTemplateEngine.RenderAsync<MailModel>("Views/Member/Authorize.cshtml", mailModel);
             mail.SendMail(member.Email, msg, "RedsBar 會員認證信件");
-            return new EmptyResult();
+            return RedirectToAction("LoginRegister","member");
         }
 
         [HttpPost]

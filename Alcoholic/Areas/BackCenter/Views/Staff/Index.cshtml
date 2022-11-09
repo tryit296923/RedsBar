@@ -257,7 +257,7 @@
                     if(r.startsWith("<")){
                         this.sweatAlert("warning", "你沒有權限!")
                     }else{
-                        switch(r.status){
+                        switch (JSON.parse(r).status) {
                         case 0:{this.sweatAlert("success", "新增成功");this.getStaff();}
                         break;
                         case 1:{this.sweatAlert("error", "帳號有人使用過了!");this.getStaff();}
@@ -265,6 +265,7 @@
                         case 2:{this.sweatAlert("error", "資料格式不符!");this.getStaff();}
                         break;
                     }
+                            this.getStaff();
                     }
                 });
             },
@@ -315,7 +316,7 @@
                     if(r.startsWith("<")){
                         this.sweatAlert("warning", "你沒有權限!")
                     }else{
-                        switch (r.status) {
+                        switch (JSON.parse(r).status) {
                         case 0:{this.sweatAlert("success", "編輯成功");this.getStaff();}
                             break;
                         case 1:{this.sweatAlert("question", "找不到使用者");this.getStaff();}
