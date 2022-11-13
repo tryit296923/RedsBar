@@ -5,6 +5,7 @@ using Alcoholic.Models.Entities;
 using Alcoholic.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +44,7 @@ namespace Alcoholic.Controllers.API
             //session取值是否可用
             var sesStr = HttpContext.Session.GetString("CartItem");
             Console.WriteLine(sesStr);
-            string sMemberID = HttpContext.Session.GetString("MemberID");           
+            string sMemberID = HttpContext.Session.GetString("MemberID");
             if (!Guid.TryParse(sMemberID, out var memberId))
             {
                 throw new Exception("Guid is error");
@@ -82,6 +83,15 @@ namespace Alcoholic.Controllers.API
 
             return Ok(ovm_Cart);
         }
+        //加點修改session
+        [HttpPost]
+        public IActionResult ComboOrder([FromBody] List<CartItem> updateCart)
+        {
+            var newCartSession = JsonConvert.SerializeObject(updateCart);
+            HttpContext.Session.SetString("CartItem", newCartSession);
+            var cartSessionInfo = HttpContext.Session.GetString("CartItem");
+            return Ok(cartSessionInfo);
+        }
         [HttpPost]
         public IActionResult Confirm([FromBody] OrderViewModel orderdata)
         {
@@ -93,7 +103,7 @@ namespace Alcoholic.Controllers.API
             var db_OrderId = (from o in _db.Orders
                               where o.MemberId == Guid.Parse(sMemberID) && o.Status == "N" && o.DeskNum == sDesk
                               select o.OrderId).FirstOrDefault();
-            var memberlvl = (from m in _db.Members where m.MemberID == Guid.Parse(sMemberID) select m.MemberLevel).FirstOrDefault()+1;
+            var memberlvl = (from m in _db.Members where m.MemberID == Guid.Parse(sMemberID) select m.MemberLevel).FirstOrDefault() + 1;
             var memberDiscount = (from d in _db.Discount where d.DiscountId == memberlvl select d.DiscountAmount).FirstOrDefault();
             try
             {
@@ -101,8 +111,9 @@ namespace Alcoholic.Controllers.API
                 if (orderdata != null)
                 {
 
-                    orderdata?.ItemList?.ForEach(x => { 
-                        if(memberDiscount < x.DiscountAmount) { x.DiscountAmount = memberDiscount; }
+                    orderdata?.ItemList?.ForEach(x =>
+                    {
+                        if (memberDiscount < x.DiscountAmount) { x.DiscountAmount = memberDiscount; }
                         total += Convert.ToInt32(Math.Round((float)(x.Qty * x.DiscountAmount * x.UnitPrice)));
                     });
                 }
@@ -246,9 +257,9 @@ namespace Alcoholic.Controllers.API
                                            Sequence = z.Sequence,
                                        }).ToList(),
                                    }).FirstOrDefault();
-                foreach(var it in orderDetail.ItemList)
+                foreach (var it in orderDetail.ItemList)
                 {
-                    if(memberDiscount < it.DiscountAmount)
+                    if (memberDiscount < it.DiscountAmount)
                     {
                         it.DiscountAmount = memberDiscount;
                     }
@@ -259,7 +270,7 @@ namespace Alcoholic.Controllers.API
             {
                 return Ok(false);
             }
-            
+
         }
         public IActionResult GetCheckInfo()
         {
@@ -294,7 +305,7 @@ namespace Alcoholic.Controllers.API
                 return Ok(orderCheckViewModel);
             }
             else { return Ok(false); }
-            
+
         }
         // 離席
         [HttpPut]
@@ -309,7 +320,7 @@ namespace Alcoholic.Controllers.API
             _db.SaveChanges();
             return Ok();
         }
-        
+
         [HttpPost]
         public IActionResult FeedbackMember([FromBody] FeedbackIdModel data)
         {
@@ -432,7 +443,7 @@ namespace Alcoholic.Controllers.API
             string sMemberID = HttpContext.Session.GetString("MemberID");
             string sDesk = HttpContext.Session.GetString("Desk");
 
-            if(sMemberID != null && sDesk != null)
+            if (sMemberID != null && sDesk != null)
             {
                 if (!Guid.TryParse(sMemberID, out var memberId))
                 {
@@ -450,7 +461,7 @@ namespace Alcoholic.Controllers.API
                 return Ok(frontDeskCheckPage);
             }
             else { return Ok(false); }
-            
+
         }
         //測試SignalR
         //public async Task<IActionResult> TestDesk(string desk)

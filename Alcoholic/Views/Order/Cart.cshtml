@@ -359,16 +359,23 @@
                 //console.log(item);
                 if (item.qty > 1) {
                     item.qty--;
+                    var de = this.itemList.find(x => x.id == item.id)
+                    de.qty = item.qty
+                    console.log(this.itemList)
                 }
             },
             increase: function (item) {
                 //console.log(item);
                 item.qty++;
+                var inc = this.itemList.find(y => y.id == item.id)
+                inc.qty = item.qty
+                console.log(this.itemList)
             },
             deleteItem: function (index) {
                 //console.log(index);
-                //console.log(this.itemList);
                 this.itemList.splice(index, 1);
+                console.log(this.itemList);
+
             },
             discountPrice: function (item) {
                 return Math.round(item.unitPrice * item.qty * item.discountAmount);
@@ -384,16 +391,6 @@
             },
             orderingSend: function () {
                 this.confirmSend();
-            },
-            getProductSession() {
-                //var ary = {};
-                //var result = cartList.split(";").map(x => this.seperate(x, ary));
-                //console.log(ary);
-                //console.log(ary['products']);
-                //console.log(JSON.parse(ary['products']));
-                this.itemList = cartInfo.ItemList;
-                console.log(this.itemList);
-                return this.itemList;
             },
             confirmSend() {
                 let x = {
@@ -419,13 +416,25 @@
                     });
             },
             backToMenu: function () {
-                this.$refs.backToMenu.click();
+                console.log(this.itemList)
+                this.isLoading = true;
+                fetch("/api/Order/ComboOrder", {
+                    body: JSON.stringify(this.itemList),
+                    headers: { 'content-type': 'application/json' },
+                    method: 'POST'
+                })
+                    .then(result => result.json())
+                    .then(result => {
+                        this.itemList = result;
+                        setTimeout(() => (this.isloading = false), 4000);
+                        this.$refs.backToMenu.click();
+                    })
             },
             getCartInfo: function () {
                 this.isLoading = true;
                 fetch("/api/Order/GetCartInfo")
                     .then(response => response.json())
-                    .then(result => { 
+                    .then(result => {
                         this.cartInfo = result;
                         this.isLoading = false;
                     })
