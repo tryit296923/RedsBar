@@ -447,7 +447,7 @@
                             self.bd = memberData.birth.slice(0, 10);
                             self.mail = memberData.mail;
                             self.tel = memberData.phone;
-                            self.percent = Math.round(memberData.total / memberData.max * 100) > 100 ? 100 : Math.round((memberData.total-memberData.min) / memberData.max * 100);
+                            self.percent = Math.round(memberData.total / memberData.max * 100) > 100 ? 100 : Math.round((memberData.total - memberData.min) / (memberData.max - memberData.min) * 100);
                             self.progressbar = `width: ${self.percent}%`;
                             Swal.fire({
                                 allowOutsideClick: 'false',
